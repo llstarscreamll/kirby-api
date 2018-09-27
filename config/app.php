@@ -150,6 +150,7 @@ return [
         /*
          * Package Service Providers...
          */
+        llstarscreamll\Authentication\AuthenticationServiceProvider::class,
 
         /*
          * Application Service Providers...
