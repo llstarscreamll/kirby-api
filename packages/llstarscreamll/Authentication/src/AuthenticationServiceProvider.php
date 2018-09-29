@@ -1,8 +1,8 @@
 <?php
-
 namespace llstarscreamll\Authentication;
 
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AuthenticationServiceProvider extends ServiceProvider
 {
@@ -13,10 +13,12 @@ class AuthenticationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Passport::routes();
+
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -35,7 +37,7 @@ class AuthenticationServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('authentication', function ($app) {
-            return new Authentication;
+            return new Authentication();
         });
     }
 
@@ -48,7 +50,7 @@ class AuthenticationServiceProvider extends ServiceProvider
     {
         return ['authentication'];
     }
-    
+
     /**
      * Console-specific booting.
      *
@@ -63,17 +65,17 @@ class AuthenticationServiceProvider extends ServiceProvider
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
+        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
         ], 'authentication.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
+        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
         ], 'authentication.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
+        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'authentication.views');*/
 
         // Registering package commands.
