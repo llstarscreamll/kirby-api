@@ -1,0 +1,46 @@
+{
+    "name": "llstarscreamll/shippings",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "author homepage"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/shippings",
+    "keywords": [
+        "Laravel",
+        "Shippings"
+    ],
+    "require": {
+        "illuminate/support": "~5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "llstarscreamll\\Shippings\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "llstarscreamll\\Shippings\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "llstarscreamll\\Shippings\\ShippingsServiceProvider"
+            ],
+            "aliases": {
+                "Shippings": "llstarscreamll\\Shippings\\Facades\\Shippings"
+            }
+        }
+    }
+}
