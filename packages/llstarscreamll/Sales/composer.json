@@ -1,0 +1,46 @@
+{
+    "name": "llstarscreamll/sales",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "author homepage"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/sales",
+    "keywords": [
+        "Laravel",
+        "Sales"
+    ],
+    "require": {
+        "illuminate/support": "~5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "llstarscreamll\\Sales\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "llstarscreamll\\Sales\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "llstarscreamll\\Sales\\SalesServiceProvider"
+            ],
+            "aliases": {
+                "Sales": "llstarscreamll\\Sales\\Facades\\Sales"
+            }
+        }
+    }
+}
