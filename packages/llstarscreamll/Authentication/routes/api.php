@@ -13,7 +13,10 @@
 
 Route::prefix('api')
     ->middleware('api')
-    ->namespace('llstarscreamll\Authentication\Http\Api\Controllers')
+    ->namespace('llstarscreamll\Authentication\Http\Controllers')
     ->group(function ($route) {
-        $route->post('test', 'Authentication@login');
+
+        $route->post('login', 'ApiAuthenticationController@login');
+        $route->delete('logout', 'ApiAuthenticationController@logout')->middleware('auth:api');
+
     });

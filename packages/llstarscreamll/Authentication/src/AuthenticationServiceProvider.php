@@ -1,6 +1,7 @@
 <?php
 namespace llstarscreamll\Authentication;
 
+use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
@@ -14,6 +15,8 @@ class AuthenticationServiceProvider extends ServiceProvider
     public function boot()
     {
         Passport::routes();
+        Passport::tokensExpireIn(Carbon::now()->addMinutes(config('authentication.api.token-expires-in')));
+        Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(config('authentication.api.refresh-token-expires-in')));
 
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
