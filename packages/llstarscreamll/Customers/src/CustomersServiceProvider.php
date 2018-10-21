@@ -1,5 +1,4 @@
 <?php
-
 namespace llstarscreamll\Customers;
 
 use Illuminate\Support\ServiceProvider;
@@ -15,8 +14,8 @@ class CustomersServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -35,7 +34,7 @@ class CustomersServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('customers', function ($app) {
-            return new Customers;
+            return new Customers();
         });
     }
 
@@ -48,7 +47,7 @@ class CustomersServiceProvider extends ServiceProvider
     {
         return ['customers'];
     }
-    
+
     /**
      * Console-specific booting.
      *
@@ -63,17 +62,17 @@ class CustomersServiceProvider extends ServiceProvider
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
+        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
         ], 'customers.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
+        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
         ], 'customers.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
+        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'customers.views');*/
 
         // Registering package commands.
