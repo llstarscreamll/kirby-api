@@ -1,6 +1,12 @@
 <?php
 
+use Carbon\Carbon;
 use Faker\Generator as Faker;
+use llstarscreamll\Customers\Models\Customer;
+use llstarscreamll\Sales\Models\SaleStatus;
+use llstarscreamll\Shippings\Models\Shipping;
+use llstarscreamll\Stockrooms\Models\Stockroom;
+use llstarscreamll\Users\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +20,15 @@ use Faker\Generator as Faker;
  */
 
 $factory->define(llstarscreamll\Sales\Models\Sale::class, function (Faker $faker) {
+    $date = Carbon::now();
+
     return [
-        'name' => $faker->words(3, true),
+        'seller_id'      => factory(User::class)->create(),
+        'customer_id'    => factory(Customer::class)->create(),
+        'shipping_to_id' => factory(Shipping::class)->create(),
+        'stockroom_id'   => factory(Stockroom::class)->create(),
+        'status_id'      => factory(SaleStatus::class)->create(),
+        'issue_date'     => $date->toDateTimeString(),
+        'shipment_date'  => $date->addDays($faker->randomDigit)->toDateTimeString(),
     ];
 });
