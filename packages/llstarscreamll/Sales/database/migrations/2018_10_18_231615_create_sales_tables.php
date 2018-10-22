@@ -23,7 +23,7 @@ class CreateSalesTables extends Migration
             $table->integer('seller_id')->unsigned();
             $table->integer('customer_id')->unsigned()->nullable();
             $table->integer('shipping_to_id')->unsigned()->nullable();
-            $table->integer('shipping_from_id')->unsigned()->nullable();
+            $table->integer('stockroom_id')->unsigned();
             $table->integer('status_id')->unsigned();
             $table->datetime('issue_date');
             $table->datetime('shipment_date')->nullable();
@@ -33,7 +33,7 @@ class CreateSalesTables extends Migration
             $table->foreign('seller_id')->references('id')->on('users');
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->foreign('shipping_to_id')->references('id')->on('shippings');
-            $table->foreign('shipping_from_id')->references('id')->on('shippings');
+            $table->foreign('stockroom_id')->references('id')->on('stockrooms');
             $table->foreign('status_id')->references('id')->on('sale_statuses');
         });
 

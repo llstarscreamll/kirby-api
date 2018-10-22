@@ -23,7 +23,7 @@ class Sale extends Model
         'seller_id',
         'customer_id',
         'shipping_to_id',
-        'shipping_from_id',
+        'stockroom_id',
         'status_id',
         'issue_date',
         'shipment_date',
@@ -38,7 +38,7 @@ class Sale extends Model
         'seller_id'        => 'int',
         'customer_id'      => 'int',
         'shipping_to_id'   => 'int',
-        'shipping_from_id' => 'int',
+        'stockroom_id' => 'int',
         'status_id'        => 'int',
     ];
 

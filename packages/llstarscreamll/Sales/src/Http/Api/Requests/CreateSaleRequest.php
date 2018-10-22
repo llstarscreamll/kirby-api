@@ -30,6 +30,7 @@ class CreateSaleRequest extends FormRequest
         return [
             'shipping_to_id'   => ['int'],
             'customer_id'      => ['int'],
+            'stockroom_id'     => ['required', 'int', 'exists:stockrooms,id'],
             'items.*.id'       => ['required', 'int', 'exists:items'],
             'items.*.quantity' => ['required', 'int'],
         ];

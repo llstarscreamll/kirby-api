@@ -4,6 +4,7 @@ namespace Sales;
 use llstarscreamll\Items\Models\Item;
 use llstarscreamll\Sales\Models\SaleStatus;
 use llstarscreamll\Shippings\Models\Shipping;
+use llstarscreamll\Stockrooms\Models\Stockroom;
 use llstarscreamll\Users\Models\User;
 use Sales\ApiTester;
 
@@ -35,13 +36,20 @@ class CreateSaleCest
     private $shipping;
 
     /**
+     * @var \llstarscreamll\Stockrooms\Models\Stockroom
+     */
+    private $stockroom;
+
+    /**
      * @param ApiTester $I
      */
     public function _before(ApiTester $I)
     {
+        $this->stockroom         = factory(Stockroom::class)->create();
         $this->defaultSaleStatus = factory(SaleStatus::class)->create(['default' => true]);
         $this->items             = factory(Item::class, 2)->create();
         $this->shipping          = factory(Shipping::class)->create();
+        $this->stockroom->items()->sync([$this->items[0]->id => ['quantity' => 100]]);
 
         $this->user = $I->amLoggedAsUser(factory(User::class)->create());
         $I->haveHttpHeader('Accept', 'application/json');
@@ -56,10 +64,11 @@ class CreateSaleCest
      * @test
      * @param ApiTester $I
      */
-    public function createSaleWithoutCustomerData(ApiTester $I)
+    public function createSaleWithoutCustomerInfo(ApiTester $I)
     {
         $data = [
-            'items' => [
+            'stockroom_id' => $this->stockroom->id,
+            'items'        => [
                 ['id' => $this->items[0]->id, 'quantity' => 2],
                 ['id' => $this->items[1]->id, 'quantity' => 4],
             ],
@@ -74,6 +83,7 @@ class CreateSaleCest
             'id'             => 1,
             'seller_id'      => $this->user->id,
             'status_id'      => $this->defaultSaleStatus->id,
+            'stockroom_id'   => $this->stockroom->id,
             'shipping_to_id' => null,
             'customer_id'    => null,
         ]);

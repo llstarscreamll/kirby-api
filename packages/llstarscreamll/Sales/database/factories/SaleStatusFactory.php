@@ -17,5 +17,6 @@ $factory->define(llstarscreamll\Sales\Models\SaleStatus::class, function (Faker 
     return [
         'name'        => $faker->word,
         'description' => $faker->words(4, true),
+        'default'     => false,
     ];
 });
