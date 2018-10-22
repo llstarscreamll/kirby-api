@@ -1,7 +1,7 @@
 <?php
-
 namespace llstarscreamll\Shippings;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 
 class ShippingsServiceProvider extends ServiceProvider
@@ -15,8 +15,9 @@ class ShippingsServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -35,7 +36,7 @@ class ShippingsServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('shippings', function ($app) {
-            return new Shippings;
+            return new Shippings();
         });
     }
 
@@ -48,7 +49,7 @@ class ShippingsServiceProvider extends ServiceProvider
     {
         return ['shippings'];
     }
-    
+
     /**
      * Console-specific booting.
      *
@@ -63,17 +64,17 @@ class ShippingsServiceProvider extends ServiceProvider
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
+        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
         ], 'shippings.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
+        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
         ], 'shippings.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
+        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'shippings.views');*/
 
         // Registering package commands.
