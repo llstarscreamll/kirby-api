@@ -15,7 +15,8 @@
         "Users"
     ],
     "require": {
-        "illuminate/support": "~5"
+        "illuminate/support": "~5",
+        "prettus/l5-repository": "^2.6"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",
