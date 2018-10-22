@@ -2,6 +2,7 @@ actor: ApiTester
 modules:
     enabled:
         - \Sales\Helper\Api
+        - Authentication\Helper\Api
         - REST:
             depends: Laravel5
         - Laravel5:
