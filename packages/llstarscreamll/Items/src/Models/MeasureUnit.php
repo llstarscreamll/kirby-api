@@ -19,13 +19,9 @@ class MeasureUnit extends Model
      * @var array
      */
     protected $fillable = [
-        'seller_id',
-        'customer_id',
-        'shipping_to_id',
-        'shipping_from_id',
-        'shipment_date',
-        'issue_date',
-        'status_id',
+        'name',
+        'symbol',
+        'default',
     ];
 
     /**
