@@ -1,8 +1,10 @@
 <?php
-
 namespace llstarscreamll\Items;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Items\Repositories\ItemRepository;
+use llstarscreamll\Items\Repositories\ItemRepositoryEloquent;
 
 class ItemsServiceProvider extends ServiceProvider
 {
@@ -15,8 +17,9 @@ class ItemsServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -32,10 +35,11 @@ class ItemsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/items.php', 'items');
+        $this->app->bind(ItemRepository::class, ItemRepositoryEloquent::class);
 
         // Register the service the package provides.
         $this->app->singleton('items', function ($app) {
-            return new Items;
+            return new Items();
         });
     }
 
@@ -48,7 +52,7 @@ class ItemsServiceProvider extends ServiceProvider
     {
         return ['items'];
     }
-    
+
     /**
      * Console-specific booting.
      *
@@ -59,21 +63,21 @@ class ItemsServiceProvider extends ServiceProvider
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/items.php' => config_path('items.php'),
-        ], 'items.config');
+        ], 'items');
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
+        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
         ], 'items.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
+        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
         ], 'items.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
+        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'items.views');*/
 
         // Registering package commands.

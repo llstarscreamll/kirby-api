@@ -1,5 +1,4 @@
 <?php
-
 namespace llstarscreamll\Items;
 
 class Items
