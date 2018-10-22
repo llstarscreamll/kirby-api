@@ -15,6 +15,19 @@ Via Composer
 $ composer require llstarscreamll/users
 ```
 
+## Setup
+
+Adjust the `config/auth.php` file to:
+
+```php
+'providers' => [
+    'users' => [
+        'driver' => 'eloquent',
+        'model'  => \llstarscreamll\Users\Models\User::class,
+    ],
+]
+```
+
 ## Usage
 
 ## Change log
@@ -24,12 +37,12 @@ Please see the [changelog](changelog.md) for more information on what has change
 ## Testing
 
 ``` bash
-$ composer test
+$ codecept run
 ```
 
 ## Contributing
 
-Please see [contributing.md](contributing.md) for details and a todolist.
+Please see [contributing.md](contributing.md) for details and a todo list.
 
 ## Security
 
@@ -37,8 +50,8 @@ If you discover any security related issues, please email author email instead o
 
 ## Credits
 
-- [author name][link-author]
-- [All Contributors][link-contributors]
+- [Johan Alvarez](https://github.com/llstarscreamll)
+
 
 ## License
 

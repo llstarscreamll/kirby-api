@@ -38,7 +38,7 @@ If you discover any security related issues, please email llstarscreamll@hotmail
 ## Credits
 
 - [Johan Alvarez][link-author]
-- [All Contributors][link-contributors]
+
 
 ## License
 
