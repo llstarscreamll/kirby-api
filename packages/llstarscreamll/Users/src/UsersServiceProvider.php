@@ -1,7 +1,7 @@
 <?php
-
 namespace llstarscreamll\Users;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 
 class UsersServiceProvider extends ServiceProvider
@@ -17,6 +17,7 @@ class UsersServiceProvider extends ServiceProvider
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -35,7 +36,7 @@ class UsersServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('users', function ($app) {
-            return new Users;
+            return new Users();
         });
     }
 
@@ -48,7 +49,7 @@ class UsersServiceProvider extends ServiceProvider
     {
         return ['users'];
     }
-    
+
     /**
      * Console-specific booting.
      *
@@ -63,17 +64,17 @@ class UsersServiceProvider extends ServiceProvider
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
+        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
         ], 'users.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
+        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
         ], 'users.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
+        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'users.views');*/
 
         // Registering package commands.
