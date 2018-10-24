@@ -1,0 +1,4 @@
+actor: ApiTester
+modules:
+    enabled:
+        - \Stockrooms\Helper\Api
