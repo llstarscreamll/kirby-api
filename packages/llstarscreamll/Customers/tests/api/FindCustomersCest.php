@@ -23,7 +23,7 @@ class FindCustomersCest
     private $user;
 
     /**
-     * @var \llstarscreamll\Customers\Models\Customer
+     * @var \Illuminate\Database\Eloquent\Collection
      */
     private $customers;
 
