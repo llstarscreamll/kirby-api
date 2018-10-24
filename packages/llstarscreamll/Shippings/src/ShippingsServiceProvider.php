@@ -3,6 +3,8 @@ namespace llstarscreamll\Shippings;
 
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Shippings\Repositories\ShippingRepository;
+use llstarscreamll\Shippings\Repositories\ShippingRepositoryEloquent;
 
 class ShippingsServiceProvider extends ServiceProvider
 {
@@ -16,7 +18,7 @@ class ShippingsServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
         // Publishing is only necessary when using the CLI.
@@ -33,6 +35,7 @@ class ShippingsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/shippings.php', 'shippings');
+        $this->app->bind(ShippingRepository::class, ShippingRepositoryEloquent::class);
 
         // Register the service the package provides.
         $this->app->singleton('shippings', function ($app) {
