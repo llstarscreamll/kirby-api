@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use llstarscreamll\Customers\Repositories\CustomerRepository;
 
 /**
- * Class PaginateCustomers.
+ * Class PaginateCustomersAction.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
