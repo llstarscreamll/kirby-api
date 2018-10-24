@@ -3,6 +3,8 @@ namespace llstarscreamll\Stockrooms;
 
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Stockrooms\Repositories\StockroomRepository;
+use llstarscreamll\Stockrooms\Repositories\StockroomRepositoryEloquent;
 
 class StockroomsServiceProvider extends ServiceProvider
 {
@@ -15,7 +17,7 @@ class StockroomsServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
@@ -33,6 +35,7 @@ class StockroomsServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/stockrooms.php', 'stockrooms');
+        $this->app->bind(StockroomRepository::class, StockroomRepositoryEloquent::class);
 
         // Register the service the package provides.
         $this->app->singleton('stockrooms', function ($app) {
