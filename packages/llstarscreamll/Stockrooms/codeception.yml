@@ -1,4 +1,4 @@
-namespace: Shippings
+namespace: Stockrooms
 paths:
     tests: tests
     output: tests/_output
