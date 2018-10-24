@@ -10,9 +10,19 @@ use Prettus\Repository\Eloquent\BaseRepository;
  * Class ItemRepositoryEloquent.
  *
  * @package namespace App\Repositories;
+ *
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class ItemRepositoryEloquent extends BaseRepository implements ItemRepository
 {
+    /**
+     * @var array
+     */
+    protected $fieldSearchable = [
+        'name',
+        'description',
+    ];
+
     /**
      * Specify Model class name.
      *
