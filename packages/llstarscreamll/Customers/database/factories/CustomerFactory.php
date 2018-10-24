@@ -16,7 +16,7 @@ use Faker\Generator as Faker;
 $factory->define(llstarscreamll\Customers\Models\Customer::class, function (Faker $faker) {
     return [
         'name'            => $faker->name,
-        'document_number' => $faker->randomNumber(12),
+        'document_number' => $faker->randomNumber(),
         'email'           => $faker->email,
         'phone'           => $faker->tollFreePhoneNumber,
     ];

@@ -10,3 +10,13 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
  */
+
+Route::prefix('api')
+    ->middleware('api')
+    ->namespace('llstarscreamll\Customers\Http\Api\Controllers')
+    ->middleware('auth:api')
+    ->group(function ($route) {
+
+        $route->apiResource('customers', 'CustomerController');
+
+    });

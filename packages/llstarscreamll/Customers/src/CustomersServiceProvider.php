@@ -1,8 +1,16 @@
 <?php
 namespace llstarscreamll\Customers;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Customers\Repositories\CustomerRepository;
+use llstarscreamll\Customers\Repositories\CustomerRepositoryEloquent;
 
+/**
+ * Class CustomersServiceProvider.
+ *
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ */
 class CustomersServiceProvider extends ServiceProvider
 {
     /**
@@ -15,9 +23,10 @@ class CustomersServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
-        // Publishing is only necessary when using the CLI.
+        // Publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -31,8 +40,9 @@ class CustomersServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/customers.php', 'customers');
+        $this->app->bind(CustomerRepository::class, CustomerRepositoryEloquent::class);
 
-        // Register the service the package provides.
+        // Register the service the package provides
         $this->app->singleton('customers', function ($app) {
             return new Customers();
         });
