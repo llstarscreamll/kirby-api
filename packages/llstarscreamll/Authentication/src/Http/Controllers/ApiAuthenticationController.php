@@ -5,8 +5,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Lcobucci\JWT\Parser;
+use llstarscreamll\Authentication\Actions\WebLoginProxyAction;
 use llstarscreamll\Authentication\Http\Requests\LoginRequest;
+use llstarscreamll\Authentication\Http\Requests\SignUpRequest;
 
 /**
  * Class ApiAuthenticationController.
@@ -15,8 +18,6 @@ use llstarscreamll\Authentication\Http\Requests\LoginRequest;
  */
 class ApiAuthenticationController extends Controller
 {
-    const AUTH_ROUTE = '/oauth/token';
-
     /**
      * @var array
      */
@@ -31,26 +32,20 @@ class ApiAuthenticationController extends Controller
     }
 
     /**
-     * @param LoginRequest $request
+     * @param \llstarscreamll\Authentication\Http\Requests\LoginRequest  $request
+     * @param \llstarscreamll\Authentication\Actions\WebLoginProxyAction $action
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request, WebLoginProxyAction $action)
     {
-        $data = $this->baseData + [
-            'grant_type' => $request->grant_type ?? 'password',
-            'scope'      => $request->scope ?? '',
-            'username'   => $request->email,
-            'password'   => $request->password,
-        ];
+        $oAuthResponse = $action->run($request->email, $request->password);
 
-        $response = $this->makeRequestToOAuthServer($data);
-
-        if ($response['statusCode'] != '200') {
-            return response($response['content'], $response['statusCode']);
+        if ($oAuthResponse['statusCode'] != '200') {
+            return response($oAuthResponse['content'], $oAuthResponse['statusCode']);
         }
 
         $authTokenCookie = cookie(
             'accessToken',
-            $response['content']['access_token'],
+            $oAuthResponse['content']['access_token'],
             config('auth.api.token-expires-in'),
             null,
             null,
@@ -60,7 +55,7 @@ class ApiAuthenticationController extends Controller
 
         $refreshTokenCookie = cookie(
             'refreshToken',
-            $response['content']['refresh_token'],
+            $oAuthResponse['content']['refresh_token'],
             config('auth.api.refresh-token-expires-in'),
             null,
             null,
@@ -68,13 +63,13 @@ class ApiAuthenticationController extends Controller
             true
         );
 
-        return response($response['content'], $response['statusCode'])
+        return response($oAuthResponse['content'], $oAuthResponse['statusCode'])
             ->withCookie($authTokenCookie)
             ->withCookie($refreshTokenCookie);
     }
 
     /**
-     * @param Request $request
+     * @param \Illuminate\Http\Request $request
      */
     public function logout(Request $request)
     {
@@ -93,17 +88,46 @@ class ApiAuthenticationController extends Controller
     }
 
     /**
-     * @param $data
+     * @todo El código de este controlador está repetido, se debe abstraer
+     * @param \llstarscreamll\Authentication\Http\Requests\SignUpRequest $request
+     * @param \llstarscreamll\Authentication\Actions\WebLoginProxyAction $action
      */
-    private function makeRequestToOAuthServer($data)
+    public function signUp(SignUpRequest $request, WebLoginProxyAction $action)
     {
-        $authFullApiUrl = config('app.url').self::AUTH_ROUTE;
-        $headers        = ['HTTP_ACCEPT' => 'application/json'];
-        $request        = Request::create($authFullApiUrl, 'POST', $data, [], [], $headers);
-        $response       = App::handle($request);
-        $content        = \GuzzleHttp\json_decode($response->getContent(), true);
-        $statusCode     = $response->getStatusCode();
+        DB::table('users')->insert([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-        return ['content' => $content, 'statusCode' => $statusCode];
+        $oAuthResponse = $action->run($request->email, $request->password);
+
+        if ($oAuthResponse['statusCode'] != '200') {
+            return response($oAuthResponse['content'], $oAuthResponse['statusCode']);
+        }
+
+        $authTokenCookie = cookie(
+            'accessToken',
+            $oAuthResponse['content']['access_token'],
+            config('auth.api.token-expires-in'),
+            null,
+            null,
+            false,
+            true
+        );
+
+        $refreshTokenCookie = cookie(
+            'refreshToken',
+            $oAuthResponse['content']['refresh_token'],
+            config('auth.api.refresh-token-expires-in'),
+            null,
+            null,
+            false,
+            true
+        );
+
+        return response($oAuthResponse['content'], $oAuthResponse['statusCode'])
+            ->withCookie($authTokenCookie)
+            ->withCookie($refreshTokenCookie);
     }
 }

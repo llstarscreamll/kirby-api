@@ -150,12 +150,6 @@ return [
         /*
          * Package Service Providers...
          */
-        llstarscreamll\Users\UsersServiceProvider::class,
-        llstarscreamll\Shippings\ShippingsServiceProvider::class,
-        llstarscreamll\Customers\CustomersServiceProvider::class,
-        llstarscreamll\Items\ItemsServiceProvider::class,
-        llstarscreamll\Sales\SalesServiceProvider::class,
-        llstarscreamll\Authentication\AuthenticationServiceProvider::class,
 
         /*
          * Application Service Providers...

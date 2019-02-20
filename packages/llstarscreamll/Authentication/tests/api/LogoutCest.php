@@ -42,7 +42,7 @@ class LogoutCest
      * @test
      * @param ApiTester $I
      */
-    public function loginSuccessfully(ApiTester $I)
+    public function logoutSuccessfully(ApiTester $I)
     {
         $I->amLoggedAsUser();
         $I->haveHttpHeader('Authorization', 'Bearer '.$this->accessToken);

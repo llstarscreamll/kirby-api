@@ -17,6 +17,7 @@ Route::prefix('api')
     ->group(function ($route) {
 
         $route->post('login', 'ApiAuthenticationController@login');
+        $route->post('sign-up', 'ApiAuthenticationController@signUp');
         $route->delete('logout', 'ApiAuthenticationController@logout')->middleware('auth:api');
 
     });

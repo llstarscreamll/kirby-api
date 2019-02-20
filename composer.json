@@ -7,6 +7,12 @@
     ],
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./packages/llstarscreamll/*"
+        }
+    ],
     "require": {
         "php": "^7.1.3",
         "barryvdh/laravel-cors": "^0.11.2",
@@ -15,7 +21,9 @@
         "laravel/tinker": "^1.0",
         "prettus/l5-repository": "^2.6",
         "spatie/laravel-permission": "^2.21",
-        "wikimedia/composer-merge-plugin": "^1.4"
+        "wikimedia/composer-merge-plugin": "^1.4",
+        "llstarscreamll/authentication": "*",
+        "llstarscreamll/users": "*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
@@ -32,25 +40,11 @@
             "database/factories"
         ],
         "psr-4": {
-            "llstarscreamll\\Users\\": "packages/llstarscreamll/Users/src",
-            "llstarscreamll\\Shippings\\": "packages/llstarscreamll/Shippings/src",
-            "llstarscreamll\\Customers\\": "packages/llstarscreamll/Customers/src",
-            "llstarscreamll\\Items\\": "packages/llstarscreamll/Items/src",
-            "llstarscreamll\\Sales\\": "packages/llstarscreamll/Sales/src",
-            "llstarscreamll\\Sales\\": "packages/llstarscreamll/Sales/src",
-            "llstarscreamll\\Authentication\\": "packages/llstarscreamll/Authentication/src",
             "App\\": "app/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "llstarscreamll\\Users\\": "packages/llstarscreamll/Users/src",
-            "llstarscreamll\\Shippings\\": "packages/llstarscreamll/Shippings/src",
-            "llstarscreamll\\Customers\\": "packages/llstarscreamll/Customers/src",
-            "llstarscreamll\\Items\\": "packages/llstarscreamll/Items/src",
-            "llstarscreamll\\Sales\\": "packages/llstarscreamll/Sales/src",
-            "llstarscreamll\\Sales\\": "packages/llstarscreamll/Sales/src",
-            "llstarscreamll\\Authentication\\": "packages/llstarscreamll/Authentication/src",
             "Tests\\": "tests/"
         }
     },
@@ -59,9 +53,7 @@
             "dont-discover": []
         },
         "merge-plugin": {
-            "include": [
-                "packages/llstarscreamll/*/composer.json"
-            ],
+            "include": [],
             "recurse": true,
             "replace": false,
             "merge-dev": true,
