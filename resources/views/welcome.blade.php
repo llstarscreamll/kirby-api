@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Agile Work</title>
+        <title>llstarscreamll</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
@@ -77,9 +77,7 @@
             @endif
 
             <div class="content">
-                <div class="title m-b-md">
-                    Agile Work
-                </div>
+                <div class="title m-b-md">{{ config('app.name', 'Laravel') }}</div>
 
                 <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
