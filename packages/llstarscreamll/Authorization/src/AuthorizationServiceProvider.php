@@ -1,9 +1,13 @@
 <?php
-
 namespace llstarscreamll\Authorization;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class AuthorizationServiceProvider.
+ *
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ */
 class AuthorizationServiceProvider extends ServiceProvider
 {
     /**
@@ -15,8 +19,8 @@ class AuthorizationServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadMigrationsFrom(__DIR__.'/Data/Migrations');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -35,7 +39,7 @@ class AuthorizationServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('authorization', function ($app) {
-            return new Authorization;
+            return new Authorization();
         });
     }
 
@@ -48,7 +52,7 @@ class AuthorizationServiceProvider extends ServiceProvider
     {
         return ['authorization'];
     }
-    
+
     /**
      * Console-specific booting.
      *
@@ -63,17 +67,17 @@ class AuthorizationServiceProvider extends ServiceProvider
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
+        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
         ], 'authorization.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
+        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
         ], 'authorization.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
+        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'authorization.views');*/
 
         // Registering package commands.
