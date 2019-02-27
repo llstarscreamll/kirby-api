@@ -30,9 +30,7 @@
         }
     },
     "autoload-dev": {
-        "psr-4": {
-            "llstarscreamll\\Users\\Tests\\": "tests"
-        }
+        "psr-4": {}
     },
     "extra": {
         "laravel": {
