@@ -22,6 +22,7 @@
         "llstarscreamll/authentication": "*",
         "llstarscreamll/authorization": "*",
         "llstarscreamll/users": "*",
+        "llstarscreamll/work-shifts": "*",
         "prettus/l5-repository": "^2.6",
         "wikimedia/composer-merge-plugin": "^1.4"
     },

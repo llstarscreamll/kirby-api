@@ -1,0 +1,44 @@
+{
+    "name": "llstarscreamll/work-shifts",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "https://github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/work-shifts",
+    "keywords": [
+        "Laravel",
+        "WorkShifts"
+    ],
+    "require": {
+        "illuminate/support": "~5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "llstarscreamll\\WorkShifts\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "llstarscreamll\\WorkShifts\\WorkShiftsServiceProvider"
+            ],
+            "aliases": {
+                "WorkShifts": "llstarscreamll\\WorkShifts\\Facades\\WorkShifts"
+            }
+        }
+    }
+}
