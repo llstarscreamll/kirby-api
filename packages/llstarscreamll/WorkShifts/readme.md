@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require llstarscreamll/work-shifts
+$ composer require llstarscreamll/laravel-work-shifts
 ```
 
 ## Usage
@@ -44,14 +44,14 @@ If you discover any security related issues, please email llstarscreamll@hotmail
 
 license. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/llstarscreamll/work-shifts.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/llstarscreamll/work-shifts.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/llstarscreamll/work-shifts/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/llstarscreamll/laravel-work-shifts.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/llstarscreamll/laravel-work-shifts.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/llstarscreamll/laravel-work-shifts/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/llstarscreamll/work-shifts
-[link-downloads]: https://packagist.org/packages/llstarscreamll/work-shifts
-[link-travis]: https://travis-ci.org/llstarscreamll/work-shifts
+[link-packagist]: https://packagist.org/packages/llstarscreamll/laravel-work-shifts
+[link-downloads]: https://packagist.org/packages/llstarscreamll/laravel-work-shifts
+[link-travis]: https://travis-ci.org/llstarscreamll/laravel-work-shifts
 [link-styleci]: https://styleci.io/repos/12345678
 [https://github.com/llstarscreamll]: https://github.com/llstarscreamll
 [link-contributors]: ../../contributors

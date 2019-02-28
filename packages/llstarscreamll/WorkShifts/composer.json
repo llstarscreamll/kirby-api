@@ -1,5 +1,5 @@
 {
-    "name": "llstarscreamll/work-shifts",
+    "name": "llstarscreamll/laravel-work-shifts",
     "description": ":description",
     "license": "license",
     "authors": [
@@ -9,7 +9,7 @@
             "homepage": "https://github.com/llstarscreamll"
         }
     ],
-    "homepage": "https://github.com/llstarscreamll/work-shifts",
+    "homepage": "https://github.com/llstarscreamll/laravel-work-shifts",
     "keywords": [
         "Laravel",
         "WorkShifts"

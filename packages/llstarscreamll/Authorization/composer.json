@@ -1,5 +1,5 @@
 {
-    "name": "llstarscreamll/authorization",
+    "name": "llstarscreamll/laravel-authorization",
     "description": ":description",
     "license": "license",
     "authors": [
@@ -9,7 +9,7 @@
             "homepage": "https://github.com/llstarscreamll"
         }
     ],
-    "homepage": "https://github.com/llstarscreamll/authorization",
+    "homepage": "https://github.com/llstarscreamll/laravel-authorization",
     "keywords": [
         "Laravel",
         "Authorization"

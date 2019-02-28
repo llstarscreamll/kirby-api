@@ -1,5 +1,5 @@
 {
-    "name": "llstarscreamll/users",
+    "name": "llstarscreamll/laravel-users",
     "description": ":description",
     "license": "license",
     "authors": [
@@ -9,7 +9,7 @@
             "homepage": "https://github.com/llstarscreamll"
         }
     ],
-    "homepage": "https://github.com/llstarscreamll/users",
+    "homepage": "https://github.com/llstarscreamll/laravel-users",
     "keywords": [
         "Laravel",
         "Users"

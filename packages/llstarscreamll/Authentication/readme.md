@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require llstarscreamll/authentication
+$ composer require llstarscreamll/laravel-authentication
 ```
 
 ## Usage
@@ -44,14 +44,14 @@ If you discover any security related issues, please email llstarscreamll@hotmail
 
 MIT. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/llstarscreamll/authentication.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/llstarscreamll/authentication.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/llstarscreamll/authentication/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/llstarscreamll/laravel-authentication.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/llstarscreamll/laravel-authentication.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/llstarscreamll/laravel-authentication/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/llstarscreamll/authentication
-[link-downloads]: https://packagist.org/packages/llstarscreamll/authentication
-[link-travis]: https://travis-ci.org/llstarscreamll/authentication
+[link-packagist]: https://packagist.org/packages/llstarscreamll/laravel-authentication
+[link-downloads]: https://packagist.org/packages/llstarscreamll/laravel-authentication
+[link-travis]: https://travis-ci.org/llstarscreamll/laravel-authentication
 [link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/llstarscreamll
 [link-contributors]: ../../contributors]

@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require llstarscreamll/authorization
+$ composer require llstarscreamll/laravel-authorization
 ```
 
 ## Usage
@@ -44,14 +44,14 @@ If you discover any security related issues, please email author email instead o
 
 license. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/llstarscreamll/authorization.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/llstarscreamll/authorization.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/llstarscreamll/authorization/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/llstarscreamll/laravel-authorization.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/llstarscreamll/laravel-authorization.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/llstarscreamll/laravel-authorization/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/llstarscreamll/authorization
-[link-downloads]: https://packagist.org/packages/llstarscreamll/authorization
-[link-travis]: https://travis-ci.org/llstarscreamll/authorization
+[link-packagist]: https://packagist.org/packages/llstarscreamll/laravel-authorization
+[link-downloads]: https://packagist.org/packages/llstarscreamll/laravel-authorization
+[link-travis]: https://travis-ci.org/llstarscreamll/laravel-authorization
 [link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/llstarscreamll
 [link-contributors]: ../../contributors
