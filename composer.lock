@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1356781cd0dbb8bc008212072d0c648a",
+    "content-hash": "f48b28356c020de5aa291f95eb5d9210",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1634,6 +1634,60 @@
             ]
         },
         {
+            "name": "llstarscreamll/laravel-core",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./packages/llstarscreamll/Core",
+                "reference": "e26a65023240f1be9b9a83a62422b5fb3a8d2f67",
+                "shasum": null
+            },
+            "require": {
+                "illuminate/support": "~5"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.1",
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "~7.0",
+                "sempro/phpunit-pretty-print": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "llstarscreamll\\Core\\CoreServiceProvider"
+                    ],
+                    "aliases": {
+                        "Core": "llstarscreamll\\Core\\Facades\\Core"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "llstarscreamll\\Core\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": []
+            },
+            "license": [
+                "license"
+            ],
+            "authors": [
+                {
+                    "name": "Johan Alvarez",
+                    "email": "llstarscreamll@hotmail.com",
+                    "homepage": "https://github.com/llstarscreamll"
+                }
+            ],
+            "description": ":description",
+            "homepage": "https://github.com/llstarscreamll/laravel-core",
+            "keywords": [
+                "Core",
+                "Laravel"
+            ]
+        },
+        {
             "name": "llstarscreamll/laravel-users",
             "version": "dev-develop",
             "dist": {
@@ -1694,11 +1748,12 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/WorkShifts",
-                "reference": "da8098820f4a671b7bb87bd690964fcd72c4a06e",
+                "reference": "ec3d57b3b9a30f4fcd9c093982a634ea5df1d371",
                 "shasum": null
             },
             "require": {
-                "illuminate/support": "~5"
+                "illuminate/support": "~5",
+                "llstarscreamll/laravel-core": "*"
             },
             "require-dev": {
                 "mockery/mockery": "^1.1",
