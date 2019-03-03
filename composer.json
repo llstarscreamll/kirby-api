@@ -21,10 +21,9 @@
         "laravel/tinker": "^1.0",
         "llstarscreamll/laravel-authentication": "*",
         "llstarscreamll/laravel-authorization": "*",
+        "llstarscreamll/laravel-core": "*",
         "llstarscreamll/laravel-users": "*",
         "llstarscreamll/laravel-work-shifts": "*",
-        "llstarscreamll/laravel-core": "*",
-        "prettus/l5-repository": "^2.6",
         "wikimedia/composer-merge-plugin": "^1.4"
     },
     "require-dev": {
