@@ -20,7 +20,7 @@ class CreateWorkShiftsTable extends Migration
     {
         Schema::create('work_shifts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 50);
+            $table->string('name', 50)->unique();
             $table->time('start_time');
             $table->time('end_time');
             $table->unsignedInteger('grace_minutes_for_start_time')->nullable()->default(15);
