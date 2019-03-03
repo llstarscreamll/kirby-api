@@ -14,7 +14,7 @@ class LoginCest
     /**
      * @var string
      */
-    private $endpoint = 'api/login';
+    private $endpoint = 'api/v1/auth/login';
 
     /**
      * @param ApiTester $I

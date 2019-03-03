@@ -13,7 +13,7 @@ class LogoutCest
     /**
      * @var string
      */
-    private $endpoint = 'api/logout';
+    private $endpoint = 'api/v1/auth/logout';
 
     /**
      * @var string

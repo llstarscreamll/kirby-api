@@ -10,6 +10,7 @@ use Lcobucci\JWT\Parser;
 use llstarscreamll\Authentication\Actions\WebLoginProxyAction;
 use llstarscreamll\Authentication\Http\Requests\LoginRequest;
 use llstarscreamll\Authentication\Http\Requests\SignUpRequest;
+use llstarscreamll\Users\UI\API\Resources\UserResource;
 
 /**
  * Class ApiAuthenticationController.
@@ -19,21 +20,9 @@ use llstarscreamll\Authentication\Http\Requests\SignUpRequest;
 class ApiAuthenticationController extends Controller
 {
     /**
-     * @var array
-     */
-    private $baseData = [];
-
-    public function __construct()
-    {
-        $this->baseData = [
-            'client_id'     => config('authentication.clients.web.id'),
-            'client_secret' => config('authentication.clients.web.secret'),
-        ];
-    }
-
-    /**
-     * @param \llstarscreamll\Authentication\Http\Requests\LoginRequest  $request
-     * @param \llstarscreamll\Authentication\Actions\WebLoginProxyAction $action
+     * @param  \llstarscreamll\Authentication\Http\Requests\LoginRequest  $request
+     * @param  \llstarscreamll\Authentication\Actions\WebLoginProxyAction $action
+     * @return Illuminate\Http\Response
      */
     public function login(LoginRequest $request, WebLoginProxyAction $action)
     {
@@ -69,7 +58,8 @@ class ApiAuthenticationController extends Controller
     }
 
     /**
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request   $request
+     * @return Illuminate\Http\Response
      */
     public function logout(Request $request)
     {
@@ -89,8 +79,9 @@ class ApiAuthenticationController extends Controller
 
     /**
      * @todo El código de este controlador está repetido, se debe abstraer
-     * @param \llstarscreamll\Authentication\Http\Requests\SignUpRequest $request
-     * @param \llstarscreamll\Authentication\Actions\WebLoginProxyAction $action
+     * @param  \llstarscreamll\Authentication\Http\Requests\SignUpRequest $request
+     * @param  \llstarscreamll\Authentication\Actions\WebLoginProxyAction $action
+     * @return Illuminate\Http\Response
      */
     public function signUp(SignUpRequest $request, WebLoginProxyAction $action)
     {
@@ -129,5 +120,16 @@ class ApiAuthenticationController extends Controller
         return response($oAuthResponse['content'], $oAuthResponse['statusCode'])
             ->withCookie($authTokenCookie)
             ->withCookie($refreshTokenCookie);
+    }
+
+    /**
+     * @param  \Illuminate\Http\Request   $request
+     * @return Illuminate\Http\Response
+     */
+    public function getAuthUser(Request $request)
+    {
+        $user = $request->user()->load(['roles', 'permissions']);
+
+        return (new UserResource($user));
     }
 }

@@ -13,7 +13,7 @@ class SignUpCest
     /**
      * @var string
      */
-    private $endpoint = 'api/sign-up';
+    private $endpoint = 'api/v1/auth/sign-up';
 
     /**
      * @param ApiTester $I
