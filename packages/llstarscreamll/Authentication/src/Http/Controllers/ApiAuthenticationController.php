@@ -22,7 +22,7 @@ class ApiAuthenticationController extends Controller
     /**
      * @param  \llstarscreamll\Authentication\Http\Requests\LoginRequest  $request
      * @param  \llstarscreamll\Authentication\Actions\WebLoginProxyAction $action
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function login(LoginRequest $request, WebLoginProxyAction $action)
     {
@@ -58,8 +58,8 @@ class ApiAuthenticationController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request   $request
-     * @return Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request    $request
+     * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
     {
@@ -81,7 +81,7 @@ class ApiAuthenticationController extends Controller
      * @todo El código de este controlador está repetido, se debe abstraer
      * @param  \llstarscreamll\Authentication\Http\Requests\SignUpRequest $request
      * @param  \llstarscreamll\Authentication\Actions\WebLoginProxyAction $action
-     * @return Illuminate\Http\Response
+     * @return \Illuminate\Http\Response
      */
     public function signUp(SignUpRequest $request, WebLoginProxyAction $action)
     {
@@ -123,8 +123,8 @@ class ApiAuthenticationController extends Controller
     }
 
     /**
-     * @param  \Illuminate\Http\Request   $request
-     * @return Illuminate\Http\Response
+     * @param  \Illuminate\Http\Request    $request
+     * @return \Illuminate\Http\Response
      */
     public function getAuthUser(Request $request)
     {
