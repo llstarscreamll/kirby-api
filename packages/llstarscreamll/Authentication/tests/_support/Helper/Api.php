@@ -19,11 +19,13 @@ class Api extends \Codeception\Module
      */
     public function amLoggedAsAdminUser(string $guard = 'api'): User
     {
-        $adminUser = User::create([
+        $adminId = $this->getModule('Laravel5')->haveRecord('users', [
             'name'     => 'admin',
             'email'    => 'admin@admin.com',
             'password' => bcrypt('admin-password'),
         ]);
+
+        $adminUser = User::find($adminId);
 
         $adminUser->syncPermissions(Permission::all());
 
@@ -41,11 +43,13 @@ class Api extends \Codeception\Module
     public function amLoggedAsUser(User $user = null, string $guard = 'api'): User
     {
         if (is_null($user)) {
-            $user = User::create([
+            $userId = $this->getModule('Laravel5')->haveRecord('users', [
                 'name'     => 'guest user',
                 'email'    => 'guest@user.com',
                 'password' => bcrypt('guest-user-password'),
             ]);
+
+            $user = User::find($userId);
         }
 
         return $this->loginUser($user, $guard);
