@@ -1,10 +1,12 @@
 <?php
 namespace llstarscreamll\WorkShifts\UI\API\Controllers;
 
-use Illuminate\Http\Response;
 use llstarscreamll\Core\Http\Controller;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\WorkShifts\UI\API\Requests\CreateWorkShiftRequest;
+use llstarscreamll\WorkShifts\UI\API\Requests\DeleteWorkShiftRequest;
+use llstarscreamll\WorkShifts\UI\API\Requests\ShowWorkShiftRequest;
+use llstarscreamll\WorkShifts\UI\API\Requests\UpdateWorkShiftRequest;
 use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
 
 /**
@@ -27,9 +29,14 @@ class WorkShiftController extends Controller
         $this->workShiftRepository = $workShiftRepository;
     }
 
+    /**
+     * @return Illuminate\Http\Response
+     */
     public function index()
     {
-        //
+        $workShift = $this->workShiftRepository->search()->paginate();
+
+        return WorkShiftResource::collection($workShift);
     }
 
     /**
@@ -44,19 +51,36 @@ class WorkShiftController extends Controller
         return new WorkShiftResource($workShift);
     }
 
-    public function show()
+    /**
+     * @param \llstarscreamll\WorkShifts\UI\API\Requests\ShowWorkShiftRequest $request
+     * @param int                                                             $workShiftId
+     */
+    public function show(ShowWorkShiftRequest $request, $workShiftId)
     {
-        //
+        $workShift = $this->workShiftRepository->find($workShiftId);
+
+        return new WorkShiftResource($workShift);
     }
 
-    public function update()
+    /**
+     * @param \llstarscreamll\WorkShifts\UI\API\Requests\UpdateWorkShiftRequest $request
+     * @param int                                                               $workShiftId
+     */
+    public function update(UpdateWorkShiftRequest $request, $workShiftId)
     {
-        //
+        $workShift = $this->workShiftRepository->update($request->validated(), $workShiftId);
+
+        return new WorkShiftResource($workShift);
     }
 
-    public function destroy()
+    /**
+     * @param $workShiftId
+     */
+    public function destroy(DeleteWorkShiftRequest $request, $workShiftId)
     {
-        //
+        $this->workShiftRepository->delete($workShiftId);
+
+        return response()->json('', 204);
     }
 
 }

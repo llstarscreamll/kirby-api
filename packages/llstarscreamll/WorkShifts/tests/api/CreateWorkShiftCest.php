@@ -28,7 +28,7 @@ class CreateWorkShiftCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnOkIfWorkShiftIsCreatedSuccessfully(ApiTester $I)
+    public function whenRequestDataIsValidExpectCreatedWithResourceOnResponseAndDB(ApiTester $I)
     {
         $requestData = [
             'name'                                       => 'work shift one',
@@ -45,5 +45,16 @@ class CreateWorkShiftCest
         $I->seeResponseCodeIs(201);
         $I->seeResponseJsonMatchesJsonPath("$.data.id");
         $I->seeRecord('work_shifts', $requestData);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenRequestDataIsEmptyExpectUnprocesableEntity(ApiTester $I)
+    {
+        $I->sendPOST($this->endpoint, []);
+
+        $I->seeResponseCodeIs(422);
     }
 }

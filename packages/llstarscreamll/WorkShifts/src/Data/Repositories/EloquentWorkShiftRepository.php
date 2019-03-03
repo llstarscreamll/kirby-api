@@ -12,7 +12,17 @@ use llstarscreamll\WorkShifts\Models\WorkShift;
  */
 class EloquentWorkShiftRepository extends EloquentRepositoryAbstract implements WorkShiftRepositoryInterface
 {
-    public function model()
+    /**
+     * @var array
+     */
+    protected $allowedFilters = ['name'];
+
+    /**
+     * @var array
+     */
+    protected $allowedIncludes = [];
+
+    public function model(): string
     {
         return WorkShift::class;
     }
