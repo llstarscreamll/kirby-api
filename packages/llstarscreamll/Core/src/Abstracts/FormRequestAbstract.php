@@ -11,6 +11,16 @@ use Illuminate\Foundation\Http\FormRequest;
 class FormRequestAbstract extends FormRequest
 {
     /**
+     * Auth user must have ANY of the given roles or permissions.
+     *
+     * @var array
+     */
+    protected $access = [
+        'roles'       => [],
+        'permissions' => [],
+    ];
+
+    /**
      * @var array
      */
     protected $urlParameters = [];
@@ -31,7 +41,7 @@ class FormRequestAbstract extends FormRequest
     }
 
     /**
-     * Merge route params to the given array.
+     * Merge route params into $requestData.
      *
      * @param  array   $requestData
      * @return array
@@ -45,5 +55,23 @@ class FormRequestAbstract extends FormRequest
         }
 
         return $requestData;
+    }
+
+    /**
+     * Check if user has ANY roles OR permissions indicated in $this->access
+     * property.
+     *
+     * @return bool
+     */
+    protected function hasAccess(): bool
+    {
+        if (isset($this->access) && is_array($this->access)) {
+            $permissions = array_get($this->access, 'permissions', []);
+            $roles       = array_get($this->access, 'roles', []);
+
+            return $this->user()->hasAnyRole($roles) || $this->user()->hasAnyPermission($permissions);
+        }
+
+        return false;
     }
 }
