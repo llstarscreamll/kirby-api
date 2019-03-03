@@ -11,6 +11,16 @@ use llstarscreamll\Core\Abstracts\FormRequestAbstract;
 class UpdateWorkShiftRequest extends FormRequestAbstract
 {
     /**
+     * User must have ANY of this roles OR permissions to make this request.
+     *
+     * @var array
+     */
+    protected $access = [
+        'roles'       => [],
+        'permissions' => ['work-shift.update'],
+    ];
+
+    /**
      * @var array
      */
     protected $urlParameters = ['work_shift'];
@@ -22,7 +32,7 @@ class UpdateWorkShiftRequest extends FormRequestAbstract
      */
     public function authorize()
     {
-        return true;
+        return $this->hasAccess();
     }
 
     /**

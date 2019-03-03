@@ -20,7 +20,7 @@ class CreateWorkShiftCest
      */
     public function _before(ApiTester $I)
     {
-        $I->amLoggedAsUser();
+        $I->amLoggedAsAdminUser();
         $I->haveHttpHeader('Accept', 'application/json');
     }
 

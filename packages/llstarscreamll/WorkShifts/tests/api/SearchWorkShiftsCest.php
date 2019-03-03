@@ -53,7 +53,7 @@ class SearchWorkShiftsCest
         $I->haveRecord('work_shifts', $this->workShiftA);
         $I->haveRecord('work_shifts', $this->workShiftB);
 
-        $I->amLoggedAsUser();
+        $I->amLoggedAsAdminUser();
         $I->haveHttpHeader('Accept', 'application/json');
     }
 

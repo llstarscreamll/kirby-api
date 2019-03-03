@@ -37,7 +37,7 @@ class GetWorkShiftByIdCest
 
         $this->workShift['id'] = $I->haveRecord('work_shifts', $this->workShift);
 
-        $I->amLoggedAsUser();
+        $I->amLoggedAsAdminUser();
         $I->haveHttpHeader('Accept', 'application/json');
     }
 
