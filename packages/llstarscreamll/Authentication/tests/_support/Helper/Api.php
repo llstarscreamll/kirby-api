@@ -1,6 +1,7 @@
 <?php
 namespace Authentication\Helper;
 
+use llstarscreamll\Authorization\Models\Permission;
 use llstarscreamll\Users\Models\User;
 
 /**
@@ -11,40 +12,56 @@ use llstarscreamll\Users\Models\User;
 class Api extends \Codeception\Module
 {
     /**
-     * Create and log in the admin user.
+     * Create user, assign all existing permissions to him and login the user.
+     *
+     * @param  string                              $guard
+     * @return \llstarscreamll\Users\Models\User
+     */
+    public function amLoggedAsAdminUser(string $guard = 'api'): User
+    {
+        $adminUser = User::create([
+            'name'     => 'admin',
+            'email'    => 'admin@admin.com',
+            'password' => bcrypt('admin-password'),
+        ]);
+
+        $adminUser->syncPermissions(Permission::all());
+
+        return $this->amLoggedAsUser($adminUser, $guard);
+    }
+
+    /**
+     * Log in user the given user, if no user provided, then create a newly
+     * guest user without any permissions or roles.
      *
      * @param  \llstarscreamll\Users\Models\User|null $user
-     * @param  string                                 $driver
+     * @param  string                                 $guard
      * @return App\Containers\User\Models\User
      */
-    public function amLoggedAsUser(User $user = null, string $driver = 'api'): User
+    public function amLoggedAsUser(User $user = null, string $guard = 'api'): User
     {
-        if (is_array($user)) {
-            $user = User::create($user);
-        }
-
         if (is_null($user)) {
             $user = User::create([
-                'name'     => 'admin user',
-                'email'    => 'admin@admin.com',
-                'password' => bcrypt('admin'),
+                'name'     => 'guest user',
+                'email'    => 'guest@user.com',
+                'password' => bcrypt('guest-user-password'),
             ]);
         }
 
-        return $this->loginUser($user, $driver);
+        return $this->loginUser($user, $guard);
     }
 
     /**
      * Log in the given user on the given guard.
      *
      * @param  \llstarscreamll\Users\Models\User   $user
-     * @param  string                              $driver
+     * @param  string                              $guard
      * @return \llstarscreamll\Users\Models\User
      */
-    public function loginUser(User $user, string $driver = 'api'): User
+    public function loginUser(User $user, string $guard = 'api'): User
     {
-        app('auth')->guard($driver)->setUser($user);
-        app('auth')->shouldUse($driver);
+        app('auth')->guard($guard)->setUser($user);
+        app('auth')->shouldUse($guard);
 
         return $user;
     }
