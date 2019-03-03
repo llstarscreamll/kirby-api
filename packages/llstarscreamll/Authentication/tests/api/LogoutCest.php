@@ -34,15 +34,10 @@ class LogoutCest
     }
 
     /**
-     * @param ApiTester $I
-     */
-    public function _after(ApiTester $I) {}
-
-    /**
      * @test
      * @param ApiTester $I
      */
-    public function logoutSuccessfully(ApiTester $I)
+    public function whenBearerTokenIsValidExpectAcceptedWithMessage(ApiTester $I)
     {
         $I->amLoggedAsUser();
         $I->haveHttpHeader('Authorization', 'Bearer '.$this->accessToken);

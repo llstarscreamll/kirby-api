@@ -47,7 +47,7 @@ class SignUpCest
      * @test
      * @param ApiTester $I
      */
-    public function createAccountSuccessfully(ApiTester $I)
+    public function whenRequestDataIsValidExpectOkWithAccessAndRefreshTokensAndUserTobeCreated(ApiTester $I)
     {
         $I->sendPOST($this->endpoint, [
             'name'                  => 'John Doe',
@@ -76,7 +76,7 @@ class SignUpCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnprocesableEntityIfRequiredDataIsMissed(ApiTester $I)
+    public function whenFieldsAreEmptyExpectUnprocesableEntity(ApiTester $I)
     {
         $I->sendPOST($this->endpoint, ['name' => '', 'email' => '', 'password' => '']);
 
@@ -87,7 +87,7 @@ class SignUpCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnprocesableEntityIfEmailIsAlreadyTakenByAnotherUser(ApiTester $I)
+    public function whenGivenEmailIsAlreadyTakenByAnotherUserExpectUnprocesableEntity(ApiTester $I)
     {
         $I->haveRecord('users', [
             'name'     => 'John Doe',

@@ -54,7 +54,7 @@ class LoginCest
      * @test
      * @param ApiTester $I
      */
-    public function loginSuccessfully(ApiTester $I)
+    public function whenCredentialsAreValidExpectOkWithAccessTokenAndRefreshToken(ApiTester $I)
     {
         $I->sendPOST($this->endpoint, [
             'email'    => 'john@doe.com',
@@ -76,7 +76,7 @@ class LoginCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnprocesableEntityIfMissedEmailAndPassword(ApiTester $I)
+    public function whenEmailAndPasswordAreEmptyExpectUnprocesableEntity(ApiTester $I)
     {
         $I->sendPOST($this->endpoint, ['email' => '', 'password' => '']);
 
@@ -87,7 +87,7 @@ class LoginCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnauthorizedIfCredentialsAreWrong(ApiTester $I)
+    public function whenPasswordDoesNotMatchExpectUnauthorizedWithMessageAndErrorOnResponse(ApiTester $I)
     {
         $I->sendPOST($this->endpoint, ['email' => 'foo@email.com', 'password' => '123456']);
 
