@@ -128,7 +128,11 @@ class ApiAuthenticationController extends Controller
      */
     public function getAuthUser(Request $request)
     {
-        $user = $request->user()->load(['roles', 'permissions']);
+        $user = $request->user()->load([
+            'roles:id,name',
+            'roles.permissions:name',
+            'permissions:id,name',
+        ]);
 
         return (new UserResource($user));
     }
