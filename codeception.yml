@@ -10,3 +10,4 @@ include:
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
+        - Codeception\Extension\DotReporter
