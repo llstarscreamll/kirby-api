@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "611cd3aa3096e1ea25a4e766207bc0ec",
+    "content-hash": "bac74fde686f456bd18e1ca073017ba5",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1858,6 +1858,53 @@
                 "Laravel",
                 "WorkShifts"
             ]
+        },
+        {
+            "name": "makeabledk/laravel-factory-enhanced",
+            "version": "v1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/makeabledk/laravel-factory-enhanced.git",
+                "reference": "cd9b0abf2930a1df21430d0835f8cd66d6dc3f8a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/makeabledk/laravel-factory-enhanced/zipball/cd9b0abf2930a1df21430d0835f8cd66d6dc3f8a",
+                "reference": "cd9b0abf2930a1df21430d0835f8cd66d6dc3f8a",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^5.5",
+                "illuminate/support": "^5.5",
+                "php": ">=7.1.0"
+            },
+            "require-dev": {
+                "codedungeon/phpunit-result-printer": "^0.26.0",
+                "doctrine/dbal": "^2.5",
+                "laravel/laravel": "5.5.*",
+                "mockery/mockery": "^1.1",
+                "nunomaduro/collision": "^1.1",
+                "orchestra/testbench": "^3.5",
+                "phpunit/phpunit": "^6.0|^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Makeable\\LaravelFactory\\FactoryServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Makeable\\LaravelFactory\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "CC-BY-SA-4.0"
+            ],
+            "time": "2019-03-22T09:10:48+00:00"
         },
         {
             "name": "monolog/monolog",

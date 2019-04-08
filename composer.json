@@ -22,9 +22,9 @@
         "llstarscreamll/laravel-authentication": "*",
         "llstarscreamll/laravel-authorization": "*",
         "llstarscreamll/laravel-core": "*",
+        "llstarscreamll/laravel-time-clock": "*",
         "llstarscreamll/laravel-users": "*",
         "llstarscreamll/laravel-work-shifts": "*",
-        "llstarscreamll/laravel-time-clock": "*",
         "wikimedia/composer-merge-plugin": "^1.4"
     },
     "require-dev": {
