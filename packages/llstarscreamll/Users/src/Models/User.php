@@ -33,4 +33,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * @return mixed
+     */
+    public function identifications()
+    {
+        return $this->hasMany(Identification::class);
+    }
 }
