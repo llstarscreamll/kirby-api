@@ -15,7 +15,8 @@
         "TimeClock"
     ],
     "require": {
-        "illuminate/support": "~5"
+        "illuminate/support": "~5",
+        "makeabledk/laravel-factory-enhanced": "^1.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",
