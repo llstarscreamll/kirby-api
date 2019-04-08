@@ -24,6 +24,7 @@
         "llstarscreamll/laravel-core": "*",
         "llstarscreamll/laravel-users": "*",
         "llstarscreamll/laravel-work-shifts": "*",
+        "llstarscreamll/laravel-time-clock": "*",
         "wikimedia/composer-merge-plugin": "^1.4"
     },
     "require-dev": {

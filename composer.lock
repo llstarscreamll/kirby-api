@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "896b16d0beb67516ca3ade5e4b1ea1e7",
+    "content-hash": "611cd3aa3096e1ea25a4e766207bc0ec",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1691,6 +1691,62 @@
             "keywords": [
                 "Core",
                 "Laravel"
+            ]
+        },
+        {
+            "name": "llstarscreamll/laravel-time-clock",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./packages/llstarscreamll/TimeClock",
+                "reference": "328596417b4b6da5280a53c9dd612d80653ab747",
+                "shasum": null
+            },
+            "require": {
+                "illuminate/support": "~5"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.1",
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "~7.0",
+                "sempro/phpunit-pretty-print": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "llstarscreamll\\TimeClock\\TimeClockServiceProvider"
+                    ],
+                    "aliases": {
+                        "TimeClock": "llstarscreamll\\TimeClock\\Facades\\TimeClock"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "llstarscreamll\\TimeClock\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "llstarscreamll\\TimeClock\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "license"
+            ],
+            "authors": [
+                {
+                    "name": "Johan Alvarez",
+                    "email": "llstarscreamll@hotmail.com",
+                    "homepage": "https://github.com/llstarscreamll"
+                }
+            ],
+            "description": ":description",
+            "homepage": "https://github.com/llstarscreamll/laravel-time-clock",
+            "keywords": [
+                "Laravel",
+                "TimeClock"
             ]
         },
         {
