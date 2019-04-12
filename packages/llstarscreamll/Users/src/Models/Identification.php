@@ -23,10 +23,24 @@ class Identification extends Model
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
+    /**
+     * Related user.
+     *
+     * @return mixed
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 }
