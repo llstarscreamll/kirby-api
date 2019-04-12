@@ -30,6 +30,15 @@ class CreateWorkShiftsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
         });
+
+        Schema::create('user_work_shift', function (Blueprint $table) {
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('work_shift_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('work_shift_id')->references('id')->on('work_shifts')->onDelete('cascade');
+            $table->primary(['user_id', 'work_shift_id']);
+            $table->timestamps();
+        });
     }
 
     /**
