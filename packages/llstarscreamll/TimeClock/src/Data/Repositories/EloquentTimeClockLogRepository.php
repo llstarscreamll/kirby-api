@@ -1,0 +1,42 @@
+<?php
+namespace llstarscreamll\TimeClock\Data\Repositories;
+
+use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
+use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\Models\TimeClockLog;
+
+/**
+ * Class EloquentTimeClockLogRepository.
+ *
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ */
+class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implements TimeClockLogRepositoryInterface
+{
+    /**
+     * @var array
+     */
+    protected $allowedFilters = ['name'];
+
+    /**
+     * @var array
+     */
+    protected $allowedIncludes = [];
+
+    public function model(): string
+    {
+        return TimeClockLog::class;
+    }
+
+    /**
+     * @param  int    $userId
+     * @return null
+     */
+    public function lastCheckInFromUserId(int $userId, array $columns = ['*'])
+    {
+        return $this->model->where(['employee_id' => $userId])
+                    ->whereNotNull('checked_in_at')
+                    ->whereNull('checked_out_at')
+                    ->orderBy('created_at', 'desc')
+                    ->first($columns);
+    }
+}
