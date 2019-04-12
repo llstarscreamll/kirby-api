@@ -1,11 +1,24 @@
 <?php
 namespace llstarscreamll\Users;
 
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\Users\Data\Repositories\EloquentIdentificationRepository;
 
+/**
+ * Class UsersServiceProvider.
+ *
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ */
 class UsersServiceProvider extends ServiceProvider
 {
+    /**
+     * @var array
+     */
+    private $binds = [
+        IdentificationRepositoryInterface::class => EloquentIdentificationRepository::class,
+    ];
+
     /**
      * Perform post-registration booting of services.
      *
@@ -17,7 +30,6 @@ class UsersServiceProvider extends ServiceProvider
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
-        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -38,6 +50,10 @@ class UsersServiceProvider extends ServiceProvider
         $this->app->singleton('users', function ($app) {
             return new Users();
         });
+
+        foreach ($this->binds as $abstract => $concrete) {
+            $this->app->bind($abstract, $concrete);
+        }
     }
 
     /**
@@ -57,6 +73,8 @@ class UsersServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
+
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/users.php' => config_path('users.php'),
