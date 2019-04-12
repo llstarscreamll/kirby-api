@@ -38,4 +38,17 @@ class WorkShift extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'grace_minutes_for_start_time' => 'real',
+        'grace_minutes_for_end_time' => 'real',
+        'meal_time_in_minutes' => 'real',
+        'min_minutes_required_to_discount_meal_time' => 'real',
+    ];
+
 }
