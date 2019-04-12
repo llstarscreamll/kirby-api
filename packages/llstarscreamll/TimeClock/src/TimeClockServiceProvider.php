@@ -1,10 +1,25 @@
 <?php
 namespace llstarscreamll\TimeClock;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\Data\Repositories\EloquentTimeClockLogRepository;
 
+/**
+ * Class TimeClockServiceProvider.
+ *
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ */
 class TimeClockServiceProvider extends ServiceProvider
 {
+    /**
+     * @var array
+     */
+    private $binds = [
+        TimeClockLogRepositoryInterface::class => EloquentTimeClockLogRepository::class,
+    ];
+
     /**
      * Perform post-registration booting of services.
      *
@@ -15,7 +30,7 @@ class TimeClockServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/Routes/v1.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -36,6 +51,10 @@ class TimeClockServiceProvider extends ServiceProvider
         $this->app->singleton('TimeClock', function ($app) {
             return new TimeClock();
         });
+
+        foreach ($this->binds as $abstract => $concrete) {
+            $this->app->bind($abstract, $concrete);
+        }
     }
 
     /**
@@ -55,6 +74,8 @@ class TimeClockServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/Data/Factories');
+
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/time-clock.php' => config_path('time-clock.php'),
