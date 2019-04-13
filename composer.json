@@ -37,7 +37,8 @@
         "phpunit/phpunit": "^7.0",
         "codeception/codeception": "^2.5",
         "flow/jsonpath": "0.3.0",
-        "codeception/mockery-module": "^0.2.3"
+        "codeception/mockery-module": "^0.2.3",
+        "makeabledk/laravel-factory-enhanced": "^1.2"
     },
     "autoload": {
         "classmap": [
