@@ -1,6 +1,7 @@
 <?php
 namespace llstarscreamll\Users;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Users\Data\Repositories\EloquentIdentificationRepository;
