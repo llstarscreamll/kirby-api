@@ -5,4 +5,4 @@
 [![Code Intelligence Status](https://scrutinizer-ci.com/g/llstarscreamll/laravel/badges/code-intelligence.svg?b=develop)](https://scrutinizer-ci.com/code-intelligence)
 [![Build Status](https://scrutinizer-ci.com/g/llstarscreamll/laravel/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/llstarscreamll/laravel/build-status/develop)
 
-this project aims to be as a base for Laravel packages development used for multipurpose stuff, since I'm tired to writing the same things over and over again. The laravel libraries are located on the packages folder under de llstarscreaml vendor name.
+this project aims to be as a base for Laravel packages development used for multipurpose stuff, since I'm tired to writing the same things over and over again. The laravel libraries are located on the packages folder under de llstarscreamll vendor name.
