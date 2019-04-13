@@ -1,8 +1,9 @@
 language: php
+
 matrix:
   fast_finish: true
+
 php:
-  - 7.1
   - 7.2
   - 7.3
 
@@ -10,9 +11,6 @@ cache:
   directories:
     - vendor
     - $HOME/.composer/cache
-
-services:
-  - sqlite
 
 install:
   - composer install
