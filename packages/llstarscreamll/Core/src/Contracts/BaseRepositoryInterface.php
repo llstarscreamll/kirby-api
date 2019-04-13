@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Core\Contracts;
 
 /**
@@ -8,9 +9,8 @@ namespace llstarscreamll\Core\Contracts;
  */
 interface BaseRepositoryInterface
 {
-
     /**
-     * Retrieve data array for populate field select
+     * Retrieve data array for populate field select.
      *
      * @param  string                                 $column
      * @param  string|null                            $key
@@ -20,7 +20,7 @@ interface BaseRepositoryInterface
 
     /**
      * Retrieve data array for populate field select
-     * Compatible with Laravel 5.3
+     * Compatible with Laravel 5.3.
      * @param  string                                 $column
      * @param  string|null                            $key
      * @return \Illuminate\Support\Collection|array
@@ -28,7 +28,7 @@ interface BaseRepositoryInterface
     public function pluck($column, $key = null);
 
     /**
-     * Sync relations
+     * Sync relations.
      *
      * @param  $id
      * @param  $relation
@@ -39,7 +39,7 @@ interface BaseRepositoryInterface
     public function sync($id, $relation, $attributes, $detaching = true);
 
     /**
-     * SyncWithoutDetaching
+     * SyncWithoutDetaching.
      *
      * @param  $id
      * @param  $relation
@@ -49,7 +49,7 @@ interface BaseRepositoryInterface
     public function syncWithoutDetaching($id, $relation, $attributes);
 
     /**
-     * Retrieve all data of repository
+     * Retrieve all data of repository.
      *
      * @param  array   $columns
      * @return mixed
@@ -57,7 +57,7 @@ interface BaseRepositoryInterface
     public function all($columns = ['*']);
 
     /**
-     * Retrieve all data of repository, paginated
+     * Retrieve all data of repository, paginated.
      *
      * @param  null    $limit
      * @param  array   $columns
@@ -66,7 +66,7 @@ interface BaseRepositoryInterface
     public function paginate($limit = null, $columns = ['*']);
 
     /**
-     * Retrieve all data of repository, simple paginated
+     * Retrieve all data of repository, simple paginated.
      *
      * @param  null    $limit
      * @param  array   $columns
@@ -75,7 +75,7 @@ interface BaseRepositoryInterface
     public function simplePaginate($limit = null, $columns = ['*']);
 
     /**
-     * Find data by id
+     * Find data by id.
      *
      * @param  $id
      * @param  array   $columns
@@ -84,7 +84,7 @@ interface BaseRepositoryInterface
     public function find($id, $columns = ['*']);
 
     /**
-     * Find data by field and value
+     * Find data by field and value.
      *
      * @param  $field
      * @param  $value
@@ -94,7 +94,7 @@ interface BaseRepositoryInterface
     public function findByField($field, $value, $columns = ['*']);
 
     /**
-     * Find data by multiple fields
+     * Find data by multiple fields.
      *
      * @param  array   $where
      * @param  array   $columns
@@ -103,7 +103,7 @@ interface BaseRepositoryInterface
     public function findWhere(array $where, $columns = ['*']);
 
     /**
-     * Find data by multiple values in one field
+     * Find data by multiple values in one field.
      *
      * @param  $field
      * @param  array    $values
@@ -113,7 +113,7 @@ interface BaseRepositoryInterface
     public function findWhereIn($field, array $values, $columns = ['*']);
 
     /**
-     * Find data by excluding multiple values in one field
+     * Find data by excluding multiple values in one field.
      *
      * @param  $field
      * @param  array    $values
@@ -123,7 +123,7 @@ interface BaseRepositoryInterface
     public function findWhereNotIn($field, array $values, $columns = ['*']);
 
     /**
-     * Save a new entity in repository
+     * Save a new entity in repository.
      *
      * @param  array   $attributes
      * @return mixed
@@ -131,7 +131,7 @@ interface BaseRepositoryInterface
     public function create(array $attributes);
 
     /**
-     * Update a entity in repository by id
+     * Update a entity in repository by id.
      *
      * @param  array   $attributes
      * @param  $id
@@ -140,7 +140,7 @@ interface BaseRepositoryInterface
     public function update(array $attributes, $id);
 
     /**
-     * Update or Create an entity in repository
+     * Update or Create an entity in repository.
      *
      * @param  array                $attributes
      * @param  array                $values
@@ -150,7 +150,7 @@ interface BaseRepositoryInterface
     public function updateOrCreate(array $attributes, array $values = []);
 
     /**
-     * Delete a entity in repository by id
+     * Delete a entity in repository by id.
      *
      * @param  $id
      * @return int
@@ -158,7 +158,7 @@ interface BaseRepositoryInterface
     public function delete($id);
 
     /**
-     * Order collection by a given column
+     * Order collection by a given column.
      *
      * @param  string  $column
      * @param  string  $direction
@@ -167,7 +167,7 @@ interface BaseRepositoryInterface
     public function orderBy($column, $direction = 'asc');
 
     /**
-     * Load relations
+     * Load relations.
      *
      * @param  $relations
      * @return $this
@@ -175,7 +175,7 @@ interface BaseRepositoryInterface
     public function with($relations);
 
     /**
-     * Load relation with closure
+     * Load relation with closure.
      *
      * @param  string  $relation
      * @param  closure $closure
@@ -197,7 +197,7 @@ interface BaseRepositoryInterface
     public function search();
 
     /**
-     * Query Scope
+     * Query Scope.
      *
      * @param  \Closure $scope
      * @return $this
@@ -205,7 +205,7 @@ interface BaseRepositoryInterface
     public function scopeQuery(\Closure $scope);
 
     /**
-     * Reset Query Scope
+     * Reset Query Scope.
      *
      * @return $this
      */
@@ -219,7 +219,7 @@ interface BaseRepositoryInterface
     public function getAllowedFilters();
 
     /**
-     * Retrieve first data of repository, or return new Entity
+     * Retrieve first data of repository, or return new Entity.
      *
      * @param  array   $attributes
      * @return mixed
@@ -227,7 +227,7 @@ interface BaseRepositoryInterface
     public function firstOrNew(array $attributes = []);
 
     /**
-     * Retrieve first data of repository, or create new Entity
+     * Retrieve first data of repository, or create new Entity.
      *
      * @param  array   $attributes
      * @return mixed

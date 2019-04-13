@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\WorkShifts\UI\API\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;

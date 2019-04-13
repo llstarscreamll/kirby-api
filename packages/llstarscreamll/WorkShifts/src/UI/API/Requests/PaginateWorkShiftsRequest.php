@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\WorkShifts\UI\API\Requests;
 
 use llstarscreamll\Core\Abstracts\FormRequestAbstract;

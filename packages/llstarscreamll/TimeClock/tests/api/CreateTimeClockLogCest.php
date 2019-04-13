@@ -1,7 +1,7 @@
 <?php
+
 namespace ClockTime;
 
-use ClockTime\ApiTester;
 use Illuminate\Support\Carbon;
 use llstarscreamll\Users\Models\User;
 
@@ -54,7 +54,7 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(201);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
@@ -92,7 +92,7 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,

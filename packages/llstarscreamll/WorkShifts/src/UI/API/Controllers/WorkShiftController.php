@@ -1,13 +1,14 @@
 <?php
+
 namespace llstarscreamll\WorkShifts\UI\API\Controllers;
 
 use llstarscreamll\Core\Http\Controller;
+use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
+use llstarscreamll\WorkShifts\UI\API\Requests\ShowWorkShiftRequest;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\WorkShifts\UI\API\Requests\CreateWorkShiftRequest;
 use llstarscreamll\WorkShifts\UI\API\Requests\DeleteWorkShiftRequest;
-use llstarscreamll\WorkShifts\UI\API\Requests\ShowWorkShiftRequest;
 use llstarscreamll\WorkShifts\UI\API\Requests\UpdateWorkShiftRequest;
-use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
 
 /**
  * Class WorkShiftController.
@@ -46,7 +47,7 @@ class WorkShiftController extends Controller
     public function store(CreateWorkShiftRequest $request)
     {
         $workShiftData = $request->validated();
-        $workShift     = $this->workShiftRepository->create($workShiftData);
+        $workShift = $this->workShiftRepository->create($workShiftData);
 
         return new WorkShiftResource($workShift);
     }
@@ -82,5 +83,4 @@ class WorkShiftController extends Controller
 
         return response()->json('', 204);
     }
-
 }

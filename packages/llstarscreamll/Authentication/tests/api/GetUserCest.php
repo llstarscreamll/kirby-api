@@ -1,7 +1,6 @@
 <?php
-namespace Authentication;
 
-use Authentication\ApiTester;
+namespace Authentication;
 
 /**
  * Class GetUserCest.
@@ -33,9 +32,9 @@ class GetUserCest
         $I->sendGET($this->endpoint);
 
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
-        $I->seeResponseJsonMatchesJsonPath("$.data.name");
-        $I->seeResponseJsonMatchesJsonPath("$.data.roles");
-        $I->seeResponseJsonMatchesJsonPath("$.data.permissions");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeResponseJsonMatchesJsonPath('$.data.name');
+        $I->seeResponseJsonMatchesJsonPath('$.data.roles');
+        $I->seeResponseJsonMatchesJsonPath('$.data.permissions');
     }
 }

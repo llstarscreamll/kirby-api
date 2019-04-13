@@ -1,13 +1,14 @@
 <?php
+
 namespace llstarscreamll\Core\Abstracts;
 
+use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use llstarscreamll\Core\Filters\QuerySearchFilter;
 use llstarscreamll\Core\Exceptions\RepositoryException;
 use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
-use Spatie\QueryBuilder\Filter;
 
 /**
  * Class EloquentRepositoryAbstract.
@@ -42,7 +43,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Specify Model class name
+     * Specify Model class name.
      *
      * @return string
      */
@@ -64,7 +65,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     {
         $model = app($this->model());
 
-        if (!$model instanceof Model) {
+        if (! $model instanceof Model) {
             throw new RepositoryException("Class {$this->model()} must be an instance of ".Model::class);
         }
 
@@ -82,7 +83,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Query Scope
+     * Query Scope.
      *
      * @param  \Closure $scope
      * @return $this
@@ -95,7 +96,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Retrieve data array for populate field select
+     * Retrieve data array for populate field select.
      *
      * @param  string                                 $column
      * @param  string|null                            $key
@@ -103,25 +104,23 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
      */
     public function lists($column, $key = null)
     {
-
         return $this->model->lists($column, $key);
     }
 
     /**
      * Retrieve data array for populate field select
-     * Compatible with Laravel 5.3
+     * Compatible with Laravel 5.3.
      * @param  string                                 $column
      * @param  string|null                            $key
      * @return \Illuminate\Support\Collection|array
      */
     public function pluck($column, $key = null)
     {
-
         return $this->model->pluck($column, $key);
     }
 
     /**
-     * Sync relations
+     * Sync relations.
      *
      * @param  $id
      * @param  $relation
@@ -135,7 +134,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * SyncWithoutDetaching
+     * SyncWithoutDetaching.
      *
      * @param  $id
      * @param  $relation
@@ -148,7 +147,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Retrieve all data of repository
+     * Retrieve all data of repository.
      *
      * @param  array   $columns
      * @return mixed
@@ -170,7 +169,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Alias of All method
+     * Alias of All method.
      *
      * @param  array   $columns
      * @return mixed
@@ -181,7 +180,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Retrieve first data of repository
+     * Retrieve first data of repository.
      *
      * @param  array   $columns
      * @return mixed
@@ -198,7 +197,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Retrieve first data of repository, or return new Entity
+     * Retrieve first data of repository, or return new Entity.
      *
      * @param  array   $attributes
      * @return mixed
@@ -215,7 +214,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Retrieve first data of repository, or create new Entity
+     * Retrieve first data of repository, or create new Entity.
      *
      * @param  array   $attributes
      * @return mixed
@@ -232,17 +231,17 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Retrieve all data of repository, paginated
+     * Retrieve all data of repository, paginated.
      *
      * @param  null    $limit
      * @param  array   $columns
      * @param  string  $method
      * @return mixed
      */
-    public function paginate($limit = null, $columns = ['*'], $method = "paginate")
+    public function paginate($limit = null, $columns = ['*'], $method = 'paginate')
     {
         $this->applyScope();
-        $limit   = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
+        $limit = is_null($limit) ? config('repository.pagination.limit', 15) : $limit;
         $results = $this->model->{$method}($limit, $columns);
         $results->appends(app('request')->query());
         $this->resetModel();
@@ -251,7 +250,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Retrieve all data of repository, simple paginated
+     * Retrieve all data of repository, simple paginated.
      *
      * @param  null    $limit
      * @param  array   $columns
@@ -259,11 +258,11 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
      */
     public function simplePaginate($limit = null, $columns = ['*'])
     {
-        return $this->paginate($limit, $columns, "simplePaginate");
+        return $this->paginate($limit, $columns, 'simplePaginate');
     }
 
     /**
-     * Find data by id
+     * Find data by id.
      *
      * @param  $id
      * @param  array   $columns
@@ -279,7 +278,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Find data by field and value
+     * Find data by field and value.
      *
      * @param  $field
      * @param  $value
@@ -296,7 +295,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Find data by multiple fields
+     * Find data by multiple fields.
      *
      * @param  array   $where
      * @param  array   $columns
@@ -315,7 +314,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Find data by multiple values in one field
+     * Find data by multiple values in one field.
      *
      * @param  $field
      * @param  array    $values
@@ -332,7 +331,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Find data by excluding multiple values in one field
+     * Find data by excluding multiple values in one field.
      *
      * @param  $field
      * @param  array    $values
@@ -349,7 +348,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Save a new entity in repository
+     * Save a new entity in repository.
      *
      * @param  array                $attributes
      * @throws ValidatorException
@@ -365,7 +364,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Update a entity in repository by id
+     * Update a entity in repository by id.
      *
      * @param  array                $attributes
      * @param  $id
@@ -386,7 +385,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Update or Create an entity in repository
+     * Update or Create an entity in repository.
      *
      * @param  array                $attributes
      * @param  array                $values
@@ -405,7 +404,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Delete a entity in repository by id
+     * Delete a entity in repository by id.
      *
      * @param  $id
      * @return int
@@ -443,7 +442,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Check if entity has relation
+     * Check if entity has relation.
      *
      * @param  string  $relation
      * @return $this
@@ -456,7 +455,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Load relations
+     * Load relations.
      *
      * @param  array|string $relations
      * @return $this
@@ -482,7 +481,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Load relation with closure
+     * Load relation with closure.
      *
      * @param  string  $relation
      * @param  closure $closure
@@ -506,7 +505,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
         $query = $this->model instanceof Builder
             ? $this->model
             : $this->model->query();
-        
+
         $allowedFilters = $enableQuerySearchFilter
             ? array_merge($this->allowedFilters, [Filter::custom('search', new QuerySearchFilter($this->allowedFilters))])
             : $this->allowedFilters;
@@ -541,7 +540,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
         foreach ($where as $field => $value) {
             if (is_array($value)) {
                 list($field, $condition, $val) = $value;
-                $this->model                   = $this->model->where($field, $condition, $val);
+                $this->model = $this->model->where($field, $condition, $val);
             } else {
                 $this->model = $this->model->where($field, '=', $value);
             }
@@ -549,7 +548,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Reset Query Scope
+     * Reset Query Scope.
      *
      * @return $this
      */
@@ -561,14 +560,14 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     }
 
     /**
-     * Apply scope in current Query
+     * Apply scope in current Query.
      *
      * @return $this
      */
     protected function applyScope()
     {
         if (isset($this->scopeQuery) && is_callable($this->scopeQuery)) {
-            $callback    = $this->scopeQuery;
+            $callback = $this->scopeQuery;
             $this->model = $callback($this->model);
         }
 

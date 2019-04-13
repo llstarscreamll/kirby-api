@@ -1,14 +1,15 @@
 <?php
+
 namespace llstarscreamll\Users\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
-use llstarscreamll\TimeClock\Models\TimeClockLog;
-use llstarscreamll\WorkShifts\Models\WorkShift;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use llstarscreamll\WorkShifts\Models\WorkShift;
+use llstarscreamll\TimeClock\Models\TimeClockLog;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
  * Class User.

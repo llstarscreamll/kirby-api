@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Authorization;
 
 use Illuminate\Support\ServiceProvider;

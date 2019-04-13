@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Core\Abstracts;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -48,7 +49,7 @@ class FormRequestAbstract extends FormRequest
      */
     private function mergeUrlParametersToRequestData(array $requestData): array
     {
-        if (isset($this->urlParameters) && !empty($this->urlParameters)) {
+        if (isset($this->urlParameters) && ! empty($this->urlParameters)) {
             foreach ($this->urlParameters as $param) {
                 $requestData[$param] = $this->route($param);
             }
@@ -67,7 +68,7 @@ class FormRequestAbstract extends FormRequest
     {
         if (isset($this->access) && is_array($this->access)) {
             $permissions = array_get($this->access, 'permissions', []);
-            $roles       = array_get($this->access, 'roles', []);
+            $roles = array_get($this->access, 'roles', []);
 
             return $this->user()->hasAnyRole($roles) || $this->user()->hasAnyPermission($permissions);
         }

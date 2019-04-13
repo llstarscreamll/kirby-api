@@ -1,4 +1,5 @@
 <?php
+
 namespace ClockTime\Helper;
 
 // here you can define custom actions
@@ -6,5 +7,4 @@ namespace ClockTime\Helper;
 
 class Api extends \Codeception\Module
 {
-
 }

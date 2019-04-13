@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\TimeClock\Contracts;
 
 use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
@@ -10,5 +11,4 @@ use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
  */
 interface TimeClockLogRepositoryInterface extends BaseRepositoryInterface
 {
-
 }

@@ -1,7 +1,6 @@
 <?php
-namespace WorkShifts;
 
-use WorkShifts\ApiTester;
+namespace WorkShifts;
 
 /**
  * Class CreateWorkShiftCest.
@@ -43,7 +42,7 @@ class CreateWorkShiftCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(201);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('work_shifts', $requestData);
     }
 

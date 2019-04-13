@@ -1,7 +1,6 @@
 <?php
-namespace WorkShifts;
 
-use WorkShifts\ApiTester;
+namespace WorkShifts;
 
 /**
  * Class SearchWorkShiftsCest.
@@ -66,10 +65,10 @@ class SearchWorkShiftsCest
         $I->sendGET($this->endpoint);
 
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.0");
-        $I->seeResponseJsonMatchesJsonPath("$.data.1");
-        $I->seeResponseJsonMatchesJsonPath("$.meta");
-        $I->seeResponseJsonMatchesJsonPath("$.links");
+        $I->seeResponseJsonMatchesJsonPath('$.data.0');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1');
+        $I->seeResponseJsonMatchesJsonPath('$.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.links');
     }
 
     /**
@@ -81,9 +80,9 @@ class SearchWorkShiftsCest
         $I->sendGET($this->endpoint, ['filter' => ['search' => $this->workShiftA['name']]]);
 
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.0");
-        $I->dontSeeResponseJsonMatchesJsonPath("$.data.1");
-        $I->seeResponseJsonMatchesJsonPath("$.meta");
-        $I->seeResponseJsonMatchesJsonPath("$.links");
+        $I->seeResponseJsonMatchesJsonPath('$.data.0');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.1');
+        $I->seeResponseJsonMatchesJsonPath('$.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.links');
     }
 }

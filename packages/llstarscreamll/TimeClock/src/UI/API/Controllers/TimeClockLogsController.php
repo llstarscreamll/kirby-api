@@ -1,13 +1,14 @@
 <?php
+
 namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Auth\Guard;
 use llstarscreamll\Core\Http\Controller;
-use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 
 /**
  * Class TimeClockLogsController.
@@ -16,7 +17,6 @@ use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
  */
 class TimeClockLogsController extends Controller
 {
-
     /**
      * @var \llstarscreamll\Users\Contracts\IdentificationRepositoryInterface
      */
@@ -70,7 +70,7 @@ class TimeClockLogsController extends Controller
                                ->findByField('code', $request->identification_code)
                                ->first();
 
-        if (!$identification) {
+        if (! $identification) {
             throw new ModelNotFoundException();
         }
 

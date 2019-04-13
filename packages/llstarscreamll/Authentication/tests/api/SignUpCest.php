@@ -1,7 +1,6 @@
 <?php
-namespace Authentication;
 
-use Authentication\ApiTester;
+namespace Authentication;
 
 /**
  * Class SignUpCest.
@@ -41,7 +40,9 @@ class SignUpCest
     /**
      * @param ApiTester $I
      */
-    public function _after(ApiTester $I) {}
+    public function _after(ApiTester $I)
+    {
+    }
 
     /**
      * @test
@@ -58,10 +59,10 @@ class SignUpCest
 
         $I->seeResponseCodeIs(200);
 
-        $I->seeResponseJsonMatchesJsonPath("$.token_type");
-        $I->seeResponseJsonMatchesJsonPath("$.expires_in");
-        $I->seeResponseJsonMatchesJsonPath("$.access_token");
-        $I->seeResponseJsonMatchesJsonPath("$.refresh_token");
+        $I->seeResponseJsonMatchesJsonPath('$.token_type');
+        $I->seeResponseJsonMatchesJsonPath('$.expires_in');
+        $I->seeResponseJsonMatchesJsonPath('$.access_token');
+        $I->seeResponseJsonMatchesJsonPath('$.refresh_token');
 
         $I->seeCookie('accessToken');
         $I->seeCookie('refreshToken');
