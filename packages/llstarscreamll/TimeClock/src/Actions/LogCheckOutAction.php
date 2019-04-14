@@ -2,6 +2,7 @@
 namespace llstarscreamll\TimeClock\Actions;
 
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Users\Models\User;
@@ -36,14 +37,15 @@ class LogCheckOutAction
     }
 
     /**
-     * @param User   $registrar
-     * @param string $identificationCode
+     * @param  User                    $registrar
+     * @param  string                  $identificationCode
+     * @throws MissingCheckInException if there is no check in found to log the check out action
      */
     public function run(User $registrar, string $identificationCode): TimeClockLog
     {
         $identification = $this->identificationRepository
                                ->with(['user.workShifts'])
-                               ->findByField('code', $identificationCode)
+                               ->findByField('code', $identificationCode, ['id', 'user_id'])
                                ->first();
 
         $timeClockLogUpdate = [
@@ -52,6 +54,10 @@ class LogCheckOutAction
         ];
 
         $timeClockLog = $this->timeClockLogRepository->lastCheckInFromUserId($identification->user_id, ['id']);
+
+        if (!$timeClockLog) {
+            throw new MissingCheckInException();
+        }
 
         return $this->timeClockLogRepository->update($timeClockLogUpdate, $timeClockLog->id);
     }
