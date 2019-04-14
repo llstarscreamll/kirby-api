@@ -35,10 +35,10 @@ class CreateTimeClockLogCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldRegisterEmployeeClockIn(ApiTester $I)
+    public function whenEmployeeHasSingleWorkShiftAndArrivesOnTimeToSaidShiftExpectCheckInLoggedWithShiftId(ApiTester $I)
     {
         // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07));
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
@@ -67,10 +67,10 @@ class CreateTimeClockLogCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldRegisterEmployeeClockOut(ApiTester $I)
+    public function whenEmployeeHasSingleWorkShiftAndLeavesOnTimeExpectToUpdateCheckInWithExitDateTime(ApiTester $I)
     {
         // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07));
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
         $checkedInTime = now()->setTime(7, 0);
 
         $employee = factory(User::class)
