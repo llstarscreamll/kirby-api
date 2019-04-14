@@ -66,11 +66,9 @@ class TimeClockLogsController extends Controller
      */
     public function store(Request $request, LogCheckInAction $logCheckInAction, LogCheckOutAction $logCheckOutAction)
     {
-        if ($request->action === 'check_in') {
-            $timeClockLog = $logCheckInAction->run($this->auth->user(), $request->identification_code);
-        } else {
-            $timeClockLog = $logCheckOutAction->run($this->auth->user(), $request->identification_code);
-        }
+        $timeClockLog = $request->action === 'check_in'
+            ? $logCheckInAction->run($this->auth->user(), $request->identification_code)
+            : $logCheckOutAction->run($this->auth->user(), $request->identification_code);
 
         return new TimeClockLogResource($timeClockLog);
     }
