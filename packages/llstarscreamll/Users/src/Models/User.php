@@ -86,7 +86,7 @@ class User extends Authenticatable
             $start = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
 
             [$hour, $seconds] = explode(':', $workShift->end_time);
-            $end = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_end_time);
+            $end = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_end_time);
 
             return $time->between($start, $end);
         });
