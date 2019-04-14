@@ -77,16 +77,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the first work shift whose start time ranges fits with the given $time.
+     *
      * @param Carbon $time
      */
-    public function getFirstWorkShiftByClosestTime(Carbon $time)
+    public function getFirstWorkShiftByClosestStartTime(Carbon $time)
     {
         return $this->workShifts->first(function (WorkShift $workShift) use ($time) {
             [$hour, $seconds] = explode(':', $workShift->start_time);
             $start = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
-
-            [$hour, $seconds] = explode(':', $workShift->end_time);
-            $end = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_end_time);
+            $end = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_start_time);
 
             return $time->between($start, $end);
         });

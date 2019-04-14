@@ -43,14 +43,10 @@ class LogCheckInAction
     {
         $identification = $this->identificationRepository
                                ->with(['user.workShifts'])
-                               ->findByField('code', $identificationCode)
+                               ->findByField('code', $identificationCode, ['id', 'user_id'])
                                ->first();
 
-        if (!$identification) {
-            throw new ModelNotFoundException();
-        }
-
-        $workShift = $identification->user->getFirstWorkShiftByClosestTime(now());
+        $workShift = $identification->user->getFirstWorkShiftByClosestStartTime(now());
 
         $timeClockLog = [
             'employee_id' => $identification->user_id,
