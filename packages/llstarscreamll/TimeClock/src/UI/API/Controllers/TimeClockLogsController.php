@@ -2,11 +2,14 @@
 namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
 use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
+use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
 
@@ -61,15 +64,19 @@ class TimeClockLogsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request           $request
-     * @param LogCheckInAction  $logCheckInAction
-     * @param LogCheckOutAction $logCheckOutAction
+     * @param StoreTimeClockLogRequest $request
+     * @param LogCheckInAction         $logCheckInAction
+     * @param LogCheckOutAction        $logCheckOutAction
      */
-    public function store(Request $request, LogCheckInAction $logCheckInAction, LogCheckOutAction $logCheckOutAction)
+    public function store(StoreTimeClockLogRequest $request, LogCheckInAction $logCheckInAction, LogCheckOutAction $logCheckOutAction)
     {
-        $timeClockLog = $request->action === 'check_in'
-            ? $logCheckInAction->run($this->auth->user(), $request->identification_code)
-            : $logCheckOutAction->run($this->auth->user(), $request->identification_code);
+        try {
+            $timeClockLog = $request->action === 'check_in'
+                ? $logCheckInAction->run($this->auth->user(), $request->identification_code)
+                : $logCheckOutAction->run($this->auth->user(), $request->identification_code);
+        } catch (MissingCheckInException $exception) {
+            throw new HttpResponseException(response()->json(['message' => $exception->getMessage()], 422));
+        }
 
         return new TimeClockLogResource($timeClockLog);
     }
