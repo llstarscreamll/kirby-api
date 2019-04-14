@@ -61,8 +61,9 @@ class TimeClockLogsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request    $request
-     * @return \Illuminate\Http\Response
+     * @param Request           $request
+     * @param LogCheckInAction  $logCheckInAction
+     * @param LogCheckOutAction $logCheckOutAction
      */
     public function store(Request $request, LogCheckInAction $logCheckInAction, LogCheckOutAction $logCheckOutAction)
     {
