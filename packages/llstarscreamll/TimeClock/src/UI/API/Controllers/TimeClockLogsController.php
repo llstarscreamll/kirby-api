@@ -2,9 +2,10 @@
 namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
+use llstarscreamll\TimeClock\Actions\LogCheckInAction;
+use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
@@ -63,37 +64,12 @@ class TimeClockLogsController extends Controller
      * @param  \Illuminate\Http\Request    $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, LogCheckInAction $logCheckInAction, LogCheckOutAction $logCheckOutAction)
     {
-        $identification = $this->identificationRepository
-                               ->with(['user.workShifts'])
-                               ->findByField('code', $request->identification_code)
-                               ->first();
-
-        if (!$identification) {
-            throw new ModelNotFoundException();
-        }
-
-        $workShift = $identification->user->getFirstWorkShiftByClosestTime(now());
-
-        $timeClockLog = [
-            'employee_id' => $identification->user_id,
-            'work_shift_id' => optional($workShift)->id,
-            'checked_in_at' => now(),
-            'checked_in_by_id' => $this->auth->user()->id,
-        ];
-
-        if ($request->action === 'check_out') {
-            $timeClockLogUpdate = [
-                'checked_out_at' => now(),
-                'checked_out_by_id' => $this->auth->user()->id,
-            ];
-
-            $timeClockLog = $this->timeClockLogRepository->lastCheckInFromUserId($identification->user_id, ['id']);
-
-            $this->timeClockLogRepository->update($timeClockLogUpdate, $timeClockLog->id);
+        if ($request->action === 'check_in') {
+            $timeClockLog = $logCheckInAction->run($this->auth->user(), $request->identification_code);
         } else {
-            $timeClockLog = $this->timeClockLogRepository->create($timeClockLog);
+            $timeClockLog = $logCheckOutAction->run($this->auth->user(), $request->identification_code);
         }
 
         return new TimeClockLogResource($timeClockLog);
