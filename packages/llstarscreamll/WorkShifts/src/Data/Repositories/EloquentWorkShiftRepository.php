@@ -1,9 +1,10 @@
 <?php
+
 namespace llstarscreamll\WorkShifts\Data\Repositories;
 
+use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
-use llstarscreamll\WorkShifts\Models\WorkShift;
 
 /**
  * Class EloquentWorkShiftRepository.

@@ -1,9 +1,10 @@
 <?php
+
 namespace llstarscreamll\Authorization\Data\Seeders;
 
 use Illuminate\Database\Seeder;
-use llstarscreamll\Authorization\Models\Permission;
 use llstarscreamll\Authorization\Models\Role;
+use llstarscreamll\Authorization\Models\Permission;
 
 /**
  * Class AuthorizationPackageSeeder.
@@ -32,7 +33,9 @@ class AuthorizationPackageSeeder extends Seeder
 
                 return Role::updateOrCreate($keys, $role);
             })
-            ->first(function ($role) {return $role->name === 'admin';})
+            ->first(function ($role) {
+                return $role->name === 'admin';
+            })
             ->syncPermissions(Permission::all());
     }
 }

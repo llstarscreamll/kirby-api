@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\WorkShifts;
 
 use Illuminate\Support\ServiceProvider;

@@ -1,9 +1,10 @@
 <?php
+
 namespace llstarscreamll\Users\Data\Repositories;
 
+use llstarscreamll\Users\Models\Identification;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
 use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
-use llstarscreamll\Users\Models\Identification;
 
 /**
  * Class EloquentIdentificationRepository.

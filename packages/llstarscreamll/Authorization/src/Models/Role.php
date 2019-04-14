@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Authorization\Models;
 
 use Spatie\Permission\Models\Role as SpatieRole;

@@ -1,8 +1,8 @@
 <?php
+
 namespace llstarscreamll\WorkShifts\Data\Seeders;
 
 use Illuminate\Database\Seeder;
-use llstarscreamll\WorkShifts\Models\WorkShift;
 
 /**
  * Class WorkShiftsPackageSeeder.

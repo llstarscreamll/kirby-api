@@ -1,8 +1,9 @@
 <?php
+
 namespace Authentication\Helper;
 
-use llstarscreamll\Authorization\Models\Permission;
 use llstarscreamll\Users\Models\User;
+use llstarscreamll\Authorization\Models\Permission;
 
 /**
  * Class Api.

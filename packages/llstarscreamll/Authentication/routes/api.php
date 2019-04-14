@@ -15,10 +15,8 @@ Route::prefix('api/v1/auth')
     ->middleware('api')
     ->namespace('llstarscreamll\Authentication\Http\Controllers')
     ->group(function ($route) {
-
         $route->post('login', 'ApiAuthenticationController@login');
         $route->post('sign-up', 'ApiAuthenticationController@signUp');
         $route->delete('logout', 'ApiAuthenticationController@logout')->middleware('auth:api');
         $route->get('user', 'ApiAuthenticationController@getAuthUser')->middleware('auth:api');
-
     });

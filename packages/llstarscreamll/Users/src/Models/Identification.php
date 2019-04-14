@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Users\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -42,5 +43,4 @@ class Identification extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 }

@@ -1,9 +1,10 @@
 <?php
+
 namespace llstarscreamll\Authentication;
 
 use Carbon\Carbon;
-use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
+use Illuminate\Support\ServiceProvider;
 
 class AuthenticationServiceProvider extends ServiceProvider
 {

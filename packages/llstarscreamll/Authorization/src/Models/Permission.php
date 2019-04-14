@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Authorization\Models;
 
 use Spatie\Permission\Models\Permission as SpatiePermission;

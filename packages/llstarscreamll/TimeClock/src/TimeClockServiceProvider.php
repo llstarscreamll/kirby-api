@@ -1,8 +1,9 @@
 <?php
+
 namespace llstarscreamll\TimeClock;
 
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Data\Repositories\EloquentTimeClockLogRepository;
 

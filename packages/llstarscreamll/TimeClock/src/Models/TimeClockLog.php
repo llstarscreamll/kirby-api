@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\TimeClock\Models;
 
 use Illuminate\Database\Eloquent\Model;

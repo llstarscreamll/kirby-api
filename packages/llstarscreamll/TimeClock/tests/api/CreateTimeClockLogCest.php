@@ -1,7 +1,7 @@
 <?php
+
 namespace ClockTime;
 
-use ClockTime\ApiTester;
 use Illuminate\Support\Carbon;
 use llstarscreamll\Users\Models\User;
 
@@ -50,8 +50,8 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath("$.message");
-        $I->seeResponseJsonMatchesJsonPath("$.errors.identification_code");
+        $I->seeResponseJsonMatchesJsonPath('$.message');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.identification_code');
     }
 
     /**
@@ -73,8 +73,8 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath("$.message");
-        $I->seeResponseJsonMatchesJsonPath("$.errors.action");
+        $I->seeResponseJsonMatchesJsonPath('$.message');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.action');
     }
 
     /**
@@ -100,7 +100,7 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(201);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
@@ -138,7 +138,7 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
@@ -171,7 +171,7 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(201);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => null,
@@ -208,7 +208,7 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => null,
@@ -247,7 +247,7 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(201);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id, // 6 to 2
@@ -284,7 +284,7 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(201);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->last()->id, // 6 to 2
@@ -316,6 +316,6 @@ class CreateTimeClockLogCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath("$.message");
+        $I->seeResponseJsonMatchesJsonPath('$.message');
     }
 }

@@ -1,11 +1,12 @@
 <?php
+
 namespace llstarscreamll\TimeClock\Actions;
 
-use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
-use llstarscreamll\TimeClock\Models\TimeClockLog;
-use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Users\Models\User;
+use llstarscreamll\TimeClock\Models\TimeClockLog;
+use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
+use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 
 /**
  * Class LogCheckOutAction.
@@ -55,7 +56,7 @@ class LogCheckOutAction
 
         $timeClockLog = $this->timeClockLogRepository->lastCheckInFromUserId($identification->user_id, ['id']);
 
-        if (!$timeClockLog) {
+        if (! $timeClockLog) {
             throw new MissingCheckInException();
         }
 
