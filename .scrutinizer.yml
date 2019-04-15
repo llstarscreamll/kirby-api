@@ -17,7 +17,7 @@ build:
                 command: vendor/bin/codecept run --coverage --coverage-xml --coverage-html --fail-fast
                 coverage:
                     file: tests/_output/coverage.xml
-                    format: xml
+                    format: clover
 
 filter:
     paths:
