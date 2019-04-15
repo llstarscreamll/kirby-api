@@ -1,7 +1,6 @@
 <?php
-namespace Authentication;
 
-use Authentication\ApiTester;
+namespace Authentication;
 
 /**
  * Class LogoutCest.

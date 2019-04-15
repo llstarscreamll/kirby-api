@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\TimeClock\UI\API\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;

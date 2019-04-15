@@ -1,16 +1,17 @@
 <?php
+
 namespace llstarscreamll\Authentication\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Lcobucci\JWT\Parser;
-use llstarscreamll\Authentication\Actions\WebLoginProxyAction;
-use llstarscreamll\Authentication\Http\Requests\LoginRequest;
-use llstarscreamll\Authentication\Http\Requests\SignUpRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cookie;
 use llstarscreamll\Users\UI\API\Resources\UserResource;
+use llstarscreamll\Authentication\Http\Requests\LoginRequest;
+use llstarscreamll\Authentication\Actions\WebLoginProxyAction;
+use llstarscreamll\Authentication\Http\Requests\SignUpRequest;
 
 /**
  * Class ApiAuthenticationController.
@@ -69,7 +70,7 @@ class ApiAuthenticationController extends Controller
             ->where('id', '=', $id)
             ->update(['revoked' => true]);
 
-        $accessTokenCookie  = Cookie::forget('accessToken');
+        $accessTokenCookie = Cookie::forget('accessToken');
         $refreshTokenCookie = Cookie::forget('refreshToken');
 
         return response(['message' => 'Token revoked successfully.'], 202)
@@ -134,6 +135,6 @@ class ApiAuthenticationController extends Controller
             'permissions:id,name',
         ]);
 
-        return (new UserResource($user));
+        return new UserResource($user);
     }
 }

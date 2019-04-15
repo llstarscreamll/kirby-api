@@ -1,7 +1,7 @@
 <?php
+
 namespace Authentication;
 
-use Authentication\ApiTester;
 use Illuminate\Support\Facades\Hash;
 
 /**
@@ -48,7 +48,9 @@ class LoginCest
     /**
      * @param ApiTester $I
      */
-    public function _after(ApiTester $I) {}
+    public function _after(ApiTester $I)
+    {
+    }
 
     /**
      * @test
@@ -63,10 +65,10 @@ class LoginCest
 
         $I->seeResponseCodeIs(200);
 
-        $I->seeResponseJsonMatchesJsonPath("$.token_type");
-        $I->seeResponseJsonMatchesJsonPath("$.expires_in");
-        $I->seeResponseJsonMatchesJsonPath("$.access_token");
-        $I->seeResponseJsonMatchesJsonPath("$.refresh_token");
+        $I->seeResponseJsonMatchesJsonPath('$.token_type');
+        $I->seeResponseJsonMatchesJsonPath('$.expires_in');
+        $I->seeResponseJsonMatchesJsonPath('$.access_token');
+        $I->seeResponseJsonMatchesJsonPath('$.refresh_token');
 
         $I->seeCookie('accessToken');
         $I->seeCookie('refreshToken');
@@ -92,7 +94,7 @@ class LoginCest
         $I->sendPOST($this->endpoint, ['email' => 'foo@email.com', 'password' => '123456']);
 
         $I->seeResponseCodeIs(401);
-        $I->seeResponseJsonMatchesJsonPath("$.error");
-        $I->seeResponseJsonMatchesJsonPath("$.message");
+        $I->seeResponseJsonMatchesJsonPath('$.error');
+        $I->seeResponseJsonMatchesJsonPath('$.message');
     }
 }

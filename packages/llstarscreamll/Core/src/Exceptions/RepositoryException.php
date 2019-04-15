@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Core\Exceptions;
 
 use Exception;

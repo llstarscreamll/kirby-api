@@ -1,7 +1,6 @@
 <?php
-namespace WorkShifts;
 
-use WorkShifts\ApiTester;
+namespace WorkShifts;
 
 /**
  * Class DeleteWorkShiftByIdCest.

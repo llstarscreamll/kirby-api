@@ -1,7 +1,6 @@
 <?php
-namespace WorkShifts;
 
-use WorkShifts\ApiTester;
+namespace WorkShifts;
 
 /**
  * Class GetWorkShiftByIdCest.
@@ -50,7 +49,7 @@ class GetWorkShiftByIdCest
         $I->sendGET(str_replace(':id', $this->workShift['id'], $this->endpoint));
 
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.id");
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeResponseContainsJson(['data' => ['id' => $this->workShift['id']]]);
     }
 

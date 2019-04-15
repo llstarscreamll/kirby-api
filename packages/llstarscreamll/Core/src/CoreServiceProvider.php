@@ -48,7 +48,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         return ['core'];
     }
-    
+
     /**
      * Console-specific booting.
      *

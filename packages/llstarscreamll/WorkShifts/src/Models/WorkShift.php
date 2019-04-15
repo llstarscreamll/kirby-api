@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\WorkShifts\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -50,5 +51,4 @@ class WorkShift extends Model
         'meal_time_in_minutes' => 'real',
         'min_minutes_required_to_discount_meal_time' => 'real',
     ];
-
 }
