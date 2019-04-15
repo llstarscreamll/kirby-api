@@ -10,7 +10,6 @@ extensions:
 coverage:
     enabled: true
     include:
-        - app/*
         - packages/**/**/src/*
     exclude:
         - bootstrap/*

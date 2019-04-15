@@ -8,6 +8,10 @@ paths:
 settings:
     bootstrap: _bootstrap.php
 actor_suffix: Tester
+coverage:
+    enabled: true
+    include:
+        - src/*
 extensions:
     enabled:
         - Codeception\Extension\RunFailed
