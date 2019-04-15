@@ -64,9 +64,9 @@ class TimeClockLogsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreTimeClockLogRequest $request
-     * @param LogCheckInAction         $logCheckInAction
-     * @param LogCheckOutAction        $logCheckOutAction
+     * @param \llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest $request
+     * @param \llstarscreamll\TimeClock\Actions\LogCheckInAction                 $logCheckInAction
+     * @param \llstarscreamll\TimeClock\Actions\LogCheckOutAction                $logCheckOutAction
      */
     public function store(StoreTimeClockLogRequest $request, LogCheckInAction $logCheckInAction, LogCheckOutAction $logCheckOutAction)
     {
@@ -75,7 +75,9 @@ class TimeClockLogsController extends Controller
                 ? $logCheckInAction->run($this->auth->user(), $request->identification_code)
                 : $logCheckOutAction->run($this->auth->user(), $request->identification_code);
         } catch (MissingCheckInException $exception) {
-            throw new HttpResponseException(response()->json(['message' => $exception->getMessage()], 422));
+            throw new HttpResponseException(response()->json([
+                'message' => "No hay registro de entrada",
+            ], 422));
         }
 
         return new TimeClockLogResource($timeClockLog);
