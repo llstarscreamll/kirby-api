@@ -1,9 +1,5 @@
 paths:
-    # tests: tests
     output: tests/_output
-    # data: tests/_data
-    # support: tests/_support
-    # envs: tests/_envs
 actor_suffix: Tester
 include:
     - packages/llstarscreamll/**/
@@ -11,3 +7,15 @@ extensions:
     enabled:
         - Codeception\Extension\RunFailed
         - Codeception\Extension\DotReporter
+coverage:
+    enabled: true
+    include:
+        - app/*
+        - packages/**/**/src/*
+    exclude:
+        - bootstrap/*
+        - config/*
+        - public/*
+        - resources/*
+        - vendor/*
+        - packages/**/**/tests/*
