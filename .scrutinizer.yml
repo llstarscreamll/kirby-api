@@ -3,6 +3,16 @@ build:
         php: '7.2'
         hosts:
             laravel.dev: '127.0.0.1'
+        variables:
+            APP_ENV: 'local'
+            APP_KEY: 'base64:RSpJ2eYhqs1ceUwhNX4Gqi2RIiPXB+0GrwN3seJqAhY='
+            APP_DEBUG: 'true'
+            APP_URL: 'http://app.test'
+            LOG_CHANNEL: 'single'
+            DB_CONNECTION: 'sqlite'
+            DB_DRIVER: "sqlite"
+            DB_DATABASE: ":memory:"
+
     cache:
         directories:
             - node_modules
@@ -10,6 +20,7 @@ build:
             - ~/.composer/cache/
     tests:
         before:
+            - php artisan passport:keys
             - chmod -R 777 storage
             - chmod -R 777 bootstrap/cache
         override:
