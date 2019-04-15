@@ -76,7 +76,7 @@ class TimeClockLogsController extends Controller
                 : $logCheckOutAction->run($this->auth->user(), $request->identification_code);
         } catch (MissingCheckInException $exception) {
             throw new HttpResponseException(response()->json([
-                'message' => "No hay registro de entrada",
+                'message' => 'No hay registro de entrada',
             ], 422));
         }
 
