@@ -3,7 +3,6 @@
 namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Auth\Guard;
 use llstarscreamll\Core\Http\Controller;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
@@ -32,21 +31,13 @@ class TimeClockLogsController extends Controller
     private $timeClockLogRepository;
 
     /**
-     * @var \Illuminate\Contracts\Auth\Guard
-     */
-    private $auth;
-
-    /**
-     * @param \Illuminate\Contracts\Auth\Guard                                    $auth
      * @param \llstarscreamll\Users\Contracts\IdentificationRepositoryInterface   $identificationRepository
      * @param \llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface $timeClockLogRepository
      */
     public function __construct(
-        Guard $auth,
         IdentificationRepositoryInterface $identificationRepository,
         TimeClockLogRepositoryInterface $timeClockLogRepository
     ) {
-        $this->auth = $auth;
         $this->identificationRepository = $identificationRepository;
         $this->timeClockLogRepository = $timeClockLogRepository;
     }
@@ -72,8 +63,8 @@ class TimeClockLogsController extends Controller
     {
         try {
             $timeClockLog = $request->action === 'check_in'
-                ? $logCheckInAction->run($this->auth->user(), $request->identification_code)
-                : $logCheckOutAction->run($this->auth->user(), $request->identification_code);
+                ? $logCheckInAction->run($request->user(), $request->identification_code)
+                : $logCheckOutAction->run($request->user(), $request->identification_code);
         } catch (MissingCheckInException $exception) {
             throw new HttpResponseException(response()->json([
                 'message' => 'No hay registro de entrada',
