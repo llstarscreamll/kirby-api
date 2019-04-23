@@ -20,7 +20,7 @@ class CreateIdentificationsTable extends Migration
     {
         Schema::create('identifications', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('user_id');
             $table->string('name');
             $table->string('code')->unique();
             $table->timestamps();
