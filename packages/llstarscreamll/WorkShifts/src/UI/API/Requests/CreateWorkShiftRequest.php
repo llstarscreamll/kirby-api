@@ -17,7 +17,7 @@ class CreateWorkShiftRequest extends FormRequestAbstract
      * @var array
      */
     protected $access = [
-        'roles'       => [],
+        'roles' => [],
         'permissions' => ['work-shift.create'],
     ];
 
@@ -39,13 +39,12 @@ class CreateWorkShiftRequest extends FormRequestAbstract
     public function rules(): array
     {
         return [
-            'name'                                       => ['required', 'min:3', 'max:50'],
-            'start_time'                                 => ['required'],
-            'end_time'                                   => ['required'],
-            'grace_minutes_for_start_time'               => ['numeric', 'min:0'],
-            'grace_minutes_for_end_time'                 => ['numeric', 'min:0'],
-            'meal_time_in_minutes'                       => ['numeric', 'min:0'],
+            'name' => ['required', 'min:3', 'max:50'],
+            'grace_minutes_for_start_times' => ['numeric', 'min:0'],
+            'grace_minutes_for_end_times' => ['numeric', 'min:0'],
+            'meal_time_in_minutes' => ['numeric', 'min:0'],
             'min_minutes_required_to_discount_meal_time' => ['numeric', 'min:0'],
+            'time-slots' => ['required', 'array'],
         ];
     }
 }

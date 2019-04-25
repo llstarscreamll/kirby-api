@@ -29,21 +29,25 @@ class CreateWorkShiftCest
      */
     public function whenRequestDataIsValidExpectCreatedWithResourceOnResponseAndDB(ApiTester $I)
     {
-        $requestData = [
-            'name'                                       => 'work shift one',
-            'start_time'                                 => '07:00',
-            'end_time'                                   => '14:00',
-            'grace_minutes_for_start_time'               => 15,
-            'grace_minutes_for_end_time'                 => 15,
-            'meal_time_in_minutes'                       => 90,
+        $requestBody = [
+            'name' => 'work shift one',
+            'grace_minutes_for_start_times' => 15,
+            'grace_minutes_for_end_times' => 15,
+            'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
+            'time-slots' => [
+                ['start' => '07:00', 'end' => '12:30'],
+                ['start' => '02:00', 'end' => '06:00'],
+            ],
         ];
 
-        $I->sendPOST($this->endpoint, $requestData);
+        $I->sendPOST($this->endpoint, $requestBody);
 
         $I->seeResponseCodeIs(201);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
-        $I->seeRecord('work_shifts', $requestData);
+        $I->seeRecord('work_shifts', array_except($requestBody, 'time-slots'));
+        $record = $I->grabRecord('work_shifts', array_except($requestBody, 'time-slots'));
+        $I->assertEquals(array_get($requestBody, 'time-slots'), json_decode($record['time-slots'], true));
     }
 
     /**

@@ -21,12 +21,11 @@ class WorkShift extends Model
      */
     protected $fillable = [
         'name',
-        'start_time',
-        'end_time',
-        'grace_minutes_for_start_time',
-        'grace_minutes_for_end_time',
+        'grace_minutes_for_start_times',
+        'grace_minutes_for_end_times',
         'meal_time_in_minutes',
         'min_minutes_required_to_discount_meal_time',
+        'time-slots',
     ];
 
     /**
@@ -46,9 +45,10 @@ class WorkShift extends Model
      * @var array
      */
     protected $casts = [
-        'grace_minutes_for_start_time' => 'real',
-        'grace_minutes_for_end_time' => 'real',
+        'grace_minutes_for_start_times' => 'real',
+        'grace_minutes_for_end_times' => 'real',
         'meal_time_in_minutes' => 'real',
         'min_minutes_required_to_discount_meal_time' => 'real',
+        'time-slots' => 'array',
     ];
 }

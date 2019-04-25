@@ -3,6 +3,7 @@ modules:
     enabled:
         - \WorkShifts\Helper\Api
         - Authentication\Helper\Api
+        - Asserts
         - REST:
             depends: Laravel5
         - Laravel5:

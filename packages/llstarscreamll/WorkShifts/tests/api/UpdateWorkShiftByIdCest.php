@@ -23,13 +23,12 @@ class UpdateWorkShiftByIdCest
      * @var array
      */
     private $requestData = [
-        'name'                                       => 'updated work shift',
-        'start_time'                                 => '02:00',
-        'end_time'                                   => '22:00',
-        'grace_minutes_for_start_time'               => 45,
-        'grace_minutes_for_end_time'                 => 45,
-        'meal_time_in_minutes'                       => 45,
+        'name' => 'updated work shift',
+        'grace_minutes_for_start_times' => 45,
+        'grace_minutes_for_end_times' => 45,
+        'meal_time_in_minutes' => 45,
         'min_minutes_required_to_discount_meal_time' => 30 * 2,
+        'time-slots' => [['start' => '07:00', 'end' => '12:30']],
     ];
 
     /**
@@ -38,13 +37,12 @@ class UpdateWorkShiftByIdCest
     public function _before(ApiTester $I)
     {
         $this->workShift = [
-            'name'                                       => 'work shift A',
-            'start_time'                                 => '07:00',
-            'end_time'                                   => '14:00',
-            'grace_minutes_for_start_time'               => 15,
-            'grace_minutes_for_end_time'                 => 15,
-            'meal_time_in_minutes'                       => 90,
+            'name' => 'work shift A',
+            'grace_minutes_for_start_times' => 15,
+            'grace_minutes_for_end_times' => 15,
+            'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
+            'time-slots' => json_encode([['start' => '07:00', 'end' => '12:30'], ['start' => '02:00', 'end' => '06:00']]),
         ];
 
         $this->workShift['id'] = $I->haveRecord('work_shifts', $this->workShift);
@@ -64,7 +62,7 @@ class UpdateWorkShiftByIdCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeResponseContainsJson(['data' => ['id' => $this->workShift['id']]]);
-        $I->seeRecord('work_shifts', $this->requestData);
+        $I->seeRecord('work_shifts', array_except($this->requestData, 'time-slots'));
     }
 
     /**
