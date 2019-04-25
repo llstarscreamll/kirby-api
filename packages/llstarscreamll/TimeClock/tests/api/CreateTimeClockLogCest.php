@@ -89,7 +89,7 @@ class CreateTimeClockLogCest
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
             ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
-            ->with('workShifts', ['name' => '7 to 6', 'start_time' => '07:00', 'end_time' => '18:00'])
+            ->with('workShifts', ['name' => '7 to 6', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
             ->create();
 
         $requestData = [
@@ -103,7 +103,7 @@ class CreateTimeClockLogCest
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
-            'work_shift_id' => $employee->workShifts->first()->id,
+            'work_shift_id' => null,
             'checked_in_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
         ]);
@@ -122,7 +122,7 @@ class CreateTimeClockLogCest
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
             ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
-            ->with('workShifts', ['name' => '7 to 6', 'start_time' => '07:00', 'end_time' => '18:00'])
+            ->with('workShifts', ['name' => '7 to 6', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
                 'checked_in_at' => $checkedInTime,
@@ -223,36 +223,43 @@ class CreateTimeClockLogCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckInWhenEmployeeHasThreeWorkShiftsWithOutOverlappingAndArrivesToTheFirstOne(ApiTester $I)
+    public function testToCheckInWhenEmployeeHasThreeWorkShiftsWithOutOverlappingAndLeavesToTheFirstOne(ApiTester $I)
     {
         // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 00));
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 14, 00));
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
             ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('timeClockLogs', [
+                'work_shift_id' => null,
+                'checked_in_at' => now()->setTime(06, 00),
+                'checked_in_by_id' => $this->user->id,
+            ])
             ->create();
 
         $employee->workShifts()->createMany([
-            ['name' => '6 to 2', 'start_time' => '06:00', 'end_time' => '14:00'],
-            ['name' => '2 to 10', 'start_time' => '14:00', 'end_time' => '22:00'],
-            ['name' => '10 to 6', 'start_time' => '22:00', 'end_time' => '06:00'],
+            ['name' => '6 to 2', 'time_slots' => [['start' => '06:00', 'end' => '14:00']]],
+            ['name' => '2 to 10', 'time_slots' => [['start' => '14:00', 'end' => '22:00']]],
+            ['name' => '10 to 6', 'time_slots' => [['start' => '22:00', 'end' => '06:00']]],
         ]);
 
         $requestData = [
-            'action' => 'check_in',
+            'action' => 'check_out',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
         $I->sendPOST($this->endpoint, $requestData);
 
-        $I->seeResponseCodeIs(201);
+        $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id, // 6 to 2
-            'checked_in_at' => now()->toDateTimeString(),
+            'checked_in_at' => now()->setTime(06, 00)->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
+            'checked_out_at' => now()->toDateTimeString(),
+            'checked_out_by_id' => $this->user->id,
         ]);
     }
 
@@ -260,36 +267,43 @@ class CreateTimeClockLogCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckInWhenEmployeeHasThreeWorkShiftsWithOutOverlappingAndArrivesToTheLastOne(ApiTester $I)
+    public function testToCheckInWhenEmployeeHasThreeWorkShiftsWithOutOverlappingAndLeavesOnTheLastOne(ApiTester $I)
     {
         // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 22, 00));
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 00));
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
             ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('timeClockLogs', [
+                'work_shift_id' => null,
+                'checked_in_at' => now()->subDay()->setTime(22, 00),
+                'checked_in_by_id' => $this->user->id,
+            ])
             ->create();
 
         $employee->workShifts()->createMany([
-            ['name' => '6 to 2', 'start_time' => '06:00', 'end_time' => '14:00'],
-            ['name' => '2 to 10', 'start_time' => '14:00', 'end_time' => '22:00'],
-            ['name' => '10 to 6', 'start_time' => '22:00', 'end_time' => '06:00'],
+            ['name' => '6 to 2', 'time_slots' => [['start' => '06:00', 'end' => '14:00']]],
+            ['name' => '2 to 10', 'time_slots' => [['start' => '14:00', 'end' => '22:00']]],
+            ['name' => '10 to 6', 'time_slots' => [['start' => '22:00', 'end' => '06:00']]],
         ]);
 
         $requestData = [
-            'action' => 'check_in',
+            'action' => 'check_out',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
         $I->sendPOST($this->endpoint, $requestData);
 
-        $I->seeResponseCodeIs(201);
+        $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->last()->id, // 6 to 2
-            'checked_in_at' => now()->toDateTimeString(),
+            'checked_in_at' => now()->subDay()->setTime(22, 00)->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
+            'checked_out_at' => now()->toDateTimeString(),
+            'checked_out_by_id' => $this->user->id,
         ]);
     }
 

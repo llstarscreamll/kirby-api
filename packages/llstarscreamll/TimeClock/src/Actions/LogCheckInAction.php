@@ -47,11 +47,8 @@ class LogCheckInAction
                                ->findByField('code', $identificationCode, ['id', 'user_id'])
                                ->first();
 
-        $workShift = $identification->user->getFirstWorkShiftByClosestStartTime(now());
-
         $timeClockLog = [
             'employee_id' => $identification->user_id,
-            'work_shift_id' => optional($workShift)->id,
             'checked_in_at' => now(),
             'checked_in_by_id' => $registrar->id,
         ];
