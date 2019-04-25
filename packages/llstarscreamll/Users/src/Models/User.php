@@ -78,18 +78,31 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the first work shift whose start time ranges fits with the given $time.
-     *
-     * @param Carbon $time
+     * @param  Carbon      $start
+     * @param  Carbon      $end
+     * @return WorkShift
      */
-    public function getFirstWorkShiftByClosestStartTime(Carbon $time)
+    public function getFirstWorkShiftByClosestRangeTime(Carbon $start, Carbon $end):  ? WorkShift
     {
-        return $this->workShifts->first(function (WorkShift $workShift) use ($time) {
-            [$hour, $seconds] = explode(':', $workShift->start_time);
-            $start = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
-            $end = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_start_time);
+        return $this->workShifts->first(function (WorkShift $workShift) use ($start, $end) {
+            $timeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($start, $end, $workShift) {
+                [$hour, $seconds] = explode(':', $timeSlot['start']);
+                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
+                $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_start_time);
 
-            return $time->between($start, $end);
+                [$hour, $seconds] = explode(':', $timeSlot['end']);
+                $slotEndFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_end_time);
+                $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_end_time);
+
+                if ($slotStartFrom->hour > (int) $hour) {
+                    $slotStartFrom = $slotStartFrom->subDay();
+                    $slotStartTo = $slotStartTo->subDay();
+                }
+
+                return $start->between($slotStartFrom, $slotStartTo) && $end->between($slotEndFrom, $slotEndTo);
+            });
+
+            return $timeSlots->count();
         });
     }
 }
