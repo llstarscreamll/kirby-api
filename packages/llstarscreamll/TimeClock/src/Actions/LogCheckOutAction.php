@@ -51,7 +51,7 @@ class LogCheckOutAction
 
         $timeClockLog = $this->timeClockLogRepository->lastCheckInFromUserId($identification->user_id, ['id', 'checked_in_at']);
 
-        if (!$timeClockLog) {
+        if (! $timeClockLog) {
             throw new MissingCheckInException();
         }
 
