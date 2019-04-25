@@ -25,7 +25,7 @@ class CreateWorkShiftsTable extends Migration
             $table->unsignedInteger('grace_minutes_for_end_times')->nullable()->default(15);
             $table->unsignedInteger('meal_time_in_minutes')->nullable()->default(0);
             $table->unsignedInteger('min_minutes_required_to_discount_meal_time')->nullable()->default(0);
-            $table->json('time-slots');
+            $table->json('time_slots');
             $table->timestamps();
             $table->softDeletes();
         });

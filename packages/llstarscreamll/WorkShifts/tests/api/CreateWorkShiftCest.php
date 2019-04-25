@@ -35,7 +35,7 @@ class CreateWorkShiftCest
             'grace_minutes_for_end_times' => 15,
             'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
-            'time-slots' => [
+            'time_slots' => [
                 ['start' => '07:00', 'end' => '12:30'],
                 ['start' => '02:00', 'end' => '06:00'],
             ],
@@ -45,9 +45,9 @@ class CreateWorkShiftCest
 
         $I->seeResponseCodeIs(201);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
-        $I->seeRecord('work_shifts', array_except($requestBody, 'time-slots'));
-        $record = $I->grabRecord('work_shifts', array_except($requestBody, 'time-slots'));
-        $I->assertEquals(array_get($requestBody, 'time-slots'), json_decode($record['time-slots'], true));
+        $I->seeRecord('work_shifts', array_except($requestBody, 'time_slots'));
+        $record = $I->grabRecord('work_shifts', array_except($requestBody, 'time_slots'));
+        $I->assertEquals(array_get($requestBody, 'time_slots'), json_decode($record['time_slots'], true));
     }
 
     /**

@@ -35,7 +35,7 @@ class SearchWorkShiftsCest
             'grace_minutes_for_end_times' => 15,
             'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
-            'time-slots' => json_encode([['start' => '07:00', 'end' => '12:30']]),
+            'time_slots' => json_encode([['start' => '07:00', 'end' => '12:30']]),
         ];
 
         $this->workShiftB = [
@@ -44,7 +44,7 @@ class SearchWorkShiftsCest
             'grace_minutes_for_end_times' => 30,
             'meal_time_in_minutes' => 30,
             'min_minutes_required_to_discount_meal_time' => 60 * 4,
-            'time-slots' => json_encode([['start' => '18:00', 'end' => '02:00']]),
+            'time_slots' => json_encode([['start' => '18:00', 'end' => '02:00']]),
         ];
 
         $I->haveRecord('work_shifts', $this->workShiftA);

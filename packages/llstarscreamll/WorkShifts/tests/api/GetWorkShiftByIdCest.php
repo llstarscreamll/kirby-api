@@ -30,7 +30,7 @@ class GetWorkShiftByIdCest
             'grace_minutes_for_end_times' => 15,
             'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
-            'time-slots' => json_encode([['start' => '07:00', 'end' => '12:30'], ['start' => '02:00', 'end' => '06:00']]),
+            'time_slots' => json_encode([['start' => '07:00', 'end' => '12:30'], ['start' => '02:00', 'end' => '06:00']]),
         ];
 
         $this->workShift['id'] = $I->haveRecord('work_shifts', $this->workShift);

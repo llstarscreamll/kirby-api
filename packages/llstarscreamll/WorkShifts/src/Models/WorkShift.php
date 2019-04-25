@@ -25,7 +25,7 @@ class WorkShift extends Model
         'grace_minutes_for_end_times',
         'meal_time_in_minutes',
         'min_minutes_required_to_discount_meal_time',
-        'time-slots',
+        'time_slots',
     ];
 
     /**
@@ -49,6 +49,6 @@ class WorkShift extends Model
         'grace_minutes_for_end_times' => 'real',
         'meal_time_in_minutes' => 'real',
         'min_minutes_required_to_discount_meal_time' => 'real',
-        'time-slots' => 'array',
+        'time_slots' => 'array',
     ];
 }
