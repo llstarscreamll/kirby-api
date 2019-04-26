@@ -17,19 +17,16 @@ class DefaultWorkShiftsSeeder extends Seeder
      */
     private $defaultWorkShifts = [
         [
-            'name'       => '6-2',
-            'start_time' => '06:00',
-            'end_time'   => '14:00',
+            'name' => '6-2',
+            'time_slots' => [['start' => '06:00', 'end' => '14:00']],
         ],
         [
-            'name'       => '2-10',
-            'start_time' => '14:00',
-            'end_time'   => '22:00',
+            'name' => '2-10',
+            'time_slots' => [['start' => '14:00', 'end' => '22:00']],
         ],
         [
-            'name'       => '10-6',
-            'start_time' => '22:00',
-            'end_time'   => '06:00',
+            'name' => '10-6',
+            'time_slots' => [['start' => '22:00', 'end' => '06:00']],
         ],
     ];
 
