@@ -2,10 +2,11 @@
 
 namespace llstarscreamll\TimeClock\Actions;
 
-use llstarscreamll\Users\Models\User;
+use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
-use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\Users\Models\User;
 
 /**
  * Class LogCheckInAction.
@@ -46,6 +47,14 @@ class LogCheckInAction
                                ->with(['user.workShifts'])
                                ->findByField('code', $identificationCode, ['id', 'user_id'])
                                ->first();
+
+        $lastTimeClockCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
+            $identification->user_id, ['id', 'checked_in_at']
+        );
+
+        if ($lastTimeClockCheckIn) {
+            throw new AlreadyCheckedInException("El usuario ya registró entrada en {$lastTimeClockCheckIn->checked_in_at}");
+        }
 
         $timeClockLog = [
             'employee_id' => $identification->user_id,

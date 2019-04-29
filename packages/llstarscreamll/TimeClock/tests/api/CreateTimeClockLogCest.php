@@ -39,7 +39,7 @@ class CreateTimeClockLogCest
     {
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->create();
 
         $requestData = [
@@ -62,12 +62,12 @@ class CreateTimeClockLogCest
     {
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->create();
 
         $requestData = [
             'action' => 'invalid_option_here',
-            'identification_code' => 'some-employee-card-code',
+            'identification_code' => 'fake-employee-card-code',
         ];
 
         $I->sendPOST($this->endpoint, $requestData);
@@ -81,6 +81,34 @@ class CreateTimeClockLogCest
      * @test
      * @param ApiTester $I
      */
+    public function testToCheckInWhenEmployeeHasAlreadyCheckedIn(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 02));
+
+        $employee = factory(User::class)
+            ->with('roles', ['name' => 'employee'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('timeClockLogs', [
+                'checked_in_at' => Carbon::now()->subMinutes(2), // employee checked in 2 minutes ago
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        $requestData = [
+            'action' => 'check_in',
+            'identification_code' => 'fake-employee-card-code',
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
     public function testToCheckInWhenEmployeeHasSingleWorkShiftAndArrivesOnTime(ApiTester $I)
     {
         // fake current date time
@@ -88,7 +116,7 @@ class CreateTimeClockLogCest
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('workShifts', ['name' => '7 to 6', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
             ->create();
 
@@ -121,7 +149,7 @@ class CreateTimeClockLogCest
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('workShifts', ['name' => '7 to 6', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
@@ -160,7 +188,7 @@ class CreateTimeClockLogCest
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->create();
 
         $requestData = [
@@ -192,7 +220,7 @@ class CreateTimeClockLogCest
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'work_shift_id' => null,
                 'checked_in_at' => $checkedInTime,
@@ -230,7 +258,7 @@ class CreateTimeClockLogCest
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'work_shift_id' => null,
                 'checked_in_at' => now()->setTime(06, 00),
@@ -274,7 +302,7 @@ class CreateTimeClockLogCest
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'work_shift_id' => null,
                 'checked_in_at' => now()->subDay()->setTime(22, 00),
@@ -319,7 +347,7 @@ class CreateTimeClockLogCest
 
         $employee = factory(User::class)
             ->with('roles', ['name' => 'employee'])
-            ->with('identifications', ['name' => 'card', 'code' => 'some-employee-card-code'])
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->create();
 
         $requestData = [

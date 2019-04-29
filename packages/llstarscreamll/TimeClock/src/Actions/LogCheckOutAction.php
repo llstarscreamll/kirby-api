@@ -49,13 +49,15 @@ class LogCheckOutAction
                                ->findByField('code', $identificationCode, ['id', 'user_id'])
                                ->first();
 
-        $timeClockLog = $this->timeClockLogRepository->lastCheckInFromUserId($identification->user_id, ['id', 'checked_in_at']);
+        $lastTimeClockCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
+            $identification->user_id, ['id', 'checked_in_at']
+        );
 
-        if (! $timeClockLog) {
+        if (!$lastTimeClockCheckIn) {
             throw new MissingCheckInException();
         }
 
-        $workShift = $identification->user->getFirstWorkShiftByClosestRangeTime($timeClockLog->checked_in_at, now());
+        $workShift = $identification->user->getFirstWorkShiftByClosestRangeTime($lastTimeClockCheckIn->checked_in_at, now());
 
         $timeClockLogUpdate = [
             'work_shift_id' => optional($workShift)->id,
@@ -63,6 +65,6 @@ class LogCheckOutAction
             'checked_out_by_id' => $registrar->id,
         ];
 
-        return $this->timeClockLogRepository->update($timeClockLogUpdate, $timeClockLog->id);
+        return $this->timeClockLogRepository->update($timeClockLogUpdate, $lastTimeClockCheckIn->id);
     }
 }

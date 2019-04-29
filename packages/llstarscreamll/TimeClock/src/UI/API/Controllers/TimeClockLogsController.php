@@ -2,16 +2,17 @@
 
 namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
 use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
+use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
+use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
-use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
-use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 
 /**
  * Class TimeClockLogsController.
@@ -68,6 +69,10 @@ class TimeClockLogsController extends Controller
         } catch (MissingCheckInException $exception) {
             throw new HttpResponseException(response()->json([
                 'message' => 'No hay registro de entrada',
+            ], 422));
+        } catch (AlreadyCheckedInException $exception) {
+            throw new HttpResponseException(response()->json([
+                'message' => $exception->getMessage(),
             ], 422));
         }
 
