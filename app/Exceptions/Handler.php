@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Validation\ValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -47,6 +48,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof ValidationException && $request->expectsJson()) {
+            return response()->json(['message' => trans('validation.validation_error'), 'errors' => $exception->validator->getMessageBag()], 422);
+        }
+
         return parent::render($request, $exception);
     }
 }

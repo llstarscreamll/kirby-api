@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\TimeClock\UI\API\Requests;
 
+use Illuminate\Support\Arr;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -32,5 +33,25 @@ class StoreTimeClockLogRequest extends FormRequest
             'action' => ['in:check_in,check_out'],
             'identification_code' => ['exists:identifications,code'],
         ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return Arr::dot(trans('time-clock::validation.custom'));
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array
+     */
+    public function attributes(): array
+    {
+        return trans('time-clock::validation.attributes');
     }
 }

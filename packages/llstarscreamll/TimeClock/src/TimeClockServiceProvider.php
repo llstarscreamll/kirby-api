@@ -28,7 +28,7 @@ class TimeClockServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'time-clock');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/UI/API/Routes/v1.php');
@@ -90,12 +90,12 @@ class TimeClockServiceProvider extends ServiceProvider
         // Publishing assets.
         /*$this->publishes([
         __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
-        ], 'time-clock.views');*/
+        ], 'time-clock.assets');*/
 
         // Publishing the translation files.
         /*$this->publishes([
         __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
-        ], 'time-clock.views');*/
+        ], 'time-clock.translations');*/
 
         // Registering package commands.
         // $this->commands([]);
