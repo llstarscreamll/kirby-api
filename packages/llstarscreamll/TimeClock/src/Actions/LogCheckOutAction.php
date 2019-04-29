@@ -53,7 +53,7 @@ class LogCheckOutAction
             $identification->user_id, ['id', 'checked_in_at']
         );
 
-        if (!$lastTimeClockCheckIn) {
+        if (! $lastTimeClockCheckIn) {
             throw new MissingCheckInException();
         }
 
