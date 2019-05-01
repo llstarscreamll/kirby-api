@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c2a55ac3800ba61f314d130d0d07be76",
+    "content-hash": "4607c6981b96d5413cc3b50b790dc763",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1533,8 +1533,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/Authentication",
-                "reference": "300bf8b5a7a7ab7d46133c9a763437a6ba67cece",
-                "shasum": null
+                "reference": "300bf8b5a7a7ab7d46133c9a763437a6ba67cece"
             },
             "require": {
                 "barryvdh/laravel-cors": "^0.11.2",
@@ -1589,8 +1588,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/Authorization",
-                "reference": "6dc2cc718c82b2ed2490b37b9c792d86565717dd",
-                "shasum": null
+                "reference": "6dc2cc718c82b2ed2490b37b9c792d86565717dd"
             },
             "require": {
                 "illuminate/support": "~5",
@@ -1644,8 +1642,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/Core",
-                "reference": "4469643acce27e866b4058ffce9af45bd06ecf8a",
-                "shasum": null
+                "reference": "4469643acce27e866b4058ffce9af45bd06ecf8a"
             },
             "require": {
                 "illuminate/support": "~5",
@@ -1699,8 +1696,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/TimeClock",
-                "reference": "8d20acc1b5adf3922426c4ba6346467e1d2527b7",
-                "shasum": null
+                "reference": "8d20acc1b5adf3922426c4ba6346467e1d2527b7"
             },
             "require": {
                 "illuminate/support": "~5"
@@ -1756,8 +1752,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/Users",
-                "reference": "d1dea2ada8c915082b0a7fd9e12c937c0a80ff5c",
-                "shasum": null
+                "reference": "d1dea2ada8c915082b0a7fd9e12c937c0a80ff5c"
             },
             "require": {
                 "illuminate/support": "~5",
@@ -1811,8 +1806,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/WorkShifts",
-                "reference": "ec3d57b3b9a30f4fcd9c093982a634ea5df1d371",
-                "shasum": null
+                "reference": "ec3d57b3b9a30f4fcd9c093982a634ea5df1d371"
             },
             "require": {
                 "illuminate/support": "~5",
@@ -2458,6 +2452,56 @@
                 "x509"
             ],
             "time": "2019-03-10T16:53:45+00:00"
+        },
+        {
+            "name": "predis/predis",
+            "version": "v1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nrk/predis.git",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nrk/predis/zipball/f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "reference": "f0210e38881631afeafb56ab43405a92cafd9fd1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "ext-curl": "Allows access to Webdis when paired with phpiredis",
+                "ext-phpiredis": "Allows faster serialization and deserialization of the Redis protocol"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Predis\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Alessandri",
+                    "email": "suppakilla@gmail.com",
+                    "homepage": "http://clorophilla.net"
+                }
+            ],
+            "description": "Flexible and feature-complete Redis client for PHP and HHVM",
+            "homepage": "http://github.com/nrk/predis",
+            "keywords": [
+                "nosql",
+                "predis",
+                "redis"
+            ],
+            "time": "2016-06-16T16:22:20+00:00"
         },
         {
             "name": "prettus/l5-repository",
@@ -6899,7 +6943,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1.3"
+        "php": "^7.2"
     },
     "platform-dev": []
 }

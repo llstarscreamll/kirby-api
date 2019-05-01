@@ -25,6 +25,7 @@
         "llstarscreamll/laravel-time-clock": "*",
         "llstarscreamll/laravel-users": "*",
         "llstarscreamll/laravel-work-shifts": "*",
+        "predis/predis": "^1.1",
         "wikimedia/composer-merge-plugin": "^1.4"
     },
     "require-dev": {
