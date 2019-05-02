@@ -10,7 +10,7 @@ $releasesDir = "{$baseDir}/releases";
 $currentDir = "{$baseDir}/current";
 $newReleaseName = date('Y_m_d-H_i_s');
 $newReleaseDir = "{$releasesDir}/{$newReleaseName}";
-$branch = $branch ?? env('BRANCH', 'develop');
+$branch = $branch ?? env('DEFAULT_BRANCH', 'develop');
 $user = get_current_user();
 
 function logMessage($message) {
