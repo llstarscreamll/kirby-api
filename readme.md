@@ -7,3 +7,26 @@
 [![Build Status](https://scrutinizer-ci.com/g/llstarscreamll/laravel/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/llstarscreamll/laravel/build-status/develop)
 
 this project aims to be as a base for Laravel packages development used for multipurpose stuff, since I'm tired to writing the same things over and over again. The laravel libraries are located on the packages folder under de llstarscreamll vendor name.
+
+## Deploying
+
+Make sure to have your `.env` file, server and Github `ssh` keys correctly established on your local and remote instances. To make a full deploy execute:
+```bash
+envoy run deploy
+```
+
+To deploy only the code:
+```bash
+envoy run deployOnlyCode
+```
+
+If you want to deploy to specific server and branch execute:
+```bash
+envoy run --target=lab --branch=staging
+``` 
+
+To use `--target=lab` flag you must have in your environment `LAB_SERVERS`. Example:
+```
+# set many servers separated by semicolon
+LAB_SERVERS="john_doe@1.2.3.4;john_doe@5.6.7.8"
+```
