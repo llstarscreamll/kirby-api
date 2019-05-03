@@ -1,6 +1,7 @@
-<?php namespace Users;
+<?php
 
-use Users\ApiTester;
+namespace Users;
+
 use Illuminate\Support\Facades\Queue;
 use llstarscreamll\Users\Jobs\SyncEmployeesByCsvFileJob;
 

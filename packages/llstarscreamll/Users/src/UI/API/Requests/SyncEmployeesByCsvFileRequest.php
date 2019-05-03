@@ -2,7 +2,6 @@
 
 namespace llstarscreamll\Users\UI\API\Requests;
 
-use Illuminate\Support\Arr;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
