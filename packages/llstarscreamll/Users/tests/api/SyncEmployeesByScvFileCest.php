@@ -38,4 +38,15 @@ class SyncEmployeesByScvFileCest
         $I->seeResponseCodeIs(202);
         Queue::assertPushed(SyncEmployeesByCsvFileJob::class);
     }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function testWithoutFile(ApiTester $I)
+    {
+        $I->sendPOST($this->endpoint, []);
+
+        $I->seeResponseCodeIs(422);
+    }
 }
