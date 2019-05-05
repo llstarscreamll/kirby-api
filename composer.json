@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "llstarscreamll/laravel",
     "description": "The Laravel Framework.",
     "keywords": [
         "framework",
@@ -22,6 +22,7 @@
         "llstarscreamll/laravel-authentication": "*",
         "llstarscreamll/laravel-authorization": "*",
         "llstarscreamll/laravel-core": "*",
+        "llstarscreamll/laravel-employees": "*",
         "llstarscreamll/laravel-time-clock": "*",
         "llstarscreamll/laravel-users": "*",
         "llstarscreamll/laravel-work-shifts": "*",
