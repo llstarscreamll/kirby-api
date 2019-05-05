@@ -5,11 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
 /**
- * Class CreateWorkShiftsTable.
+ * Class CreateWorkShiftsTables.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CreateWorkShiftsTable extends Migration
+class CreateWorkShiftsTables extends Migration
 {
     /**
      * Run the migrations.
@@ -30,12 +30,12 @@ class CreateWorkShiftsTable extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('user_work_shift', function (Blueprint $table) {
-            $table->unsignedInteger('user_id');
+        Schema::create('employee_work_shift', function (Blueprint $table) {
+            $table->unsignedInteger('employee_id');
             $table->unsignedInteger('work_shift_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
             $table->foreign('work_shift_id')->references('id')->on('work_shifts')->onDelete('cascade');
-            $table->primary(['user_id', 'work_shift_id']);
+            $table->primary(['employee_id', 'work_shift_id']);
             $table->timestamps();
         });
     }
