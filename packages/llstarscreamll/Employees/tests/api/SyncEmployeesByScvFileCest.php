@@ -1,4 +1,6 @@
-<?php namespace Employees;
+<?php
+
+namespace Employees;
 
 use Employees\ApiTester;
 use Illuminate\Support\Facades\Queue;

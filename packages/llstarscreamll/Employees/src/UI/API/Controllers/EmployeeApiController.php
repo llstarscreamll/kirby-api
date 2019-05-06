@@ -20,6 +20,6 @@ class EmployeeApiController
     {
         SyncEmployeesByCsvFileJob::dispatch($request->file('csv_file')->store('employees_sync'));
 
-        return response()->json("", Response::HTTP_ACCEPTED);
+        return response()->json('', Response::HTTP_ACCEPTED);
     }
 }
