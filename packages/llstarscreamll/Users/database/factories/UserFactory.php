@@ -15,8 +15,9 @@ use Faker\Generator as Faker;
 
 $factory->define(llstarscreamll\Users\Models\User::class, function (Faker $faker) {
     return [
-        'name'     => $faker->name,
-        'email'    => $faker->email,
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'email' => $faker->email,
         'password' => bcrypt('123'),
     ];
 });

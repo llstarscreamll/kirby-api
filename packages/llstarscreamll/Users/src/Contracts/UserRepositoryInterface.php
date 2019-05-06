@@ -5,10 +5,10 @@ namespace llstarscreamll\Users\Contracts;
 use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
 
 /**
- * Interface IdentificationRepositoryInterface.
+ * Interface UserRepositoryInterface.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-interface IdentificationRepositoryInterface extends BaseRepositoryInterface
+interface UserRepositoryInterface extends BaseRepositoryInterface
 {
 }

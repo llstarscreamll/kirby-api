@@ -3,9 +3,9 @@
 namespace llstarscreamll\Users;
 
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Users\Contracts\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
-use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
-use llstarscreamll\Users\Data\Repositories\EloquentIdentificationRepository;
+use llstarscreamll\Users\Data\Repositories\EloquentUserRepository;
 
 /**
  * Class UsersServiceProvider.
@@ -18,7 +18,7 @@ class UsersServiceProvider extends ServiceProvider
      * @var array
      */
     private $binds = [
-        IdentificationRepositoryInterface::class => EloquentIdentificationRepository::class,
+        UserRepositoryInterface::class => EloquentUserRepository::class,
     ];
 
     /**
@@ -31,7 +31,7 @@ class UsersServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/UI/API/Routes/v1.php');
+        // $this->loadRoutesFrom(__DIR__.'/UI/API/Routes/v1.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {

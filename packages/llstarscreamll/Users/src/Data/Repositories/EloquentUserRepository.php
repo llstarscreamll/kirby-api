@@ -2,16 +2,16 @@
 
 namespace llstarscreamll\Users\Data\Repositories;
 
-use llstarscreamll\Users\Models\Identification;
+use llstarscreamll\Users\Models\User;
+use llstarscreamll\Users\Contracts\UserRepositoryInterface;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
-use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
 
 /**
- * Class EloquentIdentificationRepository.
+ * Class EloquentUserRepository.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class EloquentIdentificationRepository extends EloquentRepositoryAbstract implements IdentificationRepositoryInterface
+class EloquentUserRepository extends EloquentRepositoryAbstract implements UserRepositoryInterface
 {
     /**
      * @var array
@@ -25,6 +25,6 @@ class EloquentIdentificationRepository extends EloquentRepositoryAbstract implem
 
     public function model(): string
     {
-        return Identification::class;
+        return User::class;
     }
 }

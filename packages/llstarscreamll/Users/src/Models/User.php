@@ -2,13 +2,10 @@
 
 namespace llstarscreamll\Users\Models;
 
-use Carbon\Carbon;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use llstarscreamll\WorkShifts\Models\WorkShift;
-use llstarscreamll\TimeClock\Models\TimeClockLog;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -26,7 +23,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password',
     ];
 
     /**
@@ -49,60 +46,8 @@ class User extends Authenticatable
         'deleted_at',
     ];
 
-    /**
-     * Related identifications.
-     *
-     * @return mixed
-     */
-    public function identifications()
+    public function getNameAttribute()
     {
-        return $this->hasMany(Identification::class);
-    }
-
-    /**
-     * Related work shifts.
-     *
-     * @return mixed
-     */
-    public function workShifts()
-    {
-        return $this->belongsToMany(WorkShift::class);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function timeClockLogs()
-    {
-        return $this->hasMany(TimeClockLog::class, 'employee_id');
-    }
-
-    /**
-     * @param  Carbon      $start
-     * @param  Carbon      $end
-     * @return WorkShift
-     */
-    public function getFirstWorkShiftByClosestRangeTime(Carbon $start, Carbon $end):  ? WorkShift
-    {
-        return $this->workShifts->first(function (WorkShift $workShift) use ($start, $end) {
-            $timeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($start, $end, $workShift) {
-                [$hour, $seconds] = explode(':', $timeSlot['start']);
-                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
-                $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_start_time);
-
-                [$hour, $seconds] = explode(':', $timeSlot['end']);
-                $slotEndFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_end_time);
-                $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_end_time);
-
-                if ($slotStartFrom->hour > (int) $hour) {
-                    $slotStartFrom = $slotStartFrom->subDay();
-                    $slotStartTo = $slotStartTo->subDay();
-                }
-
-                return $start->between($slotStartFrom, $slotStartTo) && $end->between($slotEndFrom, $slotEndTo);
-            });
-
-            return $timeSlots->count();
-        });
+        return "{$this->first_name} {$this->last_name}";
     }
 }
