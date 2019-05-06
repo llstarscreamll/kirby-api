@@ -1,4 +1,5 @@
 <?php
+
 namespace Employees\Helper;
 
 // here you can define custom actions
@@ -6,5 +7,4 @@ namespace Employees\Helper;
 
 class Api extends \Codeception\Module
 {
-
 }

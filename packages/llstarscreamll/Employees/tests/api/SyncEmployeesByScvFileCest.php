@@ -2,7 +2,6 @@
 
 namespace Employees;
 
-use Employees\ApiTester;
 use Illuminate\Support\Facades\Queue;
 use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
 
