@@ -1317,6 +1317,73 @@
             "time": "2018-11-11T12:22:26+00:00"
         },
         {
+            "name": "league/csv",
+            "version": "9.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/csv.git",
+                "reference": "f3a3c69b6e152417e1b62d995bcad2237b053cc6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/f3a3c69b6e152417e1b62d995bcad2237b053cc6",
+                "reference": "f3a3c69b6e152417e1b62d995bcad2237b053cc6",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": ">=7.0.10"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "friendsofphp/php-cs-fixer": "^2.12",
+                "phpstan/phpstan": "^0.9.2",
+                "phpstan/phpstan-phpunit": "^0.9.4",
+                "phpstan/phpstan-strict-rules": "^0.9.0",
+                "phpunit/phpunit": "^6.0"
+            },
+            "suggest": {
+                "ext-iconv": "Needed to ease transcoding CSV using iconv stream filters"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "9.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Csv\\": "src"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ignace Nyamagana Butera",
+                    "email": "nyamsprod@gmail.com",
+                    "homepage": "https://github.com/nyamsprod/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Csv data manipulation made easy in PHP",
+            "homepage": "http://csv.thephpleague.com",
+            "keywords": [
+                "csv",
+                "export",
+                "filter",
+                "import",
+                "read",
+                "write"
+            ],
+            "time": "2019-03-08T06:56:16+00:00"
+        },
+        {
             "name": "league/event",
             "version": "2.2.0",
             "source": {
@@ -1696,10 +1763,11 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/Employees",
-                "reference": "13e75b9ed3aa7723755b2c61bb3b01e877dd3a62"
+                "reference": "5fd23b4909f400dc998455529e30a03524b5bd87"
             },
             "require": {
-                "illuminate/support": "~5"
+                "illuminate/support": "~5",
+                "league/csv": "^9.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.1",
