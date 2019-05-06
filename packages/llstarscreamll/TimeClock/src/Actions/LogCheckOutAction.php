@@ -5,8 +5,8 @@ namespace llstarscreamll\TimeClock\Actions;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
-use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 
 /**
  * Class LogCheckOutAction.
@@ -16,7 +16,7 @@ use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 class LogCheckOutAction
 {
     /**
-     * @var \llstarscreamll\Users\Contracts\IdentificationRepositoryInterface
+     * @var \llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface
      */
     private $identificationRepository;
 
@@ -45,19 +45,19 @@ class LogCheckOutAction
     public function run(User $registrar, string $identificationCode): TimeClockLog
     {
         $identification = $this->identificationRepository
-                               ->with(['user.workShifts'])
-                               ->findByField('code', $identificationCode, ['id', 'user_id'])
+                               ->with(['employee.workShifts'])
+                               ->findByField('code', $identificationCode, ['id', 'employee_id'])
                                ->first();
 
         $lastTimeClockCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
-            $identification->user_id, ['id', 'checked_in_at']
+            $identification->employee_id, ['id', 'checked_in_at']
         );
 
-        if (! $lastTimeClockCheckIn) {
+        if (!$lastTimeClockCheckIn) {
             throw new MissingCheckInException();
         }
 
-        $workShift = $identification->user->getFirstWorkShiftByClosestRangeTime($lastTimeClockCheckIn->checked_in_at, now());
+        $workShift = $identification->employee->getFirstWorkShiftByClosestRangeTime($lastTimeClockCheckIn->checked_in_at, now());
 
         $timeClockLogUpdate = [
             'work_shift_id' => optional($workShift)->id,

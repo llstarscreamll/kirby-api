@@ -21,8 +21,9 @@ class Api extends \Codeception\Module
     public function amLoggedAsAdminUser(string $guard = 'api'): User
     {
         $adminId = $this->getModule('Laravel5')->haveRecord('users', [
-            'name'     => 'admin',
-            'email'    => 'admin@admin.com',
+            'first_name' => 'admin',
+            'last_name' => '',
+            'email' => 'admin@admin.com',
             'password' => bcrypt('admin-password'),
         ]);
 
@@ -45,8 +46,9 @@ class Api extends \Codeception\Module
     {
         if (is_null($user)) {
             $userId = $this->getModule('Laravel5')->haveRecord('users', [
-                'name'     => 'guest user',
-                'email'    => 'guest@user.com',
+                'first_name' => 'guest user',
+                'last_name' => '',
+                'email' => 'guest@user.com',
                 'password' => bcrypt('guest-user-password'),
             ]);
 

@@ -10,9 +10,9 @@ use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
-use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 
 /**
  * Class TimeClockLogsController.
@@ -22,7 +22,7 @@ use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 class TimeClockLogsController extends Controller
 {
     /**
-     * @var \llstarscreamll\Users\Contracts\IdentificationRepositoryInterface
+     * @var \llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface
      */
     private $identificationRepository;
 
@@ -32,8 +32,8 @@ class TimeClockLogsController extends Controller
     private $timeClockLogRepository;
 
     /**
-     * @param \llstarscreamll\Users\Contracts\IdentificationRepositoryInterface   $identificationRepository
-     * @param \llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface $timeClockLogRepository
+     * @param \llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface $identificationRepository
+     * @param \llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface   $timeClockLogRepository
      */
     public function __construct(
         IdentificationRepositoryInterface $identificationRepository,

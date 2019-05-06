@@ -5,8 +5,8 @@ namespace llstarscreamll\TimeClock\Actions;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
-use llstarscreamll\Users\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 
 /**
  * Class LogCheckInAction.
@@ -16,7 +16,7 @@ use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 class LogCheckInAction
 {
     /**
-     * @var \llstarscreamll\Users\Contracts\IdentificationRepositoryInterface
+     * @var \llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface
      */
     private $identificationRepository;
 
@@ -44,12 +44,12 @@ class LogCheckInAction
     public function run(User $registrar, string $identificationCode): TimeClockLog
     {
         $identification = $this->identificationRepository
-                               ->with(['user.workShifts'])
-                               ->findByField('code', $identificationCode, ['id', 'user_id'])
+                               ->with(['employee.workShifts'])
+                               ->findByField('code', $identificationCode, ['id', 'employee_id'])
                                ->first();
 
         $lastTimeClockCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
-            $identification->user_id, ['id', 'checked_in_at']
+            $identification->employee_id, ['id', 'checked_in_at']
         );
 
         if ($lastTimeClockCheckIn) {
@@ -57,7 +57,7 @@ class LogCheckInAction
         }
 
         $timeClockLog = [
-            'employee_id' => $identification->user_id,
+            'employee_id' => $identification->employee_id,
             'checked_in_at' => now(),
             'checked_in_by_id' => $registrar->id,
         ];

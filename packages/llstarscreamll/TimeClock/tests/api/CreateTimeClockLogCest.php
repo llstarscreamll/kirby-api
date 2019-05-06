@@ -4,6 +4,7 @@ namespace ClockTime;
 
 use Illuminate\Support\Carbon;
 use llstarscreamll\Users\Models\User;
+use llstarscreamll\Employees\Models\Employee;
 
 /**
  * Class CreateTimeClockLogCest.
@@ -37,8 +38,7 @@ class CreateTimeClockLogCest
      */
     public function testToCheckInWhenEmployeeIdentificationDoesNotExists(ApiTester $I)
     {
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->create();
 
@@ -60,8 +60,7 @@ class CreateTimeClockLogCest
      */
     public function testToCheckInWhenInvalidActionTypeGiven(ApiTester $I)
     {
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->create();
 
@@ -86,8 +85,7 @@ class CreateTimeClockLogCest
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 02));
 
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'checked_in_at' => Carbon::now()->subMinutes(2), // employee checked in 2 minutes ago
@@ -114,8 +112,7 @@ class CreateTimeClockLogCest
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
 
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('workShifts', ['name' => '7 to 6', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
             ->create();
@@ -147,8 +144,7 @@ class CreateTimeClockLogCest
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
         $checkedInTime = now()->setTime(7, 0);
 
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('workShifts', ['name' => '7 to 6', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
             ->with('timeClockLogs', [
@@ -186,8 +182,7 @@ class CreateTimeClockLogCest
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
 
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->create();
 
@@ -218,8 +213,7 @@ class CreateTimeClockLogCest
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
         $checkedInTime = now()->setTime(7, 0);
 
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'work_shift_id' => null,
@@ -256,8 +250,7 @@ class CreateTimeClockLogCest
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 14, 00));
 
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'work_shift_id' => null,
@@ -300,8 +293,7 @@ class CreateTimeClockLogCest
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 00));
 
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'work_shift_id' => null,
@@ -345,8 +337,7 @@ class CreateTimeClockLogCest
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
         $checkedInTime = now()->setTime(7, 0);
 
-        $employee = factory(User::class)
-            ->with('roles', ['name' => 'employee'])
+        $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->create();
 

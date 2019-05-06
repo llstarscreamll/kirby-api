@@ -25,20 +25,21 @@ class LoginCest
         config(['authentication.clients.web.secret' => 'secret-token']);
 
         $I->haveRecord('oauth_clients', [
-            'id'                     => 1,
-            'name'                   => 'App Personal Access Client',
-            'secret'                 => 'secret-token',
-            'redirect'               => 'http://localhost',
+            'id' => 1,
+            'name' => 'App Personal Access Client',
+            'secret' => 'secret-token',
+            'redirect' => 'http://localhost',
             'personal_access_client' => 0,
-            'password_client'        => 1,
-            'revoked'                => 0,
-            'created_at'             => date('Y-m-d H:i:s'),
-            'updated_at'             => date('Y-m-d H:i:s'),
+            'password_client' => 1,
+            'revoked' => 0,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
         $I->haveRecord('users', [
-            'name'     => 'John Doe',
-            'email'    => 'john@doe.com',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'email' => 'john@doe.com',
             'password' => Hash::make('123456'),
         ]);
 
@@ -48,9 +49,7 @@ class LoginCest
     /**
      * @param ApiTester $I
      */
-    public function _after(ApiTester $I)
-    {
-    }
+    public function _after(ApiTester $I) {}
 
     /**
      * @test
@@ -59,7 +58,7 @@ class LoginCest
     public function whenCredentialsAreValidExpectOkWithAccessTokenAndRefreshToken(ApiTester $I)
     {
         $I->sendPOST($this->endpoint, [
-            'email'    => 'john@doe.com',
+            'email' => 'john@doe.com',
             'password' => '123456',
         ]);
 
