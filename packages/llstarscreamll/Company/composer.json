@@ -1,0 +1,43 @@
+{
+    "name": "llstarscreamll/laravel-company",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "https://github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/laravel-company",
+    "keywords": ["Laravel", "Company"],
+    "require": {
+        "illuminate/support": "~5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "llstarscreamll\\Company\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "llstarscreamll\\Company\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "llstarscreamll\\Company\\CompanyServiceProvider"
+            ],
+            "aliases": {
+                "Company": "llstarscreamll\\Company\\Facades\\Company"
+            }
+        }
+    }
+}
