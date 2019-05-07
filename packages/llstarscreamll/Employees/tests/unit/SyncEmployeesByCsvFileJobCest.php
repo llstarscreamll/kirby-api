@@ -2,7 +2,6 @@
 
 namespace Employees;
 
-use Employees\UnitTester;
 use Illuminate\Support\Facades\Artisan;
 use llstarscreamll\Company\Models\CostCenter;
 use llstarscreamll\Users\Contracts\UserRepositoryInterface;

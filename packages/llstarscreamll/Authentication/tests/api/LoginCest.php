@@ -49,7 +49,9 @@ class LoginCest
     /**
      * @param ApiTester $I
      */
-    public function _after(ApiTester $I) {}
+    public function _after(ApiTester $I)
+    {
+    }
 
     /**
      * @test

@@ -3,7 +3,6 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
-use llstarscreamll\Users\Models\User;
 use llstarscreamll\Employees\Models\Employee;
 
 /**

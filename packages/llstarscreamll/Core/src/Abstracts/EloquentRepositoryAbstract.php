@@ -539,7 +539,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     {
         foreach ($where as $field => $value) {
             if (is_array($value)) {
-                list($field, $condition, $val) = $value;
+                [$field, $condition, $val] = $value;
                 $this->model = $this->model->where($field, $condition, $val);
             } else {
                 $this->model = $this->model->where($field, '=', $value);

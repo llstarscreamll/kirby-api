@@ -7,7 +7,6 @@ use llstarscreamll\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
-use llstarscreamll\Employees\Models\Identification;
 
 /**
  * Class Employee.

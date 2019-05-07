@@ -34,19 +34,19 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
      * @var array
      */
     private $fileColumns = [
-        "code",
-        "identification_number",
-        "first_name",
-        "last_name",
-        "cost_center_id",
-        "position",
-        "location",
-        "address",
-        "phone",
-        "email",
-        "salary",
-        "identifications",
-        "work_shifts",
+        'code',
+        'identification_number',
+        'first_name',
+        'last_name',
+        'cost_center_id',
+        'position',
+        'location',
+        'address',
+        'phone',
+        'email',
+        'salary',
+        'identifications',
+        'work_shifts',
     ];
 
     /**
@@ -96,9 +96,9 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
      */
     private function storeUser(array $user, UserRepositoryInterface $userRepository)
     {
-        $password = Arr::only($user, ["code", "identification_number", "email"]);
+        $password = Arr::only($user, ['code', 'identification_number', 'email']);
         $user['password'] = Hash::make(implode('@', $password));
-        $userKeys = Arr::only($user, ["code"]);
+        $userKeys = Arr::only($user, ['code']);
 
         return $userRepository->updateOrCreate($userKeys, $user);
     }
