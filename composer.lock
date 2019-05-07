@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "65668a4c8a759dc3d32dcf94fa966d38",
+    "content-hash": "2661883e728738cc9ff88677f7c8000e",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1700,6 +1700,61 @@
             "homepage": "https://github.com/llstarscreamll/laravel-authorization",
             "keywords": [
                 "Authorization",
+                "Laravel"
+            ]
+        },
+        {
+            "name": "llstarscreamll/laravel-company",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./packages/llstarscreamll/Company",
+                "reference": "795562fc970a7620b87c3145c9569aa46e0d92dd"
+            },
+            "require": {
+                "illuminate/support": "~5"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.1",
+                "orchestra/testbench": "~3.0",
+                "phpunit/phpunit": "~7.0",
+                "sempro/phpunit-pretty-print": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "llstarscreamll\\Company\\CompanyServiceProvider"
+                    ],
+                    "aliases": {
+                        "Company": "llstarscreamll\\Company\\Facades\\Company"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "llstarscreamll\\Company\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "llstarscreamll\\Company\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "license"
+            ],
+            "authors": [
+                {
+                    "name": "Johan Alvarez",
+                    "email": "llstarscreamll@hotmail.com",
+                    "homepage": "https://github.com/llstarscreamll"
+                }
+            ],
+            "description": ":description",
+            "homepage": "https://github.com/llstarscreamll/laravel-company",
+            "keywords": [
+                "Company",
                 "Laravel"
             ]
         },

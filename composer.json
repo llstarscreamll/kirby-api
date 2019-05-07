@@ -21,6 +21,7 @@
         "laravel/tinker": "^1.0",
         "llstarscreamll/laravel-authentication": "*",
         "llstarscreamll/laravel-authorization": "*",
+        "llstarscreamll/laravel-company": "*",
         "llstarscreamll/laravel-core": "*",
         "llstarscreamll/laravel-employees": "*",
         "llstarscreamll/laravel-time-clock": "*",
