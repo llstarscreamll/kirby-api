@@ -9,6 +9,11 @@ use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Employees\Data\Repositories\EloquentEmployeeRepository;
 use llstarscreamll\Employees\Data\Repositories\EloquentIdentificationRepository;
 
+/**
+ * Class EmployeesServiceProvider.
+ *
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ */
 class EmployeesServiceProvider extends ServiceProvider
 {
     /**
