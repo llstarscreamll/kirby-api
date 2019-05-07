@@ -35,7 +35,7 @@ class CoreServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('core', function ($app) {
-            return new Core;
+            return new Core();
         });
     }
 
@@ -63,17 +63,17 @@ class CoreServiceProvider extends ServiceProvider
 
         // Publishing the views.
         /*$this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
+        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
         ], 'core.views');*/
 
         // Publishing assets.
         /*$this->publishes([
-            __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
+        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
         ], 'core.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
-            __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
+        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'core.views');*/
 
         // Registering package commands.

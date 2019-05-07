@@ -4,6 +4,7 @@ namespace Employees;
 
 use Employees\UnitTester;
 use Illuminate\Support\Facades\Artisan;
+use llstarscreamll\Company\Models\CostCenter;
 use llstarscreamll\Users\Contracts\UserRepositoryInterface;
 use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
@@ -33,6 +34,7 @@ class SyncEmployeesByCsvFileJobCest
      */
     public function syncValidFileWithTwoEmployees(UnitTester $I)
     {
+        $costCenters = factory(CostCenter::class, 2)->create();
         $filePath = codecept_data_dir('import_employees/good_employees.csv');
         $userRepository = app(UserRepositoryInterface::class);
         $employeeRepository = app(EmployeeRepositoryInterface::class);
