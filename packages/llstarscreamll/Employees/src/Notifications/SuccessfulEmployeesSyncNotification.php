@@ -53,8 +53,9 @@ class SuccessfulEmployeesSyncNotification extends Notification
             ->subject('Sincronización de empleados exitosa')
             ->greeting("Hola {$notifiable->first_name}!")
             ->line("La tarea de sincronización de empleados ha sido "
-                ."finalizada exitosamente, fueron sincronizados "
-                ."_{$this->employeesSynced}_ registros.");
+                ."finalizada exitosamente, fueron procesados "
+                ."**{$this->employeesSynced}** registros.")
+            ->salutation("Saludos, ".config("app.name").".");
     }
 
     /**
