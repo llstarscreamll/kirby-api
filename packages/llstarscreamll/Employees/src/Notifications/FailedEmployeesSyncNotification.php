@@ -53,7 +53,7 @@ class FailedEmployeesSyncNotification extends Notification
             ->error()
             ->subject('Sincronización de empleados fallida')
             ->greeting("Hola {$notifiable->first_name}!")
-            ->line("La tarea de sincronización de empleados ha"
+            ->line('La tarea de sincronización de empleados ha'
                 ."devuelto el siguiente error: _$this->errorMessage_.");
     }
 
