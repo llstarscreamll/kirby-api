@@ -2,14 +2,19 @@
 
 namespace Employees;
 
+use llstarscreamll\Users\Models\User;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Notification;
 use llstarscreamll\Company\Models\CostCenter;
+use llstarscreamll\Employees\Models\Identification;
 use llstarscreamll\Users\Contracts\UserRepositoryInterface;
 use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
 use llstarscreamll\WorkShifts\Data\Seeders\DefaultWorkShiftsSeeder;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\Employees\Notifications\FailedEmployeesSyncNotification;
+use llstarscreamll\Employees\Notifications\SuccessfulEmployeesSyncNotification;
 
 /**
  * Class SyncEmployeesByCsvFileJobCest.
@@ -33,6 +38,7 @@ class SyncEmployeesByCsvFileJobCest
      */
     public function syncValidFileWithTwoEmployees(UnitTester $I)
     {
+        $user = factory(User::class)->create();
         $costCenters = factory(CostCenter::class, 2)->create();
         $filePath = codecept_data_dir('import_employees/good_employees.csv');
         $userRepository = app(UserRepositoryInterface::class);
@@ -40,10 +46,15 @@ class SyncEmployeesByCsvFileJobCest
         $identificationRepository = app(IdentificationRepositoryInterface::class);
         $workShiftRepository = app(WorkShiftRepositoryInterface::class);
 
-        $job = new SyncEmployeesByCsvFileJob($filePath);
+        Notification::fake();
+
+        $job = new SyncEmployeesByCsvFileJob($user->id, $filePath);
         $I->assertTrue($job->handle(
             $userRepository, $employeeRepository, $workShiftRepository, $identificationRepository
         ));
+
+        // success notification should have been sent
+        Notification::assertSentTo($user, SuccessfulEmployeesSyncNotification::class);
 
         // users persisted on DB
         $I->seeRecord('users', [
@@ -60,7 +71,7 @@ class SyncEmployeesByCsvFileJobCest
 
         // employees data persisted on DB, user may has related employee data
         $I->seeRecord('employees', [
-            'id' => 1,
+            'id' => 2,
             'code' => '123',
             'identification_number' => '456',
             'cost_center_id' => 1,
@@ -72,7 +83,7 @@ class SyncEmployeesByCsvFileJobCest
         ]);
 
         $I->seeRecord('employees', [
-            'id' => 2,
+            'id' => 3,
             'code' => '987',
             'identification_number' => '654',
             'cost_center_id' => 2,
@@ -85,42 +96,69 @@ class SyncEmployeesByCsvFileJobCest
 
         // identifications codes persisted on DB
         $I->seeRecord('identifications', [
-            'employee_id' => 1,
+            'employee_id' => 2,
             'name' => 'E-card',
             'code' => 'Code-1',
         ]);
 
         $I->seeRecord('identifications', [
-            'employee_id' => 1,
+            'employee_id' => 2,
             'name' => 'PIN',
             'code' => '2369',
         ]);
 
         $I->seeRecord('identifications', [
-            'employee_id' => 2,
+            'employee_id' => 3,
             'name' => 'E-card',
             'code' => 'Code-3',
         ]);
 
         // employee work shifts persisted on DB
         $I->seeRecord('employee_work_shift', [
-            'employee_id' => 1,
+            'employee_id' => 2,
             'work_shift_id' => 1,
-        ]);
-
-        $I->seeRecord('employee_work_shift', [
-            'employee_id' => 1,
-            'work_shift_id' => 2,
-        ]);
-
-        $I->seeRecord('employee_work_shift', [
-            'employee_id' => 1,
-            'work_shift_id' => 3,
         ]);
 
         $I->seeRecord('employee_work_shift', [
             'employee_id' => 2,
+            'work_shift_id' => 2,
+        ]);
+
+        $I->seeRecord('employee_work_shift', [
+            'employee_id' => 2,
+            'work_shift_id' => 3,
+        ]);
+
+        $I->seeRecord('employee_work_shift', [
+            'employee_id' => 3,
             'work_shift_id' => 1,
         ]);
+    }
+
+    /**
+     * @test
+     * @param UnitTester $I
+     */
+    public function syncValidFileWithIdentificationCodeTakenByAnotherEmployee(UnitTester $I)
+    {
+        $user = factory(User::class)->create();
+        factory(Identification::class)->create(['code' => 'Code-1']);
+        $costCenters = factory(CostCenter::class, 2)->create();
+        $filePath = codecept_data_dir('import_employees/good_employees.csv');
+
+        $userRepository = app(UserRepositoryInterface::class);
+        $employeeRepository = app(EmployeeRepositoryInterface::class);
+        $identificationRepository = app(IdentificationRepositoryInterface::class);
+        $workShiftRepository = app(WorkShiftRepositoryInterface::class);
+
+        Notification::fake();
+
+        $job = new SyncEmployeesByCsvFileJob($user->id, $filePath);
+        $I->assertFalse($job->handle(
+            $userRepository, $employeeRepository, $workShiftRepository, $identificationRepository
+        ));
+
+        // error notification should have been sent
+        Notification::assertSentTo($user, FailedEmployeesSyncNotification::class);
     }
 }

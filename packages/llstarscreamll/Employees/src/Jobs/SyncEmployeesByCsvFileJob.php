@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\Employees\Jobs;
 
+use Exception;
 use League\Csv\Reader;
 use League\Csv\Statement;
 use Illuminate\Support\Arr;
@@ -15,6 +16,8 @@ use llstarscreamll\Users\Contracts\UserRepositoryInterface;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\Employees\Notifications\FailedEmployeesSyncNotification;
+use llstarscreamll\Employees\Notifications\SuccessfulEmployeesSyncNotification;
 
 /**
  * Class SyncEmployeesByCsvFileJob.
@@ -26,9 +29,28 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
-     * @var mixed
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 3;
+
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = 60 * 3;
+
+    /**
+     * @var string
      */
     private $csvFilePath;
+
+    /**
+     * @var int
+     */
+    private $userId;
 
     /**
      * @var array
@@ -52,10 +74,12 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param int    $userId
+     * @param string $csvFilePath
      */
-    public function __construct(string $csvFilePath)
+    public function __construct(int $userId, string $csvFilePath)
     {
+        $this->userId = $userId;
         $this->csvFilePath = $csvFilePath;
     }
 
@@ -75,16 +99,24 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
             ->offset(1)
             ->process($reader, $this->fileColumns);
 
-        foreach ($records as $row => $record) {
-            // store user
-            $user = $this->storeUser($record, $userRepository);
-            // store employee
-            $employee = $employeeRepository->updateOrCreate(['id' => $user->id], $record + ['id' => $user->id]);
-            // store identifications
-            $this->storeIdentificationCodes($user->id, $record['identifications'], $identificationRepository);
-            // store work shifts
-            $this->storeWorkShifts($user->id, $record['work_shifts'], $employeeRepository, $workShiftRepository);
+        try {
+            foreach ($records as $row => $record) {
+                // store user
+                $user = $this->storeUser($record, $userRepository);
+                // store employee
+                $employee = $employeeRepository->updateOrCreate(['id' => $user->id], $record + ['id' => $user->id]);
+                // store identifications
+                $this->storeIdentificationCodes($user->id, $record['identifications'], $identificationRepository);
+                // store work shifts
+                $this->storeWorkShifts($user->id, $record['work_shifts'], $employeeRepository, $workShiftRepository);
+            }
+        } catch (Exception $e) {
+            $userRepository->find($this->userId)->notify(new FailedEmployeesSyncNotification($e->getMessage()));
+
+            return false;
         }
+
+        $userRepository->find($this->userId)->notify(new SuccessfulEmployeesSyncNotification(count($records)));
 
         return true;
     }
