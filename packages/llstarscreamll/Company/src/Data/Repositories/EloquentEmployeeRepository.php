@@ -11,7 +11,7 @@ use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class EloquentCostCenterRepository extends EloquentRepositoryAbstract implements CostCenterRepositoryInterface
+class EloquentEmployeeRepository extends EloquentRepositoryAbstract implements CostCenterRepositoryInterface
 {
     /**
      * @var array
