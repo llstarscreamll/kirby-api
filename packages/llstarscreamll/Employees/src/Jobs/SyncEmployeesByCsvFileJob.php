@@ -94,7 +94,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
         WorkShiftRepositoryInterface $workShiftRepository,
         IdentificationRepositoryInterface $identificationRepository
     ) {
-        $reader = Reader::createFromPath($this->csvFilePath, 'r')->setDelimiter(';');
+        $reader = Reader::createFromPath(storage_path("app/{$this->csvFilePath}"), 'r')->setDelimiter(';');
         $records = (new Statement())
             ->offset(1)
             ->process($reader, $this->fileColumns);
@@ -111,6 +111,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
                 $this->storeWorkShifts($user->id, $record['work_shifts'], $employeeRepository, $workShiftRepository);
             }
         } catch (Exception $e) {
+            logger("Error sincronizando empleados: ", [$e->getMessage()]);
             $userRepository->find($this->userId)->notify(new FailedEmployeesSyncNotification($e->getMessage()));
 
             return false;
@@ -130,7 +131,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
     {
         $password = Arr::only($user, ['code', 'identification_number', 'email']);
         $user['password'] = Hash::make(implode('@', $password));
-        $userKeys = Arr::only($user, ['code']);
+        $userKeys = Arr::only($user, ['email']);
 
         return $userRepository->updateOrCreate($userKeys, $user);
     }
