@@ -111,7 +111,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
                 $this->storeWorkShifts($user->id, $record['work_shifts'], $employeeRepository, $workShiftRepository);
             }
         } catch (Exception $e) {
-            logger("Error sincronizando empleados: ", [$e->getMessage()]);
+            logger('Error sincronizando empleados: ', [$e->getMessage()]);
             $userRepository->find($this->userId)->notify(new FailedEmployeesSyncNotification($e->getMessage()));
 
             return false;
