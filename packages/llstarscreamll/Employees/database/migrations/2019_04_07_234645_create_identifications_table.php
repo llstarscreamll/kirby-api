@@ -24,7 +24,6 @@ class CreateIdentificationsTable extends Migration
             $table->string('name');
             $table->string('code')->unique();
             $table->timestamps();
-            $table->softDeletes();
 
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });

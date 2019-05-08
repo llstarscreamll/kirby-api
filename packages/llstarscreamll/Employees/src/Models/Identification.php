@@ -3,7 +3,6 @@
 namespace llstarscreamll\Employees\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Identification.
@@ -12,8 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Identification extends Model
 {
-    use SoftDeletes;
-
     /**
      * The attributes that are mass assignable.
      *
