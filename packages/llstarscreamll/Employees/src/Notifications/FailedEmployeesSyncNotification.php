@@ -53,9 +53,9 @@ class FailedEmployeesSyncNotification extends Notification
             ->error()
             ->subject('Sincronización de empleados fallida')
             ->greeting("Hola {$notifiable->first_name}!")
-            ->line("La tarea de sincronización de empleados ha devuelto el siguiente error:")
+            ->line('La tarea de sincronización de empleados ha devuelto el siguiente error:')
             ->line("**{$this->errorMessage}**")
-            ->salutation("Saludos, ".config("app.name").".");
+            ->salutation('Saludos, '.config("app.name").'.');
     }
 
     /**
