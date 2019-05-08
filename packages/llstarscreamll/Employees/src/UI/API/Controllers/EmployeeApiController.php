@@ -18,7 +18,7 @@ class EmployeeApiController
      */
     public function syncEmployeesByCsvFile(SyncEmployeesByCsvFileRequest $request)
     {
-        SyncEmployeesByCsvFileJob::dispatch($request->file('csv_file')->store('employees_sync'));
+        SyncEmployeesByCsvFileJob::dispatch($request->user()->id, $request->file('csv_file')->store('employees_sync'));
 
         return response()->json('', Response::HTTP_ACCEPTED);
     }
