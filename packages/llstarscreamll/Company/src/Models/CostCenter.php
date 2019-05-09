@@ -20,7 +20,7 @@ class CostCenter extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
+        'code', 'name',
     ];
 
     /**
