@@ -24,12 +24,9 @@ return "echo '\033[32m" .$message. "\033[0m';\n";
 startDeployment
 cloneRepository
 runComposer
-{{-- yarn task are disabled at the moment, running them on remote/production servers sounds weird --}}
-{{-- runYarn --}}
-{{-- generateAssets --}}
 updateSymlinks
 optimizeInstallation
-backupDatabase
+{{-- backupDatabase --}}
 migrateDatabase
 setPermissions
 blessNewRelease
@@ -39,6 +36,7 @@ finishDeploy
 
 @story('deploy-code')
 deployOnlyCode
+setPermissions
 @endstory
 
 @task('startDeployment', ['on' => 'local'])
@@ -124,8 +122,8 @@ php artisan migrate --force;
 @task('setPermissions', ['on' => 'remote'])
 {{ logMessage("🔐  Set folders permissions...") }}
 cd {{ $currentDir }};
-sudo chgrp -R www-data storage bootstrap/cache
-sudo chmod -R ug+rwx storage bootstrap/cache
+sudo chgrp -R www-data storage/* bootstrap/cache
+sudo chmod -R ug+rwx storage/* bootstrap/cache
 @endtask
 
 @task('blessNewRelease', ['on' => 'remote'])
