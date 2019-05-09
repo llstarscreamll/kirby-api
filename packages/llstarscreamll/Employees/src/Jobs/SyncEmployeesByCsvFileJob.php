@@ -232,7 +232,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
             $name = $this->solveWorkShiftName($timeSlots);
             $workShift = $this->workShifts->where('name', $name)->first();
 
-            if (!$workShift) {
+            if (! $workShift) {
                 $workShift = $workShiftRepository->updateOrCreate(
                     ['name' => $name], ['name' => $name, 'time_slots' => $timeSlots->all()]
                 );
@@ -250,7 +250,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
      * Transform the given $time string to a qualified time, e.g.:
      * when $time is "6", returns "06:00"
      * when $time is "12:30", returns "12:30"
-     * when $time is "14:", returns "14:00"
+     * when $time is "14:", returns "14:00".
      *
      * @param string $time
      */
@@ -258,7 +258,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
     {
         $time = array_filter(explode(':', $time));
         count($time) > 1 ? null : array_push($time, '00');
-        $time[0] = str_pad($time[0], 2, "0", STR_PAD_LEFT);
+        $time[0] = str_pad($time[0], 2, '0', STR_PAD_LEFT);
 
         return implode(':', $time);
     }
