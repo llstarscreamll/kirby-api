@@ -11,4 +11,5 @@ use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
  */
 interface WorkShiftRepositoryInterface extends BaseRepositoryInterface
 {
+    public function deleteWhereNotIn(string $field, array $values): int;
 }
