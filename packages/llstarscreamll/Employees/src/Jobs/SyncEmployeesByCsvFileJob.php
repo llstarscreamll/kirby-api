@@ -101,6 +101,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
 
         try {
             foreach ($records as $row => $record) {
+                $record = array_map('trim', $record);
                 // store user
                 $user = $this->storeUser($record, $userRepository);
                 // store employee
@@ -111,7 +112,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
                 $this->storeWorkShifts($user->id, $record['work_shifts'], $employeeRepository, $workShiftRepository);
             }
         } catch (Exception $e) {
-            logger('Error sincronizando empleados: ', [$e->getMessage()]);
+            logger()->error('Error sincronizando empleados: ', [$e->getMessage()]);
             $userRepository->find($this->userId)->notify(new FailedEmployeesSyncNotification($e->getMessage()));
 
             return false;
@@ -147,6 +148,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
         $identificationRepository->deleteWhere(['employee_id' => $userId]);
         // store newly employee identification codes
         $identificationCodes = explode(',', $identificationCodes);
+        $identificationCodes = array_map('trim', $identificationCodes);
 
         $mapIdentifications = function ($identificationString) {
             [$identificationName, $identificationCode] = explode(':', $identificationString);
@@ -173,6 +175,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
         WorkShiftRepositoryInterface $workShiftRepository
     ) {
         $workShiftNames = explode(',', $workShifts);
+        $workShiftNames = array_map('trim', $workShiftNames);
         $workShifts = $workShiftRepository->findWhereIn('name', $workShiftNames, ['id']);
 
         return $employeeRepository->sync($userId, 'workShifts', $workShifts);
