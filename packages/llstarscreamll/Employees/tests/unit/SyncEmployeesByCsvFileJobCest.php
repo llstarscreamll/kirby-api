@@ -2,8 +2,10 @@
 
 namespace Employees;
 
+use Illuminate\Support\Facades\File;
 use llstarscreamll\Users\Models\User;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Notification;
 use llstarscreamll\Company\Models\CostCenter;
 use llstarscreamll\Employees\Models\Identification;
@@ -28,8 +30,20 @@ class SyncEmployeesByCsvFileJobCest
      */
     public function _before(UnitTester $I)
     {
+        Storage::delete('employees_sync/test_file.csv');
         // create default work shifts
         Artisan::call('db:seed', ['--class' => DefaultWorkShiftsSeeder::class]);
+    }
+
+    /**
+     * @param string $fileName
+     */
+    private function placeFile(string $fileName)
+    {
+        $filePath = codecept_data_dir("import_employees/{$fileName}");
+        File::copy($filePath, storage_path("app/employees_sync/{$fileName}"));
+
+        return "employees_sync/{$fileName}";
     }
 
     /**
@@ -40,11 +54,11 @@ class SyncEmployeesByCsvFileJobCest
     {
         $user = factory(User::class)->create();
         $costCenters = factory(CostCenter::class, 2)->create();
-        $filePath = codecept_data_dir('import_employees/good_employees.csv');
         $userRepository = app(UserRepositoryInterface::class);
         $employeeRepository = app(EmployeeRepositoryInterface::class);
-        $identificationRepository = app(IdentificationRepositoryInterface::class);
         $workShiftRepository = app(WorkShiftRepositoryInterface::class);
+        $identificationRepository = app(IdentificationRepositoryInterface::class);
+        $filePath = $this->placeFile('good_employees.csv');
 
         Notification::fake();
 
@@ -144,7 +158,7 @@ class SyncEmployeesByCsvFileJobCest
         $user = factory(User::class)->create();
         factory(Identification::class)->create(['code' => 'Code-1']);
         $costCenters = factory(CostCenter::class, 2)->create();
-        $filePath = codecept_data_dir('import_employees/good_employees.csv');
+        $filePath = $this->placeFile('good_employees.csv');
 
         $userRepository = app(UserRepositoryInterface::class);
         $employeeRepository = app(EmployeeRepositoryInterface::class);

@@ -44,7 +44,7 @@ class SyncEmployeesByScvFileCest
      * @test
      * @param ApiTester $I
      */
-    public function testWithoutFile(ApiTester $I)
+    public function testToSendNoFile(ApiTester $I)
     {
         $I->sendPOST($this->endpoint, []);
 
