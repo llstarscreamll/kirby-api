@@ -582,4 +582,18 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     {
         return $result;
     }
+
+    /**
+     * @param  string  $field
+     * @param  array   $values
+     * @return mixed
+     */
+    public function deleteWhereNotIn(string $field, array $values): int
+    {
+        $this->applyScope();
+        $deleted = $this->model->whereNotIn($field, $values)->delete();
+        $this->resetModel();
+
+        return $deleted;
+    }
 }

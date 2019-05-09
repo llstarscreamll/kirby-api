@@ -233,4 +233,11 @@ interface BaseRepositoryInterface
      * @return mixed
      */
     public function firstOrCreate(array $attributes = []);
+
+    /**
+     * @param  string $field
+     * @param  array  $values
+     * @return int
+     */
+    public function deleteWhereNotIn(string $field, array $values): int;
 }
