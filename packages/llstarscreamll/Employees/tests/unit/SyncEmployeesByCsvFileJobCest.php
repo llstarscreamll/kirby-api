@@ -11,6 +11,7 @@ use llstarscreamll\Company\Models\CostCenter;
 use llstarscreamll\Employees\Models\Identification;
 use llstarscreamll\Users\Contracts\UserRepositoryInterface;
 use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
+use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
 use llstarscreamll\WorkShifts\Data\Seeders\DefaultWorkShiftsSeeder;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
@@ -38,7 +39,7 @@ class SyncEmployeesByCsvFileJobCest
     /**
      * @param string $fileName
      */
-    private function placeFile(string $fileName)
+    private function putTestFile(string $fileName)
     {
         $filePath = codecept_data_dir("import_employees/{$fileName}");
         File::copy($filePath, storage_path("app/employees_sync/{$fileName}"));
@@ -52,19 +53,26 @@ class SyncEmployeesByCsvFileJobCest
      */
     public function syncValidFileWithTwoEmployees(UnitTester $I)
     {
+        // create fake data
         $user = factory(User::class)->create();
         $costCenters = factory(CostCenter::class, 2)->create();
+
         $userRepository = app(UserRepositoryInterface::class);
         $employeeRepository = app(EmployeeRepositoryInterface::class);
         $workShiftRepository = app(WorkShiftRepositoryInterface::class);
+        $costCenterRepository = app(CostCenterRepositoryInterface::class);
         $identificationRepository = app(IdentificationRepositoryInterface::class);
-        $filePath = $this->placeFile('good_employees.csv');
+
+        // file to test
+        $filePath = $this->putTestFile('good_employees.csv');
 
         Notification::fake();
 
         $job = new SyncEmployeesByCsvFileJob($user->id, $filePath);
         $I->assertTrue($job->handle(
-            $userRepository, $employeeRepository, $workShiftRepository, $identificationRepository
+            $userRepository, $employeeRepository,
+            $workShiftRepository, $costCenterRepository,
+            $identificationRepository
         ));
 
         // success notification should have been sent
@@ -83,12 +91,41 @@ class SyncEmployeesByCsvFileJobCest
             'email' => 'bruce@banner.com',
         ]);
 
+        // cost centers persisted on DB
+        $I->seeRecord('cost_centers', [
+            'code' => 'cc1',
+            'name' => 'centro de costos uno',
+        ]);
+
+        $I->seeRecord('cost_centers', [
+            'code' => 'cc2',
+            'name' => 'centro de costos dos',
+        ]);
+
+        // cost centers not present on csv file trashed
+        $costCenter = $I->grabRecord('cost_centers', ['id' => $costCenters->first()->id]);
+        $I->assertNotNull($costCenter['deleted_at']);
+        $costCenter = $I->grabRecord('cost_centers', ['id' => $costCenters->last()->id]);
+        $I->assertNotNull($costCenter['deleted_at']);
+
+        // work shifts persisted on DB
+        $I->seeRecord('work_shifts', ['name' => '07-18']);
+        $workShift = $I->grabRecord('work_shifts', ['name' => '07-18']);
+        $I->assertEquals(json_decode($workShift['time_slots'], true), [
+            ['start' => '07:00', 'end' => '12:30'],
+            ['start' => '13:30', 'end' => '18:00'],
+        ]);
+
+        // work shift not present on csv file should be trashed
+        $trashedWorkShift = $I->grabRecord('work_shifts', ['name' => '22-06']);
+        $I->assertNotNull($trashedWorkShift['deleted_at']);
+
         // employees data persisted on DB, user may has related employee data
         $I->seeRecord('employees', [
             'id' => 2,
             'code' => '123',
             'identification_number' => '456',
-            'cost_center_id' => 1,
+            'cost_center_id' => 3, // newly created cost center
             'position' => 'developer',
             'location' => 'Bogotá',
             'address' => 'Calle 1#2-3',
@@ -100,7 +137,7 @@ class SyncEmployeesByCsvFileJobCest
             'id' => 3,
             'code' => '987',
             'identification_number' => '654',
-            'cost_center_id' => 2,
+            'cost_center_id' => 4, // newly created cost center
             'position' => 'designer',
             'location' => 'Medellín',
             'address' => 'Calle 3#2-1',
@@ -139,13 +176,8 @@ class SyncEmployeesByCsvFileJobCest
         ]);
 
         $I->seeRecord('employee_work_shift', [
-            'employee_id' => 2,
-            'work_shift_id' => 3,
-        ]);
-
-        $I->seeRecord('employee_work_shift', [
             'employee_id' => 3,
-            'work_shift_id' => 1,
+            'work_shift_id' => 4,
         ]);
     }
 
@@ -157,19 +189,24 @@ class SyncEmployeesByCsvFileJobCest
     {
         $user = factory(User::class)->create();
         factory(Identification::class)->create(['code' => 'Code-1']);
-        $costCenters = factory(CostCenter::class, 2)->create();
-        $filePath = $this->placeFile('good_employees.csv');
+        factory(CostCenter::class, 2)->create();
+
+        // test file
+        $filePath = $this->putTestFile('good_employees.csv');
 
         $userRepository = app(UserRepositoryInterface::class);
         $employeeRepository = app(EmployeeRepositoryInterface::class);
-        $identificationRepository = app(IdentificationRepositoryInterface::class);
         $workShiftRepository = app(WorkShiftRepositoryInterface::class);
+        $costCenterRepository = app(CostCenterRepositoryInterface::class);
+        $identificationRepository = app(IdentificationRepositoryInterface::class);
 
         Notification::fake();
 
         $job = new SyncEmployeesByCsvFileJob($user->id, $filePath);
         $I->assertFalse($job->handle(
-            $userRepository, $employeeRepository, $workShiftRepository, $identificationRepository
+            $userRepository, $employeeRepository,
+            $workShiftRepository, $costCenterRepository,
+            $identificationRepository
         ));
 
         // error notification should have been sent

@@ -7,12 +7,15 @@ use League\Csv\Reader;
 use League\Csv\Statement;
 use Illuminate\Support\Arr;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use llstarscreamll\Company\Models\CostCenter;
 use llstarscreamll\Users\Contracts\UserRepositoryInterface;
+use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
@@ -60,7 +63,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
         'identification_number',
         'first_name',
         'last_name',
-        'cost_center_id',
+        'cost_center',
         'position',
         'location',
         'address',
@@ -72,6 +75,16 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
     ];
 
     /**
+     * @var Illuminate\Support\Collection
+     */
+    private $costCenters;
+
+    /**
+     * @var Illuminate\Support\Collection
+     */
+    private $workShifts;
+
+    /**
      * Create a new job instance.
      *
      * @param int    $userId
@@ -81,6 +94,8 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
     {
         $this->userId = $userId;
         $this->csvFilePath = $csvFilePath;
+        $this->costCenters = new Collection();
+        $this->workShifts = new Collection();
     }
 
     /**
@@ -92,6 +107,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
         UserRepositoryInterface $userRepository,
         EmployeeRepositoryInterface $employeeRepository,
         WorkShiftRepositoryInterface $workShiftRepository,
+        CostCenterRepositoryInterface $costCenterRepository,
         IdentificationRepositoryInterface $identificationRepository
     ) {
         $reader = Reader::createFromPath(storage_path("app/{$this->csvFilePath}"), 'r')->setDelimiter(';');
@@ -102,6 +118,11 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
         try {
             foreach ($records as $row => $record) {
                 $record = array_map('trim', $record);
+                // store cost center
+                $costCenter = $this->storeCostcenter($record['cost_center'], $costCenterRepository);
+
+                $record['cost_center_id'] = $costCenter->id;
+
                 // store user
                 $user = $this->storeUser($record, $userRepository);
                 // store employee
@@ -111,6 +132,10 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
                 // store work shifts
                 $this->storeWorkShifts($user->id, $record['work_shifts'], $employeeRepository, $workShiftRepository);
             }
+
+            // trash data not present on csv file
+            $workShiftRepository->deleteWhereNotIn('id', $this->workShifts->pluck('id')->all());
+            $costCenterRepository->deleteWhereNotIn('id', $this->costCenters->pluck('id')->all());
         } catch (Exception $e) {
             logger()->error('Error sincronizando empleados: ', [$e->getMessage()]);
             $userRepository->find($this->userId)->notify(new FailedEmployeesSyncNotification($e->getMessage()));
@@ -121,6 +146,27 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
         $userRepository->find($this->userId)->notify(new SuccessfulEmployeesSyncNotification(count($records)));
 
         return true;
+    }
+
+    /**
+     * @param string                        $costCenter
+     * @param CostCenterRepositoryInterface $costCenterRepository
+     */
+    private function storeCostcenter(string $costCenter, CostCenterRepositoryInterface $costCenterRepository): CostCenter
+    {
+        [$code, $name] = array_map('trim', explode(':', $costCenter));
+
+        if ($costCenter = $this->costCenters->where('code', $code)->first()) {
+            return $costCenter;
+        }
+
+        $costCenter = $costCenterRepository->updateOrCreate(
+            ['code' => $code], ['code' => $code, 'name' => $name]
+        );
+
+        $this->costCenters->push($costCenter);
+
+        return $costCenter;
     }
 
     /**
@@ -174,10 +220,60 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
         EmployeeRepositoryInterface $employeeRepository,
         WorkShiftRepositoryInterface $workShiftRepository
     ) {
-        $workShiftNames = explode(',', $workShifts);
-        $workShiftNames = array_map('trim', $workShiftNames);
-        $workShifts = $workShiftRepository->findWhereIn('name', $workShiftNames, ['id']);
+        $workShifts = new Collection(array_map('trim', explode(',', $workShifts)));
+        $workShifts = $workShifts->map(function ($workShift) use ($workShiftRepository) {
+            $timeSlots = new Collection(explode('|', $workShift));
+            $timeSlots = $timeSlots->map(function ($timeSlot) {
+                [$start, $end] = explode('-', $timeSlot);
 
-        return $employeeRepository->sync($userId, 'workShifts', $workShifts);
+                return ['start' => $this->parseTime($start), 'end' => $this->parseTime($end)];
+            });
+
+            $name = $this->solveWorkShiftName($timeSlots);
+            $workShift = $this->workShifts->where('name', $name)->first();
+
+            if (!$workShift) {
+                $workShift = $workShiftRepository->updateOrCreate(
+                    ['name' => $name], ['name' => $name, 'time_slots' => $timeSlots->all()]
+                );
+
+                $this->workShifts->push($workShift);
+            }
+
+            return $workShift;
+        });
+
+        return $employeeRepository->sync($userId, 'workShifts', $workShifts->pluck('id'));
+    }
+
+    /**
+     * Transform the given $time string to a qualified time, e.g.:
+     * when $time is "6", returns "06:00"
+     * when $time is "12:30", returns "12:30"
+     * when $time is "14:", returns "14:00"
+     *
+     * @param string $time
+     */
+    private function parseTime(string $time): string
+    {
+        $time = array_filter(explode(':', $time));
+        count($time) > 1 ? null : array_push($time, '00');
+        $time[0] = str_pad($time[0], 2, "0", STR_PAD_LEFT);
+
+        return implode(':', $time);
+    }
+
+    /**
+     * @param Illuminate\Support\Collection $timeSlots
+     */
+    public function solveWorkShiftName(Collection $timeSlots): string
+    {
+        $start = $timeSlots->pluck('start')->first();
+        $end = $timeSlots->pluck('end')->last();
+
+        $start = Arr::first(explode(':', $start));
+        $end = Arr::first(explode(':', $end));
+
+        return "{$start}-{$end}";
     }
 }
