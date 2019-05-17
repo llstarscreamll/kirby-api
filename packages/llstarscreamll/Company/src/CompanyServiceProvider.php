@@ -1,10 +1,14 @@
 <?php
-
 namespace llstarscreamll\Company;
 
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Company\Services\HolidaysService;
+use llstarscreamll\Company\UI\CLI\SyncHolidaysCommand;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
+use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
 use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
+use llstarscreamll\Company\Data\Repositories\EloquentHolidayRepository;
 use llstarscreamll\Company\Data\Repositories\EloquentCostCenterRepository;
 
 /**
@@ -18,6 +22,8 @@ class CompanyServiceProvider extends ServiceProvider
      * @var array
      */
     private $binds = [
+        HolidaysServiceInterface::class => HolidaysService::class,
+        HolidayRepositoryInterface::class => EloquentHolidayRepository::class,
         CostCenterRepositoryInterface::class => EloquentCostCenterRepository::class,
     ];
 
@@ -97,7 +103,9 @@ class CompanyServiceProvider extends ServiceProvider
         __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'company.views');*/
 
-        // Registering package commands.
-        // $this->commands([]);
+        // registering package commands.
+        $this->commands([
+            SyncHolidaysCommand::class,
+        ]);
     }
 }
