@@ -596,4 +596,19 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
 
         return $deleted;
     }
+
+    /**
+     * Save a new entity in repository.
+     *
+     * @param  array                $rows
+     * @throws ValidatorException
+     * @return mixed
+     */
+    public function insert(array $rows)
+    {
+        $result = $this->model->insert($rows);
+        $this->resetModel();
+
+        return $result;
+    }
 }
