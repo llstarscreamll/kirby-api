@@ -26,8 +26,8 @@ class LogCheckOutAction
     private $timeClockLogRepository;
 
     /**
-     * @param IdentificationRepositoryInterface $identificationRepository
-     * @param TimeClockLogRepositoryInterface   $timeClockLogRepository
+     * @param \llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface $identificationRepository
+     * @param \llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface   $timeClockLogRepository
      */
     public function __construct(
         TimeClockLogRepositoryInterface $timeClockLogRepository,
@@ -40,20 +40,21 @@ class LogCheckOutAction
     /**
      * @param  User                    $registrar
      * @param  string                  $identificationCode
-     * @throws MissingCheckInException if there is no check in found to log the check out action
+     * @throws \llstarscreamll\TimeClock\Exceptions\MissingCheckInException if there is no check in found to log the check out action
      */
     public function run(User $registrar, string $identificationCode): TimeClockLog
     {
         $identification = $this->identificationRepository
-                               ->with(['employee.workShifts'])
-                               ->findByField('code', $identificationCode, ['id', 'employee_id'])
-                               ->first();
+            ->with(['employee.workShifts'])
+            ->findByField('code', $identificationCode, ['id', 'employee_id'])
+            ->first();
 
         $lastTimeClockCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
-            $identification->employee_id, ['id', 'checked_in_at']
+            $identification->employee_id,
+            ['id', 'checked_in_at']
         );
 
-        if (! $lastTimeClockCheckIn) {
+        if (!$lastTimeClockCheckIn) {
             throw new MissingCheckInException();
         }
 

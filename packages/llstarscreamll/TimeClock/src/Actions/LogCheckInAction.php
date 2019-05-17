@@ -26,8 +26,8 @@ class LogCheckInAction
     private $timeClockLogRepository;
 
     /**
-     * @param IdentificationRepositoryInterface $identificationRepository
-     * @param TimeClockLogRepositoryInterface   $timeClockLogRepository
+     * @param \llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface $identificationRepository
+     * @param \llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface   $timeClockLogRepository
      */
     public function __construct(
         TimeClockLogRepositoryInterface $timeClockLogRepository,
@@ -44,12 +44,13 @@ class LogCheckInAction
     public function run(User $registrar, string $identificationCode): TimeClockLog
     {
         $identification = $this->identificationRepository
-                               ->with(['employee.workShifts'])
-                               ->findByField('code', $identificationCode, ['id', 'employee_id'])
-                               ->first();
+            ->with(['employee.workShifts'])
+            ->findByField('code', $identificationCode, ['id', 'employee_id'])
+            ->first();
 
         $lastTimeClockCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
-            $identification->employee_id, ['id', 'checked_in_at']
+            $identification->employee_id,
+            ['id', 'checked_in_at']
         );
 
         if ($lastTimeClockCheckIn) {
