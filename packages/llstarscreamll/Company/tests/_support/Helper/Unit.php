@@ -1,4 +1,5 @@
 <?php
+
 namespace Company\Helper;
 
 // here you can define custom actions
@@ -6,5 +7,4 @@ namespace Company\Helper;
 
 class Unit extends \Codeception\Module
 {
-
 }

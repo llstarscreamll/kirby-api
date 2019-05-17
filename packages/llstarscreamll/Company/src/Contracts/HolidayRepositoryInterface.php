@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Company\Contracts;
 
 use llstarscreamll\Core\Contracts\BaseRepositoryInterface;

@@ -1,4 +1,5 @@
 <?php
+
 namespace Company\UI\CLI;
 
 use Company\UnitTester;
@@ -14,7 +15,9 @@ class SyncHolidaysCommandCest
     /**
      * @param UnitTester $I
      */
-    public function _before(UnitTester $I) {}
+    public function _before(UnitTester $I)
+    {
+    }
 
     /**
      * @param UnitTester $I
@@ -57,5 +60,7 @@ class SyncHolidaysCommandCest
      * @test
      * @param UnitTester $I
      */
-    public function testToRunCommandWhenServiceThrowsError(UnitTester $I) {}
+    public function testToRunCommandWhenServiceThrowsError(UnitTester $I)
+    {
+    }
 }

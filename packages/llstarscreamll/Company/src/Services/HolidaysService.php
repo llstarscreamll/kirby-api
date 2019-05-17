@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Company\Services;
 
 use GuzzleHttp\Client;

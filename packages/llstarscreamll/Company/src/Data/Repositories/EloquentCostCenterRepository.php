@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Company\Data\Repositories;
 
 use llstarscreamll\Company\Models\CostCenter;

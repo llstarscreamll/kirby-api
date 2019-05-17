@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Company;
 
 use Illuminate\Support\ServiceProvider;

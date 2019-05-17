@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Company\UI\CLI;
 
 use Illuminate\Console\Command;
