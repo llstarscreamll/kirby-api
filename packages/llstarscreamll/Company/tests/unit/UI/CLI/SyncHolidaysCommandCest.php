@@ -31,9 +31,9 @@ class SyncHolidaysCommandCest
      * @test
      * @param UnitTester $I
      */
-    public function testToRunCommandWhenServiceResponseIsOk(UnitTester $I)
+    public function testToSyncCurrentYearHolidays(UnitTester $I)
     {
-        $holidayDate = now()->year.'-02-11';
+        $holidayDate = now()->year . '-02-11';
         $serviceMock = \Mockery::mock(HolidaysServiceInterface::class)
             ->shouldReceive('get')
             ->once()
@@ -60,7 +60,15 @@ class SyncHolidaysCommandCest
      * @test
      * @param UnitTester $I
      */
-    public function testToRunCommandWhenServiceThrowsError(UnitTester $I)
+    public function testSyncNextYearHolidays(UnitTester $I)
     {
+        $year = now()->addYear()->year;
+        $serviceMock = \Mockery::mock(HolidaysServiceInterface::class)
+            ->shouldReceive('get')->once()->with('co', $year)->andReturn([])
+            ->getMock();
+
+        $I->getApplication()->instance(HolidaysServiceInterface::class, $serviceMock);
+
+        $I->callArtisan('company:sync-holidays', ['--next-year' => true]);
     }
 }

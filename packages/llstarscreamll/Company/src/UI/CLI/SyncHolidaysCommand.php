@@ -3,8 +3,8 @@
 namespace llstarscreamll\Company\UI\CLI;
 
 use Illuminate\Console\Command;
-use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
 use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
+use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
 
 /**
  * Class SyncHolidaysCommand.
@@ -18,7 +18,7 @@ class SyncHolidaysCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'company:sync-holidays';
+    protected $signature = 'company:sync-holidays {--next-year : Sync next year holidays}';
 
     /**
      * The console command description.
@@ -46,9 +46,9 @@ class SyncHolidaysCommand extends Command
         HolidaysServiceInterface $holidaysService,
         HolidayRepositoryInterface $holidayRepository
     ) {
-        $year = now()->year;
         $countryCode = 'co';
-        $holidays = $holidaysService->get($countryCode, $year);
+        $currentDate = $this->option('next-year') ? now()->addYear() : now();
+        $holidays = $holidaysService->get($countryCode, $currentDate->year);
 
         data_fill($holidays, '*.country_code', $countryCode);
         $holidayRepository->insert($holidays);
