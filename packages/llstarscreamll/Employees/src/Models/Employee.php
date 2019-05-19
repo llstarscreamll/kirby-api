@@ -3,10 +3,11 @@
 namespace llstarscreamll\Employees\Models;
 
 use Carbon\Carbon;
-use llstarscreamll\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use llstarscreamll\WorkShifts\Models\WorkShift;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
+use llstarscreamll\Users\Models\User;
+use llstarscreamll\WorkShifts\Models\WorkShift;
 
 /**
  * Class Employee.
@@ -15,6 +16,8 @@ use llstarscreamll\TimeClock\Models\TimeClockLog;
  */
 class Employee extends Model
 {
+    use SoftDeletes;
+
     /**
      * Indicates if the IDs are auto-incrementing.
      *
@@ -92,7 +95,7 @@ class Employee extends Model
      * @param  Carbon      $end
      * @return WorkShift
      */
-    public function getFirstWorkShiftByClosestRangeTime(Carbon $start, Carbon $end):  ? WorkShift
+    public function getFirstWorkShiftByClosestRangeTime(Carbon $start, Carbon $end): ?WorkShift
     {
         return $this->workShifts->first(function (WorkShift $workShift) use ($start, $end) {
             $timeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($start, $end, $workShift) {

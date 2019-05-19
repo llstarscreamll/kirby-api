@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateEmployeesTable.
@@ -29,6 +29,7 @@ class CreateEmployeesTable extends Migration
             $table->string('phone');
             $table->bigInteger('salary');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('id')->references('id')->on('users');
             $table->foreign('cost_center_id')->references('id')->on('cost_centers');

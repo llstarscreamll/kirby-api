@@ -3,24 +3,24 @@
 namespace llstarscreamll\Employees\Jobs;
 
 use Exception;
-use League\Csv\Reader;
-use League\Csv\Statement;
-use Illuminate\Support\Arr;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use llstarscreamll\Company\Models\CostCenter;
-use llstarscreamll\Users\Contracts\UserRepositoryInterface;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
+use League\Csv\Reader;
+use League\Csv\Statement;
 use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
+use llstarscreamll\Company\Models\CostCenter;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
-use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Employees\Notifications\FailedEmployeesSyncNotification;
 use llstarscreamll\Employees\Notifications\SuccessfulEmployeesSyncNotification;
+use llstarscreamll\Users\Contracts\UserRepositoryInterface;
+use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 
 /**
  * Class SyncEmployeesByCsvFileJob.
@@ -77,6 +77,11 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
     /**
      * @var Illuminate\Support\Collection
      */
+    private $employees;
+
+    /**
+     * @var Illuminate\Support\Collection
+     */
     private $costCenters;
 
     /**
@@ -94,6 +99,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
     {
         $this->userId = $userId;
         $this->csvFilePath = $csvFilePath;
+        $this->employees = new Collection();
         $this->costCenters = new Collection();
         $this->workShifts = new Collection();
     }
@@ -126,16 +132,21 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
                 // store user
                 $user = $this->storeUser($record, $userRepository);
                 // store employee
-                $employee = $employeeRepository->updateOrCreate(['id' => $user->id], $record + ['id' => $user->id]);
+                $this->employees->push($employeeRepository->updateOrCreate(['id' => $user->id], $record + ['id' => $user->id]));
                 // store identifications
                 $this->storeIdentificationCodes($user->id, $record['identifications'], $identificationRepository);
                 // store work shifts
                 $this->storeWorkShifts($user->id, $record['work_shifts'], $employeeRepository, $workShiftRepository);
             }
 
-            // trash data not present on csv file
+            // trash missing data from csv file
             $workShiftRepository->deleteWhereNotIn('id', $this->workShifts->pluck('id')->all());
             $costCenterRepository->deleteWhereNotIn('id', $this->costCenters->pluck('id')->all());
+            // delete missing employees and their related users
+            $syncedEmployeesIds = $this->employees->pluck('id')->all();
+            $employeesToDelete = $employeeRepository->findWhereNotIn('id', $syncedEmployeesIds, ['id']);
+            $userRepository->deleteWhereIn('id', $employeesToDelete->all());
+            $employeeRepository->deleteWhereNotIn('id', $syncedEmployeesIds);
         } catch (Exception $e) {
             logger()->error('Error sincronizando empleados: ', [$e->getMessage()]);
             $userRepository->find($this->userId)->notify(new FailedEmployeesSyncNotification($e->getMessage()));
@@ -232,7 +243,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
             $name = $this->solveWorkShiftName($timeSlots);
             $workShift = $this->workShifts->where('name', $name)->first();
 
-            if (! $workShift) {
+            if (!$workShift) {
                 $workShift = $workShiftRepository->updateOrCreate(
                     ['name' => $name], ['name' => $name, 'time_slots' => $timeSlots->all()]
                 );

@@ -2,22 +2,23 @@
 
 namespace Employees;
 
-use Illuminate\Support\Facades\File;
-use llstarscreamll\Users\Models\User;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
-use llstarscreamll\Company\Models\CostCenter;
-use llstarscreamll\Employees\Models\Identification;
-use llstarscreamll\Users\Contracts\UserRepositoryInterface;
-use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
+use Illuminate\Support\Facades\Storage;
 use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
+use llstarscreamll\Company\Models\CostCenter;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
-use llstarscreamll\WorkShifts\Data\Seeders\DefaultWorkShiftsSeeder;
-use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
+use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\Employees\Models\Identification;
 use llstarscreamll\Employees\Notifications\FailedEmployeesSyncNotification;
 use llstarscreamll\Employees\Notifications\SuccessfulEmployeesSyncNotification;
+use llstarscreamll\Users\Contracts\UserRepositoryInterface;
+use llstarscreamll\Users\Models\User;
+use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
+use llstarscreamll\WorkShifts\Data\Seeders\DefaultWorkShiftsSeeder;
 
 /**
  * Class SyncEmployeesByCsvFileJobCest.
@@ -55,6 +56,7 @@ class SyncEmployeesByCsvFileJobCest
     {
         // create fake data
         $user = factory(User::class)->create();
+        $employee = factory(Employee::class)->create();
         $costCenters = factory(CostCenter::class, 2)->create();
 
         $userRepository = app(UserRepositoryInterface::class);
@@ -122,7 +124,7 @@ class SyncEmployeesByCsvFileJobCest
 
         // employees data persisted on DB, user may has related employee data
         $I->seeRecord('employees', [
-            'id' => 2,
+            'id' => 3,
             'code' => '123',
             'identification_number' => '456',
             'cost_center_id' => 3, // newly created cost center
@@ -134,7 +136,7 @@ class SyncEmployeesByCsvFileJobCest
         ]);
 
         $I->seeRecord('employees', [
-            'id' => 3,
+            'id' => 4,
             'code' => '987',
             'identification_number' => '654',
             'cost_center_id' => 4, // newly created cost center
@@ -145,38 +147,42 @@ class SyncEmployeesByCsvFileJobCest
             'salary' => 5000000,
         ]);
 
+        // employees not present on csv file should be trashed
+        $trashedEmployee = $I->grabRecord('employees', ['id' => $employee->id]);
+        $I->assertNotNull($trashedEmployee['deleted_at']);
+
         // identifications codes persisted on DB
         $I->seeRecord('identifications', [
-            'employee_id' => 2,
+            'employee_id' => 3,
             'name' => 'E-card',
             'code' => 'Code-1',
         ]);
 
         $I->seeRecord('identifications', [
-            'employee_id' => 2,
+            'employee_id' => 3,
             'name' => 'PIN',
             'code' => '2369',
         ]);
 
         $I->seeRecord('identifications', [
-            'employee_id' => 3,
+            'employee_id' => 4,
             'name' => 'E-card',
             'code' => 'Code-3',
         ]);
 
         // employee work shifts persisted on DB
         $I->seeRecord('employee_work_shift', [
-            'employee_id' => 2,
+            'employee_id' => 3,
             'work_shift_id' => 1,
         ]);
 
         $I->seeRecord('employee_work_shift', [
-            'employee_id' => 2,
+            'employee_id' => 3,
             'work_shift_id' => 2,
         ]);
 
         $I->seeRecord('employee_work_shift', [
-            'employee_id' => 3,
+            'employee_id' => 4,
             'work_shift_id' => 4,
         ]);
     }

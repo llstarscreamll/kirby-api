@@ -611,4 +611,21 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
 
         return $result;
     }
+
+    /**
+     * Delete data by multiple values in one field.
+     *
+     * @param  $field
+     * @param  array    $values
+     * @param  array    $columns
+     * @return mixed
+     */
+    public function deleteWhereIn($field, array $values)
+    {
+        $this->applyScope();
+        $model = $this->model->whereIn($field, $values)->delete();
+        $this->resetModel();
+
+        return $this->parserResult($model);
+    }
 }
