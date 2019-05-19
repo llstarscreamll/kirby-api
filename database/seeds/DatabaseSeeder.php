@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use llstarscreamll\Authorization\Data\Seeders\AuthorizationPackageSeeder;
+use llstarscreamll\WorkShifts\Data\Seeders\WorkShiftsPackageSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -11,6 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
+        $this->call([
+            WorkShiftsPackageSeeder::class,
+            AuthorizationPackageSeeder::class,
+        ]);
     }
 }
