@@ -34,6 +34,17 @@ class SyncHolidaysCommandCest
     public function testToSyncCurrentYearHolidays(UnitTester $I)
     {
         $holidayDate = now()->year . '-02-11';
+
+        // existing 'country' holiday 'date', after command execution, holiday should be updated, not duplicated
+        $I->haveRecord('holidays', [
+            'country_code' => 'co',
+            'name' => 'some holiday name',
+            'description' => 'some example description',
+            'date' => $holidayDate,
+            'created_at' => now()->subDays(5),
+            'updated_at' => now()->subDays(5),
+        ]);
+
         $serviceMock = \Mockery::mock(HolidaysServiceInterface::class)
             ->shouldReceive('get')
             ->once()
@@ -48,12 +59,23 @@ class SyncHolidaysCommandCest
 
         $I->callArtisan('company:sync-holidays');
 
+        // said holidays musts be present only one times on DB
+        $I->seeNumRecords(1, 'holidays', ['country_code' => 'co', 'date' => $holidayDate]);
+
         $I->seeRecord('holidays', [
             'country_code' => 'co',
             'name' => 'holiday name',
             'description' => 'example description',
             'date' => $holidayDate,
         ]);
+
+        $holiday = $I->grabRecord('holidays', [
+            'country_code' => 'co',
+            'date' => $holidayDate,
+        ]);
+
+        $I->assertNotNull($holiday['created_at']);
+        $I->assertNotNull($holiday['updated_at']);
     }
 
     /**

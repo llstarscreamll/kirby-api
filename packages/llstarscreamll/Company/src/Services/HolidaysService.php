@@ -1,9 +1,10 @@
 <?php
-
 namespace llstarscreamll\Company\Services;
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
 
 /**
@@ -34,8 +35,24 @@ class HolidaysService implements HolidaysServiceInterface
     public function __construct(Client $httpClient)
     {
         $this->httpClient = $httpClient;
-        $this->apiUrl = config('company.services.holidays.url');
-        $this->apiKey = config('company.services.holidays.key');
+        $this->apiUrl = config('company.services.calendarific.url');
+        $this->apiKey = config('company.services.calendarific.key');
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiKey(): string
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiUrl(): string
+    {
+        return $this->apiUrl;
     }
 
     /**
@@ -45,17 +62,39 @@ class HolidaysService implements HolidaysServiceInterface
      */
     public function get(string $countryCode, int $year): array
     {
-        $apiResponse = $this->httpClient->get($this->apiUrl, [
-            'query' => [
-                'api_key' => $this->apiKey,
-                'country' => $countryCode,
-                'year' => $year,
-            ],
-        ]);
+        try {
+            $apiResponse = $this->httpClient->get($this->apiUrl, [
+                'query' => [
+                    'api_key' => $this->apiKey,
+                    'country' => $countryCode,
+                    'year' => $year,
+                ],
+            ]);
 
-        $apiData = json_decode($apiResponse->getBody()->getContents(), true);
-        $holidays = Arr::get($apiData, 'response.holidays', []);
+            $apiData = json_decode($apiResponse->getBody()->getContents(), true);
+        } catch (\Throwable $th) {
+            $apiData = [];
+        }
 
-        return $holidays;
+        return $this->mapApiResponse($apiData);
+    }
+
+    /**
+     * @param array $responseData
+     */
+    private function mapApiResponse($responseData): array
+    {
+        $responseData = Arr::get($responseData, 'response.holidays', []);
+        return (new Collection($responseData))
+            ->map(function ($holiday) {
+                $date = Arr::get($holiday, 'date.iso');
+                $date = Carbon::parse($date);
+
+                return [
+                    'date' => $date->toDateString(),
+                    'name' => Arr::get($holiday, 'name'),
+                    'description' => Arr::get($holiday, 'description'),
+                ];
+            })->all();
     }
 }

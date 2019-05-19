@@ -3,6 +3,8 @@
 namespace llstarscreamll\Company\UI\CLI;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
 use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
 
@@ -51,6 +53,10 @@ class SyncHolidaysCommand extends Command
         $holidays = $holidaysService->get($countryCode, $currentDate->year);
 
         data_fill($holidays, '*.country_code', $countryCode);
-        $holidayRepository->insert($holidays);
+
+        (new Collection($holidays))->each(function ($holiday) use ($holidayRepository) {
+            $keys = Arr::only($holiday, ['country_code', 'date']);
+            $holidayRepository->updateOrCreate($keys, $holiday);
+        });
     }
 }

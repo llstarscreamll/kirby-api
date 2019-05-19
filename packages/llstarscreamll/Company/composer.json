@@ -10,11 +10,15 @@
         }
     ],
     "homepage": "https://github.com/llstarscreamll/laravel-company",
-    "keywords": ["Laravel", "Company"],
+    "keywords": [
+        "Laravel",
+        "Company"
+    ],
     "require": {
         "illuminate/support": "~5"
     },
     "require-dev": {
+        "blastcloud/guzzler": "^1.5",
         "phpunit/phpunit": "~7.0",
         "mockery/mockery": "^1.1",
         "orchestra/testbench": "~3.0",

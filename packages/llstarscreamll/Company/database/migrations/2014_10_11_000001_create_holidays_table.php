@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateHolidaysTable.
@@ -20,9 +20,9 @@ class CreateHolidaysTable extends Migration
     {
         Schema::create('holidays', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('country_code');
+            $table->string('country_code', 10);
             $table->string('name');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->date('date');
             $table->timestamps();
         });
