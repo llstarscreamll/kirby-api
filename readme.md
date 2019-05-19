@@ -17,6 +17,7 @@ composer install
 cp .env.example .env # fill the environment variables
 php artisan migrate --seed
 php artisan passport:install # fill the environment variables based on output
+php artisan company:sync-holidays # use the --nex-year flag to sync next year holidays
 ```
 
 ## Deploying
