@@ -3,11 +3,11 @@
 namespace llstarscreamll\Employees\Models;
 
 use Carbon\Carbon;
+use llstarscreamll\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use llstarscreamll\TimeClock\Models\TimeClockLog;
-use llstarscreamll\Users\Models\User;
 use llstarscreamll\WorkShifts\Models\WorkShift;
+use llstarscreamll\TimeClock\Models\TimeClockLog;
 
 /**
  * Class Employee.

@@ -3,24 +3,24 @@
 namespace llstarscreamll\Employees\Jobs;
 
 use Exception;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Hash;
 use League\Csv\Reader;
 use League\Csv\Statement;
-use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
+use Illuminate\Support\Arr;
+use Illuminate\Bus\Queueable;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use llstarscreamll\Company\Models\CostCenter;
+use llstarscreamll\Users\Contracts\UserRepositoryInterface;
+use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
+use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Employees\Notifications\FailedEmployeesSyncNotification;
 use llstarscreamll\Employees\Notifications\SuccessfulEmployeesSyncNotification;
-use llstarscreamll\Users\Contracts\UserRepositoryInterface;
-use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 
 /**
  * Class SyncEmployeesByCsvFileJob.
@@ -243,7 +243,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
             $name = $this->solveWorkShiftName($timeSlots);
             $workShift = $this->workShifts->where('name', $name)->first();
 
-            if (!$workShift) {
+            if (! $workShift) {
                 $workShift = $workShiftRepository->updateOrCreate(
                     ['name' => $name], ['name' => $name, 'time_slots' => $timeSlots->all()]
                 );
