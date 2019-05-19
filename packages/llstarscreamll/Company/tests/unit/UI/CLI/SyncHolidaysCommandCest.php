@@ -33,7 +33,7 @@ class SyncHolidaysCommandCest
      */
     public function testToSyncCurrentYearHolidays(UnitTester $I)
     {
-        $holidayDate = now()->year . '-02-11';
+        $holidayDate = now()->year.'-02-11';
 
         // existing 'country' holiday 'date', after command execution, holiday should be updated, not duplicated
         $I->haveRecord('holidays', [

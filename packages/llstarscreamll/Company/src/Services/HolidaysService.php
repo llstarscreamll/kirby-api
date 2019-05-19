@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Company\Services;
 
 use Carbon\Carbon;
@@ -85,6 +86,7 @@ class HolidaysService implements HolidaysServiceInterface
     private function mapApiResponse($responseData): array
     {
         $responseData = Arr::get($responseData, 'response.holidays', []);
+
         return (new Collection($responseData))
             ->map(function ($holiday) {
                 $date = Arr::get($holiday, 'date.iso');

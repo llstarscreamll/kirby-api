@@ -1,11 +1,13 @@
-<?php namespace Company\Services;
+<?php
 
-use BlastCloud\Guzzler\Guzzler;
-use Codeception\Example;
+namespace Company\Services;
+
 use Company\UnitTester;
-use GuzzleHttp\Exception\RequestException;
+use Codeception\Example;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use BlastCloud\Guzzler\Guzzler;
+use GuzzleHttp\Exception\RequestException;
 use llstarscreamll\Company\Services\HolidaysService;
 
 /**
@@ -15,7 +17,6 @@ use llstarscreamll\Company\Services\HolidaysService;
  */
 class HolidaysServiceCest
 {
-
     /**
      * @var string
      */
@@ -28,7 +29,7 @@ class HolidaysServiceCest
 
     /**
      * Success Calendarific API response, taken from the official docs, read more here:
-     * https://calendarific.com/api-documentation
+     * https://calendarific.com/api-documentation.
      *
      * @var string
      */
@@ -121,7 +122,7 @@ class HolidaysServiceCest
                 'expected' => [
                     ['date' => '2018-12-31', 'name' => 'Holiday one', 'description' => 'Test description'],
                     ['date' => '2019-03-20', 'name' => 'March Equinox', 'description' => null],
-                ]
+                ],
             ],
             [
                 'country' => 'co',
@@ -138,7 +139,7 @@ class HolidaysServiceCest
             [
                 'country' => 'us',
                 'year' => 2021,
-                'apiResponse' => new RequestException("Something went wrong!!", new Request('GET', 'test')),
+                'apiResponse' => new RequestException('Something went wrong!!', new Request('GET', 'test')),
                 'expected' => [],
             ],
         ];
