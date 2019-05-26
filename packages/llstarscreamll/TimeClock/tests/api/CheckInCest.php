@@ -1,4 +1,5 @@
 <?php
+
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
