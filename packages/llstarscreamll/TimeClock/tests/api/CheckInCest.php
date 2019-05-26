@@ -34,7 +34,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckInWhenEmployeeIdentificationDoesNotExists(ApiTester $I)
+    public function testWhenEmployeeIdentificationDoesNotExists(ApiTester $I)
     {
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
@@ -56,7 +56,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckInWhenInvalidActionTypeGiven(ApiTester $I)
+    public function testWhenInvalidActionTypeGiven(ApiTester $I)
     {
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
@@ -78,7 +78,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckInWhenEmployeeHasAlreadyCheckedIn(ApiTester $I)
+    public function testWhenEmployeeHasAlreadyCheckedIn(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 02));
@@ -105,7 +105,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckInWhenEmployeeHasSingleWorkShiftAndArrivesOnTime(ApiTester $I)
+    public function testWhenEmployeeHasSingleWorkShiftAndArrivesOnTime(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
@@ -136,7 +136,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckInWhenEmployeeHasNotWorkShift(ApiTester $I)
+    public function testWhenEmployeeHasNotWorkShift(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));

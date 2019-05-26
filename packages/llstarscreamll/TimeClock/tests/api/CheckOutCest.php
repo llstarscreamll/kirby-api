@@ -34,7 +34,7 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckOutWhenEmployeeHasSingleWorkShiftAndLeavesOnTime(ApiTester $I)
+    public function testWhenEmployeeHasSingleWorkShiftAndLeavesOnTime(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
@@ -73,7 +73,7 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckOutWhenEmployeeHasNotWorkShift(ApiTester $I)
+    public function testWhenEmployeeHasNotWorkShift(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
@@ -111,7 +111,7 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckOutWhenEmployeeHasNotCheckIn(ApiTester $I)
+    public function testWhenEmployeeHasNotCheckIn(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
@@ -136,7 +136,7 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckOutWhenEmployeeHasThreeWorkShiftsWithOutOverlappingAndLeavesOnTheLastOne(ApiTester $I)
+    public function testWhenEmployeeHasThreeWorkShiftsWithOutOverlappingAndLeavesOnTheLastOne(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 00));
@@ -179,7 +179,7 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function testToCheckOutWhenEmployeeHasThreeWorkShiftsWithOutOverlappingAndLeavesToTheFirstOne(ApiTester $I)
+    public function testWhenEmployeeHasThreeWorkShiftsWithOutOverlappingAndLeavesToTheFirstOne(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 14, 00));
