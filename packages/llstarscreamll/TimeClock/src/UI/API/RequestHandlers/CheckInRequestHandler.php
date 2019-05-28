@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\TimeClock\UI\API\RequestHandlers;
 
 use Symfony\Component\HttpFoundation\Response;
