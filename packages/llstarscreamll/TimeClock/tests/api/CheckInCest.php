@@ -1,4 +1,5 @@
 <?php
+
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
@@ -189,7 +190,6 @@ class CheckInCest
             'checked_in_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
         ]);
-
     }
 
     /**
