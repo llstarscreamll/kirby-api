@@ -1,5 +1,4 @@
 <?php
-
 namespace llstarscreamll\TimeClock\UI\API\RequestHandlers;
 
 use Symfony\Component\HttpFoundation\Response;
@@ -24,7 +23,7 @@ class CheckInRequestHandler
     public function __invoke(StoreTimeClockLogRequest $request, LogCheckInAction $logCheckInAction)
     {
         try {
-            $timeClockLog = $logCheckInAction->run($request->user(), $request->identification_code);
+            $timeClockLog = $logCheckInAction->run($request->user(), $request->identification_code, $request->work_shift_id);
         } catch (CanNotDeductWorkShiftException | AlreadyCheckedInException $exception) {
             throw new HttpResponseException(response()->json([
                 'message' => $exception->getMessage(),

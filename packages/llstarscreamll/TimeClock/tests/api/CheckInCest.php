@@ -1,5 +1,4 @@
 <?php
-
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
@@ -157,6 +156,40 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenEmployeeHasSpecifiedWorkShiftAndArrivesOnTimeThenReturnCreated(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            // work shifts with same start time
+            ->with('workShifts', ['name' => '7 to 18', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
+            ->andWith('workShifts', ['name' => '7 to 15', 'time_slots' => [['start' => '07:00', 'end' => '15:00']]])
+            ->create();
+
+        $requestData = [
+            'action' => 'check_in',
+            'work_shift_id' => $employee->workShifts->first()->id, // specify work shift id
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'checked_in_at' => now()->toDateTimeString(),
+            'checked_in_by_id' => $this->user->id,
+        ]);
+
     }
 
     /**

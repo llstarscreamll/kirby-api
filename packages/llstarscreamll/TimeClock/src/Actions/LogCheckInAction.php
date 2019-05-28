@@ -40,8 +40,9 @@ class LogCheckInAction
     /**
      * @param User   $registrar
      * @param string $identificationCode
+     * @param int    $workShiftId
      */
-    public function run(User $registrar, string $identificationCode): TimeClockLog
+    public function run(User $registrar, string $identificationCode, int $workShiftId = null): TimeClockLog
     {
         $identification = $this->identificationRepository
             ->with(['employee.workShifts'])
@@ -60,6 +61,10 @@ class LogCheckInAction
         $workShifts = $identification
             ->employee
             ->getWorkShiftsByClosestStartRangeTime(now());
+
+        if ($workShiftId) {
+            $workShifts = $workShifts->where('id', $workShiftId);
+        }
 
         if ($workShifts->count() > 1) {
             throw new CanNotDeductWorkShiftException("No es posible deducir el turno de trabajo, hay {$workShifts->count()} posibilidades.");
