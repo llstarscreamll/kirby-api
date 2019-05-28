@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\TimeClock\Actions;
 
 use llstarscreamll\Users\Models\User;

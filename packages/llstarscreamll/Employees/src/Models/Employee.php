@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\Employees\Models;
 
 use Carbon\Carbon;

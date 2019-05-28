@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\TimeClock\Actions;
 
 use llstarscreamll\Users\Models\User;
@@ -53,7 +54,7 @@ class LogCheckOutAction
             ['id', 'checked_in_at']
         );
 
-        if (!$lastTimeClockCheckIn) {
+        if (! $lastTimeClockCheckIn) {
             throw new MissingCheckInException();
         }
 

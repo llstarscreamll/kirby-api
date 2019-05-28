@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\TimeClock\Exceptions;
 
 use Exception;
