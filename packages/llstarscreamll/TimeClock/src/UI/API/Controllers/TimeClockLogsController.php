@@ -1,4 +1,5 @@
 <?php
+
 namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
