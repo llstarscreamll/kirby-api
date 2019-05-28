@@ -1,5 +1,4 @@
 <?php
-
 namespace llstarscreamll\TimeClock\Actions;
 
 use llstarscreamll\Users\Models\User;
@@ -38,8 +37,8 @@ class LogCheckOutAction
     }
 
     /**
-     * @param  User                    $registrar
-     * @param  string                  $identificationCode
+     * @param  User                                                         $registrar
+     * @param  string                                                       $identificationCode
      * @throws \llstarscreamll\TimeClock\Exceptions\MissingCheckInException if there is no check in found to log the check out action
      */
     public function run(User $registrar, string $identificationCode): TimeClockLog
@@ -54,11 +53,11 @@ class LogCheckOutAction
             ['id', 'checked_in_at']
         );
 
-        if (! $lastTimeClockCheckIn) {
+        if (!$lastTimeClockCheckIn) {
             throw new MissingCheckInException();
         }
 
-        $workShift = $identification->employee->getFirstWorkShiftByClosestRangeTime($lastTimeClockCheckIn->checked_in_at, now());
+        $workShift = $identification->employee->getWorkShiftsByClosestRangeTime($lastTimeClockCheckIn->checked_in_at, now());
 
         $timeClockLogUpdate = [
             'work_shift_id' => optional($workShift)->id,

@@ -4,21 +4,21 @@ namespace llstarscreamll\TimeClock\Exceptions;
 use Exception;
 
 /**
- * Class AlreadyCheckedInException.
+ * Class CanNotDeductWorkShiftException.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class AlreadyCheckedInException extends Exception
+class CanNotDeductWorkShiftException extends Exception
 {
     /**
      * @var string
      */
-    protected $message = 'Already checked in, can\'t check again';
+    protected $message = 'Can not deduct work shift, you must provide which to use.';
 
     /**
      * @var int
      */
-    protected $code = 1050;
+    protected $code = 1051;
 
     /**
      * @param string $message
