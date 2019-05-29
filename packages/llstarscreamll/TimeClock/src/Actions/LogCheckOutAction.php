@@ -38,34 +38,30 @@ class LogCheckOutAction
     }
 
     /**
-     * @param  User                                                         $registrar
+     * @param  \llstarscreamll\Users\Models\User                            $registrar
      * @param  string                                                       $identificationCode
      * @throws \llstarscreamll\TimeClock\Exceptions\MissingCheckInException if there is no check in found to log the check out action
      */
     public function run(User $registrar, string $identificationCode): TimeClockLog
     {
         $identification = $this->identificationRepository
-            ->with(['employee.workShifts'])
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        $lastTimeClockCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
+        $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromEmployeeId(
             $identification->employee_id,
             ['id', 'checked_in_at']
         );
 
-        if (! $lastTimeClockCheckIn) {
-            throw new MissingCheckInException();
+        if (!$lastCheckIn) {
+            throw new MissingCheckInException("No se ha registrado entrada.");
         }
 
-        $workShift = $identification->employee->getWorkShiftsByClosestRangeTime($lastTimeClockCheckIn->checked_in_at, now());
-
         $timeClockLogUpdate = [
-            'work_shift_id' => optional($workShift)->id,
             'checked_out_at' => now(),
             'checked_out_by_id' => $registrar->id,
         ];
 
-        return $this->timeClockLogRepository->update($timeClockLogUpdate, $lastTimeClockCheckIn->id);
+        return $this->timeClockLogRepository->update($timeClockLogUpdate, $lastCheckIn->id);
     }
 }

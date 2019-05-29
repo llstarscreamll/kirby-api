@@ -15,7 +15,7 @@ class AlreadyCheckedInException extends Exception
     /**
      * @var string
      */
-    protected $message = 'Already checked in, can\'t check again';
+    protected $message = 'Already checked in, can\'t check again.';
 
     /**
      * @var int

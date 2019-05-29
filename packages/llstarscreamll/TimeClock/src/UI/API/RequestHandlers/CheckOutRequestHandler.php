@@ -24,9 +24,11 @@ class CheckOutRequestHandler
         try {
             $timeClockLog = $logCheckOutAction->run($request->user(), $request->identification_code);
         } catch (MissingCheckInException $exception) {
-            throw new HttpResponseException(response()->json([
-                'message' => 'No hay registro de entrada',
-            ], 422));
+            throw new HttpResponseException(response()->json(['errors' => [
+                'title' => $exception->getMessage(),
+                'detail' => 'Deseas registrar salida pero no has registrado una entrada aún.',
+                'code' => $exception->getCode(),
+            ]], 422));
         }
 
         return new TimeClockLogResource($timeClockLog);

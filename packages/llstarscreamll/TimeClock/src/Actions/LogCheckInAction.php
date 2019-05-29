@@ -50,7 +50,7 @@ class LogCheckInAction
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
+        $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromEmployeeId(
             $identification->employee_id,
             ['id', 'checked_in_at']
         );

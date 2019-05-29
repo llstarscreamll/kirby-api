@@ -32,12 +32,12 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
      * @param  int    $userId
      * @return null
      */
-    public function lastCheckInWithOutCheckOutFromUserId(int $userId, array $columns = ['*'])
+    public function lastCheckInWithOutCheckOutFromEmployeeId(int $userId, array $columns = ['*'])
     {
         return $this->model->where(['employee_id' => $userId])
-                    ->whereNotNull('checked_in_at')
-                    ->whereNull('checked_out_at')
-                    ->orderBy('created_at', 'desc')
-                    ->first($columns);
+            ->whereNotNull('checked_in_at')
+            ->whereNull('checked_out_at')
+            ->orderBy('created_at', 'desc')
+            ->first($columns);
     }
 }

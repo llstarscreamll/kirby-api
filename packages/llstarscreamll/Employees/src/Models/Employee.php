@@ -92,35 +92,6 @@ class Employee extends Model
     }
 
     /**
-     * @param  Carbon      $start
-     * @param  Carbon      $end
-     * @return WorkShift
-     */
-    public function getWorkShiftsByClosestRangeTime(Carbon $start, Carbon $end): ?WorkShift
-    {
-        return $this->workShifts->filter(function (WorkShift $workShift) use ($start, $end) {
-            $timeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($start, $end, $workShift) {
-                [$hour, $seconds] = explode(':', $timeSlot['start']);
-                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
-                $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_start_time);
-
-                [$hour, $seconds] = explode(':', $timeSlot['end']);
-                $slotEndFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_end_time);
-                $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_end_time);
-
-                if ($slotStartFrom->hour > (int) $hour) {
-                    $slotStartFrom = $slotStartFrom->subDay();
-                    $slotStartTo = $slotStartTo->subDay();
-                }
-
-                return $start->between($slotStartFrom, $slotStartTo) && $end->between($slotEndFrom, $slotEndTo);
-            });
-
-            return $timeSlots->count();
-        });
-    }
-
-    /**
      * @param  Carbon      $time
      * @return WorkShift
      */
