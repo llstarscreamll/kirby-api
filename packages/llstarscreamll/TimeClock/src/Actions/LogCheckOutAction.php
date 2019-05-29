@@ -53,8 +53,8 @@ class LogCheckOutAction
             ['id', 'checked_in_at']
         );
 
-        if (!$lastCheckIn) {
-            throw new MissingCheckInException("No se ha registrado entrada.");
+        if (! $lastCheckIn) {
+            throw new MissingCheckInException('No se ha registrado entrada.');
         }
 
         $timeClockLogUpdate = [
