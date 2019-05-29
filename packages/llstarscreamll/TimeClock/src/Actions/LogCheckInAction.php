@@ -56,7 +56,7 @@ class LogCheckInAction
         );
 
         if ($lastCheckIn) {
-            throw new AlreadyCheckedInException("Ya se registra una entrada.", $lastCheckIn->checked_in_at);
+            throw new AlreadyCheckedInException('Ya se registra una entrada.', $lastCheckIn->checked_in_at);
         }
 
         $workShifts = $identification
@@ -68,7 +68,7 @@ class LogCheckInAction
         }
 
         if ($workShifts->count() > 1) {
-            throw new CanNotDeductWorkShiftException("No fue posible deducir el turno.", $workShifts);
+            throw new CanNotDeductWorkShiftException('No fue posible deducir el turno.', $workShifts);
         }
 
         $timeClockLog = [
