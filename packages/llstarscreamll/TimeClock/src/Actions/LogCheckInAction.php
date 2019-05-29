@@ -50,13 +50,13 @@ class LogCheckInAction
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        $lastTimeClockCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
+        $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromUserId(
             $identification->employee_id,
             ['id', 'checked_in_at']
         );
 
-        if ($lastTimeClockCheckIn) {
-            throw new AlreadyCheckedInException("El usuario ya registró entrada en {$lastTimeClockCheckIn->checked_in_at}");
+        if ($lastCheckIn) {
+            throw new AlreadyCheckedInException("Ya se registra una entrada.", $lastCheckIn->checked_in_at);
         }
 
         $workShifts = $identification
@@ -68,7 +68,7 @@ class LogCheckInAction
         }
 
         if ($workShifts->count() > 1) {
-            throw new CanNotDeductWorkShiftException("No es posible deducir el turno de trabajo, hay {$workShifts->count()} posibilidades.");
+            throw new CanNotDeductWorkShiftException("No fue posible deducir el turno.", $workShifts);
         }
 
         $timeClockLog = [

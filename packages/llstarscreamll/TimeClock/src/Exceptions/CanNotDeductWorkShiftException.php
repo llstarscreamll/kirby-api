@@ -3,6 +3,7 @@
 namespace llstarscreamll\TimeClock\Exceptions;
 
 use Exception;
+use Illuminate\Support\Collection;
 
 /**
  * Class CanNotDeductWorkShiftException.
@@ -22,10 +23,17 @@ class CanNotDeductWorkShiftException extends Exception
     protected $code = 1051;
 
     /**
-     * @param string $message
+     * @var \Illuminate\Support\Collection
      */
-    public function __construct(string $message = null)
+    public $posibleWorkShifts;
+
+    /**
+     * @param string                         $message
+     * @param \Illuminate\Support\Collection $posibleWorkShifts
+     */
+    public function __construct(string $message = null, Collection $posibleWorkShifts)
     {
         $this->message = $message ?? $this->message;
+        $this->posibleWorkShifts = $posibleWorkShifts;
     }
 }

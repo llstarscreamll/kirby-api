@@ -99,6 +99,10 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath("$.errors.0.code");
+        $I->seeResponseJsonMatchesJsonPath("$.errors.0.title");
+        $I->seeResponseJsonMatchesJsonPath("$.errors.0.detail");
+
     }
 
     /**
@@ -156,13 +160,20 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath("$.errors.0.code");
+        $I->seeResponseJsonMatchesJsonPath("$.errors.0.title");
+        $I->seeResponseJsonMatchesJsonPath("$.errors.0.detail");
+        // posible work shifts
+        $I->seeResponseJsonMatchesJsonPath("$.errors.0.meta.work_shifts.0.id");
+        $I->seeResponseJsonMatchesJsonPath("$.errors.0.meta.work_shifts.1.id");
+
     }
 
     /**
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasSpecifiedWorkShiftAndArrivesOnTimeThenReturnCreated(ApiTester $I)
+    public function whenEmployeeHasSpecifiedWorkShiftIdAndArrivesOnTimeThenReturnCreated(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));

@@ -3,6 +3,7 @@
 namespace llstarscreamll\TimeClock\Exceptions;
 
 use Exception;
+use Carbon\Carbon;
 
 /**
  * Class AlreadyCheckedInException.
@@ -22,10 +23,17 @@ class AlreadyCheckedInException extends Exception
     protected $code = 1050;
 
     /**
-     * @param string $message
+     * @var \Carbon\Carbon
      */
-    public function __construct(string $message = null)
+    public $checkedInAt;
+
+    /**
+     * @param string $message
+     * @param Carbon $checkedInAt
+     */
+    public function __construct(string $message = null, Carbon $checkedInAt)
     {
         $this->message = $message ?? $this->message;
+        $this->checkedInAt = $checkedInAt;
     }
 }
