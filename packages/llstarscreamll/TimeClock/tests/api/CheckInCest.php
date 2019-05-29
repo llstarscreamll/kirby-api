@@ -100,10 +100,9 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath("$.errors.0.code");
-        $I->seeResponseJsonMatchesJsonPath("$.errors.0.title");
-        $I->seeResponseJsonMatchesJsonPath("$.errors.0.detail");
-
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
     }
 
     /**
@@ -161,13 +160,12 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath("$.errors.0.code");
-        $I->seeResponseJsonMatchesJsonPath("$.errors.0.title");
-        $I->seeResponseJsonMatchesJsonPath("$.errors.0.detail");
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
         // posible work shifts
-        $I->seeResponseJsonMatchesJsonPath("$.errors.0.meta.work_shifts.0.id");
-        $I->seeResponseJsonMatchesJsonPath("$.errors.0.meta.work_shifts.1.id");
-
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.0.id');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.1.id');
     }
 
     /**

@@ -40,9 +40,9 @@ class CheckInRequestHandler
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => $exception->getMessage(),
-                'detail' => "No se pudo deducir el turno, debes elegir uno "
+                'detail' => 'No se pudo deducir el turno, debes elegir uno '
                 ."de {$exception->posibleWorkShifts->count()} posibles.",
-                "meta" => [
+                'meta' => [
                     'work_shifts' => WorkShiftResource::collection($exception->posibleWorkShifts),
                 ],
             ]);
