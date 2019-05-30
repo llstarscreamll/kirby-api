@@ -41,7 +41,7 @@ class CheckInRequestHandler
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => $exception->getMessage(),
-                'detail' => "Si se llega tarde al turno, se debe registrar un tipo de novedad.",
+                'detail' => 'Si se llega tarde al turno, se debe registrar un tipo de novedad.',
             ]);
         } catch (CanNotDeductWorkShiftException $exception) {
             array_push($errors, [

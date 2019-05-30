@@ -123,7 +123,6 @@ class Employee extends Model
     public function getWorkShiftsByClosestStartRangeTime(Carbon $time): ?Collection
     {
         return $this->workShifts->filter(function (WorkShift $workShift) use ($time) {
-
             $timeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
                 [$hour, $seconds] = explode(':', $timeSlot['start']);
                 $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
