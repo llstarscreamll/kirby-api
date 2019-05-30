@@ -111,7 +111,7 @@ class Employee extends Model
                 return $time->between($slotStartFrom, $slotStartTo);
             });
 
-            return $timeSlots->count();
+            return $timeSlots->count() && in_array($time->dayOfWeekIso, $workShift->applies_on_days);
         });
     }
 }

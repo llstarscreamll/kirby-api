@@ -144,7 +144,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasShiftsOverlappingThenReturnUnprocesableEntity(ApiTester $I)
+    public function whenEmployeeHasShiftsWithOverlapOnTimeAndDaysThenReturnUnprocesableEntity(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
@@ -207,6 +207,46 @@ class CheckInCest
         $requestData = [
             'action' => 'check_in',
             'work_shift_id' => $employee->workShifts->first()->id, // specify work shift id
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'checked_in_at' => now()->toDateTimeString(),
+            'checked_in_by_id' => $this->user->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenEmployeeHasWorkShiftsWithTimeOnlyOverlapThenReturnCreated(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            // work shifts with same start time
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->andWith('workShifts', [
+                'name' => '7 to 15',
+                'applies_on_days' => [6], // saturday
+                'time_slots' => [['start' => '07:00', 'end' => '15:00']],
+            ])
+            ->create();
+
+        $requestData = [
+            'action' => 'check_in',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
