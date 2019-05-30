@@ -116,7 +116,11 @@ class CheckInCest
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', ['name' => '7 to 18', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
             ->create();
 
         $requestData = [
@@ -140,7 +144,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasShiftsOverlappingAndArrivesOnTimeThenReturnUnprocesableEntity(ApiTester $I)
+    public function whenEmployeeHasShiftsOverlappingThenReturnUnprocesableEntity(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
@@ -148,8 +152,16 @@ class CheckInCest
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             // work shifts with same start time
-            ->with('workShifts', ['name' => '7 to 18', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
-            ->andWith('workShifts', ['name' => '7 to 15', 'time_slots' => [['start' => '07:00', 'end' => '15:00']]])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->andWith('workShifts', [
+                'name' => '7 to 15',
+                'applies_on_days' => [1], // monday
+                'time_slots' => [['start' => '07:00', 'end' => '15:00']],
+            ])
             ->create();
 
         $requestData = [
@@ -180,8 +192,16 @@ class CheckInCest
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             // work shifts with same start time
-            ->with('workShifts', ['name' => '7 to 18', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
-            ->andWith('workShifts', ['name' => '7 to 15', 'time_slots' => [['start' => '07:00', 'end' => '15:00']]])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->andWith('workShifts', [
+                'name' => '7 to 15',
+                'applies_on_days' => [1], // monday
+                'time_slots' => [['start' => '07:00', 'end' => '15:00']],
+            ])
             ->create();
 
         $requestData = [
