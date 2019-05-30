@@ -7,6 +7,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
 use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
+use llstarscreamll\TimeClock\Exceptions\TooLateToCheckInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
@@ -36,11 +37,17 @@ class CheckInRequestHandler
                 'title' => $exception->getMessage(),
                 'detail' => "Ya se ha registrado entrada en {$exception->checkedInAt}.",
             ]);
+        } catch (TooLateToCheckInException $exception) {
+            array_push($errors, [
+                'code' => $exception->getCode(),
+                'title' => $exception->getMessage(),
+                'detail' => "Si se llega tarde al turno, se debe registrar un tipo de novedad.",
+            ]);
         } catch (CanNotDeductWorkShiftException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => $exception->getMessage(),
-                'detail' => 'No se pudo deducir el turno, debes elegir uno '
+                'detail' => 'No se pudo deducir el turno, se debe elegir uno '
                 ."de {$exception->posibleWorkShifts->count()} posibles.",
                 'meta' => [
                     'work_shifts' => WorkShiftResource::collection($exception->posibleWorkShifts),

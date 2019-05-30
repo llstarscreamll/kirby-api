@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\WorkShifts\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -81,5 +82,27 @@ class WorkShift extends Model
         $daysNumbers = explode($this->daysSeparator, $this->attributes['applies_on_days']);
 
         return array_map('intval', $daysNumbers);
+    }
+
+    /**
+     * @param  Carbon $time
+     * @return bool
+     */
+    public function isOnTimeToStart(Carbon $time = null): bool
+    {
+        $time = $time ?? now();
+
+        return collect($this->time_slots)->filter(function (array $timeSlot) use ($time) {
+            [$hour, $seconds] = explode(':', $timeSlot['start']);
+            $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_start_time);
+            $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($this->grace_minutes_for_start_time);
+
+            if ($slotStartFrom->hour > (int) $hour) {
+                $slotStartFrom = $slotStartFrom->subDay();
+                $slotStartTo = $slotStartTo->subDay();
+            }
+
+            return $time->between($slotStartFrom, $slotStartTo);
+        })->count() > 0;
     }
 }

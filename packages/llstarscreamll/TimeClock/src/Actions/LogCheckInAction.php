@@ -5,6 +5,7 @@ namespace llstarscreamll\TimeClock\Actions;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
+use llstarscreamll\TimeClock\Exceptions\TooLateToCheckInException;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
@@ -61,7 +62,7 @@ class LogCheckInAction
 
         $workShifts = $identification
             ->employee
-            ->getWorkShiftsByClosestStartRangeTime(now());
+            ->getWorkShiftsThatMatchesTime(now());
 
         if ($workShiftId) {
             $workShifts = $workShifts->where('id', $workShiftId);
@@ -71,11 +72,17 @@ class LogCheckInAction
             throw new CanNotDeductWorkShiftException('No fue posible deducir el turno.', $workShifts);
         }
 
+        $workShift = $workShifts->first();
+
+        if ($workShift && !$workShift->isOnTimeToStart()) {
+            throw new TooLateToCheckInException('Es tarde para registrar la entrada.');
+        }
+
         $timeClockLog = [
             'employee_id' => $identification->employee_id,
             'checked_in_at' => now(),
             'checked_in_by_id' => $registrar->id,
-            'work_shift_id' => optional($workShifts->first())->id,
+            'work_shift_id' => optional($workShift)->id,
         ];
 
         return $this->timeClockLogRepository->create($timeClockLog);

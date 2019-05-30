@@ -103,6 +103,7 @@ class CheckInCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseContainsJson(['code' => 1050]);
     }
 
     /**
@@ -178,6 +179,8 @@ class CheckInCest
         // posible work shifts
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.1.id');
+        $I->seeResponseContainsJson(['code' => 1051]);
+
     }
 
     /**
@@ -225,7 +228,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasWorkShiftsWithTimeOnlyOverlapThenReturnCreated(ApiTester $I)
+    public function whenEmployeeHasWorkShiftsWithOverlapInTimeOnlyThenReturnCreated(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
@@ -290,5 +293,37 @@ class CheckInCest
             'checked_in_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
         ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenEmployeeHasSingleWorkShiftAndArrivesTooLateThenReturnUnprocessableEntity(ApiTester $I)
+    {
+        // fake current date time, one hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])
+            ->create();
+
+        $requestData = [
+            'action' => 'check_in',
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseContainsJson(['code' => 1053]);
     }
 }
