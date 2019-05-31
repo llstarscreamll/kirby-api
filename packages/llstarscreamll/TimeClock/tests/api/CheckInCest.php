@@ -180,7 +180,6 @@ class CheckInCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.1.id');
         $I->seeResponseContainsJson(['code' => 1051]);
-
     }
 
     /**

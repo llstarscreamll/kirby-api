@@ -74,7 +74,7 @@ class LogCheckInAction
 
         $workShift = $workShifts->first();
 
-        if ($workShift && !$workShift->isOnTimeToStart()) {
+        if ($workShift && ! $workShift->isOnTimeToStart()) {
             throw new TooLateToCheckInException('Es tarde para registrar la entrada.');
         }
 
