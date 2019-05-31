@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require llstarscreamll/laravel-time-clock
+composer require llstarscreamll/laravel-time-clock
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ Please see the [changelog](changelog.md) for more information on what has change
 ## Testing
 
 ``` bash
-$ composer test
+composer test
 ```
 
 ## Contributing
@@ -37,12 +37,12 @@ If you discover any security related issues, please email llstarscreamll@hotmail
 
 ## Credits
 
-- [Johan Alvarez][link-author]
+- [Johan Alvarez][https://github.com/llstarscreamll]
 - [All Contributors][link-contributors]
 
 ## License
 
-license. Please see the [license file](license.md) for more information.
+Please see the [license file](license.md) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/llstarscreamll/laravel-time-clock.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/llstarscreamll/laravel-time-clock.svg?style=flat-square
@@ -53,5 +53,5 @@ license. Please see the [license file](license.md) for more information.
 [link-downloads]: https://packagist.org/packages/llstarscreamll/laravel-time-clock
 [link-travis]: https://travis-ci.org/llstarscreamll/laravel-time-clock
 [link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/llstarscreamll
+[https://github.com/llstarscreamll]: https://github.com/llstarscreamll
 [link-contributors]: ../../contributors

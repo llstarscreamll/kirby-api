@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require llstarscreamll/laravel-work-shifts
+composer require llstarscreamll/laravel-work-shifts
 ```
 
 ## Usage
@@ -24,7 +24,7 @@ Please see the [changelog](changelog.md) for more information on what has change
 ## Testing
 
 ``` bash
-$ composer test
+composer test
 ```
 
 ## Contributing
@@ -42,7 +42,7 @@ If you discover any security related issues, please email llstarscreamll@hotmail
 
 ## License
 
-license. Please see the [license file](license.md) for more information.
+Please see the [license file](license.md) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/llstarscreamll/laravel-work-shifts.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/llstarscreamll/laravel-work-shifts.svg?style=flat-square
