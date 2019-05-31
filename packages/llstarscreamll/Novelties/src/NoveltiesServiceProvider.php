@@ -48,7 +48,7 @@ class NoveltiesServiceProvider extends ServiceProvider
     {
         return ['novelties'];
     }
-    
+
     /**
      * Console-specific booting.
      *
