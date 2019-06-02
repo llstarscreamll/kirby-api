@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
 use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
+use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
@@ -42,6 +43,9 @@ class CheckInRequestHandler
                 'code' => $exception->getCode(),
                 'title' => $exception->getMessage(),
                 'detail' => 'Si se llega tarde al turno, se debe registrar un tipo de novedad.',
+                'meta' => [
+                    'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
+                ],
             ]);
         } catch (CanNotDeductWorkShiftException $exception) {
             array_push($errors, [

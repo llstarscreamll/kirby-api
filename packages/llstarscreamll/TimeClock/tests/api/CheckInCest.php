@@ -4,6 +4,8 @@ namespace ClockTime;
 
 use Illuminate\Support\Carbon;
 use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\Novelties\Models\NoveltyType;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Class CheckInCest.
@@ -303,6 +305,11 @@ class CheckInCest
         // fake current date time, one hour late
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
 
+        // subtraction novelty types
+        factory(NoveltyType::class, 3)->create([
+            'operator' => NoveltyTypeOperator::Subtraction,
+        ]);
+
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('workShifts', [
@@ -323,6 +330,10 @@ class CheckInCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        // should return novelties that subtract time
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.2.id');
         $I->seeResponseContainsJson(['code' => 1053]);
     }
 }

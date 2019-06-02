@@ -6,6 +6,7 @@ use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckInException;
+use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
@@ -18,23 +19,31 @@ use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 class LogCheckInAction
 {
     /**
-     * @var \llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface
+     * @var IdentificationRepositoryInterface
      */
     private $identificationRepository;
 
     /**
-     * @var \llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface
+     * @var TimeClockLogRepositoryInterface
      */
     private $timeClockLogRepository;
 
     /**
-     * @param \llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface $identificationRepository
-     * @param \llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface   $timeClockLogRepository
+     * @var NoveltyTypeRepositoryInterface
+     */
+    private $noveltyTypeRepository;
+
+    /**
+     * @param NoveltyTypeRepositoryInterface    $noveltyTypeRepository
+     * @param IdentificationRepositoryInterface $identificationRepository
+     * @param TimeClockLogRepositoryInterface   $timeClockLogRepository
      */
     public function __construct(
+        NoveltyTypeRepositoryInterface $noveltyTypeRepository,
         TimeClockLogRepositoryInterface $timeClockLogRepository,
         IdentificationRepositoryInterface $identificationRepository
     ) {
+        $this->noveltyTypeRepository = $noveltyTypeRepository;
         $this->timeClockLogRepository = $timeClockLogRepository;
         $this->identificationRepository = $identificationRepository;
     }
@@ -74,8 +83,9 @@ class LogCheckInAction
 
         $workShift = $workShifts->first();
 
-        if ($workShift && ! $workShift->isOnTimeToStart()) {
-            throw new TooLateToCheckInException('Es tarde para registrar la entrada.');
+        if ($workShift && !$workShift->isOnTimeToStart()) {
+            $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
+            throw new TooLateToCheckInException('Es tarde para registrar la entrada.', $noveltyTypes);
         }
 
         $timeClockLog = [
