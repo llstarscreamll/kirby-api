@@ -15,6 +15,7 @@
         "Novelties"
     ],
     "require": {
+        "bensampo/laravel-enum": "^1.19",
         "illuminate/support": "~5"
     },
     "require-dev": {
