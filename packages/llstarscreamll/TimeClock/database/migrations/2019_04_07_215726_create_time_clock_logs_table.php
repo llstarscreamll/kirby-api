@@ -22,6 +22,7 @@ class CreateTimeClockLogsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('work_shift_id')->nullable();
+            $table->unsignedInteger('novelty_type_id')->nullable();
             $table->timestamp('checked_in_at');
             $table->timestamp('checked_out_at')->nullable();
             $table->unsignedInteger('checked_in_by_id');
@@ -31,6 +32,7 @@ class CreateTimeClockLogsTable extends Migration
 
             $table->foreign('employee_id')->references('id')->on('users');
             $table->foreign('work_shift_id')->references('id')->on('work_shifts');
+            $table->foreign('novelty_type_id')->references('id')->on('novelty_types');
             $table->foreign('checked_in_by_id')->references('id')->on('users');
             $table->foreign('checked_out_by_id')->references('id')->on('users');
         });

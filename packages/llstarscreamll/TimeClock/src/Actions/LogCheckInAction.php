@@ -3,10 +3,15 @@
 namespace llstarscreamll\TimeClock\Actions;
 
 use llstarscreamll\Users\Models\User;
+use llstarscreamll\WorkShifts\Models\WorkShift;
+use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
+use llstarscreamll\Employees\Models\Identification;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
+use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
@@ -58,13 +63,33 @@ class LogCheckInAction
      * @throws TooLateToCheckException
      * @return TimeClockLog
      */
-    public function run(User $registrar, string $identificationCode, int $workShiftId = null): TimeClockLog
+    public function run(User $registrar, string $identificationCode, int $workShiftId = null, array $novelty = null): TimeClockLog
     {
         $identification = $this->identificationRepository
             ->with(['employee.workShifts'])
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
+        $this->validateUnfinishedCheckIn($identification);
+        $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $novelty);
+        $novelty = $this->validateNoveltyTypeBasedOnWorkShiftPuntuality($workShift, $novelty);
+
+        $timeClockLog = [
+            'employee_id' => $identification->employee_id,
+            'checked_in_at' => now(),
+            'checked_in_by_id' => $registrar->id,
+            'work_shift_id' => optional($workShift)->id,
+            'novelty_type_id' => optional($novelty)->id,
+        ];
+
+        return $this->timeClockLogRepository->create($timeClockLog);
+    }
+
+    /**
+     * @param Identification $identification
+     */
+    private function validateUnfinishedCheckIn(Identification $identification): void
+    {
         $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromEmployeeId(
             $identification->employee_id,
             ['id', 'checked_in_at']
@@ -73,10 +98,20 @@ class LogCheckInAction
         if ($lastCheckIn) {
             throw new AlreadyCheckedInException('Ya se registra una entrada.', $lastCheckIn->checked_in_at);
         }
+    }
 
+    /**
+     * @param  Identification   $identification
+     * @param  null|int         $workShiftId
+     * @return null|WorkShift
+     */
+    private function validateDeductibleWorkShift(Identification $identification, ?int $workShiftId): ?WorkShift
+    {
         $workShifts = $identification
             ->employee
             ->getWorkShiftsThatMatchesTime(now());
+
+        $employeeWorkShiftsCount = $identification->employee->workShifts->count();
 
         if ($workShiftId) {
             $workShifts = $identification
@@ -85,29 +120,46 @@ class LogCheckInAction
                 ->where('id', $workShiftId);
         }
 
-        if ($workShifts->count() > 1) {
+        $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && $workShifts->count() === 0;
+
+        if ($hasWorkShiftsButCantBeDeducted || $workShifts->count() > 1) {
             throw new CanNotDeductWorkShiftException('No fue posible deducir el turno.', $workShifts);
         }
 
-        $workShift = $workShifts->first();
+        return $workShifts->first();
+    }
 
-        if ($workShift && $workShift->isOnTimeToStart() < 0) {
+    /**
+     * @param  null|WorkShift $workShift
+     * @param  null|array     $noveltyType
+     * @return null|Novelty
+     */
+    private function validateNoveltyTypeBasedOnWorkShiftPuntuality(?WorkShift $workShift, array $noveltyType = null): ?NoveltyType
+    {
+        if ($noveltyType) {
+            $noveltyType = $this->noveltyTypeRepository->find($noveltyType['id']);
+        }
+
+        if ($workShift && $workShift->isOnTimeToStart() < 0 && !$noveltyType) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeAddition();
             throw new TooEarlyToCheckException('Es temprano para registrar la entrada.', $noveltyTypes);
         }
 
-        if ($workShift && $workShift->isOnTimeToStart() > 0) {
+        if ($workShift && $workShift->isOnTimeToStart() > 0 && !$noveltyType) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
             throw new TooLateToCheckException('Es tarde para registrar la entrada.', $noveltyTypes);
         }
 
-        $timeClockLog = [
-            'employee_id' => $identification->employee_id,
-            'checked_in_at' => now(),
-            'checked_in_by_id' => $registrar->id,
-            'work_shift_id' => optional($workShift)->id,
-        ];
+        if ($workShift && $workShift->isOnTimeToStart() > 0 && $noveltyType && !$noveltyType->operator->is(NoveltyTypeOperator::Subtraction)) {
+            $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
+            throw new InvalidNoveltyTypeException('Tipo de novedad no válido.', $noveltyTypes);
+        }
 
-        return $this->timeClockLogRepository->create($timeClockLog);
+        if ($workShift && $workShift->isOnTimeToStart() < 0 && $noveltyType && !$noveltyType->operator->is(NoveltyTypeOperator::Addition)) {
+            $noveltyTypes = $this->noveltyTypeRepository->findForTimeAddition();
+            throw new InvalidNoveltyTypeException('Tipo de novedad no válido.', $noveltyTypes);
+        }
+
+        return $noveltyType;
     }
 }

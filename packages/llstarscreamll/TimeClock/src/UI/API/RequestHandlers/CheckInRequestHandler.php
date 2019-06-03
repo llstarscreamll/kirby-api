@@ -11,6 +11,7 @@ use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
 use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
+use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 
@@ -31,7 +32,10 @@ class CheckInRequestHandler
 
         try {
             $timeClockLog = $logCheckInAction->run(
-                $request->user(), $request->identification_code, $request->work_shift_id
+                $request->user(),
+                $request->identification_code,
+                $request->work_shift_id,
+                $request->novelty_type
             );
         } catch (AlreadyCheckedInException $exception) {
             array_push($errors, [
@@ -65,6 +69,15 @@ class CheckInRequestHandler
                 ."de {$exception->posibleWorkShifts->count()} posibles.",
                 'meta' => [
                     'work_shifts' => WorkShiftResource::collection($exception->posibleWorkShifts),
+                ],
+            ]);
+        } catch (InvalidNoveltyTypeException $exception) {
+            array_push($errors, [
+                'code' => $exception->getCode(),
+                'title' => $exception->getMessage(),
+                'detail' => 'El tipo de novedad no es válido.',
+                'meta' => [
+                    'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
                 ],
             ]);
         }

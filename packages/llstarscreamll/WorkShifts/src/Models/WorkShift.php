@@ -103,8 +103,9 @@ class WorkShift extends Model
     }
 
     /**
+     * @param  string $flag   'start'|'end'
      * @param  Carbon $time
-     * @return int
+     * @return int    -1 too early, on time, 1 too late
      */
     public function isOnTimeOnSlot(string $flag, Carbon $time): int
     {
