@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
+use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
@@ -39,6 +40,15 @@ class CheckOutRequestHandler
                 'code' => $exception->getCode(),
                 'title' => $exception->getMessage(),
                 'detail' => 'Si se sale temprano del turno, se debe registrar un tipo de novedad.',
+                'meta' => [
+                    'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
+                ],
+            ]);
+        } catch (TooLateToCheckException $exception) {
+            array_push($errors, [
+                'code' => $exception->getCode(),
+                'title' => $exception->getMessage(),
+                'detail' => 'Si se sale tarde del turno, se debe registrar un tipo de novedad.',
                 'meta' => [
                     'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
                 ],

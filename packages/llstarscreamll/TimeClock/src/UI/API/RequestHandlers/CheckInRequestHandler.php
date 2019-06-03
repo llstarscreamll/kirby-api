@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
+use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
 use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
@@ -38,11 +39,20 @@ class CheckInRequestHandler
                 'title' => $exception->getMessage(),
                 'detail' => "Ya se ha registrado entrada en {$exception->checkedInAt}.",
             ]);
+        } catch (TooEarlyToCheckException $exception) {
+            array_push($errors, [
+                'code' => $exception->getCode(),
+                'title' => $exception->getMessage(),
+                'detail' => 'Si se llega temprano al turno, se debe registrar una novedad.',
+                'meta' => [
+                    'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
+                ],
+            ]);
         } catch (TooLateToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => $exception->getMessage(),
-                'detail' => 'Si se llega tarde al turno, se debe registrar un tipo de novedad.',
+                'detail' => 'Si se llega tarde al turno, se debe registrar una novedad.',
                 'meta' => [
                     'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
                 ],

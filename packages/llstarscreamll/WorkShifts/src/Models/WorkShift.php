@@ -47,10 +47,10 @@ class WorkShift extends Model
      * @var array
      */
     protected $casts = [
-        'grace_minutes_for_start_times' => 'real',
-        'grace_minutes_for_end_times' => 'real',
-        'meal_time_in_minutes' => 'real',
-        'min_minutes_required_to_discount_meal_time' => 'real',
+        'grace_minutes_for_start_times' => 'int',
+        'grace_minutes_for_end_times' => 'int',
+        'meal_time_in_minutes' => 'int',
+        'min_minutes_required_to_discount_meal_time' => 'int',
         'time_slots' => 'array',
     ];
 
@@ -86,35 +86,53 @@ class WorkShift extends Model
 
     /**
      * @param  Carbon $time
-     * @return bool
+     * @return int
      */
-    public function isOnTimeToStart(Carbon $time = null): bool
+    public function isOnTimeToStart(Carbon $time = null): int
     {
-        $time = $time ?? now();
-
-        return collect($this->time_slots)->filter(function (array $timeSlot) use ($time) {
-            [$hour, $seconds] = explode(':', $timeSlot['start']);
-            $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_start_time);
-            $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($this->grace_minutes_for_start_time);
-
-            return $time->between($slotStartFrom, $slotStartTo);
-        })->count() > 0;
+        return $this->isOnTimeOnSlot('start', $time ?? now());
     }
 
     /**
      * @param  Carbon $time
-     * @return bool
+     * @return int
      */
-    public function isOnTimeToEnd(Carbon $time = null): bool
+    public function isOnTimeToEnd(Carbon $time = null): int
     {
-        $time = $time ?? now();
+        return $this->isOnTimeOnSlot('end', $time ?? now());
+    }
 
-        return collect($this->time_slots)->filter(function (array $timeSlot) use ($time) {
-            [$hour, $seconds] = explode(':', $timeSlot['end']);
-            $slotEndFrom = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_start_time);
-            $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($this->grace_minutes_for_start_time);
+    /**
+     * @param  Carbon $time
+     * @return int
+     */
+    public function isOnTimeOnSlot(string $flag, Carbon $time): int
+    {
+        return collect($this->time_slots)
+            ->map(function ($timeSlot) {
+                [$hour, $seconds] = explode(':', $timeSlot['start']);
+                $start = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_start_times);
 
-            return $time->between($slotEndFrom, $slotEndTo);
-        })->count() > 0;
+                [$hour, $seconds] = explode(':', $timeSlot['end']);
+                $end = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_end_times);
+
+                return [
+                    'end' => $end,
+                    'start' => $start,
+                ];
+            })
+            ->sortBy(function (array $timeSlot) use ($time, $flag) {
+                return $time->diffInSeconds($timeSlot[$flag]);
+            })
+            ->map(function (array $timeSlot) use ($time, $flag) {
+                $flagGraceFrom = $timeSlot[$flag]->copy()->subMinutes($this->grace_minutes_for_end_times);
+                $flagGraceTo = $timeSlot[$flag]->copy()->addMinutes($this->grace_minutes_for_end_times);
+
+                if ($time->between($flagGraceFrom, $flagGraceTo)) {
+                    return 0;
+                }
+
+                return $time->lessThan($flagGraceFrom) ? -1 : 1;
+            })->first();
     }
 }

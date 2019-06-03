@@ -12,5 +12,13 @@ use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
  */
 interface NoveltyTypeRepositoryInterface extends BaseRepositoryInterface
 {
-    public function findForTimeSubtraction(): Collection;
+    /**
+     * @param array $columns
+     */
+    public function findForTimeSubtraction($columns = ['*']): Collection;
+
+    /**
+     * @param array $columns
+     */
+    public function findForTimeAddition($columns = ['*']): Collection;
 }

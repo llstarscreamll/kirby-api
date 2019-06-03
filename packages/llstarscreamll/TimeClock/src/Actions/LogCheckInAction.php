@@ -5,6 +5,7 @@ namespace llstarscreamll\TimeClock\Actions;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
+use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
@@ -77,7 +78,10 @@ class LogCheckInAction
             ->getWorkShiftsThatMatchesTime(now());
 
         if ($workShiftId) {
-            $workShifts = $workShifts->where('id', $workShiftId);
+            $workShifts = $identification
+                ->employee
+                ->workShifts
+                ->where('id', $workShiftId);
         }
 
         if ($workShifts->count() > 1) {
@@ -86,7 +90,12 @@ class LogCheckInAction
 
         $workShift = $workShifts->first();
 
-        if ($workShift && !$workShift->isOnTimeToStart()) {
+        if ($workShift && $workShift->isOnTimeToStart() < 0) {
+            $noveltyTypes = $this->noveltyTypeRepository->findForTimeAddition();
+            throw new TooEarlyToCheckException('Es temprano para registrar la entrada.', $noveltyTypes);
+        }
+
+        if ($workShift && $workShift->isOnTimeToStart() > 0) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
             throw new TooLateToCheckException('Es tarde para registrar la entrada.', $noveltyTypes);
         }

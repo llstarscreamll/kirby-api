@@ -49,9 +49,10 @@ class LogCheckOutAction
     }
 
     /**
-     * @param  User                      $registrar
-     * @param  string                    $identificationCode
+     * @param  User                       $registrar
+     * @param  string                     $identificationCode
      * @throws MissingCheckInException
+     * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
      */
     public function run(User $registrar, string $identificationCode): TimeClockLog
@@ -69,9 +70,14 @@ class LogCheckOutAction
             throw new MissingCheckInException('No se ha registrado entrada.');
         }
 
-        if ($lastCheckIn->workShift && !$lastCheckIn->workShift->isOnTimeToEnd()) {
+        if ($lastCheckIn->workShift && $lastCheckIn->workShift->isOnTimeToEnd() < 0) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
-            throw new TooEarlyToCheckException('Es tarde para registrar la salida.', $noveltyTypes);
+            throw new TooEarlyToCheckException('Es temprano para registrar la salida.', $noveltyTypes);
+        }
+
+        if ($lastCheckIn->workShift && $lastCheckIn->workShift->isOnTimeToEnd() > 0) {
+            $noveltyTypes = $this->noveltyTypeRepository->findForTimeAddition();
+            throw new TooLateToCheckException('Es tarde para registrar la salida.', $noveltyTypes);
         }
 
         $timeClockLogUpdate = [

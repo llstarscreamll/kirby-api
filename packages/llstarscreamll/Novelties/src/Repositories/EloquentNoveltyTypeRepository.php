@@ -38,4 +38,13 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     {
         return $this->findWhere(['operator' => NoveltyTypeOperator::Subtraction], $columns);
     }
+
+    /**
+     * @param  array        $columns
+     * @return Collection
+     */
+    public function findForTimeAddition($columns = ['*']): Collection
+    {
+        return $this->findWhere(['operator' => NoveltyTypeOperator::Addition], $columns);
+    }
 }
