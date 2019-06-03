@@ -44,7 +44,6 @@ class CheckInCest
             ->create();
 
         $requestData = [
-            'action' => 'check_in',
             'identification_code' => 'wrong_identification_here',
         ];
 
@@ -53,28 +52,6 @@ class CheckInCest
         $I->seeResponseCodeIs(422);
         $I->seeResponseJsonMatchesJsonPath('$.message');
         $I->seeResponseJsonMatchesJsonPath('$.errors.identification_code');
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
-    public function whenInvalidActionTypeGivenThenReturnUnprocesableEntity(ApiTester $I)
-    {
-        $employee = factory(Employee::class)
-            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->create();
-
-        $requestData = [
-            'action' => 'invalid_option_here',
-            'identification_code' => 'fake-employee-card-code',
-        ];
-
-        $I->sendPOST($this->endpoint, $requestData);
-
-        $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath('$.message');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.action');
     }
 
     /**
@@ -95,7 +72,6 @@ class CheckInCest
             ->create();
 
         $requestData = [
-            'action' => 'check_in',
             'identification_code' => 'fake-employee-card-code',
         ];
 
@@ -127,7 +103,6 @@ class CheckInCest
             ->create();
 
         $requestData = [
-            'action' => 'check_in',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -168,7 +143,6 @@ class CheckInCest
             ->create();
 
         $requestData = [
-            'action' => 'check_in',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -209,7 +183,6 @@ class CheckInCest
             ->create();
 
         $requestData = [
-            'action' => 'check_in',
             'work_shift_id' => $employee->workShifts->first()->id, // specify work shift id
             'identification_code' => $employee->identifications->first()->code,
         ];
@@ -250,7 +223,6 @@ class CheckInCest
             ->create();
 
         $requestData = [
-            'action' => 'check_in',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -280,7 +252,6 @@ class CheckInCest
             ->create();
 
         $requestData = [
-            'action' => 'check_in',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -320,7 +291,6 @@ class CheckInCest
             ->create();
 
         $requestData = [
-            'action' => 'check_in',
             'identification_code' => $employee->identifications->first()->code,
         ];
 

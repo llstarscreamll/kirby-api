@@ -30,7 +30,6 @@ class StoreTimeClockLogRequest extends FormRequest
     public function rules()
     {
         return [
-            'action' => ['in:check_in,check_out'],
             'identification_code' => ['exists:identifications,code'],
         ];
     }

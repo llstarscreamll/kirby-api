@@ -52,7 +52,6 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'action' => 'check_out',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -90,7 +89,6 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'action' => 'check_out',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -123,7 +121,6 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'action' => 'check_out',
             'identification_code' => $employee->identifications->first()->code,
         ];
 
