@@ -43,7 +43,11 @@ class CheckOutCest
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', ['name' => '7 to 6', 'time_slots' => [['start' => '07:00', 'end' => '18:00']]])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
                 'checked_in_at' => $checkedInTime,
@@ -73,7 +77,7 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function whenCheckInHasEmptyShift(ApiTester $I)
+    public function whenCheckInHasEmptyShiftThenReturnOk(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
@@ -110,11 +114,10 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasNotCheckIn(ApiTester $I)
+    public function whenEmployeeHasNotCheckInThenReturnUnprocessableEntity(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
-        $checkedInTime = now()->setTime(7, 0);
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
