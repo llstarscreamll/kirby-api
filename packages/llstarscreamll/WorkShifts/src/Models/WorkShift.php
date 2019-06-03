@@ -97,12 +97,24 @@ class WorkShift extends Model
             $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_start_time);
             $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($this->grace_minutes_for_start_time);
 
-            if ($slotStartFrom->hour > (int) $hour) {
-                $slotStartFrom = $slotStartFrom->subDay();
-                $slotStartTo = $slotStartTo->subDay();
-            }
-
             return $time->between($slotStartFrom, $slotStartTo);
+        })->count() > 0;
+    }
+
+    /**
+     * @param  Carbon $time
+     * @return bool
+     */
+    public function isOnTimeToEnd(Carbon $time = null): bool
+    {
+        $time = $time ?? now();
+
+        return collect($this->time_slots)->filter(function (array $timeSlot) use ($time) {
+            [$hour, $seconds] = explode(':', $timeSlot['end']);
+            $slotEndFrom = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_start_time);
+            $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($this->grace_minutes_for_start_time);
+
+            return $time->between($slotEndFrom, $slotEndTo);
         })->count() > 0;
     }
 }

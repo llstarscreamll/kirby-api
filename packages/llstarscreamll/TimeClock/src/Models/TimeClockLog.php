@@ -4,6 +4,7 @@ namespace llstarscreamll\TimeClock\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use llstarscreamll\WorkShifts\Models\WorkShift;
 
 /**
  * Class TimeClockLog.
@@ -40,4 +41,12 @@ class TimeClockLog extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    /**
+     * @return mixed
+     */
+    public function workShift()
+    {
+        return $this->belongsTo(WorkShift::class);
+    }
 }
