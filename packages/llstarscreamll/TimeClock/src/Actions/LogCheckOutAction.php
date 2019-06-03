@@ -6,6 +6,7 @@ use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
+use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
@@ -70,7 +71,7 @@ class LogCheckOutAction
 
         if ($lastCheckIn->workShift && !$lastCheckIn->workShift->isOnTimeToEnd()) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
-            throw new TooLateToCheckException('Es tarde para registrar la salida.', $noveltyTypes);
+            throw new TooEarlyToCheckException('Es tarde para registrar la salida.', $noveltyTypes);
         }
 
         $timeClockLogUpdate = [

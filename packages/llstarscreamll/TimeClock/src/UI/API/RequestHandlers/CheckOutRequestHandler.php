@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
-use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
+use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
@@ -34,7 +34,7 @@ class CheckOutRequestHandler
                 'title' => $exception->getMessage(),
                 'detail' => 'No se puede registrar salida si no hay registro de entrada.',
             ]);
-        } catch (TooLateToCheckException $exception) {
+        } catch (TooEarlyToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => $exception->getMessage(),

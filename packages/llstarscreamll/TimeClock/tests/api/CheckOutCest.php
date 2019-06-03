@@ -116,6 +116,31 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
+    public function whenHasNotCheckIn(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->create();
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
     public function whenHasShiftAndLeavesTooEarly(ApiTester $I)
     {
         // fake current date time
@@ -154,30 +179,6 @@ class CheckOutCest
         // should return novelties that subtract time
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
-    public function whenHasNotCheckIn(ApiTester $I)
-    {
-        // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
-
-        $employee = factory(Employee::class)
-            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->create();
-
-        $requestData = [
-            'identification_code' => $employee->identifications->first()->code,
-        ];
-
-        $I->sendPOST($this->endpoint, $requestData);
-
-        $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseContainsJson(['code' => 1054]);
     }
 }
