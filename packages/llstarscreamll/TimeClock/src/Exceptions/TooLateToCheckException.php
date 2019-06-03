@@ -15,7 +15,7 @@ class TooLateToCheckException extends Exception
     /**
      * @var string
      */
-    protected $message = 'Too late to check in.';
+    protected $message = 'Too late to check.';
 
     /**
      * @var int
