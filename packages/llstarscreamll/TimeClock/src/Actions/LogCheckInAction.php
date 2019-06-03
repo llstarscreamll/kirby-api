@@ -140,22 +140,22 @@ class LogCheckInAction
             $noveltyType = $this->noveltyTypeRepository->find($noveltyType['id']);
         }
 
-        if ($workShift && $workShift->isOnTimeToStart() < 0 && !$noveltyType) {
+        if ($workShift && $workShift->isOnTimeToStart() < 0 && ! $noveltyType) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeAddition();
             throw new TooEarlyToCheckException('Es temprano para registrar la entrada.', $noveltyTypes);
         }
 
-        if ($workShift && $workShift->isOnTimeToStart() > 0 && !$noveltyType) {
+        if ($workShift && $workShift->isOnTimeToStart() > 0 && ! $noveltyType) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
             throw new TooLateToCheckException('Es tarde para registrar la entrada.', $noveltyTypes);
         }
 
-        if ($workShift && $workShift->isOnTimeToStart() > 0 && $noveltyType && !$noveltyType->operator->is(NoveltyTypeOperator::Subtraction)) {
+        if ($workShift && $workShift->isOnTimeToStart() > 0 && $noveltyType && ! $noveltyType->operator->is(NoveltyTypeOperator::Subtraction)) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
             throw new InvalidNoveltyTypeException('Tipo de novedad no válido.', $noveltyTypes);
         }
 
-        if ($workShift && $workShift->isOnTimeToStart() < 0 && $noveltyType && !$noveltyType->operator->is(NoveltyTypeOperator::Addition)) {
+        if ($workShift && $workShift->isOnTimeToStart() < 0 && $noveltyType && ! $noveltyType->operator->is(NoveltyTypeOperator::Addition)) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeAddition();
             throw new InvalidNoveltyTypeException('Tipo de novedad no válido.', $noveltyTypes);
         }
