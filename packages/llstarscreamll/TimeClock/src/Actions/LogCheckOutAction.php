@@ -34,8 +34,8 @@ class LogCheckOutAction
 
     /**
      * @param NoveltyTypeRepositoryInterface    $noveltyTypeRepository
-     * @param IdentificationRepositoryInterface $identificationRepository
      * @param TimeClockLogRepositoryInterface   $timeClockLogRepository
+     * @param IdentificationRepositoryInterface $identificationRepository
      */
     public function __construct(
         NoveltyTypeRepositoryInterface $noveltyTypeRepository,
@@ -48,9 +48,10 @@ class LogCheckOutAction
     }
 
     /**
-     * @param  User                    $registrar
-     * @param  string                  $identificationCode
-     * @throws MissingCheckInException if there is no check in found to log the check out action
+     * @param  User                      $registrar
+     * @param  string                    $identificationCode
+     * @throws MissingCheckInException
+     * @throws TooLateToCheckException
      */
     public function run(User $registrar, string $identificationCode): TimeClockLog
     {

@@ -49,9 +49,12 @@ class LogCheckInAction
     }
 
     /**
-     * @param User   $registrar
-     * @param string $identificationCode
-     * @param int    $workShiftId
+     * @param  User                             $registrar
+     * @param  string                           $identificationCode
+     * @param  int                              $workShiftId
+     * @throws AlreadyCheckedInException
+     * @throws CanNotDeductWorkShiftException
+     * @throws TooLateToCheckException
      */
     public function run(User $registrar, string $identificationCode, int $workShiftId = null): TimeClockLog
     {
