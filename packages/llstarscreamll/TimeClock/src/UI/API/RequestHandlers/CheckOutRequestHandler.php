@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\TimeClock\UI\API\RequestHandlers;
 
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
@@ -21,14 +22,20 @@ class CheckOutRequestHandler
      */
     public function __invoke(StoreTimeClockLogRequest $request, LogCheckOutAction $logCheckOutAction)
     {
+        $errors = [];
+
         try {
             $timeClockLog = $logCheckOutAction->run($request->user(), $request->identification_code);
         } catch (MissingCheckInException $exception) {
-            throw new HttpResponseException(response()->json(['errors' => [
-                'title' => $exception->getMessage(),
-                'detail' => 'Deseas registrar salida pero no has registrado una entrada aún.',
+            array_push($errors, [
                 'code' => $exception->getCode(),
-            ]], 422));
+                'title' => $exception->getMessage(),
+                'detail' => 'No se puede registrar salida si no hay registro de entrada.',
+            ]);
+        }
+
+        if ($errors) {
+            throw new HttpResponseException(response()->json(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
 
         return new TimeClockLogResource($timeClockLog);

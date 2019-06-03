@@ -130,8 +130,8 @@ class CheckOutCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath('$.errors.code');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.title');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
     }
 }
