@@ -6,11 +6,11 @@ use Exception;
 use Illuminate\Support\Collection;
 
 /**
- * Class TooLateToCheckInException.
+ * Class TooLateToCheckException.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class TooLateToCheckInException extends Exception
+class TooLateToCheckException extends Exception
 {
     /**
      * @var string

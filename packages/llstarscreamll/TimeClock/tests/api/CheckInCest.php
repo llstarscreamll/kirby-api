@@ -37,58 +37,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenIdentificationCodeDoesNotExistsThenReturnUnprocesableEntity(ApiTester $I)
-    {
-        $employee = factory(Employee::class)
-            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->create();
-
-        $requestData = [
-            'identification_code' => 'wrong_identification_here',
-        ];
-
-        $I->sendPOST($this->endpoint, $requestData);
-
-        $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath('$.message');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.identification_code');
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
-    public function whenEmployeeHasAlreadyCheckedInThenReturnUnprocesableEntity(ApiTester $I)
-    {
-        // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 02));
-
-        $employee = factory(Employee::class)
-            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('timeClockLogs', [
-                'checked_in_at' => Carbon::now()->subMinutes(2), // employee checked in 2 minutes ago
-                'checked_in_by_id' => $this->user->id,
-            ])
-            ->create();
-
-        $requestData = [
-            'identification_code' => 'fake-employee-card-code',
-        ];
-
-        $I->sendPOST($this->endpoint, $requestData);
-
-        $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
-        $I->seeResponseContainsJson(['code' => 1050]);
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
-    public function whenEmployeeHasSingleWorkShiftAndArrivesOnTimeThenReturnCreated(ApiTester $I)
+    public function whenHasSingleWorkShiftAndArrivesOnTime(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
@@ -122,47 +71,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasShiftsWithOverlapOnTimeAndDaysThenReturnUnprocesableEntity(ApiTester $I)
-    {
-        // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
-
-        $employee = factory(Employee::class)
-            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            // work shifts with same start time
-            ->with('workShifts', [
-                'name' => '7 to 18',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
-            ->andWith('workShifts', [
-                'name' => '7 to 15',
-                'applies_on_days' => [1], // monday
-                'time_slots' => [['start' => '07:00', 'end' => '15:00']],
-            ])
-            ->create();
-
-        $requestData = [
-            'identification_code' => $employee->identifications->first()->code,
-        ];
-
-        $I->sendPOST($this->endpoint, $requestData);
-
-        $I->seeResponseCodeIs(422);
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
-        // posible work shifts
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.0.id');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.1.id');
-        $I->seeResponseContainsJson(['code' => 1051]);
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
-    public function whenEmployeeHasSpecifiedWorkShiftIdAndArrivesOnTimeThenReturnCreated(ApiTester $I)
+    public function whenHasSpecifiedWorkShiftIdAndArrivesOnTime(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
@@ -202,7 +111,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasWorkShiftsWithOverlapInTimeOnlyThenReturnCreated(ApiTester $I)
+    public function whenHasWorkShiftsWithOverlapInTimeOnly(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
@@ -242,7 +151,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasNotWorkShiftThenReturnCreated(ApiTester $I)
+    public function whenHasNotWorkShift(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
@@ -271,7 +180,98 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenEmployeeHasSingleWorkShiftAndArrivesTooLateThenReturnUnprocessableEntity(ApiTester $I)
+    public function whenHasAlreadyCheckedIn(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 02));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('timeClockLogs', [
+                'checked_in_at' => Carbon::now()->subMinutes(2), // employee checked in 2 minutes ago
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        $requestData = [
+            'identification_code' => 'fake-employee-card-code',
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseContainsJson(['code' => 1050]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenIdentificationCodeDoesNotExists(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->create();
+
+        $requestData = [
+            'identification_code' => 'wrong_identification_here',
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath('$.message');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.identification_code');
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasShiftsWithOverlapOnTimeAndDays(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            // work shifts with same start time
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->andWith('workShifts', [
+                'name' => '7 to 15',
+                'applies_on_days' => [1], // monday
+                'time_slots' => [['start' => '07:00', 'end' => '15:00']],
+            ])
+            ->create();
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        // posible work shifts
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.0.id');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.1.id');
+        $I->seeResponseContainsJson(['code' => 1051]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasSingleWorkShiftAndArrivesTooLate(ApiTester $I)
     {
         // fake current date time, one hour late
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));

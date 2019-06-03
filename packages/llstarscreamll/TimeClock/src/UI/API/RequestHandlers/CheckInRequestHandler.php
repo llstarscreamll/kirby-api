@@ -5,10 +5,10 @@ namespace llstarscreamll\TimeClock\UI\API\RequestHandlers;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
+use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
 use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
-use llstarscreamll\TimeClock\Exceptions\TooLateToCheckInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
@@ -38,7 +38,7 @@ class CheckInRequestHandler
                 'title' => $exception->getMessage(),
                 'detail' => "Ya se ha registrado entrada en {$exception->checkedInAt}.",
             ]);
-        } catch (TooLateToCheckInException $exception) {
+        } catch (TooLateToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => $exception->getMessage(),

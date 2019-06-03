@@ -4,8 +4,8 @@ namespace llstarscreamll\TimeClock\Actions;
 
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
+use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
-use llstarscreamll\TimeClock\Exceptions\TooLateToCheckInException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
@@ -85,7 +85,7 @@ class LogCheckInAction
 
         if ($workShift && !$workShift->isOnTimeToStart()) {
             $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
-            throw new TooLateToCheckInException('Es tarde para registrar la entrada.', $noveltyTypes);
+            throw new TooLateToCheckException('Es tarde para registrar la entrada.', $noveltyTypes);
         }
 
         $timeClockLog = [
