@@ -23,9 +23,10 @@ class TimeClockLog extends Model
     protected $fillable = [
         'employee_id',
         'work_shift_id',
-        'novelty_type_id',
         'checked_in_at',
+        'check_in_novelty_type_id',
         'checked_out_at',
+        'check_out_novelty_type_id',
         'checked_in_by_id',
         'checked_out_by_id',
     ];

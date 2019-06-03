@@ -3,7 +3,6 @@
 namespace llstarscreamll\TimeClock\Exceptions;
 
 use Exception;
-use Illuminate\Support\Collection;
 
 /**
  * Class InvalidNoveltyTypeException.
@@ -15,7 +14,7 @@ class InvalidNoveltyTypeException extends Exception
     /**
      * @var string
      */
-    protected $message = 'Too late to check.';
+    protected $message = 'Invalid or missing novelty type.';
 
     /**
      * @var int
@@ -23,16 +22,15 @@ class InvalidNoveltyTypeException extends Exception
     protected $code = 1055;
 
     /**
-     * @var Collection
+     * @var int
      */
-    public $posibleNoveltyTypes;
+    public $punctuality;
 
     /**
-     * @param string $message
+     * @param int $punctuality
      */
-    public function __construct(string $message = null, Collection $posibleNoveltyTypes)
+    public function __construct(int $punctuality)
     {
-        $this->message = $message ?? $this->message;
-        $this->posibleNoveltyTypes = $posibleNoveltyTypes;
+        $this->punctuality = $punctuality;
     }
 }

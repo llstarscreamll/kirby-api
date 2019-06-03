@@ -3,7 +3,6 @@
 namespace llstarscreamll\TimeClock\Exceptions;
 
 use Exception;
-use Illuminate\Support\Collection;
 
 /**
  * Class TooLateToCheckException.
@@ -23,16 +22,10 @@ class TooLateToCheckException extends Exception
     protected $code = 1053;
 
     /**
-     * @var Collection
-     */
-    public $posibleNoveltyTypes;
-
-    /**
      * @param string $message
      */
-    public function __construct(string $message = null, Collection $posibleNoveltyTypes)
+    public function __construct(string $message = null)
     {
         $this->message = $message ?? $this->message;
-        $this->posibleNoveltyTypes = $posibleNoveltyTypes;
     }
 }

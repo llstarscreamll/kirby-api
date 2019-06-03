@@ -17,10 +17,11 @@ class WorkShiftCest
     /**
      * @return array
      */
-    protected function isOnTimeToEndFooProvider(): array
+    protected function punctualityProvider(): array
     {
         return [
             [
+                'slot' => 'end',
                 'workShiftData' => [
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
@@ -31,6 +32,40 @@ class WorkShiftCest
                 'expected' => 0, // on time
             ],
             [
+                'slot' => 'start',
+                'workShiftData' => [
+                    'time_slots' => [
+                        ['start' => '07:00', 'end' => '18:00'],
+                    ],
+                ],
+                'testNow' => Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00)),
+                'time' => now(),
+                'expected' => 0, // on time
+            ],
+            [
+                'slot' => 'start',
+                'workShiftData' => [
+                    'time_slots' => [
+                        ['start' => '07:00', 'end' => '18:00'],
+                    ],
+                ],
+                'testNow' => Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 00)),
+                'time' => now(),
+                'expected' => -1, // too eager
+            ],
+            [
+                'slot' => 'start',
+                'workShiftData' => [
+                    'time_slots' => [
+                        ['start' => '07:00', 'end' => '18:00'],
+                    ],
+                ],
+                'testNow' => Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00)),
+                'time' => now(),
+                'expected' => 1, // too late
+            ],
+            [
+                'slot' => 'end',
                 'workShiftData' => [
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
@@ -41,6 +76,7 @@ class WorkShiftCest
                 'expected' => -1, // too early
             ],
             [
+                'slot' => 'end',
                 'workShiftData' => [
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
@@ -51,6 +87,7 @@ class WorkShiftCest
                 'expected' => 1, // too late
             ],
             [
+                'slot' => 'end',
                 'workShiftData' => [
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '12:00'],
@@ -62,6 +99,7 @@ class WorkShiftCest
                 'expected' => 0, // on time
             ],
             [
+                'slot' => 'end',
                 'workShiftData' => [
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '12:00'],
@@ -73,6 +111,7 @@ class WorkShiftCest
                 'expected' => 1, // too late
             ],
             [
+                'slot' => 'end',
                 'workShiftData' => [
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '12:00'],
@@ -84,6 +123,7 @@ class WorkShiftCest
                 'expected' => -1, // too early
             ],
             [
+                'slot' => 'end',
                 'workShiftData' => [
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '12:00'],
@@ -98,14 +138,15 @@ class WorkShiftCest
     }
 
     /**
-     * @dataProvider isOnTimeToEndFooProvider
+     * @test
+     * @dataProvider punctualityProvider
      * @param UnitTester $I
      */
-    public function testIsOnTimeToEndFoo(UnitTester $I, Example $data)
+    public function testSlotPunctuality(UnitTester $I, Example $data)
     {
         $workShift = new WorkShift($data['workShiftData']);
 
-        $result = $workShift->isOnTimeToEnd($data['time']);
+        $result = $workShift->slotPunctuality($data['slot'], $data['time']);
 
         $I->assertEquals($data['expected'], $result);
     }

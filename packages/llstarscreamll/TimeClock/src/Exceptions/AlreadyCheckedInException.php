@@ -31,9 +31,8 @@ class AlreadyCheckedInException extends Exception
      * @param string $message
      * @param Carbon $checkedInAt
      */
-    public function __construct(string $message = null, Carbon $checkedInAt)
+    public function __construct(Carbon $checkedInAt)
     {
-        $this->message = $message ?? $this->message;
         $this->checkedInAt = $checkedInAt;
     }
 }

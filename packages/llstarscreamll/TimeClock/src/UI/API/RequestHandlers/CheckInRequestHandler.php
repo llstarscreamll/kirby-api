@@ -12,6 +12,7 @@ use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
+use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 
@@ -26,8 +27,11 @@ class CheckInRequestHandler
      * @param StoreTimeClockLogRequest $request
      * @param LogCheckInAction         $logCheckInAction
      */
-    public function __invoke(StoreTimeClockLogRequest $request, LogCheckInAction $logCheckInAction)
-    {
+    public function __invoke(
+        StoreTimeClockLogRequest $request,
+        LogCheckInAction $logCheckInAction,
+        NoveltyTypeRepositoryInterface $noveltyTypeRepository
+    ) {
         $errors = [];
 
         try {
@@ -40,31 +44,31 @@ class CheckInRequestHandler
         } catch (AlreadyCheckedInException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
-                'title' => $exception->getMessage(),
+                'title' => 'Ya se registra una entrada.',
                 'detail' => "Ya se ha registrado entrada en {$exception->checkedInAt}.",
             ]);
         } catch (TooEarlyToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
-                'title' => $exception->getMessage(),
+                'title' => 'Es temprano para registrar la entrada.',
                 'detail' => 'Si se llega temprano al turno, se debe registrar una novedad.',
                 'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
+                    'novelty_types' => NoveltyTypeResource::collection($noveltyTypeRepository->findForTimeAddition()),
                 ],
             ]);
         } catch (TooLateToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
-                'title' => $exception->getMessage(),
+                'title' => 'Es tarde para registrar la entrada.',
                 'detail' => 'Si se llega tarde al turno, se debe registrar una novedad.',
                 'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
+                    'novelty_types' => NoveltyTypeResource::collection($noveltyTypeRepository->findForTimeSubtraction()),
                 ],
             ]);
         } catch (CanNotDeductWorkShiftException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
-                'title' => $exception->getMessage(),
+                'title' => 'No fue posible deducir el turno.',
                 'detail' => 'No se pudo deducir el turno, se debe elegir uno '
                 ."de {$exception->posibleWorkShifts->count()} posibles.",
                 'meta' => [
@@ -74,10 +78,14 @@ class CheckInRequestHandler
         } catch (InvalidNoveltyTypeException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
-                'title' => $exception->getMessage(),
+                'title' => 'Tipo de novedad no válido.',
                 'detail' => 'El tipo de novedad no es válido.',
                 'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection($exception->posibleNoveltyTypes),
+                    'novelty_types' => NoveltyTypeResource::collection(
+                        $exception->punctuality > 0
+                            ? $noveltyTypeRepository->findForTimeSubtraction()
+                            : $noveltyTypeRepository->findForTimeAddition()
+                    ),
                 ],
             ]);
         }

@@ -377,7 +377,7 @@ class CheckInCest
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
-            'novelty_type_id' => 1, // subtraction novelty type
+            'check_in_novelty_type_id' => 1, // subtraction novelty type
         ]);
     }
 
@@ -490,7 +490,7 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => 1,
-            'novelty_type_id' => 3, // addition novelty type
+            'check_in_novelty_type_id' => 3, // addition novelty type
         ]);
     }
 

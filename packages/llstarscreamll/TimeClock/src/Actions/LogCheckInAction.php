@@ -7,15 +7,13 @@ use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Employees\Models\Identification;
-use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
-use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
-use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\TimeClock\Actions\ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
 /**
  * Class LogCheckInAction.
@@ -40,6 +38,11 @@ class LogCheckInAction
     private $noveltyTypeRepository;
 
     /**
+     * @var ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction
+     */
+    private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
+
+    /**
      * @param NoveltyTypeRepositoryInterface    $noveltyTypeRepository
      * @param IdentificationRepositoryInterface $identificationRepository
      * @param TimeClockLogRepositoryInterface   $timeClockLogRepository
@@ -47,11 +50,13 @@ class LogCheckInAction
     public function __construct(
         NoveltyTypeRepositoryInterface $noveltyTypeRepository,
         TimeClockLogRepositoryInterface $timeClockLogRepository,
-        IdentificationRepositoryInterface $identificationRepository
+        IdentificationRepositoryInterface $identificationRepository,
+        ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
     ) {
         $this->noveltyTypeRepository = $noveltyTypeRepository;
         $this->timeClockLogRepository = $timeClockLogRepository;
         $this->identificationRepository = $identificationRepository;
+        $this->validateNoveltyTypeBasedOnWorkShiftPunctualityAction = $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
     }
 
     /**
@@ -72,14 +77,16 @@ class LogCheckInAction
 
         $this->validateUnfinishedCheckIn($identification);
         $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $novelty);
-        $novelty = $this->validateNoveltyTypeBasedOnWorkShiftPuntuality($workShift, $novelty);
+        $novelty = $this->validateNoveltyTypeBasedOnWorkShiftPunctualityAction->run(
+            'start', $workShift, $novelty
+        );
 
         $timeClockLog = [
             'employee_id' => $identification->employee_id,
             'checked_in_at' => now(),
             'checked_in_by_id' => $registrar->id,
             'work_shift_id' => optional($workShift)->id,
-            'novelty_type_id' => optional($novelty)->id,
+            'check_in_novelty_type_id' => optional($novelty)->id,
         ];
 
         return $this->timeClockLogRepository->create($timeClockLog);
@@ -96,7 +103,7 @@ class LogCheckInAction
         );
 
         if ($lastCheckIn) {
-            throw new AlreadyCheckedInException('Ya se registra una entrada.', $lastCheckIn->checked_in_at);
+            throw new AlreadyCheckedInException($lastCheckIn->checked_in_at);
         }
     }
 
@@ -123,43 +130,9 @@ class LogCheckInAction
         $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && $workShifts->count() === 0;
 
         if ($hasWorkShiftsButCantBeDeducted || $workShifts->count() > 1) {
-            throw new CanNotDeductWorkShiftException('No fue posible deducir el turno.', $workShifts);
+            throw new CanNotDeductWorkShiftException(null, $workShifts);
         }
 
         return $workShifts->first();
-    }
-
-    /**
-     * @param  null|WorkShift $workShift
-     * @param  null|array     $noveltyType
-     * @return null|Novelty
-     */
-    private function validateNoveltyTypeBasedOnWorkShiftPuntuality(?WorkShift $workShift, array $noveltyType = null): ?NoveltyType
-    {
-        if ($noveltyType) {
-            $noveltyType = $this->noveltyTypeRepository->find($noveltyType['id']);
-        }
-
-        if ($workShift && $workShift->isOnTimeToStart() < 0 && !$noveltyType) {
-            $noveltyTypes = $this->noveltyTypeRepository->findForTimeAddition();
-            throw new TooEarlyToCheckException('Es temprano para registrar la entrada.', $noveltyTypes);
-        }
-
-        if ($workShift && $workShift->isOnTimeToStart() > 0 && !$noveltyType) {
-            $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
-            throw new TooLateToCheckException('Es tarde para registrar la entrada.', $noveltyTypes);
-        }
-
-        if ($workShift && $workShift->isOnTimeToStart() > 0 && $noveltyType && !$noveltyType->operator->is(NoveltyTypeOperator::Subtraction)) {
-            $noveltyTypes = $this->noveltyTypeRepository->findForTimeSubtraction();
-            throw new InvalidNoveltyTypeException('Tipo de novedad no válido.', $noveltyTypes);
-        }
-
-        if ($workShift && $workShift->isOnTimeToStart() < 0 && $noveltyType && !$noveltyType->operator->is(NoveltyTypeOperator::Addition)) {
-            $noveltyTypes = $this->noveltyTypeRepository->findForTimeAddition();
-            throw new InvalidNoveltyTypeException('Tipo de novedad no válido.', $noveltyTypes);
-        }
-
-        return $noveltyType;
     }
 }

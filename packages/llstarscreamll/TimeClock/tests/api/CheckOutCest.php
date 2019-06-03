@@ -231,4 +231,91 @@ class CheckOutCest
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
     }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasShiftAndLeavesTooLateWithRightNoveltyType(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 30));
+        $checkedInTime = now()->setTime(7, 0);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'check_in_novelty_type_id' => 1, // with check in novelty type
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        $requestData = [
+            'novelty_type' => ['id' => 3], // addition novelty type
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'check_in_novelty_type_id' => 1,
+            'check_out_novelty_type_id' => 3,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasShiftAndLeavesTooLateWithWrongNoveltyType(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 30));
+        $checkedInTime = now()->setTime(7, 0);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'check_in_novelty_type_id' => 1, // with check in novelty type
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        $requestData = [
+            'novelty_type' => ['id' => 1], // wrong subtraction novelty type
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1055]); // InvalidNoveltyTypeException
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        // should return addition novelty types
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.2.id');
+        $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 1]]);
+        $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
+        $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
+    }
 }

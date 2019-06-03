@@ -88,18 +88,18 @@ class WorkShift extends Model
      * @param  Carbon $time
      * @return int
      */
-    public function isOnTimeToStart(Carbon $time = null): int
+    public function startPunctuality(Carbon $time = null): int
     {
-        return $this->isOnTimeOnSlot('start', $time ?? now());
+        return $this->slotPunctuality('start', $time ?? now());
     }
 
     /**
      * @param  Carbon $time
      * @return int
      */
-    public function isOnTimeToEnd(Carbon $time = null): int
+    public function endPunctuality(Carbon $time = null): int
     {
-        return $this->isOnTimeOnSlot('end', $time ?? now());
+        return $this->slotPunctuality('end', $time ?? now());
     }
 
     /**
@@ -107,7 +107,7 @@ class WorkShift extends Model
      * @param  Carbon $time
      * @return int    -1 too early, on time, 1 too late
      */
-    public function isOnTimeOnSlot(string $flag, Carbon $time): int
+    public function slotPunctuality(string $flag, Carbon $time): int
     {
         return collect($this->time_slots)
             ->map(function ($timeSlot) {
