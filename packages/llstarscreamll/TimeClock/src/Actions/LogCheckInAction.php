@@ -56,6 +56,7 @@ class LogCheckInAction
      * @throws AlreadyCheckedInException
      * @throws CanNotDeductWorkShiftException
      * @throws TooLateToCheckException
+     * @return TimeClockLog
      */
     public function run(User $registrar, string $identificationCode, int $workShiftId = null): TimeClockLog
     {

@@ -54,6 +54,7 @@ class LogCheckOutAction
      * @throws MissingCheckInException
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
+     * @return TimeClockLog
      */
     public function run(User $registrar, string $identificationCode): TimeClockLog
     {
