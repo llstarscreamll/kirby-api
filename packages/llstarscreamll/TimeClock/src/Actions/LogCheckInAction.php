@@ -4,7 +4,6 @@ namespace llstarscreamll\TimeClock\Actions;
 
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\WorkShifts\Models\WorkShift;
-use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Employees\Models\Identification;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
@@ -13,7 +12,6 @@ use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
-use llstarscreamll\TimeClock\Actions\ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
 /**
  * Class LogCheckInAction.

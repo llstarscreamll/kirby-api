@@ -10,7 +10,6 @@ use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
-use llstarscreamll\TimeClock\Actions\ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
 /**
  * Class LogCheckOutAction.
@@ -76,7 +75,7 @@ class LogCheckOutAction
             ['id', 'work_shift_id', 'checked_in_at']
         );
 
-        if (!$lastCheckIn) {
+        if (! $lastCheckIn) {
             throw new MissingCheckInException();
         }
 

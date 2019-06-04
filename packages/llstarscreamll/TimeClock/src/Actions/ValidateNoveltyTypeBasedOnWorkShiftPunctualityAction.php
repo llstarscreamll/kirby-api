@@ -41,22 +41,22 @@ class ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction
 
         $shiftPunctuality = optional($workShift)->slotPunctuality($flag, now());
 
-        if ($workShift && $shiftPunctuality < 0 && !$noveltyType) {
+        if ($workShift && $shiftPunctuality < 0 && ! $noveltyType) {
             throw new TooEarlyToCheckException();
         }
 
-        if ($workShift && $shiftPunctuality > 0 && !$noveltyType) {
+        if ($workShift && $shiftPunctuality > 0 && ! $noveltyType) {
             throw new TooLateToCheckException();
         }
 
         $lateNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Subtraction : NoveltyTypeOperator::Addition;
         $eagerNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Addition : NoveltyTypeOperator::Subtraction;
 
-        if ($workShift && $shiftPunctuality > 0 && $noveltyType && !$noveltyType->operator->is($lateNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality > 0 && $noveltyType && ! $noveltyType->operator->is($lateNoveltyOperator)) {
             throw new InvalidNoveltyTypeException($shiftPunctuality);
         }
 
-        if ($workShift && $shiftPunctuality < 0 && $noveltyType && !$noveltyType->operator->is($eagerNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality < 0 && $noveltyType && ! $noveltyType->operator->is($eagerNoveltyOperator)) {
             throw new InvalidNoveltyTypeException($shiftPunctuality);
         }
 
