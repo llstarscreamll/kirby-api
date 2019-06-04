@@ -91,7 +91,10 @@ class CheckInRequestHandler
         }
 
         if ($errors) {
-            throw new HttpResponseException(response()->json(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY));
+            throw new HttpResponseException(response()->json([
+                'message' => 'Error registrando entrada!',
+                'errors' => $errors,
+            ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
 
         return new TimeClockLogResource($timeClockLog);

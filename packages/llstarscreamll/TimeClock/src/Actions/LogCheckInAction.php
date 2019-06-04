@@ -114,25 +114,25 @@ class LogCheckInAction
      */
     private function validateDeductibleWorkShift(Identification $identification, ?int $workShiftId): ?WorkShift
     {
-        $workShifts = $identification
+        $deductedWorkShifts = $identification
             ->employee
             ->getWorkShiftsThatMatchesTime(now());
 
         $employeeWorkShiftsCount = $identification->employee->workShifts->count();
 
         if ($workShiftId) {
-            $workShifts = $identification
+            $deductedWorkShifts = $identification
                 ->employee
                 ->workShifts
                 ->where('id', $workShiftId);
         }
 
-        $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && $workShifts->count() === 0;
+        $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && $deductedWorkShifts->count() === 0;
 
-        if ($hasWorkShiftsButCantBeDeducted || $workShifts->count() > 1) {
-            throw new CanNotDeductWorkShiftException(null, $workShifts);
+        if ($hasWorkShiftsButCantBeDeducted || $deductedWorkShifts->count() > 1) {
+            throw new CanNotDeductWorkShiftException(null, $deductedWorkShifts);
         }
 
-        return $workShifts->first();
+        return $deductedWorkShifts->first();
     }
 }

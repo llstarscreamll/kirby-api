@@ -106,13 +106,13 @@ class Employee extends Model
                 $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_end_time);
 
                 if ($slotStartFrom->hour > (int) $hour) {
-                    $slotStartFrom = $slotStartFrom->subDay();
+                    $slotEndTo = $slotEndTo->addDay();
                 }
 
                 return $time->between($slotStartFrom, $slotEndTo);
             });
 
-            return $timeSlots->count() && in_array($time->dayOfWeekIso, $workShift->applies_on_days);
+            return $timeSlots->count() && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
         });
     }
 

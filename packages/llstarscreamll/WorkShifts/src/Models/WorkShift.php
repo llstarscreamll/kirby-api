@@ -79,7 +79,9 @@ class WorkShift extends Model
      */
     public function getAppliesOnDaysAttribute(): array
     {
-        $daysNumbers = explode($this->daysSeparator, $this->attributes['applies_on_days']);
+        $daysNumbers = $this->attributes['applies_on_days']
+            ? explode($this->daysSeparator, $this->attributes['applies_on_days'])
+            : [];
 
         return array_map('intval', $daysNumbers);
     }
