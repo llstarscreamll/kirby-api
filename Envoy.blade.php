@@ -26,7 +26,7 @@ cloneRepository
 runComposer
 updateSymlinks
 optimizeInstallation
-{{-- backupDatabase --}}
+{{-- backup --}}
 migrateDatabase
 setPermissions
 blessNewRelease
@@ -107,7 +107,7 @@ cd {{ $newReleaseDir }};
 php artisan clear-compiled;
 @endtask
 
-@task('backupDatabase', ['on' => 'remote'])
+@task('backup', ['on' => 'remote'])
 {{ logMessage("📀  Backing up database...") }}
 cd {{ $newReleaseDir }}
 php artisan backup:run
