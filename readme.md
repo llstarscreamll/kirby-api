@@ -42,3 +42,14 @@ To use `--target=lab` flag you must have in your environment `LAB_SERVERS`. Exam
 # set many servers separated by semicolon
 LAB_SERVERS="john_doe@1.2.3.4;john_doe@5.6.7.8"
 ```
+
+For lab servers, some times you need to reset the Postgres database:
+
+```bash
+sudo -u postgres psql -c "DROP SCHEMA public CASCADE;
+create SCHEMA public;
+grant usage on schema public to public;
+grant create on schema public to public;" database_name
+```
+
+Replace `database_name`.
