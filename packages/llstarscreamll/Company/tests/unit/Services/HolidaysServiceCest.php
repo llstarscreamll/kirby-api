@@ -106,6 +106,7 @@ class HolidaysServiceCest
         (function () {
             $this->runExpectations();
         })->call($this->guzzler);
+
         \Mockery::close();
     }
 
