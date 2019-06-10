@@ -109,7 +109,7 @@ class WorkShift extends Model
      * @param  Carbon $time
      * @return int    -1 too early, on time, 1 too late
      */
-    public function slotPunctuality(string $flag, Carbon $time): int
+    public function slotPunctuality(string $flag, Carbon $time): ?int
     {
         return collect($this->time_slots)
             ->map(function ($timeSlot) {

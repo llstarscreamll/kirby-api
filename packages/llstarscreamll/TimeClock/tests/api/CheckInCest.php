@@ -234,6 +234,7 @@ class CheckInCest
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'checked_in_at' => Carbon::now()->subMinutes(2), // employee checked in 2 minutes ago
+                'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();

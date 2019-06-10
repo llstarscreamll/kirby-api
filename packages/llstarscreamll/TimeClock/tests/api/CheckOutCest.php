@@ -59,6 +59,7 @@ class CheckOutCest
             ->with('timeClockLogs', [
                 'work_shift_id' => null, // empty shift
                 'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
@@ -102,6 +103,7 @@ class CheckOutCest
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
                 'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
@@ -169,6 +171,7 @@ class CheckOutCest
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
                 'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
@@ -210,6 +213,7 @@ class CheckOutCest
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
                 'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
@@ -254,6 +258,7 @@ class CheckOutCest
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
                 'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
                 'check_in_novelty_type_id' => 1, // with check in novelty type
                 'checked_in_by_id' => $this->user->id,
             ])
@@ -295,6 +300,7 @@ class CheckOutCest
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
                 'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
                 'check_in_novelty_type_id' => 1, // with check in novelty type
                 'checked_in_by_id' => $this->user->id,
             ])

@@ -3,6 +3,7 @@
 namespace llstarscreamll\WorkShifts;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\WorkShifts\Data\Repositories\EloquentWorkShiftRepository;
 
@@ -74,6 +75,8 @@ class WorkShiftsServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
+
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/Config/work-shifts.php' => config_path('work-shifts.php'),
