@@ -2,8 +2,10 @@
 
 namespace llstarscreamll\Novelties;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use llstarscreamll\Novelties\Providers\EventServiceProvider;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\Novelties\Repositories\EloquentNoveltyTypeRepository;
 
@@ -17,8 +19,26 @@ class NoveltiesServiceProvider extends ServiceProvider
     /**
      * @var array
      */
-    private $binds = [
+    public $serviceProviders = [
+        EventServiceProvider::class,
+    ];
+
+    /**
+     * All of the container bindings that should be registered.
+     *
+     * @var array
+     */
+    public $bindings = [
         NoveltyTypeRepositoryInterface::class => EloquentNoveltyTypeRepository::class,
+    ];
+
+    /**
+     * All of the container singletons that should be registered.
+     *
+     * @var array
+     */
+    public $singletons = [
+        'novelties' => Novelties::class,
     ];
 
     /**
@@ -32,6 +52,7 @@ class NoveltiesServiceProvider extends ServiceProvider
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadServiceProviders();
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -47,15 +68,6 @@ class NoveltiesServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/novelties.php', 'novelties');
-
-        // Register the service the package provides.
-        $this->app->singleton('novelties', function ($app) {
-            return new Novelties();
-        });
-
-        foreach ($this->binds as $abstract => $concrete) {
-            $this->app->bind($abstract, $concrete);
-        }
     }
 
     /**
@@ -66,6 +78,13 @@ class NoveltiesServiceProvider extends ServiceProvider
     public function provides()
     {
         return ['novelties'];
+    }
+
+    private function loadServiceProviders()
+    {
+        foreach ($this->serviceProviders as $provider) {
+            $this->app->register($provider);
+        }
     }
 
     /**
