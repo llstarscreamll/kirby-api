@@ -3,6 +3,7 @@
 namespace llstarscreamll\TimeClock\UI\API\RequestHandlers;
 
 use Symfony\Component\HttpFoundation\Response;
+use llstarscreamll\TimeClock\Events\CheckedInEvent;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
@@ -96,6 +97,8 @@ class CheckInRequestHandler
                 'errors' => $errors,
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
+
+        event(new CheckedInEvent($timeClockLog->id));
 
         return new TimeClockLogResource($timeClockLog);
     }

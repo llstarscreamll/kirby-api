@@ -5,6 +5,7 @@ namespace ClockTime;
 use Illuminate\Support\Carbon;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Novelties\Models\NoveltyType;
+use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 
 /**
@@ -69,6 +70,7 @@ class CheckOutCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(200);
+        $I->seeEventTriggered(CheckedOutEvent::class);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,

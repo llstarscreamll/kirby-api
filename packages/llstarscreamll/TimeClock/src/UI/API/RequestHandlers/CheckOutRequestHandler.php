@@ -3,6 +3,7 @@
 namespace llstarscreamll\TimeClock\UI\API\RequestHandlers;
 
 use Symfony\Component\HttpFoundation\Response;
+use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
@@ -80,6 +81,8 @@ class CheckOutRequestHandler
         if ($errors) {
             throw new HttpResponseException(response()->json(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
+
+        event(new CheckedOutEvent($timeClockLog->id));
 
         return new TimeClockLogResource($timeClockLog);
     }
