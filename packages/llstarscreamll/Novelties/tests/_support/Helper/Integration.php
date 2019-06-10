@@ -1,4 +1,5 @@
 <?php
+
 namespace Novelties\Helper;
 
 // here you can define custom actions
@@ -6,5 +7,4 @@ namespace Novelties\Helper;
 
 class Integration extends \Codeception\Module
 {
-
 }

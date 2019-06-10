@@ -19,11 +19,11 @@ $factory->define(WorkShift::class, function (Faker $faker) {
 
     return [
         'name' => "Work shift $randomCode",
-        "grace_minutes_for_start_times" => null,
-        "grace_minutes_for_end_times" => null,
-        "meal_time_in_minutes" => null,
-        "min_minutes_required_to_discount_meal_time" => null,
-        "applies_on_days" => [],
-        "time_slots" => [],
+        'grace_minutes_for_start_times' => null,
+        'grace_minutes_for_end_times' => null,
+        'meal_time_in_minutes' => null,
+        'min_minutes_required_to_discount_meal_time' => null,
+        'applies_on_days' => [],
+        'time_slots' => [],
     ];
 });

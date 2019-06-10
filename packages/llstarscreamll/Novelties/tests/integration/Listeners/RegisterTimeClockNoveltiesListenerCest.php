@@ -18,7 +18,9 @@ class RegisterTimeClockNoveltiesListenerCest
     /**
      * @param IntegrationTester $I
      */
-    public function _before(IntegrationTester $I) {}
+    public function _before(IntegrationTester $I)
+    {
+    }
 
     /**
      * @param IntegrationTester $I

@@ -2,7 +2,6 @@
 
 namespace llstarscreamll\Novelties;
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use llstarscreamll\Novelties\Providers\EventServiceProvider;
