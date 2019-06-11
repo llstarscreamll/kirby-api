@@ -4,6 +4,7 @@ namespace llstarscreamll\Novelties\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use llstarscreamll\TimeClock\Events\CheckedOutEvent;
+use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 
 /**
  * Class RegisterTimeClockNoveltiesListener.
@@ -13,13 +14,16 @@ use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 class RegisterTimeClockNoveltiesListener implements ShouldQueue
 {
     /**
-     * Create the event listener.
-     *
-     * @return void
+     * @var RegisterTimeClockNoveltiesAction
      */
-    public function __construct()
+    private $registerTimeClockNoveltiesAction;
+
+    /**
+     * @param RegisterTimeClockNoveltiesAction $registerTimeClockNoveltiesAction
+     */
+    public function __construct(RegisterTimeClockNoveltiesAction $registerTimeClockNoveltiesAction)
     {
-        //
+        $this->registerTimeClockNoveltiesAction = $registerTimeClockNoveltiesAction;
     }
 
     /**
@@ -30,6 +34,6 @@ class RegisterTimeClockNoveltiesListener implements ShouldQueue
      */
     public function handle(CheckedOutEvent $event)
     {
-        //
+        $this->registerTimeClockNoveltiesAction->run($event->timeClockLogId);
     }
 }

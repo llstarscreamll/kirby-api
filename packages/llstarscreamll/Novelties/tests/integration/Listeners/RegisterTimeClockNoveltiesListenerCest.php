@@ -4,8 +4,8 @@ namespace Novelties\Listeners;
 
 use Mockery;
 use Novelties\IntegrationTester;
-use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Events\CheckedOutEvent;
+use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 use llstarscreamll\Novelties\Listeners\RegisterTimeClockNoveltiesListener;
 
 /**
@@ -18,9 +18,7 @@ class RegisterTimeClockNoveltiesListenerCest
     /**
      * @param IntegrationTester $I
      */
-    public function _before(IntegrationTester $I)
-    {
-    }
+    public function _before(IntegrationTester $I) {}
 
     /**
      * @param IntegrationTester $I
@@ -34,16 +32,17 @@ class RegisterTimeClockNoveltiesListenerCest
      * @test
      * @param IntegrationTester $I
      */
-    public function shouldBeTriggeredOnCheckedOutEventDispatch(IntegrationTester $I)
+    public function shouldBeCalledOnEventDispatchAndInvokeRunMethodOnActionClass(IntegrationTester $I)
     {
-        $listenerMock = Mockery::mock(RegisterTimeClockNoveltiesListener::class)
-            ->shouldReceive('handle')
+        $timeClockId = 10;
+        $actionMock = Mockery::mock(RegisterTimeClockNoveltiesAction::class)
+            ->shouldReceive('run')
+            ->with($timeClockId)
             ->once()
             ->getMock();
 
-        $I->getApplication()->instance(RegisterTimeClockNoveltiesListener::class, $listenerMock);
-        $timeClockLog = factory(TimeClockLog::class)->create();
+        $I->getApplication()->instance(RegisterTimeClockNoveltiesAction::class, $actionMock);
 
-        event(new CheckedOutEvent($timeClockLog->id));
+        event(new CheckedOutEvent($timeClockId));
     }
 }
