@@ -3,7 +3,6 @@
 namespace llstarscreamll\Novelties\Seeds;
 
 use Illuminate\Database\Seeder;
-use llstarscreamll\Novelties\Seeds\DefaultNoveltyTypesSeed;
 
 /**
  * Class NoveltiesPackageSeed.

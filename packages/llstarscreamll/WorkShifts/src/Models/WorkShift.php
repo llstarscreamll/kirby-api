@@ -63,9 +63,9 @@ class WorkShift extends Model
      */
     private $daysSeparator = '|';
 
-    # ######################################################################## #
-    #                                  Mutators                                #
-    # ######################################################################## #
+    // ######################################################################## #
+    //                                  Mutators                                #
+    // ######################################################################## #
 
     /**
      * `applies_on_days` attribute is used as array but stored as string.
@@ -78,9 +78,9 @@ class WorkShift extends Model
         $this->attributes['applies_on_days'] = implode($this->daysSeparator, $appliesOnDays);
     }
 
-    # ######################################################################## #
-    #                                 Accessors                                #
-    # ######################################################################## #
+    // ######################################################################## #
+    //                                 Accessors                                #
+    // ######################################################################## #
 
     /**
      * `applies_on_days` attribute is used as array but stored as string.
@@ -104,7 +104,9 @@ class WorkShift extends Model
         $totalTime = 0;
 
         $slots = new Collection($this->time_slots ?? []);
-        $slots = $slots->map(function ($slot) {return $this->mapTimeSlot($slot);});
+        $slots = $slots->map(function ($slot) {
+            return $this->mapTimeSlot($slot);
+        });
         $firstSlot = $slots->first();
         $lastSlot = $slots->last();
         $start = Arr::get($firstSlot, 'start');
@@ -117,9 +119,9 @@ class WorkShift extends Model
         return $totalTime;
     }
 
-    # ######################################################################## #
-    #                                Methods                                   #
-    # ######################################################################## #
+    // ######################################################################## #
+    //                                Methods                                   #
+    // ######################################################################## #
 
     /**
      * @param  Carbon $time

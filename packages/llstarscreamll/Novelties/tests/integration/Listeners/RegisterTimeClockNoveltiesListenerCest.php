@@ -6,7 +6,6 @@ use Mockery;
 use Novelties\IntegrationTester;
 use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
-use llstarscreamll\Novelties\Listeners\RegisterTimeClockNoveltiesListener;
 
 /**
  * Class RegisterTimeClockNoveltiesListenerCest.
@@ -18,7 +17,9 @@ class RegisterTimeClockNoveltiesListenerCest
     /**
      * @param IntegrationTester $I
      */
-    public function _before(IntegrationTester $I) {}
+    public function _before(IntegrationTester $I)
+    {
+    }
 
     /**
      * @param IntegrationTester $I

@@ -65,7 +65,7 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
     {
         $model = app($this->model());
 
-        if (!$model instanceof Model) {
+        if (! $model instanceof Model) {
             throw new RepositoryException("Class {$this->model()} must be an instance of ".Model::class);
         }
 
@@ -510,10 +510,9 @@ abstract class EloquentRepositoryAbstract implements BaseRepositoryInterface
             ? array_merge($this->allowedFilters, [Filter::custom('search', new QuerySearchFilter($this->allowedFilters))])
             : $this->allowedFilters;
 
-        $this->model = QueryBuilder::for($query) 
+        $this->model = QueryBuilder::for($query)
                 ->allowedFilters($allowedFilters)
                 ->allowedIncludes($this->allowedIncludes);
-        
 
         return $this;
     }

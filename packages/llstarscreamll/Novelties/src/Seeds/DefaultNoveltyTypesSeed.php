@@ -20,15 +20,15 @@ class DefaultNoveltyTypesSeed extends Seeder
      */
     private $noveltyTypes = [
         [
-            'code' => "PP",
-            'name' => "Permiso Personal",
+            'code' => 'PP',
+            'name' => 'Permiso Personal',
             'apply_on_days_of_type' => null, // any day
             'apply_on_time_slots' => null, // any time
             'operator' => NoveltyTypeOperator::Subtraction,
         ],
         [
-            'code' => "HN",
-            'name' => "Hora normal",
+            'code' => 'HN',
+            'name' => 'Hora normal',
             'context_type' => 'logging_work_shift_time',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
@@ -37,8 +37,8 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
-            'code' => "RECNO",
-            'name' => "Recargo Nocturno",
+            'code' => 'RECNO',
+            'name' => 'Recargo Nocturno',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
                 ['start' => '00:00', 'end' => '06:00'],
@@ -47,8 +47,8 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
-            'code' => "HDF",
-            'name' => "Hora Diurna Festiva",
+            'code' => 'HDF',
+            'name' => 'Hora Diurna Festiva',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
                 ['start' => '06:00', 'end' => '21:00'],
@@ -56,8 +56,8 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
-            'code' => "HNF",
-            'name' => "Hora Nocturna Festiva",
+            'code' => 'HNF',
+            'name' => 'Hora Nocturna Festiva',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
                 ['start' => '00:00', 'end' => '06:00'],
@@ -66,8 +66,8 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
-            'code' => "HDEF",
-            'name' => "Hora Diurna Extra Festiva",
+            'code' => 'HDEF',
+            'name' => 'Hora Diurna Extra Festiva',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
                 ['start' => '06:00', 'end' => '21:00'],
@@ -75,8 +75,8 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
-            'code' => "HENF",
-            'name' => "Hora Nocturna Extra Festiva",
+            'code' => 'HENF',
+            'name' => 'Hora Nocturna Extra Festiva',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
                 ['start' => '00:00', 'end' => '06:00'],
@@ -85,8 +85,8 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
-            'code' => "HEDI",
-            'name' => "Hora Extra Diurna",
+            'code' => 'HEDI',
+            'name' => 'Hora Extra Diurna',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
                 ['start' => '06:00', 'end' => '21:00'],
@@ -94,8 +94,8 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
-            'code' => "HENO",
-            'name' => "Hora Nocturna Extra",
+            'code' => 'HENO',
+            'name' => 'Hora Nocturna Extra',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
                 ['start' => '00:00', 'end' => '06:00'],
@@ -104,8 +104,8 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
-            'code' => "HADI",
-            'name' => "Hora Adicional",
+            'code' => 'HADI',
+            'name' => 'Hora Adicional',
             'apply_on_days_of_type' => null, // any day
             'apply_on_time_slots' => null, // any time
             'operator' => NoveltyTypeOperator::Addition,

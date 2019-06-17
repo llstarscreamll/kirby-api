@@ -157,7 +157,7 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes += $endNoveltyMinutes;
         }
 
-        if (!$timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
+        if (! $timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
             $timeInMinutes = $workMinutes;
         }
 

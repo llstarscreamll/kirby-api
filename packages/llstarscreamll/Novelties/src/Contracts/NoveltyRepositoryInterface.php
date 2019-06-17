@@ -11,5 +11,4 @@ use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
  */
 interface NoveltyRepositoryInterface extends BaseRepositoryInterface
 {
-
 }
