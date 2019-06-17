@@ -7,3 +7,5 @@ modules:
             root: ../../../
             environment_file: .env.testing
             run_database_migrations: true
+            run_database_seeder: true
+            database_seeder_class: llstarscreamll\Novelties\Seeds\NoveltiesPackageSeed

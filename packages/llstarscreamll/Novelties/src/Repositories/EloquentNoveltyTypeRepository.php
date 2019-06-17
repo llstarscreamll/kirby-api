@@ -3,6 +3,7 @@
 namespace llstarscreamll\Novelties\Repositories;
 
 use Illuminate\Support\Collection;
+use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
@@ -31,6 +32,22 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
+     * @param  string  $code
+     * @param  array   $columns
+     * @return mixed
+     */
+    public function findByCode(string $code, $columns = ['*'])
+    {
+        $this->applyScope();
+
+        $results = $this->model->whereCode($code)->first($columns);
+
+        $this->resetModel();
+
+        return $this->parserResult($results);
+    }
+
+    /**
      * @param  array        $columns
      * @return Collection
      */
@@ -46,5 +63,50 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     public function findForTimeAddition($columns = ['*']): Collection
     {
         return $this->findWhere(['operator' => NoveltyTypeOperator::Addition], $columns);
+    }
+
+    /**
+     * @param string $dayType
+     */
+    public function whereDayType(string $dayType)
+    {
+        $this->model = $this->model->where('apply_on_days_of_type', $dayType);
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function whereApplicableOnAnyDayType()
+    {
+        $this->model = $this->model->orWhereNull('apply_on_days_of_type');
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function whereContextType(string $context)
+    {
+        $this->model = $this->model->where('context_type', $context);
+
+        return $this;
+    }
+
+    /**
+     * @param  $field
+     * @param  array    $values
+     * @param  array    $columns
+     * @return mixed
+     */
+    public function findOrWhereIn($field, array $values, $columns = ['*'])
+    {
+        $this->applyScope();
+        $model = $this->model->orWhereIn($field, $values)->get($columns);
+        $this->resetModel();
+
+        return $this->parserResult($model);
     }
 }

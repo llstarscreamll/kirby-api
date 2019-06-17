@@ -3,6 +3,8 @@
 namespace llstarscreamll\WorkShifts\Models;
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -61,6 +63,10 @@ class WorkShift extends Model
      */
     private $daysSeparator = '|';
 
+    # ######################################################################## #
+    #                                  Mutators                                #
+    # ######################################################################## #
+
     /**
      * `applies_on_days` attribute is used as array but stored as string.
      *
@@ -71,6 +77,10 @@ class WorkShift extends Model
     {
         $this->attributes['applies_on_days'] = implode($this->daysSeparator, $appliesOnDays);
     }
+
+    # ######################################################################## #
+    #                                 Accessors                                #
+    # ######################################################################## #
 
     /**
      * `applies_on_days` attribute is used as array but stored as string.
@@ -85,6 +95,31 @@ class WorkShift extends Model
 
         return array_map('intval', $daysNumbers);
     }
+
+    /**
+     * @return int diff in hours
+     */
+    public function getTotalTimeAttribute()
+    {
+        $totalTime = 0;
+
+        $slots = new Collection($this->time_slots ?? []);
+        $slots = $slots->map(function ($slot) {return $this->mapTimeSlot($slot);});
+        $firstSlot = $slots->first();
+        $lastSlot = $slots->last();
+        $start = Arr::get($firstSlot, 'start');
+        $end = Arr::get($lastSlot, 'end');
+
+        if ($start || $end) {
+            $totalTime = $start->diffInHours($end) - ($this->meal_time_in_minutes / 60);
+        }
+
+        return $totalTime;
+    }
+
+    # ######################################################################## #
+    #                                Methods                                   #
+    # ######################################################################## #
 
     /**
      * @param  Carbon $time
@@ -107,22 +142,13 @@ class WorkShift extends Model
     /**
      * @param  string $flag   'start'|'end'
      * @param  Carbon $time
-     * @return int    -1 too early, on time, 1 too late
+     * @return int    -1 early, zero on time, 1 late
      */
     public function slotPunctuality(string $flag, Carbon $time): ?int
     {
         return collect($this->time_slots)
             ->map(function ($timeSlot) {
-                [$hour, $seconds] = explode(':', $timeSlot['start']);
-                $start = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_start_times);
-
-                [$hour, $seconds] = explode(':', $timeSlot['end']);
-                $end = now()->setTime($hour, $seconds)->subMinutes($this->grace_minutes_for_end_times);
-
-                return [
-                    'end' => $end,
-                    'start' => $start,
-                ];
+                return $this->mapTimeSlot($timeSlot, null, false);
             })
             ->sortBy(function (array $timeSlot) use ($time, $flag) {
                 return $time->diffInSeconds($timeSlot[$flag]);
@@ -137,5 +163,62 @@ class WorkShift extends Model
 
                 return $time->lessThan($flagGraceFrom) ? -1 : 1;
             })->first();
+    }
+
+    /**
+     * @param array  $timeSlot
+     * @param Carbon $date
+     */
+    private function mapTimeSlot(array $timeSlot, Carbon $date = null, bool $beGraceTimeAware = true): array
+    {
+        $date = $date ?? now();
+        [$hour, $seconds] = explode(':', $timeSlot['start']);
+        $start = $date->copy()->setTime($hour, $seconds);
+
+        [$hour, $seconds] = explode(':', $timeSlot['end']);
+        $end = $date->copy()->setTime($hour, $seconds);
+
+        if ($beGraceTimeAware) {
+            $start = $start->subMinutes($this->grace_minutes_for_start_times);
+            $end = $end->addMinutes($this->grace_minutes_for_end_times);
+        }
+
+        return [
+            'end' => $end,
+            'start' => $start,
+        ];
+    }
+
+    /**
+     * @param  string  $flag
+     * @param  Carbon  $time
+     * @return mixed
+     */
+    public function getClosestSlotFlagTime(string $flag, Carbon $time)
+    {
+        $slot = collect($this->time_slots)
+            ->map(function (array $timeSlot) use ($time, $flag) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $time, false);
+                $timeSlot['diff'] = $time->diffInMinutes($timeSlot[$flag]);
+
+                return $timeSlot;
+            })->sortBy('diff')->first();
+
+        return $slot[$flag] ?? null;
+    }
+
+    /**
+     * @param Carbon $relativeToTime
+     */
+    public function minStartTimeSlots(Carbon $relativeToTime = null): Collection
+    {
+        $relativeToTime = $relativeToTime ?? now();
+
+        return collect($this->time_slots)
+            ->map(function (array $timeSlot) use ($relativeToTime) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
+
+                return $timeSlot['start'];
+            });
     }
 }

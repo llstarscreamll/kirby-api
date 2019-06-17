@@ -120,7 +120,7 @@ class WorkShiftCest
                 ],
                 'testNow' => Carbon::setTestNow(Carbon::create(2019, 04, 01, 15, 00)), // middle between 12:00 and 18:00
                 'time' => now(),
-                'expected' => -1, // too early
+                'expected' => 1, // too late compared to 12:00
             ],
             [
                 'slot' => 'end',

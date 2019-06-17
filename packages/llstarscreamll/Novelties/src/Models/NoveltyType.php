@@ -4,6 +4,7 @@ namespace llstarscreamll\Novelties\Models;
 
 use BenSampo\Enum\Traits\CastsEnums;
 use Illuminate\Database\Eloquent\Model;
+use llstarscreamll\Novelties\Enums\DayType;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 
@@ -21,7 +22,14 @@ class NoveltyType extends Model
      *
      * @var array
      */
-    protected $fillable = ['code', 'name', 'operator'];
+    protected $fillable = [
+        'code',
+        'name',
+        'context_type',
+        'apply_on_days_of_type',
+        'apply_on_time_slots',
+        'operator',
+    ];
 
     /**
      * The attributes that should be cast to enum types.
@@ -30,6 +38,16 @@ class NoveltyType extends Model
      */
     protected $enumCasts = [
         'operator' => NoveltyTypeOperator::class,
+        'apply_on_days_of_type' => DayType::class,
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'apply_on_time_slots' => 'array',
     ];
 
     /**
