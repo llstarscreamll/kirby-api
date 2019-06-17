@@ -63,14 +63,17 @@ class RegisterTimeClockNoveltiesAction
     {
         $timeClockLog = $this->timeClockLogRepository->find($timeClockLogId);
         $aplicableNovelties = $this->getApplicableNovelties($timeClockLog);
+        $date = now();
 
         $novelties = $aplicableNovelties
-            ->map(function ($noveltyType) use ($timeClockLog) {
+            ->map(function ($noveltyType) use ($timeClockLog, $date) {
                 return [
                     'time_clock_log_id' => $timeClockLog->id,
                     'employee_id' => $timeClockLog->employee_id,
                     'novelty_type_id' => $noveltyType->id,
                     'total_time_in_minutes' => $this->solveTimeForNoveltyType($timeClockLog, $noveltyType), // in minutes
+                    'created_at' => $date,
+                    'updated_at' => $date,
                 ];
             })
             ->filter(function ($novelty) {
@@ -157,7 +160,7 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes += $endNoveltyMinutes;
         }
 
-        if (! $timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
+        if (!$timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
             $timeInMinutes = $workMinutes;
         }
 
