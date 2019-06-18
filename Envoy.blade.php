@@ -122,8 +122,8 @@ php artisan migrate --force;
 @task('setPermissions', ['on' => 'remote'])
 {{ logMessage("🔐  Set folders permissions...") }}
 cd {{ $currentDir }};
-sudo chgrp -R www-data storage/* bootstrap/cache
-sudo chmod -R ug+rwx storage/* bootstrap/cache
+sudo chown -R $USER:www-data storage/* bootstrap/cache/*
+sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 @endtask
 
 @task('blessNewRelease', ['on' => 'remote'])
@@ -160,5 +160,7 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 php artisan queue:restart
+php artisan horizon:purge
+sudo php artisan horizon:terminate
 sudo service php7.3-fpm restart
 @endtask
