@@ -4,6 +4,7 @@ namespace llstarscreamll\TimeClock;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use llstarscreamll\TimeClock\UI\CLI\GenerateFakeTimeClockDataCommand;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Data\Repositories\EloquentTimeClockLogRepository;
 
@@ -98,6 +99,8 @@ class TimeClockServiceProvider extends ServiceProvider
         ], 'time-clock.translations');*/
 
         // Registering package commands.
-        // $this->commands([]);
+        $this->commands([
+            GenerateFakeTimeClockDataCommand::class,
+        ]);
     }
 }
