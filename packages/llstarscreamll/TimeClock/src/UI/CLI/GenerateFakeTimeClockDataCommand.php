@@ -72,7 +72,7 @@ class GenerateFakeTimeClockDataCommand extends Command
         $this->line("Proceed to create time clock data for {$employees->count()} employees starting {$daysAgo} ago");
 
         $employees->map(function ($employee) use ($workShiftsGroups, $registerNoveltiesAction, $existsEmployees, $daysAgo) {
-            if (!$existsEmployees) {
+            if (! $existsEmployees) {
                 // attach work shifts
                 $employee->workShifts()->sync($this->faker->randomElement($workShiftsGroups));
             }
@@ -117,7 +117,7 @@ class GenerateFakeTimeClockDataCommand extends Command
             return in_array($date->dayOfWeekIso, $workShift->applies_on_days);
         })->first();
 
-        if (!$workShift && $this->faker->boolean($chanceOfGettingTrue = 40)) {
+        if (! $workShift && $this->faker->boolean($chanceOfGettingTrue = 40)) {
             $noveltyType = $this->noveltyTypes->whereIn('code', ['HEDI', 'HADI'])->random();
 
             return [
@@ -132,7 +132,9 @@ class GenerateFakeTimeClockDataCommand extends Command
             ];
         }
 
-        if (!$workShift) {return;}
+        if (! $workShift) {
+            return;
+        }
 
         $timeSlot = $this->faker->randomElement($workShift->time_slots);
         $startNoveltyType = null;
