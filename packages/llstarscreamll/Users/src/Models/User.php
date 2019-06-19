@@ -6,6 +6,7 @@ use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use llstarscreamll\Employees\Models\Employee;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
@@ -45,6 +46,14 @@ class User extends Authenticatable
         'updated_at',
         'deleted_at',
     ];
+
+    /**
+     * @return mixed
+     */
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'id');
+    }
 
     public function getNameAttribute()
     {

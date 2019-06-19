@@ -57,37 +57,37 @@ class GenerateFakeTimeClockDataCommand extends Command
     public function handle()
     {
         $lastTimeClockLog = TimeClockLog::orderBy('id', 'desc')->first();
-        $startFrom = optional($lastTimeClockLog)->checked_out_at ?? now()->subMonths(3);
-        $daysAgo = $startFrom->diffInDays(now());
+        $startFrom = optional($lastTimeClockLog)->checked_out_at ?? now()->subDays(2);
+        $days = $startFrom->diffInDays(now());
         $workShifts = WorkShift::pluck('id');
         $this->noveltyTypes = NoveltyType::all();
-        $this->clockers = factory(User::class, 10)->create();
+        $this->clockers = User::whereDoesntHave('employee')->get()->random(5);
         $workShiftsGroups = [$workShifts->take(3), $workShifts->take(-2)];
         $registerNoveltiesAction = app(RegisterTimeClockNoveltiesAction::class);
         $existsEmployees = Employee::count() > 0;
         $employees = $existsEmployees
-            ? Employee::all()
-            : factory(Employee::class, 300)->create();
-
-        $this->line("Proceed to create time clock data for {$employees->count()} employees starting {$daysAgo} ago");
-
-        $employees->map(function ($employee) use ($workShiftsGroups, $registerNoveltiesAction, $existsEmployees, $daysAgo) {
-            if (!$existsEmployees) {
-                // attach work shifts
+            ? Employee::limit(20)->get()
+            : factory(Employee::class, 10)->create()
+            ->map(function ($employee) use ($workShiftsGroups) {
                 $employee->workShifts()->sync($this->faker->randomElement($workShiftsGroups));
-            }
 
-            // create time clock logs for employee
-            $timeClocks = $employee->timeClockLogs()->createMany($this->createTimeClogLogsForEmployee($employee, $daysAgo));
-
-            $this->line("created {$timeClocks->count()} time clock logs for employee {$employee->id}");
-
-            $timeClocks->each(function ($timeClockLog) use ($registerNoveltiesAction) {
-                $registerNoveltiesAction->run($timeClockLog->id);
+                return $employee;
             });
 
-            return $employee;
-        });
+        $this->line("Proceed to create time clock data for {$employees->count()} employees starting {$days} ago");
+        for ($i = $days; $i >= 0; $i--) {
+            $daysAgo = $i;
+            $employees->map(function ($employee) use ($registerNoveltiesAction, $daysAgo) {
+                // create time clock logs for employee
+                $timeClocks = $employee->timeClockLogs()->createMany($this->createTimeClogLogsForEmployee($employee, $daysAgo));
+
+                $timeClocks->each(function ($timeClockLog) use ($registerNoveltiesAction) {
+                    $registerNoveltiesAction->run($timeClockLog->id);
+                });
+
+                return $employee;
+            });
+        }
     }
 
     /**
@@ -95,14 +95,9 @@ class GenerateFakeTimeClockDataCommand extends Command
      */
     private function createTimeClogLogsForEmployee(Employee $employee, int $daysAgo)
     {
-        $startDate = now()->subDays($daysAgo);
-        $endDate = now();
-        $totalDays = $endDate->diffInDays($startDate);
         $timeClockLogs = new Collection();
 
-        for ($i = $totalDays; $i > 0; $i--) {
-            $timeClockLogs->push($this->createTimeClockLog($employee, $i));
-        }
+        $timeClockLogs->push($this->createTimeClockLog($employee, $daysAgo));
 
         return $timeClockLogs->filter()->all();
     }
@@ -145,19 +140,21 @@ class GenerateFakeTimeClockDataCommand extends Command
         $endTime->setMinutes($this->faker->numberBetween(-10, 12));
 
         // apply start time punctuality variation?
-        if ($this->faker->boolean($chanceOfGettingTrue = 35)) {
+        if ($foo = $this->faker->boolean($chanceOfGettingTrue = 50)) {
             $hoursVariation = $this->faker->numberBetween(-2, 2);
             $startTime->addHours($hoursVariation);
-            $startNoveltyType = $hoursVariation > 0 ? $this->noveltyTypes->whereIn('code', ['PP'])->random() : null;
-            $startNoveltyType = $hoursVariation < 0 ? $this->noveltyTypes->whereIn('code', ['HADI'])->random() : null;
+            $startNoveltyType = $hoursVariation > 0
+                ? $this->noveltyTypes->whereIn('code', ['PP'])->random()
+                : ($hoursVariation < 0 ? $this->noveltyTypes->whereIn('code', ['HADI'])->random() : null);
         }
 
         // apply end time punctuality variation?
-        if ($this->faker->boolean($chanceOfGettingTrue = 35)) {
+        if ($this->faker->boolean($chanceOfGettingTrue = 50)) {
             $hoursVariation = $this->faker->numberBetween(-2, 2);
             $endTime->addHours($hoursVariation);
-            $endNoveltyType = $hoursVariation > 0 ? $this->noveltyTypes->whereIn('code', ['HADI'])->random() : null;
-            $endNoveltyType = $hoursVariation < 0 ? $this->noveltyTypes->whereIn('code', ['PP'])->random() : null;
+            $endNoveltyType = $hoursVariation > 0
+                ? $this->noveltyTypes->whereIn('code', ['HADI'])->random()
+                : ($hoursVariation < 0 ? $this->noveltyTypes->whereIn('code', ['PP'])->random() : null);
         }
 
         return [
