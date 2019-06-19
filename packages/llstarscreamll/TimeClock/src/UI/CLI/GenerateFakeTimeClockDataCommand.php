@@ -57,7 +57,7 @@ class GenerateFakeTimeClockDataCommand extends Command
     public function handle()
     {
         $lastTimeClockLog = TimeClockLog::orderBy('id', 'desc')->first();
-        $startFrom = optional($lastTimeClockLog)->checked_out_at ?? now()->subDays(2);
+        $startFrom = optional($lastTimeClockLog)->checked_out_at ?? now()->subMonths(2);
         $days = $startFrom->diffInDays(now());
         $workShifts = WorkShift::pluck('id');
         $this->noveltyTypes = NoveltyType::all();
@@ -66,8 +66,8 @@ class GenerateFakeTimeClockDataCommand extends Command
         $registerNoveltiesAction = app(RegisterTimeClockNoveltiesAction::class);
         $existsEmployees = Employee::count() > 0;
         $employees = $existsEmployees
-            ? Employee::limit(20)->get()
-            : factory(Employee::class, 10)->create()
+            ? Employee::all()
+            : factory(Employee::class, 300)->create()
             ->map(function ($employee) use ($workShiftsGroups) {
                 $employee->workShifts()->sync($this->faker->randomElement($workShiftsGroups));
 
@@ -127,7 +127,9 @@ class GenerateFakeTimeClockDataCommand extends Command
             ];
         }
 
-        if (!$workShift) {return;}
+        if (!$workShift) {
+            return;
+        }
 
         $timeSlot = $this->faker->randomElement($workShift->time_slots);
         $startNoveltyType = null;
