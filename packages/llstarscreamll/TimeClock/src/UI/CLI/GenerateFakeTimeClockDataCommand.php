@@ -112,7 +112,7 @@ class GenerateFakeTimeClockDataCommand extends Command
             return in_array($date->dayOfWeekIso, $workShift->applies_on_days);
         })->first();
 
-        if (!$workShift && $this->faker->boolean($chanceOfGettingTrue = 40)) {
+        if (! $workShift && $this->faker->boolean($chanceOfGettingTrue = 40)) {
             $noveltyType = $this->noveltyTypes->whereIn('code', ['HEDI', 'HADI'])->random();
 
             return [
@@ -127,7 +127,7 @@ class GenerateFakeTimeClockDataCommand extends Command
             ];
         }
 
-        if (!$workShift) {
+        if (! $workShift) {
             return;
         }
 
