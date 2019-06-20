@@ -41,8 +41,7 @@ class SearchTimeClockLogsCest
     {
         $I->sendGET($this->endpoint);
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.0");
-        $I->seeResponseJsonMatchesJsonPath("$.data.1");
+        $I->seeResponseJsonMatchesJsonPath('$.data.0');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1');
     }
-
 }
