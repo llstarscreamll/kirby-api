@@ -4,6 +4,8 @@ namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
+use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
+use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 
 /**
  * Class TimeClockLogsController.
@@ -13,13 +15,31 @@ use llstarscreamll\Core\Http\Controller;
 class TimeClockLogsController extends Controller
 {
     /**
+     * @var TimeClockLogRepositoryInterface
+     */
+    private $timeClockLogRepository;
+
+    /**
+     * @param TimeClockLogRepositoryInterface $timeClockLogRepository
+     */
+    public function __construct(TimeClockLogRepositoryInterface $timeClockLogRepository)
+    {
+        $this->timeClockLogRepository = $timeClockLogRepository;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        $timeClockLogs = $this->timeClockLogRepository
+            ->with(['employee.user', 'workShift'])
+            ->orderBy('updated_at', 'DESC')
+            ->simplePaginate();
+
+        return TimeClockLogResource::collection($timeClockLogs);
     }
 
     /**
