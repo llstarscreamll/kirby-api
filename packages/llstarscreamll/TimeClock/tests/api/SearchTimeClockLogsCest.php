@@ -41,12 +41,11 @@ class SearchTimeClockLogsCest
     {
         $I->sendGET($this->endpoint);
         $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath("$.data.0");
-        $I->seeResponseJsonMatchesJsonPath("$.data.1");
+        $I->seeResponseJsonMatchesJsonPath('$.data.0');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1');
         // relations
-        $I->seeResponseJsonMatchesJsonPath("$.data.1.novelties_count");
-        $I->seeResponseJsonMatchesJsonPath("$.data.1.employee.user");
-        $I->seeResponseJsonMatchesJsonPath("$.data.1.work_shift");
+        $I->seeResponseJsonMatchesJsonPath('$.data.1.novelties_count');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1.employee.user');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1.work_shift');
     }
-
 }
