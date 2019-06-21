@@ -3,6 +3,7 @@
 namespace llstarscreamll\TimeClock\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use llstarscreamll\Novelties\Models\Novelty;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\WorkShifts\Models\WorkShift;
@@ -94,6 +95,14 @@ class TimeClockLog extends Model
     public function checkOutNovelty()
     {
         return $this->belongsTo(NoveltyType::class, 'check_out_novelty_type_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function novelties()
+    {
+        return $this->hasMany(Novelty::class);
     }
 
     // ######################################################################## #
