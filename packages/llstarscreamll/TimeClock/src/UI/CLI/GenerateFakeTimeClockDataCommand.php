@@ -61,7 +61,6 @@ class GenerateFakeTimeClockDataCommand extends Command
         $days = $startFrom->diffInDays(now());
         $workShifts = WorkShift::pluck('id');
         $this->noveltyTypes = NoveltyType::all();
-        $this->clockers = User::whereDoesntHave('employee')->get()->random(5);
         $workShiftsGroups = [$workShifts->take(3), $workShifts->take(-2)];
         $registerNoveltiesAction = app(RegisterTimeClockNoveltiesAction::class);
         $existsEmployees = Employee::count() > 0;
@@ -73,8 +72,10 @@ class GenerateFakeTimeClockDataCommand extends Command
 
                 return $employee;
             });
+        $this->clockers = User::inRandomOrder()->limit(10)->get()->random(5);
 
-        $this->line("Proceed to create time clock data for {$employees->count()} employees starting {$days} ago");
+        $this->line("Proceed to create time clock data for {$employees->count()} employees, starting {$days} days ago");
+
         for ($i = $days; $i >= 0; $i--) {
             $daysAgo = $i;
             $employees->map(function ($employee) use ($registerNoveltiesAction, $daysAgo) {
@@ -87,6 +88,8 @@ class GenerateFakeTimeClockDataCommand extends Command
 
                 return $employee;
             });
+
+            $this->line("day #$i processed");
         }
     }
 
@@ -112,7 +115,7 @@ class GenerateFakeTimeClockDataCommand extends Command
             return in_array($date->dayOfWeekIso, $workShift->applies_on_days);
         })->first();
 
-        if (! $workShift && $this->faker->boolean($chanceOfGettingTrue = 40)) {
+        if (!$workShift && $this->faker->boolean($chanceOfGettingTrue = 40)) {
             $noveltyType = $this->noveltyTypes->whereIn('code', ['HEDI', 'HADI'])->random();
 
             return [
@@ -127,7 +130,7 @@ class GenerateFakeTimeClockDataCommand extends Command
             ];
         }
 
-        if (! $workShift) {
+        if (!$workShift) {
             return;
         }
 
