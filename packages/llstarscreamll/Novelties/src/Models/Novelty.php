@@ -32,4 +32,16 @@ class Novelty extends Model
      * @var array
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    // ######################################################################## #
+    //                                 Relations                                #
+    // ######################################################################## #
+
+    /**
+     * @return mixed
+     */
+    public function noveltyType()
+    {
+        return $this->belongsTo(NoveltyType::class);
+    }
 }
