@@ -2,7 +2,6 @@
 
 namespace llstarscreamll\Novelties\Actions;
 
-use Illuminate\Support\Arr;
 use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
@@ -168,7 +167,7 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes += $endNoveltyMinutes;
         }
 
-        if (!$timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
+        if (! $timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
             $timeInMinutes = $clockedMinutes;
         }
 
