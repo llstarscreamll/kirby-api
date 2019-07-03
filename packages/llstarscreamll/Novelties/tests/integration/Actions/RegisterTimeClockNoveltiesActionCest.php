@@ -7,6 +7,7 @@ use Codeception\Example;
 use Illuminate\Support\Arr;
 use Novelties\IntegrationTester;
 use Illuminate\Support\Collection;
+use llstarscreamll\Company\Models\Holiday;
 use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
@@ -37,6 +38,14 @@ class RegisterTimeClockNoveltiesActionCest
         $this->noveltyTypes = NoveltyType::all();
         $this->workShifts = new Collection();
 
+        // holiday test
+        Holiday::create([
+            'country_code' => 'CO',
+            'name' => 'Test holiday',
+            'description' => 'test holiday description',
+            'date' => '2019-07-01',
+        ]);
+
         $this->workShifts->push(factory(WorkShift::class)->create([
             'name' => '7-18',
             'meal_time_in_minutes' => 60, // 1 hour
@@ -53,6 +62,26 @@ class RegisterTimeClockNoveltiesActionCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:30'],
                 ['start' => '13:30', 'end' => '17:00'],
+            ],
+        ]));
+
+        $this->workShifts->push(factory(WorkShift::class)->create([
+            'name' => '22-6',
+            'meal_time_in_minutes' => 0,
+            'min_minutes_required_to_discount_meal_time' => 0,
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [
+                ['start' => '22:00', 'end' => '06:00'],
+            ],
+        ]));
+
+        $this->workShifts->push(factory(WorkShift::class)->create([
+            'name' => '14-22',
+            'meal_time_in_minutes' => 0,
+            'min_minutes_required_to_discount_meal_time' => 0,
+            'applies_on_days' => [1, 2, 3, 4, 5], // all days
+            'time_slots' => [
+                ['start' => '14:00', 'end' => '22:00'],
             ],
         ]));
     }
@@ -262,13 +291,107 @@ class RegisterTimeClockNoveltiesActionCest
             [
                 'timeClockLog' => [ // time clock log without work shift
                     'check_in_novelty_type_code' => 'HADI', // additional time
-                    'checked_in_at' => '2019-04-01 07:00:00', // time doesn't matters because of no work shift
-                    'checked_out_at' => '2019-04-01 14:00:00', // time doesn't matters because of no work shift
+                    'checked_in_at' => '2019-04-01 07:00:00', // time doesn't matters because work shift is null
+                    'checked_out_at' => '2019-04-01 14:00:00', // time doesn't matters because work shift is null
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HADI',
                         'total_time_in_minutes' => (60 * 7), // 7 hours
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log with night work shift
+                    'work_shift_name' => '22-6',
+                    'checked_in_at' => '2019-04-01 22:00:00', // on time
+                    'checked_out_at' => '2019-04-02 06:00:00', // on time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'RECNO',
+                        'total_time_in_minutes' => (60 * 8), // 8 hours
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log with night work shift
+                    'work_shift_name' => '22-6',
+                    'checked_in_at' => '2019-06-30 22:00:00', // sunday holiday, on time
+                    'checked_out_at' => '2019-07-01 06:00:00', // test monday holiday, on time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HNF',
+                        'total_time_in_minutes' => (60 * 8), // 8 hours
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log with night work shift and one holiday
+                    'work_shift_name' => '22-6',
+                    'checked_in_at' => '2019-03-30 22:00:00', // saturday, on time
+                    'checked_out_at' => '2019-03-31 06:00:00', // sunday holiday, on time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'RECNO',
+                        'total_time_in_minutes' => (60 * 2), // 2 hours, from 2019-03-30 22:00:00 to 23:59:59
+                    ],
+                    [
+                        'novelty_type_code' => 'HNF',
+                        'total_time_in_minutes' => (60 * 6), // 6 hours, from 2019-03-31 00:00 to 06:00:00
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log with one holiday and night work shift
+                    'work_shift_name' => '22-6',
+                    'checked_in_at' => '2019-07-01 22:00:00', // monday holiday, on time
+                    'checked_out_at' => '2019-07-02 06:00:00', // tuesday work day, on time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'RECNO',
+                        'total_time_in_minutes' => (60 * 6), // 6 hours, from 2019-07-02 00:00 to 06:00
+                    ],
+                    [
+                        'novelty_type_code' => 'HNF',
+                        'total_time_in_minutes' => (60 * 2), // 2 hours, from 2019-07-01 22:00 to 23:59:59
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log on work day
+                    'work_shift_name' => '14-22',
+                    'checked_in_at' => '2019-04-01 14:00:00', // monday work day, on time
+                    'checked_out_at' => '2019-04-01 22:00:00', // monday work day, on time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'RECNO',
+                        'total_time_in_minutes' => (60 * 1), // 1 hour, from 21:00:00 to 22:00
+                    ],
+                    [
+                        'novelty_type_code' => 'HN',
+                        'total_time_in_minutes' => (60 * 7), // 7 hours, from 14:00 to 21:00:00
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log on holiday
+                    'work_shift_name' => '14-22',
+                    'checked_in_at' => '2019-07-01 14:00:00', // monday holiday, on time
+                    'checked_out_at' => '2019-07-01 22:00:00', // monday holiday, on time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HNF',
+                        'total_time_in_minutes' => (60 * 1), // 1 hour, from 21:00:00 to 22:00
+                    ],
+                    [
+                        'novelty_type_code' => 'HDF',
+                        'total_time_in_minutes' => (60 * 7), // 7 hours, from 14:00 to 21:00:00
                     ],
                 ],
             ],

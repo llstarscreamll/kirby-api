@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\Novelties\Models;
 
+use Carbon\Carbon;
 use BenSampo\Enum\Traits\CastsEnums;
 use Illuminate\Database\Eloquent\Model;
 use llstarscreamll\Novelties\Enums\DayType;
@@ -56,4 +57,81 @@ class NoveltyType extends Model
      * @var array
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    /**
+     * @param array  $timeSlot
+     * @param Carbon $date
+     */
+    private function mapTimeSlot(array $timeSlot, Carbon $date = null): array
+    {
+        $date = $date ?? now();
+
+        [$hour, $seconds] = explode(':', $timeSlot['start']);
+        $start = $date->copy()->setTime($hour, $seconds);
+
+        [$hour, $seconds] = explode(':', $timeSlot['end']);
+        $end = $date->copy()->setTime($hour, $seconds);
+
+        if ($start->greaterThan($end)) {
+            $end = $end->addDay();
+        }
+
+        return [
+            'end' => $end,
+            'start' => $start,
+        ];
+    }
+
+    /**
+     * @param Carbon $relativeToTime
+     */
+    public function minStartTimeSlot(Carbon $relativeToTime = null)
+    {
+        $relativeToTime = $relativeToTime ?? now();
+
+        return collect($this->apply_on_time_slots)
+            ->map(function (array $timeSlot) use ($relativeToTime) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
+
+                return $timeSlot['start'];
+            })->sort()->first();
+    }
+
+    /**
+     * @param Carbon $relativeToTime
+     */
+    public function maxEndTimeSlot(Carbon $relativeToTime = null)
+    {
+        $relativeToTime = $relativeToTime ?? now();
+
+        return collect($this->apply_on_time_slots)
+            ->map(function (array $timeSlot) use ($relativeToTime) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
+
+                return $timeSlot['end'];
+            })->sort()->last();
+    }
+
+    /**
+     * @param  Carbon $checkedInAt
+     * @param  Carbon $checkedOutAt
+     * @return int
+     */
+    public function applicableTimeInMinutesFromTimeRange(Carbon $checkedInAt, Carbon $checkedOutAt): int
+    {
+        $applicableMinutes = 0;
+
+        $startTime = $checkedInAt->between($this->minStartTimeSlot($checkedInAt), $this->maxEndTimeSlot($checkedInAt))
+            ? $checkedInAt : $this->minStartTimeSlot($checkedInAt);
+        $endTime = $checkedOutAt->between($this->minStartTimeSlot($checkedOutAt), $this->maxEndTimeSlot($checkedInAt))
+            ? $checkedOutAt : $this->maxEndTimeSlot($checkedInAt);
+
+        $applicableMinutes = $startTime->diffInMinutes($endTime);
+
+        if (empty($this->apply_on_time_slots)) {
+            $applicableMinutes = $checkedInAt->diffInMinutes($checkedOutAt);
+        }
+
+        return $applicableMinutes;
+    }
 }

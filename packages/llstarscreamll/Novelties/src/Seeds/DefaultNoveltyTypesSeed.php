@@ -29,7 +29,7 @@ class DefaultNoveltyTypesSeed extends Seeder
         [
             'code' => 'HN',
             'name' => 'Hora normal',
-            'context_type' => 'logging_work_shift_time',
+            'context_type' => 'normal_work_shift_time',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
                 ['start' => '06:00', 'end' => '21:00'],
@@ -39,16 +39,17 @@ class DefaultNoveltyTypesSeed extends Seeder
         [
             'code' => 'RECNO',
             'name' => 'Recargo Nocturno',
+            'context_type' => 'normal_work_shift_time',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '00:00', 'end' => '06:00'],
-                ['start' => '21:00', 'end' => '23:59'],
+                ['start' => '21:00', 'end' => '06:00'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
             'code' => 'HDF',
             'name' => 'Hora Diurna Festiva',
+            'context_type' => 'normal_work_shift_time',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
                 ['start' => '06:00', 'end' => '21:00'],
@@ -58,10 +59,10 @@ class DefaultNoveltyTypesSeed extends Seeder
         [
             'code' => 'HNF',
             'name' => 'Hora Nocturna Festiva',
+            'context_type' => 'normal_work_shift_time',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
-                ['start' => '00:00', 'end' => '06:00'],
-                ['start' => '21:00', 'end' => '23:59'],
+                ['start' => '21:00', 'end' => '06:00'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
@@ -79,8 +80,7 @@ class DefaultNoveltyTypesSeed extends Seeder
             'name' => 'Hora Nocturna Extra Festiva',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
-                ['start' => '00:00', 'end' => '06:00'],
-                ['start' => '21:00', 'end' => '23:59'],
+                ['start' => '21:00', 'end' => '06:00'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
@@ -98,8 +98,7 @@ class DefaultNoveltyTypesSeed extends Seeder
             'name' => 'Hora Nocturna Extra',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '00:00', 'end' => '06:00'],
-                ['start' => '21:00', 'end' => '23:59'],
+                ['start' => '21:00', 'end' => '06:00'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],

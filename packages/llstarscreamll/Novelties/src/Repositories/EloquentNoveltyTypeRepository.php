@@ -3,7 +3,6 @@
 namespace llstarscreamll\Novelties\Repositories;
 
 use Illuminate\Support\Collection;
-use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
@@ -66,11 +65,11 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param string $dayType
+     * @param array $dayType
      */
-    public function whereDayType(string $dayType)
+    public function whereDayType(array $dayType)
     {
-        $this->model = $this->model->where('apply_on_days_of_type', $dayType);
+        $this->model = $this->model->whereIn('apply_on_days_of_type', $dayType);
 
         return $this;
     }

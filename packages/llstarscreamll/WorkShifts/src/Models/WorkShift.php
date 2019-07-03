@@ -174,6 +174,7 @@ class WorkShift extends Model
     private function mapTimeSlot(array $timeSlot, Carbon $date = null, bool $beGraceTimeAware = true): array
     {
         $date = $date ?? now();
+
         [$hour, $seconds] = explode(':', $timeSlot['start']);
         $start = $date->copy()->setTime($hour, $seconds);
 
@@ -183,6 +184,10 @@ class WorkShift extends Model
         if ($beGraceTimeAware) {
             $start = $start->subMinutes($this->grace_minutes_for_start_times);
             $end = $end->addMinutes($this->grace_minutes_for_end_times);
+        }
+
+        if ($start->greaterThan($end)) {
+            $end = $end->addDay();
         }
 
         return [
@@ -212,7 +217,7 @@ class WorkShift extends Model
     /**
      * @param Carbon $relativeToTime
      */
-    public function minStartTimeSlots(Carbon $relativeToTime = null): Collection
+    public function minStartTimeSlot(Carbon $relativeToTime = null)
     {
         $relativeToTime = $relativeToTime ?? now();
 
@@ -221,6 +226,21 @@ class WorkShift extends Model
                 $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
 
                 return $timeSlot['start'];
-            });
+            })->sort()->first();
+    }
+
+    /**
+     * @param Carbon $relativeToTime
+     */
+    public function maxEndTimeSlot(Carbon $relativeToTime = null)
+    {
+        $relativeToTime = $relativeToTime ?? now();
+
+        return collect($this->time_slots)
+            ->map(function (array $timeSlot) use ($relativeToTime) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
+
+                return $timeSlot['end'];
+            })->sort()->last();
     }
 }
