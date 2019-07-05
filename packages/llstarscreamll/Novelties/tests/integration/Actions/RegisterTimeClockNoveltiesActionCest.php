@@ -79,9 +79,19 @@ class RegisterTimeClockNoveltiesActionCest
             'name' => '14-22',
             'meal_time_in_minutes' => 0,
             'min_minutes_required_to_discount_meal_time' => 0,
-            'applies_on_days' => [1, 2, 3, 4, 5], // all days
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
             'time_slots' => [
                 ['start' => '14:00', 'end' => '22:00'],
+            ],
+        ]));
+
+        $this->workShifts->push(factory(WorkShift::class)->create([
+            'name' => '6-14',
+            'meal_time_in_minutes' => 0,
+            'min_minutes_required_to_discount_meal_time' => 0,
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [
+                ['start' => '06:00', 'end' => '14:00'],
             ],
         ]));
     }
@@ -176,6 +186,7 @@ class RegisterTimeClockNoveltiesActionCest
             [
                 'timeClockLog' => [
                     // without work shift
+                    'work_shift_name' => null,
                     'check_in_novelty_type_code' => 'HADI', // additional time
                     'checked_in_at' => '2019-03-31 08:00:00',
                     'checked_out_at' => '2019-03-31 14:00:00',
@@ -392,6 +403,24 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'HDF',
                         'total_time_in_minutes' => (60 * 7), // 7 hours, from 14:00 to 21:00:00
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log on workday
+                    'work_shift_name' => '6-14',
+                    'check_in_novelty_type_code' => 'HADI',
+                    'checked_in_at' => '2019-04-01 05:00:00', // workday, one hour early
+                    'checked_out_at' => '2019-04-01 14:00:00', // workday, on time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        'total_time_in_minutes' => (60 * 8), // 8 hours, from 06:00:00 to 14:00
+                    ],
+                    [
+                        'novelty_type_code' => 'HADI',
+                        'total_time_in_minutes' => (60 * 1), // 1 hour, from 05:00 to 06:00:00
                     ],
                 ],
             ],

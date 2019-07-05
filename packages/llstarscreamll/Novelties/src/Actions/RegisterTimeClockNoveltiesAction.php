@@ -61,7 +61,9 @@ class RegisterTimeClockNoveltiesAction
      */
     public function run(int $timeClockLogId)
     {
-        $timeClockLog = $this->timeClockLogRepository->find($timeClockLogId);
+        $timeClockLog = $this->timeClockLogRepository->with([
+            'workShift', 'checkInNovelty', 'checkOutNovelty', 'novelties',
+        ])->find($timeClockLogId);
         $aplicableNovelties = $this->getApplicableNovelties($timeClockLog);
 
         $date = now();
@@ -133,6 +135,7 @@ class RegisterTimeClockNoveltiesAction
     private function solveTimeForNoveltyType(TimeClockLog $timeClockLog, NoveltyType $noveltyType)
     {
         $timeInMinutes = 0;
+        $workShift = $timeClockLog->workShift;
         $checkInNoveltyTypeId = $timeClockLog->check_in_novelty_type_id;
         $checkOutNoveltyTypeId = $timeClockLog->check_out_novelty_type_id;
         $clockedMinutes = $timeClockLog->clocked_minutes;
@@ -140,15 +143,23 @@ class RegisterTimeClockNoveltiesAction
         [$startNoveltyMinutes, $clockedMinutes, $endNoveltyMinutes, $mealMinutes] = $this->calculateTimeClockLogTimesInMinutes($timeClockLog);
 
         if ($timeClockLog->work_shift_id && $noveltyType->context_type === 'normal_work_shift_time' && $clockedMinutes[$noveltyType->apply_on_days_of_type->value]) {
-            $timeInMinutes = $noveltyType->applicableTimeInMinutesFromTimeRange($timeClockLog->checked_in_at, $timeClockLog->checked_out_at);
-            $timeInMinutes -= $startNoveltyMinutes + $endNoveltyMinutes;
+            if ($workShift) {
+                $checkedInAt = $timeClockLog->checked_in_at;
+                $checkedOutAt = $timeClockLog->checked_out_at;
+
+                $startTime = $checkedInAt->between($workShift->minStartTimeSlot($checkedInAt), $workShift->maxEndTimeSlot($checkedInAt))
+                    ? $checkedInAt : $workShift->minStartTimeSlot($checkedInAt);
+
+                $endTime = $checkedOutAt->between($workShift->minStartTimeSlot($checkedOutAt), $workShift->maxEndTimeSlot($checkedInAt))
+                    ? $checkedOutAt : $workShift->maxEndTimeSlot($checkedInAt);
+
+                $workShiftApplicableTime = $noveltyType->applicableTimeInMinutesFromTimeRange($startTime, $endTime);
+                $timeInMinutes = $workShiftApplicableTime;
+            }
 
             $timeInMinutes -= $noveltyType->apply_on_days_of_type->is(DayType::Holiday)
                 ? $clockedMinutes[DayType::Workday]
                 : $clockedMinutes[DayType::Holiday];
-
-            $timeInMinutes = $startNoveltyMinutes < 0 ? $timeInMinutes + $startNoveltyMinutes : $timeInMinutes;
-            $timeInMinutes = $endNoveltyMinutes < 0 ? $timeInMinutes + $endNoveltyMinutes : $timeInMinutes;
 
             if ($shouldDiscountMealTime) {
                 $timeInMinutes -= $mealMinutes;
@@ -167,7 +178,7 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes += $endNoveltyMinutes;
         }
 
-        if (! $timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
+        if (!$timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
             $timeInMinutes = $clockedMinutes;
         }
 
