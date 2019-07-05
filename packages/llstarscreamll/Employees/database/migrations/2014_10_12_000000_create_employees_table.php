@@ -31,7 +31,7 @@ class CreateEmployeesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('id')->references('id')->on('users');
+            $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('cost_center_id')->references('id')->on('cost_centers');
         });
     }
