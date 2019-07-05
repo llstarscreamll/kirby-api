@@ -136,26 +136,32 @@ class RegisterTimeClockNoveltiesAction
     {
         $timeInMinutes = 0;
         $workShift = $timeClockLog->workShift;
+        $clockedMinutes = $timeClockLog->clocked_minutes;
         $checkInNoveltyTypeId = $timeClockLog->check_in_novelty_type_id;
         $checkOutNoveltyTypeId = $timeClockLog->check_out_novelty_type_id;
-        $clockedMinutes = $timeClockLog->clocked_minutes;
-        $shouldDiscountMealTime = $clockedMinutes >= optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time;
         [$startNoveltyMinutes, $clockedMinutes, $endNoveltyMinutes, $mealMinutes] = $this->calculateTimeClockLogTimesInMinutes($timeClockLog);
 
         if ($timeClockLog->work_shift_id && $noveltyType->context_type === 'normal_work_shift_time' && $clockedMinutes[$noveltyType->apply_on_days_of_type->value]) {
             if ($workShift) {
                 $checkedInAt = $timeClockLog->checked_in_at;
                 $checkedOutAt = $timeClockLog->checked_out_at;
+                $checkInPunctuality = $workShift->startPunctuality($checkedInAt);
+                $checkOutPunctuality = $workShift->endPunctuality($checkedOutAt);
 
-                $startTime = $checkedInAt->between($workShift->minStartTimeSlot($checkedInAt), $workShift->maxEndTimeSlot($checkedInAt))
-                    ? $checkedInAt : $workShift->minStartTimeSlot($checkedInAt);
+                // on time or early
+                $startTime = in_array($checkInPunctuality, [-1, 0])
+                    ? $workShift->getClosestSlotFlagTime('start', $checkedInAt)
+                    : $checkedInAt;
 
-                $endTime = $checkedOutAt->between($workShift->minStartTimeSlot($checkedOutAt), $workShift->maxEndTimeSlot($checkedInAt))
-                    ? $checkedOutAt : $workShift->maxEndTimeSlot($checkedInAt);
+                // on time or late
+                $endTime = in_array($checkOutPunctuality, [0, 1])
+                    ? $workShift->getClosestSlotFlagTime('end', $checkedOutAt)
+                    : $checkedOutAt;
 
-                $workShiftApplicableTime = $noveltyType->applicableTimeInMinutesFromTimeRange($startTime, $endTime);
-                $timeInMinutes = $workShiftApplicableTime;
+                $timeInMinutes = $noveltyType->applicableTimeInMinutesFromTimeRange($startTime, $endTime);
             }
+
+            $shouldDiscountMealTime = $timeInMinutes >= optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time;
 
             $timeInMinutes -= $noveltyType->apply_on_days_of_type->is(DayType::Holiday)
                 ? $clockedMinutes[DayType::Workday]

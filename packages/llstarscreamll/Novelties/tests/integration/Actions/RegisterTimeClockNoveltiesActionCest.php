@@ -50,6 +50,8 @@ class RegisterTimeClockNoveltiesActionCest
             'name' => '7-18',
             'meal_time_in_minutes' => 60, // 1 hour
             'min_minutes_required_to_discount_meal_time' => 60 * 11, // 11 hours
+            'grace_minutes_for_start_times' => 15,
+            'grace_minutes_for_end_times' => 15,
             'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
             'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
         ]));
@@ -110,6 +112,19 @@ class RegisterTimeClockNoveltiesActionCest
     protected function successCases()
     {
         return [
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'checked_in_at' => '2019-04-01 06:55:00', // on time, with grace time
+                    'checked_out_at' => '2019-04-01 17:50:00', // on time, with grace time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        'total_time_in_minutes' => 60 * 10, // 11 work hours - 1 hour launch
+                    ],
+                ],
+            ],
             [
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',

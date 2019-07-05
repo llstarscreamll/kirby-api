@@ -149,8 +149,8 @@ class WorkShift extends Model
     public function slotPunctuality(string $flag, Carbon $time): ?int
     {
         return collect($this->time_slots)
-            ->map(function ($timeSlot) {
-                return $this->mapTimeSlot($timeSlot, null, false);
+            ->map(function ($timeSlot) use ($time) {
+                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware = false);
             })
             ->sortBy(function (array $timeSlot) use ($time, $flag) {
                 return $time->diffInSeconds($timeSlot[$flag]);
@@ -205,7 +205,7 @@ class WorkShift extends Model
     {
         $slot = collect($this->time_slots)
             ->map(function (array $timeSlot) use ($time, $flag) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $time, false);
+                $timeSlot = $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware = false);
                 $timeSlot['diff'] = $time->diffInMinutes($timeSlot[$flag]);
 
                 return $timeSlot;
@@ -217,13 +217,13 @@ class WorkShift extends Model
     /**
      * @param Carbon $relativeToTime
      */
-    public function minStartTimeSlot(Carbon $relativeToTime = null)
+    public function minStartTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false)
     {
         $relativeToTime = $relativeToTime ?? now();
 
         return collect($this->time_slots)
-            ->map(function (array $timeSlot) use ($relativeToTime) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
+            ->map(function (array $timeSlot) use ($relativeToTime, $beGraceTimeAware) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, $beGraceTimeAware);
 
                 return $timeSlot['start'];
             })->sort()->first();
@@ -232,13 +232,13 @@ class WorkShift extends Model
     /**
      * @param Carbon $relativeToTime
      */
-    public function maxEndTimeSlot(Carbon $relativeToTime = null)
+    public function maxEndTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false)
     {
         $relativeToTime = $relativeToTime ?? now();
 
         return collect($this->time_slots)
-            ->map(function (array $timeSlot) use ($relativeToTime) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
+            ->map(function (array $timeSlot) use ($relativeToTime, $beGraceTimeAware) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, $beGraceTimeAware);
 
                 return $timeSlot['end'];
             })->sort()->last();
