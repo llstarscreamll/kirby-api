@@ -66,7 +66,7 @@ class GenerateFakeTimeClockDataCommand extends Command
         $existsEmployees = Employee::count() > 0;
         $employees = $existsEmployees
             ? Employee::all()
-            : factory(Employee::class, 300)->create()
+            : factory(Employee::class, 30)->create()
             ->map(function ($employee) use ($workShiftsGroups) {
                 $employee->workShifts()->sync($this->faker->randomElement($workShiftsGroups));
 
