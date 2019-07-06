@@ -1,10 +1,8 @@
 build:
     environment:
-        php:
-            version: '7.3'
-            pecl_extensions:
-                - zlib
-                - zip
+        php: '7.3'
+        after:
+            - apt install php7.2-zip
         hosts:
             laravel.dev: '127.0.0.1'
         variables:
