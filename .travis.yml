@@ -4,7 +4,6 @@ matrix:
   fast_finish: true
 
 php:
-  - 7.2
   - 7.3
 
 cache:
