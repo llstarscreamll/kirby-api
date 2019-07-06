@@ -1,6 +1,9 @@
 build:
     environment:
         php: '7.3'
+            pecl_extensions:
+                - zlib
+                - zip
         hosts:
             laravel.dev: '127.0.0.1'
         variables:
