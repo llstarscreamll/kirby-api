@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
 use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
 use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
+use llstarscreamll\Company\Contracts\SubCostCenterRepositoryInterface;
 use llstarscreamll\Company\Data\Repositories\EloquentHolidayRepository;
 use llstarscreamll\Company\Data\Repositories\EloquentCostCenterRepository;
+use llstarscreamll\Company\Data\Repositories\EloquentSubCostCenterRepository;
 
 /**
  * Class CompanyServiceProvider.
@@ -26,6 +28,7 @@ class CompanyServiceProvider extends ServiceProvider
         HolidaysServiceInterface::class => HolidaysService::class,
         HolidayRepositoryInterface::class => EloquentHolidayRepository::class,
         CostCenterRepositoryInterface::class => EloquentCostCenterRepository::class,
+        SubCostCenterRepositoryInterface::class => EloquentSubCostCenterRepository::class,
     ];
 
     /**
