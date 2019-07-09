@@ -4,6 +4,7 @@ namespace ClockTime;
 
 use Illuminate\Support\Carbon;
 use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
@@ -26,6 +27,11 @@ class CheckOutCest
     private $user;
 
     /**
+     * @var \llstarscreamll\Company\Models\SubCostCenter
+     */
+    private $subCostCenter;
+
+    /**
      * @param ApiTester $I
      */
     public function _before(ApiTester $I)
@@ -42,6 +48,8 @@ class CheckOutCest
         factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Addition,
         ]);
+
+        $this->subCostCenter = factory(SubCostCenter::class)->create();
     }
 
     /**
@@ -65,6 +73,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
+            'sub_cost_center' => ['id' => $this->subCostCenter->id],
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -76,6 +85,7 @@ class CheckOutCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => null,
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'checked_in_at' => $checkedInTime->toDateTimeString(),
             'checked_out_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
@@ -109,6 +119,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
+            'sub_cost_center' => ['id' => $this->subCostCenter->id],
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -119,6 +130,7 @@ class CheckOutCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'checked_in_at' => $checkedInTime->toDateTimeString(),
             'checked_out_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
@@ -140,6 +152,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
+            'sub_cost_center' => ['id' => $this->subCostCenter->id],
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -177,6 +190,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
+            'sub_cost_center' => ['id' => $this->subCostCenter->id],
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -219,6 +233,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
+            'sub_cost_center' => ['id' => $this->subCostCenter->id],
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -266,6 +281,7 @@ class CheckOutCest
 
         $requestData = [
             'novelty_type' => ['id' => 3], // addition novelty type
+            'sub_cost_center' => ['id' => $this->subCostCenter->id],
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -277,6 +293,7 @@ class CheckOutCest
             'employee_id' => $employee->id,
             'check_in_novelty_type_id' => 1,
             'check_out_novelty_type_id' => 3,
+            'sub_cost_center_id' => $this->subCostCenter->id,
         ]);
     }
 
@@ -308,6 +325,7 @@ class CheckOutCest
 
         $requestData = [
             'novelty_type' => ['id' => 1], // wrong subtraction novelty type
+            'sub_cost_center' => ['id' => $this->subCostCenter->id],
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -325,5 +343,38 @@ class CheckOutCest
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenSubCostCenterDoesNotExists(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
+        $checkedInTime = now()->setTime(7, 0);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('timeClockLogs', [
+                'work_shift_id' => null, // empty shift
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        $requestData = [
+            'sub_cost_center' => ['id' => 100],
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->dontSeeEventTriggered(CheckedOutEvent::class);
+        $I->seeResponseJsonMatchesJsonPath('$.message');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.["sub_cost_center.id"].0');
     }
 }

@@ -58,13 +58,14 @@ class LogCheckOutAction
     /**
      * @param  User                       $registrar
      * @param  string                     $identificationCode
+     * @param  array                      $subCostCenter
      * @param  null|array                 $noveltyType
      * @throws MissingCheckInException
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
      * @return TimeClockLog
      */
-    public function run(User $registrar, string $identificationCode, array $noveltyType = null): TimeClockLog
+    public function run(User $registrar, string $identificationCode, array $subCostCenter, array $noveltyType = null): TimeClockLog
     {
         $identification = $this->identificationRepository
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
@@ -75,7 +76,7 @@ class LogCheckOutAction
             ['id', 'work_shift_id', 'checked_in_at']
         );
 
-        if (! $lastCheckIn) {
+        if (!$lastCheckIn) {
             throw new MissingCheckInException();
         }
 
@@ -87,6 +88,7 @@ class LogCheckOutAction
             'checked_out_at' => now(),
             'checked_out_by_id' => $registrar->id,
             'check_out_novelty_type_id' => optional($noveltyType)->id,
+            'sub_cost_center_id' => $subCostCenter['id'],
         ];
 
         return $this->timeClockLogRepository->update($timeClockLogUpdate, $lastCheckIn->id);

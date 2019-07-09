@@ -21,6 +21,7 @@ class CreateTimeClockLogsTable extends Migration
         Schema::create('time_clock_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('employee_id');
+            $table->unsignedInteger('sub_cost_center_id')->nullable();
             $table->unsignedInteger('work_shift_id')->nullable();
             $table->timestamp('checked_in_at');
             $table->unsignedInteger('check_in_novelty_type_id')->nullable();
@@ -33,6 +34,7 @@ class CreateTimeClockLogsTable extends Migration
 
             $table->foreign('employee_id')->references('id')->on('users');
             $table->foreign('work_shift_id')->references('id')->on('work_shifts');
+            $table->foreign('sub_cost_center_id')->references('id')->on('sub_cost_centers');
             $table->foreign('check_in_novelty_type_id')->references('id')->on('novelty_types');
             $table->foreign('check_out_novelty_type_id')->references('id')->on('novelty_types');
             $table->foreign('checked_in_by_id')->references('id')->on('users');

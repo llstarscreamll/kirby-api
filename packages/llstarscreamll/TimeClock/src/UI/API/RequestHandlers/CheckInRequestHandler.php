@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use llstarscreamll\TimeClock\Events\CheckedInEvent;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckInAction;
+use llstarscreamll\TimeClock\UI\API\Requests\CheckInRequest;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
@@ -14,7 +15,6 @@ use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 
 /**
@@ -25,11 +25,11 @@ use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 class CheckInRequestHandler
 {
     /**
-     * @param StoreTimeClockLogRequest $request
-     * @param LogCheckInAction         $logCheckInAction
+     * @param CheckInRequest   $request
+     * @param LogCheckInAction $logCheckInAction
      */
     public function __invoke(
-        StoreTimeClockLogRequest $request,
+        CheckInRequest $request,
         LogCheckInAction $logCheckInAction,
         NoveltyTypeRepositoryInterface $noveltyTypeRepository
     ) {

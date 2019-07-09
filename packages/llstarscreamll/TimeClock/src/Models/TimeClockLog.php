@@ -9,6 +9,7 @@ use llstarscreamll\Novelties\Models\Novelty;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\WorkShifts\Models\WorkShift;
+use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
 
@@ -33,6 +34,7 @@ class TimeClockLog extends Model
      */
     protected $fillable = [
         'employee_id',
+        'sub_cost_center_id',
         'work_shift_id',
         'checked_in_at',
         'check_in_novelty_type_id',
@@ -113,6 +115,14 @@ class TimeClockLog extends Model
         return $this->hasMany(Novelty::class);
     }
 
+    /**
+     * @return mixed
+     */
+    public function subCostCenter()
+    {
+        return $this->hasMany(SubCostCenter::class);
+    }
+
     // ######################################################################## #
     //                                 Accessors                                #
     // ######################################################################## #
@@ -154,7 +164,7 @@ class TimeClockLog extends Model
      */
     private function holidayRepository()
     {
-        if (! $this->holidayRepository) {
+        if (!$this->holidayRepository) {
             $this->holidayRepository = App::make(HolidayRepositoryInterface::class);
         }
 
@@ -181,27 +191,27 @@ class TimeClockLog extends Model
         $isTheSameDay = $this->checked_in_at->isSameDay($this->checked_out_at);
 
         // not the same day
-        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && ! $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && !$this->checkedOutOnHoliday && !$isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->diffInMinutes($this->checked_out_at->startOfDay());
         }
 
-        if ($dayType->is(DayType::Holiday) && ! $this->checkedInOnHoliday && $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Holiday) && !$this->checkedInOnHoliday && $this->checkedOutOnHoliday && !$isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->endOfDay()->diffInMinutes($this->checked_out_at);
         }
 
-        if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday && ! $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday && !$this->checkedOutOnHoliday && !$isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->endOfDay()->diffInMinutes($this->checked_out_at);
         }
 
-        if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday && $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Workday) && !$this->checkedInOnHoliday && $this->checkedOutOnHoliday && !$isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->diffInMinutes($this->checked_out_at->startOfDay());
         }
 
-        if ($dayType->is(DayType::Workday) && ! $this->hasHolidaysChecks() && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Workday) && !$this->hasHolidaysChecks() && !$isTheSameDay) {
             $timeInMinutes += $this->clocked_minutes;
         }
 
-        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && $this->checkedOutOnHoliday && !$isTheSameDay) {
             $timeInMinutes += $this->clocked_minutes;
         }
 
@@ -210,7 +220,7 @@ class TimeClockLog extends Model
             $timeInMinutes = $this->clocked_minutes;
         }
 
-        if ($dayType->is(DayType::Workday) && $isTheSameDay && ! $this->checkedInOnHoliday) {
+        if ($dayType->is(DayType::Workday) && $isTheSameDay && !$this->checkedInOnHoliday) {
             $timeInMinutes = $this->clocked_minutes;
         }
 

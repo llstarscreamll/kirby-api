@@ -6,11 +6,11 @@ use Illuminate\Support\Arr;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class StoreTimeClockLogRequest.
+ * Class CheckOutRequest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class StoreTimeClockLogRequest extends FormRequest
+class CheckOutRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,6 +31,8 @@ class StoreTimeClockLogRequest extends FormRequest
     {
         return [
             'identification_code' => ['exists:identifications,code'],
+            'novelty_type.id' => ['exists:novelty_types,id'],
+            'sub_cost_center.id' => ['exists:sub_cost_centers,id'],
         ];
     }
 

@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
+use llstarscreamll\TimeClock\UI\API\Requests\CheckOutRequest;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
@@ -13,7 +14,6 @@ use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 
 /**
  * Class CheckOutRequestHandler.
@@ -23,11 +23,11 @@ use llstarscreamll\TimeClock\UI\API\Requests\StoreTimeClockLogRequest;
 class CheckOutRequestHandler
 {
     /**
-     * @param StoreTimeClockLogRequest $request
-     * @param LogCheckOutAction        $logCheckOutAction
+     * @param CheckOutRequest   $request
+     * @param LogCheckOutAction $logCheckOutAction
      */
     public function __invoke(
-        StoreTimeClockLogRequest $request,
+        CheckOutRequest $request,
         LogCheckOutAction $logCheckOutAction,
         NoveltyTypeRepositoryInterface $noveltyTypeRepository
     ) {
@@ -37,6 +37,7 @@ class CheckOutRequestHandler
             $timeClockLog = $logCheckOutAction->run(
                 $request->user(),
                 $request->identification_code,
+                $request->sub_cost_center,
                 $request->novelty_type
             );
         } catch (MissingCheckInException $exception) {
