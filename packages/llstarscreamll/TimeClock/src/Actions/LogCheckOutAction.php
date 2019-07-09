@@ -76,7 +76,7 @@ class LogCheckOutAction
             ['id', 'work_shift_id', 'checked_in_at']
         );
 
-        if (!$lastCheckIn) {
+        if (! $lastCheckIn) {
             throw new MissingCheckInException();
         }
 
