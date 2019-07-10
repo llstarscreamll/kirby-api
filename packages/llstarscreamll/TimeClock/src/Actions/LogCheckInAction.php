@@ -6,9 +6,11 @@ use llstarscreamll\Users\Models\User;
 use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Employees\Models\Identification;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use llstarscreamll\TimeClock\Exceptions\MissingSubCostCenterException;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
@@ -66,7 +68,7 @@ class LogCheckInAction
      * @throws TooLateToCheckException
      * @return TimeClockLog
      */
-    public function run(User $registrar, string $identificationCode, int $workShiftId = null, array $novelty = null): TimeClockLog
+    public function run(User $registrar, string $identificationCode, int $workShiftId = null, array $novelty = null, $subCostCenterId = null): TimeClockLog
     {
         $identification = $this->identificationRepository
             ->with(['employee.workShifts'])
@@ -75,16 +77,20 @@ class LogCheckInAction
 
         $this->validateUnfinishedCheckIn($identification);
         $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $novelty);
-        $novelty = $this->validateNoveltyTypeBasedOnWorkShiftPunctualityAction->run(
+        $noveltyType = $this->validateNoveltyTypeBasedOnWorkShiftPunctualityAction->run(
             'start', $workShift, $novelty
         );
+
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenterId) {
+            throw new MissingSubCostCenterException();
+        }
 
         $timeClockLog = [
             'employee_id' => $identification->employee_id,
             'checked_in_at' => now(),
             'checked_in_by_id' => $registrar->id,
             'work_shift_id' => optional($workShift)->id,
-            'check_in_novelty_type_id' => optional($novelty)->id,
+            'check_in_novelty_type_id' => optional($noveltyType)->id,
         ];
 
         return $this->timeClockLogRepository->create($timeClockLog);

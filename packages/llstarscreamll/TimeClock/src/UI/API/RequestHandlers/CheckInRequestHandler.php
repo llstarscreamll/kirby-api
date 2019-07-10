@@ -15,6 +15,7 @@ use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use llstarscreamll\TimeClock\Exceptions\MissingSubCostCenterException;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 
 /**
@@ -40,7 +41,8 @@ class CheckInRequestHandler
                 $request->user(),
                 $request->identification_code,
                 $request->work_shift_id,
-                $request->novelty_type
+                $request->novelty_type,
+                $request->sub_cost_center_id,
             );
         } catch (AlreadyCheckedInException $exception) {
             array_push($errors, [
@@ -88,6 +90,12 @@ class CheckInRequestHandler
                             : $noveltyTypeRepository->findForTimeAddition()
                     ),
                 ],
+            ]);
+        } catch (MissingSubCostCenterException $exception) {
+            array_push($errors, [
+                'code' => $exception->getCode(),
+                'title' => 'Datos inválidos.',
+                'detail' => "Cuando se registra novedad que suma tiempo, se debe proveer el sub centro de costo.",
             ]);
         }
 

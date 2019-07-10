@@ -25,8 +25,10 @@ class CreateTimeClockLogsTable extends Migration
             $table->unsignedInteger('work_shift_id')->nullable();
             $table->timestamp('checked_in_at');
             $table->unsignedInteger('check_in_novelty_type_id')->nullable();
+            $table->unsignedInteger('check_in_sub_cost_center_id')->nullable();
             $table->timestamp('checked_out_at')->nullable();
             $table->unsignedInteger('check_out_novelty_type_id')->nullable();
+            $table->unsignedInteger('check_out_sub_cost_center_id')->nullable();
             $table->unsignedInteger('checked_in_by_id');
             $table->unsignedInteger('checked_out_by_id')->nullable();
             $table->timestamps();
@@ -36,7 +38,9 @@ class CreateTimeClockLogsTable extends Migration
             $table->foreign('work_shift_id')->references('id')->on('work_shifts');
             $table->foreign('sub_cost_center_id')->references('id')->on('sub_cost_centers');
             $table->foreign('check_in_novelty_type_id')->references('id')->on('novelty_types');
+            $table->foreign('check_in_sub_cost_center_id')->references('id')->on('sub_cost_centers');
             $table->foreign('check_out_novelty_type_id')->references('id')->on('novelty_types');
+            $table->foreign('check_out_sub_cost_center_id')->references('id')->on('sub_cost_centers');
             $table->foreign('checked_in_by_id')->references('id')->on('users');
             $table->foreign('checked_out_by_id')->references('id')->on('users');
         });

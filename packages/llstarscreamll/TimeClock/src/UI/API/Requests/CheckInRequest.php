@@ -33,6 +33,7 @@ class CheckInRequest extends FormRequest
             'identification_code' => ['required', 'exists:identifications,code'],
             'novelty_type.id' => ['exists:novelty_types,id'],
             'work_shift_id' => ['exists:work_shifts,id'],
+            'sub_cost_center_id' => ['exists:sub_cost_centers,id'],
         ];
     }
 

@@ -4,6 +4,7 @@ namespace ClockTime;
 
 use Illuminate\Support\Carbon;
 use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Events\CheckedInEvent;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
@@ -26,6 +27,11 @@ class CheckInCest
     private $user;
 
     /**
+     * @var \llstarscreamll\Company\Models\SubCostCenter
+     */
+    private $subCostCenter;
+
+    /**
      * @param ApiTester $I
      */
     public function _before(ApiTester $I)
@@ -42,6 +48,8 @@ class CheckInCest
         factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Addition,
         ]);
+
+        $this->subCostCenter = factory(SubCostCenter::class)->create();
     }
 
     /**
@@ -427,7 +435,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenHasSingleWorkShiftAndArrivesTooEarly(ApiTester $I)
+    public function whenHasSingleWorkShiftAndArrivesTooEarlyWithoutNoveltyTypeSpecified(ApiTester $I)
     {
         // fake current date time, one hour late
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
@@ -466,6 +474,40 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
+    public function whenHasSingleWorkShiftAndArrivesTooEarlyWithRightNoveltyTypeButWithoutSuBcostCenter(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])
+            ->create();
+
+        // fake current date time, one hour early
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
+
+        $requestData = [
+            'work_shift_id' => 1,
+            'novelty_type' => ['id' => 3], // addition novelty type
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath('$.message');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseContainsJson(['errors' => ['code' => 1056]]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
     public function whenHasSingleWorkShiftAndArrivesTooEarlyWithRightNoveltyType(ApiTester $I)
     {
         $employee = factory(Employee::class)
@@ -483,6 +525,7 @@ class CheckInCest
         $requestData = [
             'work_shift_id' => 1,
             'novelty_type' => ['id' => 3], // addition novelty type
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
