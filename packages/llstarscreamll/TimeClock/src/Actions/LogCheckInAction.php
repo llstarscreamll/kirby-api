@@ -81,7 +81,7 @@ class LogCheckInAction
             'start', $workShift, $novelty
         );
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenterId) {
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenterId) {
             throw new MissingSubCostCenterException();
         }
 

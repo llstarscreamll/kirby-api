@@ -95,7 +95,7 @@ class CheckInRequestHandler
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'Datos inválidos.',
-                'detail' => "Cuando se registra novedad que suma tiempo, se debe proveer el sub centro de costo.",
+                'detail' => 'Cuando se registra novedad que suma tiempo, se debe proveer el sub centro de costo.',
             ]);
         }
 
