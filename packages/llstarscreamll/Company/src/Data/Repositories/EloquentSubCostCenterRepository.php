@@ -23,7 +23,7 @@ class EloquentSubCostCenterRepository extends EloquentRepositoryAbstract impleme
      */
     protected $allowedIncludes = [];
 
-    public function model(): string
+    public function model()
     {
         return SubCostCenter::class;
     }
