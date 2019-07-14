@@ -20,4 +20,17 @@ class MissingSubCostCenterException extends Exception
      * @var int
      */
     protected $code = 1056;
+
+    /**
+     * @var array
+     */
+    public $timeClockData;
+
+    /**
+     * @param array $timeClockData
+     */
+    public function __construct(array $timeClockData)
+    {
+        $this->timeClockData = $timeClockData;
+    }
 }

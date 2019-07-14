@@ -224,9 +224,17 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1051]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
     }
 
     /**
@@ -254,10 +262,10 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1050]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
-        $I->seeResponseContainsJson(['code' => 1050]);
     }
 
     /**
@@ -312,13 +320,17 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1051]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
-        // posible work shifts
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.0.id');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.1.id');
-        $I->seeResponseContainsJson(['code' => 1051]);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
     }
 
     /**
@@ -354,6 +366,17 @@ class CheckInCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.2.id');
         $I->seeResponseContainsJson(['code' => 1053]);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
+        // novelty types
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 3]]);
@@ -418,14 +441,21 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1055]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
         // should return subtract novelty types
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.2.id');
-        $I->seeResponseContainsJson(['code' => 1055]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 3]]);
@@ -457,14 +487,21 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1054]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
         // should return addition novelty types
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.2.id');
-        $I->seeResponseContainsJson(['code' => 1054]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
@@ -497,11 +534,18 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['errors' => ['code' => 1056]]);
         $I->seeResponseJsonMatchesJsonPath('$.message');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
-        $I->seeResponseContainsJson(['errors' => ['code' => 1056]]);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
     }
 
     /**
@@ -569,14 +613,21 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1055]); // InvalidNoveltyTypeException
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
         // should return addition novelty types
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.2.id');
-        $I->seeResponseContainsJson(['code' => 1055]); // InvalidNoveltyTypeException
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);

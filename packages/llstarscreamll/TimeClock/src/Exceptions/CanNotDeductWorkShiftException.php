@@ -25,15 +25,13 @@ class CanNotDeductWorkShiftException extends Exception
     /**
      * @var \Illuminate\Support\Collection
      */
-    public $posibleWorkShifts;
+    public $timeClockData;
 
     /**
-     * @param string                         $message
-     * @param \Illuminate\Support\Collection $posibleWorkShifts
+     * @param array $timeClockData
      */
-    public function __construct(string $message = null, Collection $posibleWorkShifts)
+    public function __construct(array $timeClockData)
     {
-        $this->message = $message ?? $this->message;
-        $this->posibleWorkShifts = $posibleWorkShifts;
+        $this->timeClockData = $timeClockData;
     }
 }

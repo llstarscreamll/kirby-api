@@ -9,12 +9,9 @@ use llstarscreamll\TimeClock\Actions\LogCheckInAction;
 use llstarscreamll\TimeClock\UI\API\Requests\CheckInRequest;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
-use llstarscreamll\WorkShifts\UI\API\Resources\WorkShiftResource;
-use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
-use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\MissingSubCostCenterException;
 use llstarscreamll\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 
@@ -31,8 +28,7 @@ class CheckInRequestHandler
      */
     public function __invoke(
         CheckInRequest $request,
-        LogCheckInAction $logCheckInAction,
-        NoveltyTypeRepositoryInterface $noveltyTypeRepository
+        LogCheckInAction $logCheckInAction
     ) {
         $errors = [];
 
@@ -55,47 +51,36 @@ class CheckInRequestHandler
                 'code' => $exception->getCode(),
                 'title' => 'Es temprano para registrar la entrada.',
                 'detail' => 'Si se llega temprano al turno, se debe registrar una novedad.',
-                'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection($noveltyTypeRepository->findForTimeAddition()),
-                ],
+                'meta' => $exception->timeClockData,
             ]);
         } catch (TooLateToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'Es tarde para registrar la entrada.',
                 'detail' => 'Si se llega tarde al turno, se debe registrar una novedad.',
-                'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection($noveltyTypeRepository->findForTimeSubtraction()),
-                ],
+                'meta' => $exception->timeClockData,
             ]);
         } catch (CanNotDeductWorkShiftException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'No fue posible deducir el turno.',
                 'detail' => 'No se pudo deducir el turno, se debe elegir uno '
-                ."de {$exception->posibleWorkShifts->count()} posibles.",
-                'meta' => [
-                    'work_shifts' => WorkShiftResource::collection($exception->posibleWorkShifts),
-                ],
+                ."de {$exception->timeClockData['work_shifts']->count()} posibles.",
+                'meta' => $exception->timeClockData,
             ]);
         } catch (InvalidNoveltyTypeException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'Tipo de novedad no válido.',
                 'detail' => 'El tipo de novedad no es válido.',
-                'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection(
-                        $exception->punctuality > 0
-                            ? $noveltyTypeRepository->findForTimeSubtraction()
-                            : $noveltyTypeRepository->findForTimeAddition()
-                    ),
-                ],
+                'meta' => $exception->timeClockData,
             ]);
         } catch (MissingSubCostCenterException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'Datos inválidos.',
                 'detail' => 'Cuando se registra novedad que suma tiempo, se debe proveer el sub centro de costo.',
+                'meta' => $exception->timeClockData,
             ]);
         }
 

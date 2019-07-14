@@ -22,10 +22,15 @@ class TooLateToCheckException extends Exception
     protected $code = 1053;
 
     /**
-     * @param string $message
+     * @var array
      */
-    public function __construct(string $message = null)
+    public $timeClockData;
+
+    /**
+     * @param array $timeClockData
+     */
+    public function __construct(array $timeClockData)
     {
-        $this->message = $message ?? $this->message;
+        $this->timeClockData = $timeClockData;
     }
 }

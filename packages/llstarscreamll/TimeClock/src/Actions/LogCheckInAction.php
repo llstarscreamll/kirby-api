@@ -2,13 +2,17 @@
 
 namespace llstarscreamll\TimeClock\Actions;
 
+use Illuminate\Support\Collection;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\WorkShifts\Models\WorkShift;
+use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Employees\Models\Identification;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
+use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
+use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\MissingSubCostCenterException;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
@@ -60,29 +64,45 @@ class LogCheckInAction
     }
 
     /**
-     * @param  User                             $registrar
-     * @param  string                           $identificationCode
-     * @param  int                              $workShiftId
-     * @throws AlreadyCheckedInException
-     * @throws CanNotDeductWorkShiftException
+     * @param  User                          $registrar
+     * @param  string                        $identificationCode
+     * @param  int                           $workShiftId
+     * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
+     * @throws InvalidNoveltyTypeException
      * @return TimeClockLog
      */
-    public function run(User $registrar, string $identificationCode, int $workShiftId = null, array $novelty = null, $subCostCenterId = null): TimeClockLog
+    public function run(User $registrar, string $identificationCode, int $workShiftId = null, array $noveltyType = null, $subCostCenterId = null): TimeClockLog
     {
         $identification = $this->identificationRepository
             ->with(['employee.workShifts'])
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        $this->validateUnfinishedCheckIn($identification);
-        $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $novelty);
-        $noveltyType = $this->validateNoveltyTypeBasedOnWorkShiftPunctualityAction->run(
-            'start', $workShift, $novelty
-        );
+        if ($noveltyType) {
+            $noveltyType = $this->noveltyTypeRepository->find($noveltyType['id']);
+        }
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenterId) {
-            throw new MissingSubCostCenterException();
+        $this->validateUnfinishedCheckIn($identification);
+
+        $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $noveltyType['id']);
+
+        if (!$this->noveltyIsValid('start', $workShift, $noveltyType)) {
+            throw new InvalidNoveltyTypeException($this->getTimeClockData($identification, $workShiftId));
+        }
+
+        $shiftPunctuality = optional($workShift)->slotPunctuality('start', now());
+
+        if ($workShift && $shiftPunctuality < 0 && !$noveltyType) {
+            throw new TooEarlyToCheckException($this->getTimeClockData($identification, $workShiftId));
+        }
+
+        if ($workShift && $shiftPunctuality > 0 && !$noveltyType) {
+            throw new TooLateToCheckException($this->getTimeClockData($identification, $workShiftId));
+        }
+
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenterId) {
+            throw new MissingSubCostCenterException($this->getTimeClockData($identification, $workShiftId));
         }
 
         $timeClockLog = [
@@ -97,7 +117,8 @@ class LogCheckInAction
     }
 
     /**
-     * @param Identification $identification
+     * @param  Identification              $identification
+     * @throws AlreadyCheckedInException
      */
     private function validateUnfinishedCheckIn(Identification $identification): void
     {
@@ -112,17 +133,60 @@ class LogCheckInAction
     }
 
     /**
-     * @param  Identification   $identification
-     * @param  null|int         $workShiftId
+     * @param  Identification                   $identification
+     * @param  null|int                         $workShiftId
+     * @throws CanNotDeductWorkShiftException
      * @return null|WorkShift
      */
     private function validateDeductibleWorkShift(Identification $identification, ?int $workShiftId): ?WorkShift
     {
+        $deductedWorkShifts = $this->getApplicableWorkShifts($identification, $workShiftId);
+
+        $employeeWorkShiftsCount = $identification->employee->workShifts->count();
+
+        $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && $deductedWorkShifts->count() === 0;
+
+        if ($hasWorkShiftsButCantBeDeducted || $deductedWorkShifts->count() > 1) {
+            throw new CanNotDeductWorkShiftException($this->getTimeClockData($identification, $workShiftId));
+        }
+
+        return $deductedWorkShifts->first();
+    }
+
+    /**
+     * @param  string           $flag
+     * @param  WorkShift        $workShift
+     * @param  NoveltyType|null $noveltyType
+     * @return mixed
+     */
+    private function noveltyIsValid(string $flag, ?WorkShift $workShift, ?NoveltyType $noveltyType = null): bool
+    {
+        $isValid = true;
+        $shiftPunctuality = optional($workShift)->slotPunctuality($flag, now());
+
+        $lateNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Subtraction : NoveltyTypeOperator::Addition;
+        $eagerNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Addition : NoveltyTypeOperator::Subtraction;
+
+        if ($workShift && $shiftPunctuality > 0 && $noveltyType && !$noveltyType->operator->is($lateNoveltyOperator)) {
+            $isValid = false;
+        }
+
+        if ($workShift && $shiftPunctuality < 0 && $noveltyType && !$noveltyType->operator->is($eagerNoveltyOperator)) {
+            $isValid = false;
+        }
+
+        return $isValid;
+    }
+
+    /**
+     * @param Identification $identification
+     * @param int            $workShiftId
+     */
+    private function getApplicableWorkShifts(Identification $identification, ?int $workShiftId): Collection
+    {
         $deductedWorkShifts = $identification
             ->employee
             ->getWorkShiftsThatMatchesTime(now());
-
-        $employeeWorkShiftsCount = $identification->employee->workShifts->count();
 
         if ($workShiftId) {
             $deductedWorkShifts = $identification
@@ -131,12 +195,37 @@ class LogCheckInAction
                 ->where('id', $workShiftId);
         }
 
-        $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && $deductedWorkShifts->count() === 0;
+        return $deductedWorkShifts;
+    }
 
-        if ($hasWorkShiftsButCantBeDeducted || $deductedWorkShifts->count() > 1) {
-            throw new CanNotDeductWorkShiftException(null, $deductedWorkShifts);
-        }
+    /**
+     * @param Identification $identification
+     * @param int            $workShiftId
+     */
+    private function getTimeClockData(Identification $identification, ?int $workShiftId): array
+    {
+        $applicableWorkShifts = $this->getApplicableWorkShifts($identification, $workShiftId);
+        $workShift = $applicableWorkShifts->first();
+        $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality('start', now()) : null;
+        // return all novelty types if punctuality wasn't solved
+        $noveltyTypes = is_null($punctuality)
+            ? $this->noveltyTypeRepository->all() : $punctuality > 0
+            ? $this->noveltyTypeRepository->findForTimeSubtraction()
+            : $this->noveltyTypeRepository->findForTimeAddition();
+        // last selected sub cost centers based on time clock logs
+        $subCostCenters = $this->timeClockLogRepository
+            ->lastEmployeeLogs($identification->employee->id)
+            ->map(function ($timeClockLog) {
+                return $timeClockLog->relatedSubCostCenters();
+            })->collapse();
 
-        return $deductedWorkShifts->first();
+        return [
+            'action' => 'check_in',
+            'employee' => ['id' => $identification->employee->id, 'name' => $identification->employee->user->name],
+            'punctuality' => $punctuality,
+            'work_shifts' => $applicableWorkShifts,
+            'novelty_types' => $noveltyTypes,
+            'sub_cost_centers' => $subCostCenters,
+        ];
     }
 }

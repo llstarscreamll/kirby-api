@@ -22,15 +22,15 @@ class InvalidNoveltyTypeException extends Exception
     protected $code = 1055;
 
     /**
-     * @var int
+     * @var array
      */
-    public $punctuality;
+    public $timeClockData;
 
     /**
-     * @param int $punctuality
+     * @param array $timeClockData
      */
-    public function __construct(int $punctuality)
+    public function __construct(array $timeClockData)
     {
-        $this->punctuality = $punctuality;
+        $this->timeClockData = $timeClockData;
     }
 }
