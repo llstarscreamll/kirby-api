@@ -4,7 +4,6 @@ namespace llstarscreamll\Core\Abstracts;
 
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Prettus\Repository\Eloquent\BaseRepository;
 use llstarscreamll\Core\Filters\QuerySearchFilter;
@@ -62,10 +61,10 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
             ? array_merge($this->allowedFilters, [Filter::custom('search', new QuerySearchFilter($this->allowedFilters))])
             : $this->allowedFilters;
 
-        $this->model = QueryBuilder::for($query) 
+        $this->model = QueryBuilder::for($query)
                 ->allowedFilters($allowedFilters)
                 ->allowedIncludes($this->allowedIncludes);
-        
+
         return $this;
     }
 

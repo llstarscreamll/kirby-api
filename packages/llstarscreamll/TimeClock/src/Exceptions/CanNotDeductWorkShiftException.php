@@ -3,7 +3,6 @@
 namespace llstarscreamll\TimeClock\Exceptions;
 
 use Exception;
-use Illuminate\Support\Collection;
 
 /**
  * Class CanNotDeductWorkShiftException.

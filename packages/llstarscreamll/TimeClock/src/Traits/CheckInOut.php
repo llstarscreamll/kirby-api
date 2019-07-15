@@ -49,11 +49,11 @@ trait CheckInOut
         $lateNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Subtraction : NoveltyTypeOperator::Addition;
         $eagerNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Addition : NoveltyTypeOperator::Subtraction;
 
-        if ($workShift && $shiftPunctuality > 0 && $noveltyType && !$noveltyType->operator->is($lateNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality > 0 && $noveltyType && ! $noveltyType->operator->is($lateNoveltyOperator)) {
             $isValid = false;
         }
 
-        if ($workShift && $shiftPunctuality < 0 && $noveltyType && !$noveltyType->operator->is($eagerNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality < 0 && $noveltyType && ! $noveltyType->operator->is($eagerNoveltyOperator)) {
             $isValid = false;
         }
 
