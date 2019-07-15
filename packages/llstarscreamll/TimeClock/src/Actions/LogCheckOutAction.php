@@ -3,10 +3,12 @@
 namespace llstarscreamll\TimeClock\Actions;
 
 use llstarscreamll\Users\Models\User;
+use llstarscreamll\TimeClock\Traits\CheckInOut;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
+use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
@@ -18,6 +20,8 @@ use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
  */
 class LogCheckOutAction
 {
+    use CheckInOut;
+
     /**
      * @var IdentificationRepositoryInterface
      */
@@ -71,18 +75,34 @@ class LogCheckOutAction
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
+        if ($noveltyType) {
+            $noveltyType = $this->noveltyTypeRepository->find($noveltyType['id']);
+        }
+
         $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromEmployeeId(
             $identification->employee_id,
             ['id', 'work_shift_id', 'checked_in_at']
         );
 
-        if (! $lastCheckIn) {
+        if (!$lastCheckIn) {
             throw new MissingCheckInException();
         }
 
-        $noveltyType = $this->validateNoveltyTypeBasedOnWorkShiftPunctualityAction->run(
-            'end', $lastCheckIn->workShift, $noveltyType
-        );
+        $workShift = $lastCheckIn->workShift;
+
+        $shiftPunctuality = optional($workShift)->slotPunctuality('end', now());
+
+        if (!$this->noveltyIsValid('end', $workShift, $noveltyType)) {
+            throw new InvalidNoveltyTypeException($this->getTimeClockData('end', $identification, $workShift->id));
+        }
+
+        if ($workShift && $shiftPunctuality < 0 && !$noveltyType) {
+            throw new TooEarlyToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
+        }
+
+        if ($workShift && $shiftPunctuality > 0 && !$noveltyType) {
+            throw new TooLateToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
+        }
 
         $timeClockLogUpdate = [
             'checked_out_at' => now(),

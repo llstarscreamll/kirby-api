@@ -197,13 +197,20 @@ class CheckOutCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1054]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
         // should return novelties that subtracts time
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
-        $I->seeResponseContainsJson(['code' => 1054]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 3]]);
     }
 
@@ -243,6 +250,13 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
         // should return novelties that adds time
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
@@ -336,6 +350,13 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
         // should return addition novelty types
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');

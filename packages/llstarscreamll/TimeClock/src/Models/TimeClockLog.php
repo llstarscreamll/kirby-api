@@ -120,7 +120,7 @@ class TimeClockLog extends Model
      */
     public function subCostCenter()
     {
-        return $this->hasMany(SubCostCenter::class);
+        return $this->belongsTo(SubCostCenter::class);
     }
 
     /**
@@ -128,7 +128,7 @@ class TimeClockLog extends Model
      */
     public function checkInSubCostCenter()
     {
-        return $this->hasMany(SubCostCenter::class, 'check_in_sub_cost_center_id');
+        return $this->belongsTo(SubCostCenter::class);
     }
 
     /**
@@ -136,7 +136,7 @@ class TimeClockLog extends Model
      */
     public function checkOutSubCostCenter()
     {
-        return $this->hasMany(SubCostCenter::class, 'check_out_sub_cost_center_id');
+        return $this->belongsTo(SubCostCenter::class);
     }
 
     // ######################################################################## #

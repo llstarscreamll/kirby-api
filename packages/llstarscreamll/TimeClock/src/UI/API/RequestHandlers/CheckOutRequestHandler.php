@@ -10,10 +10,8 @@ use llstarscreamll\TimeClock\UI\API\Requests\CheckOutRequest;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
-use llstarscreamll\Novelties\UI\API\Resources\NoveltyTypeResource;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
-use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 
 /**
  * Class CheckOutRequestHandler.
@@ -28,8 +26,7 @@ class CheckOutRequestHandler
      */
     public function __invoke(
         CheckOutRequest $request,
-        LogCheckOutAction $logCheckOutAction,
-        NoveltyTypeRepositoryInterface $noveltyTypeRepository
+        LogCheckOutAction $logCheckOutAction
     ) {
         $errors = [];
 
@@ -51,31 +48,21 @@ class CheckOutRequestHandler
                 'code' => $exception->getCode(),
                 'title' => 'Es temprano para registrar la salida.',
                 'detail' => 'Si se sale temprano del turno, se debe registrar un tipo de novedad.',
-                'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection($noveltyTypeRepository->findForTimeSubtraction()),
-                ],
+                'meta' => $exception->timeClockData,
             ]);
         } catch (TooLateToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'Es tarde para registrar la salida.',
                 'detail' => 'Si se sale tarde del turno, se debe registrar un tipo de novedad.',
-                'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection($noveltyTypeRepository->findForTimeAddition()),
-                ],
+                'meta' => $exception->timeClockData,
             ]);
         } catch (InvalidNoveltyTypeException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'Tipo de novedad no válido.',
                 'detail' => 'El tipo de novedad no es válido.',
-                'meta' => [
-                    'novelty_types' => NoveltyTypeResource::collection(
-                        $exception->punctuality > 0
-                            ? $noveltyTypeRepository->findForTimeAddition()
-                            : $noveltyTypeRepository->findForTimeSubtraction()
-                    ),
-                ],
+                'meta' => $exception->timeClockData,
             ]);
         }
 
