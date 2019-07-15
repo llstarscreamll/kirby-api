@@ -22,6 +22,7 @@ class DefaultNoveltyTypesSeed extends Seeder
         [
             'code' => 'PP',
             'name' => 'Permiso Personal',
+            'context_type' => 'elegible_by_user',
             'apply_on_days_of_type' => null, // any day
             'apply_on_time_slots' => null, // any time
             'operator' => NoveltyTypeOperator::Subtraction,
@@ -105,6 +106,7 @@ class DefaultNoveltyTypesSeed extends Seeder
         [
             'code' => 'HADI',
             'name' => 'Hora Adicional',
+            'context_type' => 'elegible_by_user',
             'apply_on_days_of_type' => null, // any day
             'apply_on_time_slots' => null, // any time
             'operator' => NoveltyTypeOperator::Addition,
