@@ -3,6 +3,7 @@
 namespace llstarscreamll\TimeClock\UI\API\Requests;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -29,11 +30,13 @@ class CheckInRequest extends FormRequest
      */
     public function rules()
     {
+        logger('incoming check in data', Request::all());
+
         return [
             'identification_code' => ['required', 'exists:identifications,code'],
-            'novelty_type.id' => ['exists:novelty_types,id'],
-            'work_shift_id' => ['exists:work_shifts,id'],
-            'sub_cost_center_id' => ['exists:sub_cost_centers,id'],
+            'novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],
+            'work_shift_id' => ['nullable', 'numeric', 'exists:work_shifts,id'],
+            'sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
         ];
     }
 

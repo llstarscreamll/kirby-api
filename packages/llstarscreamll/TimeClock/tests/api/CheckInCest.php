@@ -43,10 +43,12 @@ class CheckInCest
         // novelty types
         factory(NoveltyType::class, 2)->create([
             'operator' => NoveltyTypeOperator::Subtraction,
+            'context_type' => 'elegible_by_user',
         ]);
 
         factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Addition,
+            'context_type' => 'elegible_by_user',
         ]);
 
         $this->subCostCenter = factory(SubCostCenter::class)->create();
@@ -156,7 +158,6 @@ class CheckInCest
         ];
 
         $I->sendPOST($this->endpoint, $requestData);
-
         $I->seeResponseCodeIs(201);
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
@@ -202,19 +203,20 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenHasWorkShiftButCanNotBeDeducted(ApiTester $I)
+    public function whenHasWorkShiftButIsNotOnStartTimeRange(ApiTester $I)
     {
         // employee without work shift
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('workShifts', [
                 'name' => '7 to 18',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'applies_on_days' => [1, 2, 3, 4, 5], // *monday* to friday
                 'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
             ])
             ->create();
 
-        // fake current date time
+        // fake current date time, its *monday* out of time range, but the work shift
+        // should be deducted by the current day
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 00));
 
         $requestData = [
@@ -224,7 +226,7 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->seeResponseContainsJson(['code' => 1051]);
+        $I->seeResponseContainsJson(['code' => 1054]); // work shift deducted, but a novelty type must be specified
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
@@ -235,6 +237,8 @@ class CheckInCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
+        // should return posible work shifts
+        $I->seeResponseContainsJson(['work_shifts' => ['id' => $employee->workShifts->first()->id]]);
     }
 
     /**
@@ -401,7 +405,7 @@ class CheckInCest
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
 
         $requestData = [
-            'novelty_type' => ['id' => 1], // subtraction novelty type
+            'novelty_type_id' => 1, // subtraction novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -434,7 +438,7 @@ class CheckInCest
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
 
         $requestData = [
-            'novelty_type' => ['id' => 3], // wrong addition novelty type
+            'novelty_type_id' => 3, // wrong addition novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -527,7 +531,7 @@ class CheckInCest
 
         $requestData = [
             'work_shift_id' => 1,
-            'novelty_type' => ['id' => 3], // addition novelty type
+            'novelty_type_id' => 3, // addition novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -568,7 +572,7 @@ class CheckInCest
 
         $requestData = [
             'work_shift_id' => 1,
-            'novelty_type' => ['id' => 3], // addition novelty type
+            'novelty_type_id' => 3, // addition novelty type
             'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
@@ -606,7 +610,7 @@ class CheckInCest
             // when checking is too early, there is no way to know the work shift,
             // so the work shift id should be provided
             'work_shift_id' => $employee->workShifts->first()->id,
-            'novelty_type' => ['id' => 1], // wrong subtraction novelty type
+            'novelty_type_id' => 1, // wrong subtraction novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 

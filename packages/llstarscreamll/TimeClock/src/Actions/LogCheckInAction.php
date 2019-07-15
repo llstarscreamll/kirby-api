@@ -69,25 +69,28 @@ class LogCheckInAction
      * @param  User                          $registrar
      * @param  string                        $identificationCode
      * @param  int                           $workShiftId
+     * @param  null|int                      $noveltyType
+     * @param  null|int                      $subCostCenterId
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
      * @throws InvalidNoveltyTypeException
      * @return TimeClockLog
      */
-    public function run(User $registrar, string $identificationCode, int $workShiftId = null, array $noveltyType = null, $subCostCenterId = null): TimeClockLog
+    public function run(User $registrar, string $identificationCode, int $workShiftId = null, ?int $noveltyTypeId = null, ?int $subCostCenterId = null): TimeClockLog
     {
+        $noveltyType = null;
         $identification = $this->identificationRepository
             ->with(['employee.workShifts'])
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        if ($noveltyType) {
-            $noveltyType = $this->noveltyTypeRepository->find($noveltyType['id']);
+        if ($noveltyTypeId) {
+            $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);
         }
 
         $this->validateUnfinishedCheckIn($identification);
 
-        $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $noveltyType['id']);
+        $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $noveltyTypeId);
 
         if (!$this->noveltyIsValid('start', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));

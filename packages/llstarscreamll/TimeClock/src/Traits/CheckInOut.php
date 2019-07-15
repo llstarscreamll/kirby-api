@@ -66,7 +66,7 @@ trait CheckInOut
      * @param  int            $workShiftId
      * @return array
      */
-    protected function getTimeClockData(string $flag, Identification $identification, ?int $workShiftId): array
+    protected function getTimeClockData(string $flag, Identification $identification, ?int $workShiftId = null): array
     {
         $applicableWorkShifts = $this->getApplicableWorkShifts($identification, $workShiftId);
         $workShift = $applicableWorkShifts->first();
@@ -74,12 +74,12 @@ trait CheckInOut
 
         // return all novelty types if punctuality wasn't solved
         if (is_null($punctuality)) {
-            $noveltyTypes = $this->noveltyTypeRepository->all();
+            $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->all();
         } else {
             // return novelty types based  punctuality and action
             $noveltyTypes = ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
-                ? $this->noveltyTypeRepository->findForTimeSubtraction()
-                : $this->noveltyTypeRepository->findForTimeAddition();
+                ? $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeSubtraction()
+                : $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
         }
 
         // last selected sub cost centers based on time clock logs
@@ -90,7 +90,7 @@ trait CheckInOut
             })->collapse();
 
         return [
-            'action' => 'check_in',
+            'action' => $flag === 'start' ? 'check_in' : 'check_out',
             'employee' => ['id' => $identification->employee->id, 'name' => $identification->employee->user->name],
             'punctuality' => $punctuality,
             'work_shifts' => $applicableWorkShifts,

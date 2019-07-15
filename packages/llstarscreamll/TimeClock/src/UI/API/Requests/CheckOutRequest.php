@@ -30,9 +30,9 @@ class CheckOutRequest extends FormRequest
     public function rules()
     {
         return [
-            'identification_code' => ['exists:identifications,code'],
-            'novelty_type.id' => ['exists:novelty_types,id'],
-            'sub_cost_center.id' => ['exists:sub_cost_centers,id'],
+            'identification_code' => ['required', 'string', 'exists:identifications,code'],
+            'novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],
+            'sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
         ];
     }
 

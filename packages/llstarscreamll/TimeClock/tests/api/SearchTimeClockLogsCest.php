@@ -37,7 +37,7 @@ class SearchTimeClockLogsCest
     /**
      * @param ApiTester $I
      */
-    public function shouldDisplayItemsList(ApiTester $I)
+    public function shouldReturnPaginatedData(ApiTester $I)
     {
         $I->sendGET($this->endpoint);
         $I->seeResponseCodeIs(200);

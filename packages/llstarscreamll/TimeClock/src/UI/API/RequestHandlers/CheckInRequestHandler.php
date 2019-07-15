@@ -37,7 +37,7 @@ class CheckInRequestHandler
                 $request->user(),
                 $request->identification_code,
                 $request->work_shift_id,
-                $request->novelty_type,
+                $request->novelty_type_id,
                 $request->sub_cost_center_id,
             );
         } catch (AlreadyCheckedInException $exception) {

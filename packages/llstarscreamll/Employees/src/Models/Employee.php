@@ -97,8 +97,8 @@ class Employee extends Model
      */
     public function getWorkShiftsThatMatchesTime(Carbon $time): ?Collection
     {
-        return $this->workShifts->filter(function (WorkShift $workShift) use ($time) {
-            $timeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
+        $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function (WorkShift $workShift) use ($time) {
+            $matchedTimeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
                 [$hour, $seconds] = explode(':', $timeSlot['start']);
                 $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
 
@@ -112,8 +112,17 @@ class Employee extends Model
                 return $time->between($slotStartFrom, $slotEndTo);
             });
 
-            return $timeSlots->count() && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
+            return $matchedTimeSlots->count() || (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
         });
+
+        // if there are more than one work shift matched, then get those that match the day only
+        if ($workShiftsMatchedBySlotTimesAndDays->count() > 1) {
+            $workShiftsMatchedBySlotTimesAndDays = $workShiftsMatchedBySlotTimesAndDays->filter(function ($workShift) use ($time) {
+                return in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0;
+            });
+        }
+
+        return $workShiftsMatchedBySlotTimesAndDays;
     }
 
     /**

@@ -5,11 +5,13 @@ namespace llstarscreamll\TimeClock\Actions;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Traits\CheckInOut;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use llstarscreamll\TimeClock\Exceptions\MissingSubCostCenterException;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 
@@ -60,23 +62,26 @@ class LogCheckOutAction
     }
 
     /**
-     * @param  User                       $registrar
-     * @param  string                     $identificationCode
-     * @param  array                      $subCostCenter
-     * @param  null|array                 $noveltyType
+     * @param  User                            $registrar
+     * @param  string                          $identificationCode
+     * @param  int                             $subCostCenterId
+     * @param  int                             $noveltyTypeId
      * @throws MissingCheckInException
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
+     * @throws InvalidNoveltyTypeException
+     * @throws MissingSubCostCenterException
      * @return TimeClockLog
      */
-    public function run(User $registrar, string $identificationCode, array $subCostCenter, array $noveltyType = null): TimeClockLog
+    public function run(User $registrar, string $identificationCode, ?int $subCostCenterId, ?int $noveltyTypeId): TimeClockLog
     {
+        $noveltyType = null;
         $identification = $this->identificationRepository
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        if ($noveltyType) {
-            $noveltyType = $this->noveltyTypeRepository->find($noveltyType['id']);
+        if ($noveltyTypeId) {
+            $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);
         }
 
         $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromEmployeeId(
@@ -88,7 +93,15 @@ class LogCheckOutAction
             throw new MissingCheckInException();
         }
 
+        if (!$subCostCenterId) {
+            throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification));
+        }
+
         $workShift = $lastCheckIn->workShift;
+
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenterId) {
+            throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification, $workShift->id));
+        }
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('end', now());
 
@@ -108,7 +121,7 @@ class LogCheckOutAction
             'checked_out_at' => now(),
             'checked_out_by_id' => $registrar->id,
             'check_out_novelty_type_id' => optional($noveltyType)->id,
-            'sub_cost_center_id' => $subCostCenter['id'],
+            'sub_cost_center_id' => $subCostCenterId,
         ];
 
         return $this->timeClockLogRepository->update($timeClockLogUpdate, $lastCheckIn->id);

@@ -12,6 +12,7 @@ use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
+use llstarscreamll\TimeClock\Exceptions\MissingSubCostCenterException;
 
 /**
  * Class CheckOutRequestHandler.
@@ -34,8 +35,8 @@ class CheckOutRequestHandler
             $timeClockLog = $logCheckOutAction->run(
                 $request->user(),
                 $request->identification_code,
-                $request->sub_cost_center,
-                $request->novelty_type
+                $request->sub_cost_center_id,
+                $request->novelty_type_id
             );
         } catch (MissingCheckInException $exception) {
             array_push($errors, [
@@ -64,10 +65,20 @@ class CheckOutRequestHandler
                 'detail' => 'El tipo de novedad no es válido.',
                 'meta' => $exception->timeClockData,
             ]);
+        } catch (MissingSubCostCenterException $exception) {
+            array_push($errors, [
+                'code' => $exception->getCode(),
+                'title' => 'Datos inválidos.',
+                'detail' => 'Sub centro de costo es un campo obligatorio.',
+                'meta' => $exception->timeClockData,
+            ]);
         }
 
         if ($errors) {
-            throw new HttpResponseException(response()->json(['errors' => $errors], Response::HTTP_UNPROCESSABLE_ENTITY));
+            throw new HttpResponseException(response()->json([
+                'message' => 'Error registrando salida!',
+                'errors' => $errors,
+            ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
 
         event(new CheckedOutEvent($timeClockLog->id));

@@ -43,10 +43,12 @@ class CheckOutCest
         // novelty types
         factory(NoveltyType::class, 2)->create([
             'operator' => NoveltyTypeOperator::Subtraction,
+            'context_type' => 'elegible_by_user',
         ]);
 
         factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Addition,
+            'context_type' => 'elegible_by_user',
         ]);
 
         $this->subCostCenter = factory(SubCostCenter::class)->create();
@@ -73,7 +75,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center' => ['id' => $this->subCostCenter->id],
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -119,7 +121,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center' => ['id' => $this->subCostCenter->id],
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -152,7 +154,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center' => ['id' => $this->subCostCenter->id],
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -190,7 +192,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center' => ['id' => $this->subCostCenter->id],
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -240,7 +242,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center' => ['id' => $this->subCostCenter->id],
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -294,8 +296,8 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'novelty_type' => ['id' => 3], // addition novelty type
-            'sub_cost_center' => ['id' => $this->subCostCenter->id],
+            'novelty_type_id' => 3, // addition novelty type
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -338,8 +340,8 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'novelty_type' => ['id' => 1], // wrong subtraction novelty type
-            'sub_cost_center' => ['id' => $this->subCostCenter->id],
+            'novelty_type_id' => 1, // wrong subtraction novelty type
+            'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -387,7 +389,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center' => ['id' => 100],
+            'sub_cost_center_id' => 100,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -396,6 +398,52 @@ class CheckOutCest
         $I->seeResponseCodeIs(422);
         $I->dontSeeEventTriggered(CheckedOutEvent::class);
         $I->seeResponseJsonMatchesJsonPath('$.message');
-        $I->seeResponseJsonMatchesJsonPath('$.errors.["sub_cost_center.id"].0');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.["sub_cost_center_id"].0');
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenSubCostCenterIsMissing(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 30));
+        $checkedInTime = now()->setTime(7, 0);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'check_in_novelty_type_id' => 1, // with check in novelty type
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1056]); // InvalidNoveltyTypeException
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
     }
 }
