@@ -2,7 +2,6 @@
 
 namespace Company;
 
-use Company\ApiTester;
 use Symfony\Component\HttpFoundation\Response;
 use llstarscreamll\Company\Models\SubCostCenter;
 
@@ -13,7 +12,6 @@ use llstarscreamll\Company\Models\SubCostCenter;
  */
 class SearchSubCostCentersCest
 {
-
     /**
      * @var string
      */
@@ -39,8 +37,8 @@ class SearchSubCostCentersCest
         $I->sendGET($this->endpoint);
 
         $I->seeResponseCodeIs(Response::HTTP_OK);
-        $I->seeResponseJsonMatchesJsonPath("$.data.0.id");
-        $I->seeResponseJsonMatchesJsonPath("$.meta");
-        $I->seeResponseJsonMatchesJsonPath("$.links");
+        $I->seeResponseJsonMatchesJsonPath('$.data.0.id');
+        $I->seeResponseJsonMatchesJsonPath('$.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.links');
     }
 }

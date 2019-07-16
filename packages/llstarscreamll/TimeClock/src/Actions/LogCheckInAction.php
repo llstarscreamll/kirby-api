@@ -92,21 +92,21 @@ class LogCheckInAction
 
         $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $noveltyTypeId);
 
-        if (!$this->noveltyIsValid('start', $workShift, $noveltyType)) {
+        if (! $this->noveltyIsValid('start', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('start', now());
 
-        if ($workShift && $shiftPunctuality < 0 && !$noveltyType) {
+        if ($workShift && $shiftPunctuality < 0 && ! $noveltyType) {
             throw new TooEarlyToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($workShift && $shiftPunctuality > 0 && !$noveltyType) {
+        if ($workShift && $shiftPunctuality > 0 && ! $noveltyType) {
             throw new TooLateToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenterId) {
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
