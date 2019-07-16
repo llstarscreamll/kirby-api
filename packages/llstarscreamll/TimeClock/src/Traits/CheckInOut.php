@@ -73,7 +73,7 @@ trait CheckInOut
         $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, now()) : null;
 
         // return novelty types based  punctuality and action
-        $noveltyTypes = !is_null($punctuality) && ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
+        $noveltyTypes = ! is_null($punctuality) && ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
             ? $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeSubtraction()
             : $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
 
