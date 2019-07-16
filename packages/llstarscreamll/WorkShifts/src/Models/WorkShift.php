@@ -201,7 +201,7 @@ class WorkShift extends Model
      * @param  Carbon  $time
      * @return mixed
      */
-    public function getClosestSlotFlagTime(string $flag, Carbon $time)
+    public function getClosestSlotFlagTime(string $flag, Carbon $time): ?Carbon
     {
         $slot = collect($this->time_slots)
             ->map(function (array $timeSlot) use ($time, $flag) {

@@ -72,15 +72,10 @@ trait CheckInOut
         $workShift = $applicableWorkShifts->first();
         $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, now()) : null;
 
-        // return all novelty types if punctuality wasn't solved
-        if (is_null($punctuality)) {
-            $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->all();
-        } else {
-            // return novelty types based  punctuality and action
-            $noveltyTypes = ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
-                ? $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeSubtraction()
-                : $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
-        }
+        // return novelty types based  punctuality and action
+        $noveltyTypes = !is_null($punctuality) && ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
+            ? $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeSubtraction()
+            : $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
 
         // last selected sub cost centers based on time clock logs
         $subCostCenters = $this->timeClockLogRepository

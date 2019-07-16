@@ -35,7 +35,7 @@ class CheckInRequest extends FormRequest
         return [
             'identification_code' => ['required', 'exists:identifications,code'],
             'novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],
-            'work_shift_id' => ['nullable', 'numeric', 'exists:work_shifts,id'],
+            'work_shift_id' => ['nullable', 'numeric'],
             'sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
         ];
     }

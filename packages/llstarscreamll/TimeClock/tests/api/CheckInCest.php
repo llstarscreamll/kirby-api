@@ -341,6 +341,42 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
+    public function whenHasWorkShiftButChecksAfterMaxTimeSlotAndWantsToIgnoreWorkShiftData(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])
+            ->create();
+
+        // fake current date time, check in after max end time slot
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 19, 00));
+
+        $requestData = [
+            'work_shift_id' => -1, // without specific work shift
+            'novelty_type_id' => 3, // addition novelty type registered must be provided
+            'sub_cost_center_id' => $this->subCostCenter->id, // sub cost center id must be provided
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => null, // empty work shift
+            'check_in_novelty_type_id' => 3,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
     public function whenHasSingleWorkShiftAndArrivesTooLate(ApiTester $I)
     {
         $employee = factory(Employee::class)
@@ -362,6 +398,7 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1053]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
@@ -369,7 +406,6 @@ class CheckInCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.2.id');
-        $I->seeResponseContainsJson(['code' => 1053]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
@@ -463,6 +499,53 @@ class CheckInCest
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 3]]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasSingleWorkShiftAndArrivesAfterMaxEndTimeSlot(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18', // max is 18:00
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])
+            ->create();
+
+        // fake current date time, after max time slot hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 19, 00));
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1051]); // CanNotDeductWorkShiftException
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.action');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.employee');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
+        // without work shifts
+        $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.0');
+        // addition novelty types
+        $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 1]]);
+        $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
+        $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
     }
 
     /**

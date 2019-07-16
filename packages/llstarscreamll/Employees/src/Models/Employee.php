@@ -113,14 +113,9 @@ class Employee extends Model
             });
 
             return $matchedTimeSlots->count() || (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
+        })->filter(function ($workShift) use ($time) {
+            return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && !$time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
         });
-
-        // if there are more than one work shift matched, then get those that match the day only
-        if ($workShiftsMatchedBySlotTimesAndDays->count() > 1) {
-            $workShiftsMatchedBySlotTimesAndDays = $workShiftsMatchedBySlotTimesAndDays->filter(function ($workShift) use ($time) {
-                return in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0;
-            });
-        }
 
         return $workShiftsMatchedBySlotTimesAndDays;
     }

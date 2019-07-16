@@ -151,7 +151,7 @@ class LogCheckInAction
 
         $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && $deductedWorkShifts->count() === 0;
 
-        if ($hasWorkShiftsButCantBeDeducted || $deductedWorkShifts->count() > 1) {
+        if (($hasWorkShiftsButCantBeDeducted || $deductedWorkShifts->count() > 1) && $workShiftId !== -1) {
             throw new CanNotDeductWorkShiftException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
