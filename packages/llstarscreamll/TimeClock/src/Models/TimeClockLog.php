@@ -178,7 +178,6 @@ class TimeClockLog extends Model
      */
     public function getRequireCostCenterAttribute(): bool
     {
-
         return (empty($this->work_shift_id) && !empty($this->check_in_novelty_type_id) && !empty($this->check_in_sub_cost_center_id))
             || (!empty($this->work_shift_id) && empty($this->sub_cost_center_id));
     }

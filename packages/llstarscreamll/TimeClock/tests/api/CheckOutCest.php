@@ -287,7 +287,7 @@ class CheckOutCest
     public function whenHasShiftAndLeavesTooLateWithRightNoveltyType(ApiTester $I)
     {
         // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 30));
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 30)); // 30 minutes late
         $checkedInTime = now()->setTime(7, 0);
 
         $employee = factory(Employee::class)
