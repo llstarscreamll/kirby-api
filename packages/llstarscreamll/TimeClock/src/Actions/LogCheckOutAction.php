@@ -101,31 +101,31 @@ class LogCheckOutAction
             ['id', 'work_shift_id', 'checked_in_at']
         );
 
-        if (!$lastCheckIn) {
+        if (! $lastCheckIn) {
             throw new MissingCheckInException();
         }
 
-        if ($lastCheckIn->requireCostCenter && !$subCostCenterId) {
+        if ($lastCheckIn->requireCostCenter && ! $subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification));
         }
 
         $workShift = $lastCheckIn->workShift;
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenterId) {
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('end', now());
 
-        if (!$this->noveltyIsValid('end', $workShift, $noveltyType)) {
+        if (! $this->noveltyIsValid('end', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $shiftPunctuality < 0 && !$noveltyType) {
+        if ($workShift && $shiftPunctuality < 0 && ! $noveltyType) {
             throw new TooEarlyToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $shiftPunctuality > 0 && !$noveltyType) {
+        if ($workShift && $shiftPunctuality > 0 && ! $noveltyType) {
             throw new TooLateToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
