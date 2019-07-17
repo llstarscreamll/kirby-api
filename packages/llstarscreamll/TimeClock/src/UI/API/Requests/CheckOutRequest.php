@@ -33,6 +33,7 @@ class CheckOutRequest extends FormRequest
             'identification_code' => ['required', 'string', 'exists:identifications,code'],
             'novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],
             'sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
+            'check_out_sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
         ];
     }
 

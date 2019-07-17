@@ -29,7 +29,12 @@ class CheckOutCest
     /**
      * @var \llstarscreamll\Company\Models\SubCostCenter
      */
-    private $subCostCenter;
+    private $firstSubCostCenter;
+
+    /**
+     * @var \llstarscreamll\Company\Models\SubCostCenter
+     */
+    private $secondSubCostCenter;
 
     /**
      * @param ApiTester $I
@@ -51,7 +56,8 @@ class CheckOutCest
             'context_type' => 'elegible_by_user',
         ]);
 
-        $this->subCostCenter = factory(SubCostCenter::class)->create();
+        $this->firstSubCostCenter = factory(SubCostCenter::class)->create();
+        $this->secondSubCostCenter = factory(SubCostCenter::class)->create();
     }
 
     /**
@@ -75,7 +81,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -87,7 +93,7 @@ class CheckOutCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => null,
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'checked_in_at' => $checkedInTime->toDateTimeString(),
             'checked_out_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
@@ -121,7 +127,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -132,7 +138,7 @@ class CheckOutCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'checked_in_at' => $checkedInTime->toDateTimeString(),
             'checked_out_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
@@ -154,7 +160,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -192,7 +198,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -242,7 +248,7 @@ class CheckOutCest
             ->create();
 
         $requestData = [
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -297,7 +303,8 @@ class CheckOutCest
 
         $requestData = [
             'novelty_type_id' => 3, // addition novelty type
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'novelty_sub_cost_center_id' => $this->secondSubCostCenter->id, // sub cost center because novelty type
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -307,9 +314,9 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
-            'check_in_novelty_type_id' => 1,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'check_out_novelty_type_id' => 3,
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'check_out_sub_cost_center_id' => $this->secondSubCostCenter->id,
         ]);
     }
 
@@ -341,7 +348,7 @@ class CheckOutCest
 
         $requestData = [
             'novelty_type_id' => 1, // wrong subtraction novelty type
-            'sub_cost_center_id' => $this->subCostCenter->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 

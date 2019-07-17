@@ -36,7 +36,8 @@ class CheckOutRequestHandler
                 $request->user(),
                 $request->identification_code,
                 $request->sub_cost_center_id,
-                $request->novelty_type_id
+                $request->novelty_type_id,
+                $request->novelty_sub_cost_center_id
             );
         } catch (MissingCheckInException $exception) {
             array_push($errors, [

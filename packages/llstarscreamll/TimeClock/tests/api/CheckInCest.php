@@ -355,6 +355,7 @@ class CheckInCest
         // fake current date time, check in after max end time slot
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 19, 00));
 
+        // novelty sub cost center is send on `sub_cost_center_id` field
         $requestData = [
             'work_shift_id' => -1, // without specific work shift
             'novelty_type_id' => 3, // addition novelty type registered must be provided
