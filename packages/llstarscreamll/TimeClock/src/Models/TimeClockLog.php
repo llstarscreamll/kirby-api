@@ -164,13 +164,23 @@ class TimeClockLog extends Model
     }
 
     /**
-     * @return mixed
+     * @return bool
      */
     public function getCheckedOutOnHolidayAttribute(): bool
     {
         $holidaysCount = $this->holidayRepository()->countWhereIn('date', [$this->checked_out_at->toDateString()]);
 
         return $holidaysCount || $this->checked_out_at->isSunday();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getRequireCostCenterAttribute(): bool
+    {
+
+        return (empty($this->work_shift_id) && !empty($this->check_in_novelty_type_id) && !empty($this->check_in_sub_cost_center_id))
+            || (!empty($this->work_shift_id) && empty($this->sub_cost_center_id));
     }
 
     // ######################################################################## #

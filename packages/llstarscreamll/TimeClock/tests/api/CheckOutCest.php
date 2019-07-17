@@ -74,14 +74,17 @@ class CheckOutCest
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'work_shift_id' => null, // empty shift
+                'check_in_novelty_type_id' => 3, // empty shift must specify addition novelty type
+                'check_in_sub_cost_center_id' => $this->secondSubCostCenter->id, // addition novelty type must provide related sub cost center
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
 
+        // check in novelty type and check in sub cost center already exists,
+        // only the identification code is required
         $requestData = [
-            'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -93,7 +96,9 @@ class CheckOutCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => null,
-            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'sub_cost_center_id' => null,
+            'check_in_novelty_type_id' => 3,
+            'check_in_sub_cost_center_id' => $this->secondSubCostCenter->id,
             'checked_in_at' => $checkedInTime->toDateTimeString(),
             'checked_out_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
@@ -427,9 +432,9 @@ class CheckOutCest
             ])
             ->with('timeClockLogs', [
                 'work_shift_id' => 1,
-                'checked_in_at' => $checkedInTime,
+                'checked_in_at' => $checkedInTime, // on time
                 'checked_out_at' => null,
-                'check_in_novelty_type_id' => 1, // with check in novelty type
+                'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
@@ -441,7 +446,7 @@ class CheckOutCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->seeResponseContainsJson(['code' => 1056]); // InvalidNoveltyTypeException
+        $I->seeResponseContainsJson(['code' => 1056]); // MissingSubCostCenterException
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.title');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.detail');

@@ -87,7 +87,6 @@ class LogCheckOutAction
     public function run(User $registrar, string $identificationCode, ?int $subCostCenterId, ?int $noveltyTypeId, ?int $noveltySubCostCenterId): TimeClockLog
     {
         $noveltyType = null;
-        $noveltySubCostCenter = null;
 
         $identification = $this->identificationRepository
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
@@ -95,10 +94,6 @@ class LogCheckOutAction
 
         if ($noveltyTypeId) {
             $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);
-        }
-
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && $noveltySubCostCenterId) {
-            $noveltySubCostCenter = $this->subCostCenterRepository->find($noveltySubCostCenterId);
         }
 
         $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromEmployeeId(
@@ -110,7 +105,7 @@ class LogCheckOutAction
             throw new MissingCheckInException();
         }
 
-        if (!$subCostCenterId) {
+        if ($lastCheckIn->requireCostCenter && !$subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification));
         }
 
