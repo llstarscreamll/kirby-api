@@ -358,7 +358,7 @@ class CheckInCest
         $requestData = [
             'work_shift_id' => -1, // without specific work shift
             'novelty_type_id' => 3, // addition novelty type registered must be provided
-            'sub_cost_center_id' => $this->subCostCenter->id, // sub cost center id must be provided
+            'sub_cost_center_id' => $this->subCostCenter->id, // sub cost center id because of novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -370,6 +370,7 @@ class CheckInCest
             'employee_id' => $employee->id,
             'work_shift_id' => null, // empty work shift
             'check_in_novelty_type_id' => 3,
+            'check_in_sub_cost_center_id' => $this->subCostCenter->id,
         ]);
     }
 

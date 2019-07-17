@@ -13,6 +13,7 @@ use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
+use llstarscreamll\Company\Contracts\SubCostCenterRepositoryInterface;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\MissingSubCostCenterException;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
@@ -44,23 +45,32 @@ class LogCheckInAction
     private $noveltyTypeRepository;
 
     /**
+     * @var SubCostCenterRepository
+     */
+    private $subCostCenterRepository;
+
+    /**
      * @var ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
     /**
-     * @param NoveltyTypeRepositoryInterface    $noveltyTypeRepository
-     * @param IdentificationRepositoryInterface $identificationRepository
-     * @param TimeClockLogRepositoryInterface   $timeClockLogRepository
+     * @param NoveltyTypeRepositoryInterface                       $noveltyTypeRepository
+     * @param TimeClockLogRepositoryInterface                      $timeClockLogRepository
+     * @param SubCostCenterRepositoryInterface                     $subCostCenterRepository
+     * @param IdentificationRepositoryInterface                    $identificationRepository
+     * @param ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
         NoveltyTypeRepositoryInterface $noveltyTypeRepository,
         TimeClockLogRepositoryInterface $timeClockLogRepository,
+        SubCostCenterRepositoryInterface $subCostCenterRepository,
         IdentificationRepositoryInterface $identificationRepository,
         ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
     ) {
         $this->noveltyTypeRepository = $noveltyTypeRepository;
         $this->timeClockLogRepository = $timeClockLogRepository;
+        $this->subCostCenterRepository = $subCostCenterRepository;
         $this->identificationRepository = $identificationRepository;
         $this->validateNoveltyTypeBasedOnWorkShiftPunctualityAction = $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
     }
@@ -79,6 +89,8 @@ class LogCheckInAction
     public function run(User $registrar, string $identificationCode, int $workShiftId = null, ?int $noveltyTypeId = null, ?int $subCostCenterId = null): TimeClockLog
     {
         $noveltyType = null;
+        $subCostCenter = null;
+
         $identification = $this->identificationRepository
             ->with(['employee.workShifts'])
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
@@ -88,25 +100,29 @@ class LogCheckInAction
             $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);
         }
 
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && $subCostCenterId) {
+            $subCostCenter = $this->subCostCenterRepository->find($subCostCenterId);
+        }
+
         $this->validateUnfinishedCheckIn($identification);
 
         $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $noveltyTypeId);
 
-        if (! $this->noveltyIsValid('start', $workShift, $noveltyType)) {
+        if (!$this->noveltyIsValid('start', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('start', now());
 
-        if ($workShift && $shiftPunctuality < 0 && ! $noveltyType) {
+        if ($workShift && $shiftPunctuality < 0 && !$noveltyType) {
             throw new TooEarlyToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($workShift && $shiftPunctuality > 0 && ! $noveltyType) {
+        if ($workShift && $shiftPunctuality > 0 && !$noveltyType) {
             throw new TooLateToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenterId) {
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenter) {
             throw new MissingSubCostCenterException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
@@ -116,6 +132,7 @@ class LogCheckInAction
             'checked_in_by_id' => $registrar->id,
             'work_shift_id' => optional($workShift)->id,
             'check_in_novelty_type_id' => optional($noveltyType)->id,
+            'check_in_sub_cost_center_id' => optional($subCostCenter)->id,
         ];
 
         return $this->timeClockLogRepository->create($timeClockLog);
