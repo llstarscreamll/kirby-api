@@ -217,7 +217,7 @@ class WorkShift extends Model
     /**
      * @param Carbon $relativeToTime
      */
-    public function minStartTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false)
+    public function minStartTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false): ?Carbon
     {
         $relativeToTime = $relativeToTime ?? now();
 

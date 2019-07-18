@@ -105,7 +105,7 @@ class LogCheckOutAction
             throw new MissingCheckInException();
         }
 
-        if ($lastCheckIn->requireCostCenter && ! $subCostCenterId) {
+        if ($lastCheckIn->requireSubCostCenter(now()) && ! $subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification));
         }
 

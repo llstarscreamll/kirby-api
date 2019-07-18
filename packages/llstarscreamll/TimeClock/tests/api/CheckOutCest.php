@@ -231,6 +231,51 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
+    public function whenHasTooEarlyCheckInWithSelectedShiftButLeavesBeforeShiftStart(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 50)); // 10 minutes before work shift start
+        $checkedInTime = now()->setTime(6, 0); // one hour early check in
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime, // one hour early check in
+                'check_in_novelty_type_id' => 3,
+                'check_in_sub_cost_center_id' => $this->firstSubCostCenter->id,
+                'checked_out_at' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        $requestData = [
+            // sub cost center is not required because no work shift time will be registered
+            'novelty_type_id' => 1, // subtract novelty type, because missing work shift time
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'sub_cost_center_id' => null,
+            'check_out_novelty_type_id' => 1,
+            'check_out_sub_cost_center_id' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
     public function whenHasShiftAndLeavesTooLate(ApiTester $I)
     {
         // fake current date time
