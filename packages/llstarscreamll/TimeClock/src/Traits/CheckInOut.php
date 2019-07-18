@@ -49,11 +49,11 @@ trait CheckInOut
         $lateNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Subtraction : NoveltyTypeOperator::Addition;
         $eagerNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Addition : NoveltyTypeOperator::Subtraction;
 
-        if ($workShift && $shiftPunctuality > 0 && $noveltyType && ! $noveltyType->operator->is($lateNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality > 0 && $noveltyType && !$noveltyType->operator->is($lateNoveltyOperator)) {
             $isValid = false;
         }
 
-        if ($workShift && $shiftPunctuality < 0 && $noveltyType && ! $noveltyType->operator->is($eagerNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality < 0 && $noveltyType && !$noveltyType->operator->is($eagerNoveltyOperator)) {
             $isValid = false;
         }
 
@@ -72,10 +72,17 @@ trait CheckInOut
         $workShift = $applicableWorkShifts->first();
         $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, now()) : null;
 
-        // return novelty types based  punctuality and action
-        $noveltyTypes = ! is_null($punctuality) && ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
-            ? $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeSubtraction()
-            : $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
+        if ($applicableWorkShifts->count() === 1) {
+            // return novelty types based  punctuality and action
+            $noveltyTypes = ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
+                ? $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeSubtraction()
+                : $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
+        } elseif ($applicableWorkShifts->count() > 1) {
+            $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->get();
+        } else {
+            // when $applicableWorkShifts->count() === 0
+            $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
+        }
 
         // last selected sub cost centers based on time clock logs
         $subCostCenters = $this->timeClockLogRepository

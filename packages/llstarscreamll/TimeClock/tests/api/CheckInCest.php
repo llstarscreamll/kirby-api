@@ -335,6 +335,7 @@ class CheckInCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
+        $I->seeResponseContainsJson(['novelty_types' => [['id' => 1], ['id' => 2], ['id' => 3]]]);
     }
 
     /**
@@ -519,7 +520,7 @@ class CheckInCest
             ->create();
 
         // fake current date time, after max time slot hour late
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 19, 00));
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 19, 00)); // 19:00
 
         $requestData = [
             'identification_code' => $employee->identifications->first()->code,
@@ -545,9 +546,9 @@ class CheckInCest
         // without work shifts
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts.0');
         // addition novelty types
+        $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
-        $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
     }
 
     /**

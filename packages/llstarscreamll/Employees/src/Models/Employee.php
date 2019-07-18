@@ -114,7 +114,13 @@ class Employee extends Model
 
             return $matchedTimeSlots->count() || (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
         })->filter(function ($workShift) use ($time) {
-            return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && ! $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
+            /*dd(
+            $time,
+            $workShift->getClosestSlotFlagTime('end', $time),
+            $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time))
+            );*/
+
+            return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && !$time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
         });
 
         return $workShiftsMatchedBySlotTimesAndDays;
