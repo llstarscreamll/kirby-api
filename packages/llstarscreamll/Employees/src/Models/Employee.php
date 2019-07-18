@@ -120,7 +120,7 @@ class Employee extends Model
             $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time))
             );*/
 
-            return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && !$time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
+            return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && ! $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
         });
 
         return $workShiftsMatchedBySlotTimesAndDays;
