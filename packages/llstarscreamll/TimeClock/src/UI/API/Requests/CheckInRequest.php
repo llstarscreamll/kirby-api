@@ -30,8 +30,6 @@ class CheckInRequest extends FormRequest
      */
     public function rules()
     {
-        logger('incoming check in data', Request::all());
-
         return [
             'identification_code' => ['required', 'exists:identifications,code'],
             'novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],

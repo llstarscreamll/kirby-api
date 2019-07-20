@@ -109,19 +109,17 @@ class Employee extends Model
                     $slotEndTo = $slotEndTo->addDay();
                 }
 
-                return $time->between($slotStartFrom, $slotEndTo);
+                return $time->between($slotStartFrom, $slotEndTo) && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
             });
 
-            return $matchedTimeSlots->count() || (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
-        })->filter(function ($workShift) use ($time) {
-            /*dd(
-            $time,
-            $workShift->getClosestSlotFlagTime('end', $time),
-            $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time))
-            );*/
-
-            return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && ! $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
+            return $matchedTimeSlots->count();
         });
+
+        if ($workShiftsMatchedBySlotTimesAndDays->count() === 0) {
+            $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function ($workShift) use ($time) {
+                return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && ! $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
+            });
+        }
 
         return $workShiftsMatchedBySlotTimesAndDays;
     }

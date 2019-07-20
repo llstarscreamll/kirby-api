@@ -86,7 +86,7 @@ class LogCheckInAction
      * @throws InvalidNoveltyTypeException
      * @return TimeClockLog
      */
-    public function run(User $registrar, string $identificationCode, int $workShiftId = null, ?int $noveltyTypeId = null, ?int $subCostCenterId = null): TimeClockLog
+    public function run(User $registrar, string $identificationCode, ?int $workShiftId = null, ?int $noveltyTypeId = null, ?int $subCostCenterId = null): TimeClockLog
     {
         $noveltyType = null;
         $subCostCenter = null;
@@ -105,8 +105,7 @@ class LogCheckInAction
         }
 
         $this->validateUnfinishedCheckIn($identification);
-
-        $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId, $noveltyTypeId);
+        $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId);
 
         if (! $this->noveltyIsValid('start', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));

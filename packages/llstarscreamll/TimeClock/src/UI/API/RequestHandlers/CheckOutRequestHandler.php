@@ -77,7 +77,7 @@ class CheckOutRequestHandler
 
         if ($errors) {
             throw new HttpResponseException(response()->json([
-                'message' => 'Error registrando salida!',
+                'message' => 'No se pudo registrar la salida',
                 'errors' => $errors,
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }

@@ -64,7 +64,7 @@ class CheckInRequestHandler
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'No fue posible deducir el turno.',
-                'detail' => 'No se pudo deducir el turno, se debe elegir uno '
+                'detail' => 'No se logró deducir el turno, se debe elegir uno '
                 ."de {$exception->timeClockData['work_shifts']->count()} posibles.",
                 'meta' => $exception->timeClockData,
             ]);
@@ -86,7 +86,7 @@ class CheckInRequestHandler
 
         if ($errors) {
             throw new HttpResponseException(response()->json([
-                'message' => 'Error registrando entrada!',
+                'message' => 'No se pudo registrar la entrada',
                 'errors' => $errors,
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }

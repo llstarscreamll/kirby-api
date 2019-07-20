@@ -32,7 +32,7 @@ trait CheckInOut
                 ->where('id', $workShiftId);
         }
 
-        return $deductedWorkShifts;
+        return $deductedWorkShifts->values();
     }
 
     /**
@@ -89,7 +89,8 @@ trait CheckInOut
             ->lastEmployeeLogs($identification->employee->id)
             ->map(function ($timeClockLog) {
                 return $timeClockLog->relatedSubCostCenters();
-            })->collapse();
+            })->collapse()
+            ->unique('id');
 
         return [
             'action' => $flag === 'start' ? 'check_in' : 'check_out',
