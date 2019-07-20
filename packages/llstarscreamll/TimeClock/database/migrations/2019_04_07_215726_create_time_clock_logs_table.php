@@ -23,10 +23,10 @@ class CreateTimeClockLogsTable extends Migration
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('sub_cost_center_id')->nullable();
             $table->unsignedInteger('work_shift_id')->nullable();
-            $table->timestamp('checked_in_at');
+            $table->datetime('checked_in_at');
             $table->unsignedInteger('check_in_novelty_type_id')->nullable();
             $table->unsignedInteger('check_in_sub_cost_center_id')->nullable();
-            $table->timestamp('checked_out_at')->nullable();
+            $table->datetime('checked_out_at')->nullable();
             $table->unsignedInteger('check_out_novelty_type_id')->nullable();
             $table->unsignedInteger('check_out_sub_cost_center_id')->nullable();
             $table->unsignedInteger('checked_in_by_id');
