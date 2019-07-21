@@ -269,4 +269,24 @@ class TimeClockLog extends Model
             || ($this->work_shift_id && ! $this->sub_cost_center_id && $this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)))
             || ($this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)));
     }
+
+    /**
+     * @return bool
+     */
+    public function hasClockedTimeOnWorkShift(): bool
+    {
+        $hasClockedTimeOnWorkShift = true;
+
+        if ($this->work_shift_id) {
+            $beGraceTimeAware = true;
+            $workShiftStart = $this->workShift->minStartTimeSlot($this->checked_in_at, $beGraceTimeAware);
+            $workShiftEnd = $this->workShift->maxEndTimeSlot($this->checked_in_at, $beGraceTimeAware);
+
+            $hasClockedTimeOnWorkShift = $this->checked_in_at->between($workShiftStart, $workShiftEnd)
+            || $this->checked_out_at->between($workShiftStart, $workShiftEnd)
+                || ($this->checked_in_at->lessThan($workShiftStart) && $this->checked_out_at->greaterThan($workShiftEnd));
+        }
+
+        return $hasClockedTimeOnWorkShift;
+    }
 }

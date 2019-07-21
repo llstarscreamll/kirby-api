@@ -9,6 +9,7 @@ use Novelties\IntegrationTester;
 use Illuminate\Support\Collection;
 use llstarscreamll\Company\Models\Holiday;
 use llstarscreamll\WorkShifts\Models\WorkShift;
+use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
@@ -29,6 +30,11 @@ class RegisterTimeClockNoveltiesActionCest
      * @var Collection
      */
     private $noveltyTypes;
+
+    /**
+     * @var Collection
+     */
+    private $subCostCenters;
 
     /**
      * @param IntegrationTester $I
@@ -96,6 +102,8 @@ class RegisterTimeClockNoveltiesActionCest
                 ['start' => '06:00', 'end' => '14:00'],
             ],
         ]));
+
+        $this->subCostCenters = factory(SubCostCenter::class, 2)->create();
     }
 
     /**
@@ -436,6 +444,26 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'HADI',
                         'total_time_in_minutes' => (60 * 1), // 1 hour, from 05:00 to 06:00:00
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log on workday
+                    'work_shift_name' => '14-22',
+                    'checked_in_at' => '2019-04-01 12:00:00', // workday, two hours early
+                    'checked_out_at' => '2019-04-01 13:30:00', // workday, two hours early, before shift start
+                    'check_in_novelty_type_code' => 'HADI',
+                    'check_in_sub_cost_center_id' => 1,
+                    'check_out_novelty_type_code' => 'PP', // for the time not worked, the entire work shift
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HADI',
+                        'total_time_in_minutes' => 90, // 1.5 hours, from 12:00:00 to 13:30
+                    ],
+                    [
+                        'novelty_type_code' => 'PP',
+                        'total_time_in_minutes' => (60 * -8), // -8 hours, from 14:00 to 22:00
                     ],
                 ],
             ],

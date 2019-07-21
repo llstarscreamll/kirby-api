@@ -111,7 +111,6 @@ class RegisterTimeClockNoveltiesAction
         $noveltyTypes = $noveltyTypes->filter(function (NoveltyType $noveltyType) use ($timeClockLog) {
             // filter by time slots
             return collect($noveltyType->apply_on_time_slots)
-
                 ->filter(function (?array $timeSlot) use ($timeClockLog, $noveltyType) {
                     [$hours, $seconds] = explode(':', $timeSlot['start']);
                     $start = now()->setTime($hours, $seconds);
@@ -142,7 +141,7 @@ class RegisterTimeClockNoveltiesAction
         [$startNoveltyMinutes, $clockedMinutes, $endNoveltyMinutes, $mealMinutes] = $this->calculateTimeClockLogTimesInMinutes($timeClockLog);
 
         if ($timeClockLog->work_shift_id && $noveltyType->context_type === 'normal_work_shift_time' && $clockedMinutes[$noveltyType->apply_on_days_of_type->value]) {
-            if ($workShift) {
+            if ($workShift && $timeClockLog->hasClockedTimeOnWorkShift()) {
                 $checkedInAt = $timeClockLog->checked_in_at;
                 $checkedOutAt = $timeClockLog->checked_out_at;
                 $checkInPunctuality = $workShift->startPunctuality($checkedInAt);
@@ -215,7 +214,9 @@ class RegisterTimeClockNoveltiesAction
 
         // calculate check in novelty time
         if ($timeClockLog->check_in_novelty_type_id && $timeClockLog->work_shift_id) {
-            $startNoveltyMinutes = $closestStartSlot->diffInMinutes($timeClockLog->checked_in_at);
+            $estimatedStartTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
+                ? $timeClockLog->checked_out_at : $closestStartSlot;
+            $startNoveltyMinutes = $estimatedStartTime->diffInMinutes($timeClockLog->checked_in_at);
 
             if ($timeClockLog->checkInNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
                 $startNoveltyMinutes *= -1;
@@ -224,7 +225,9 @@ class RegisterTimeClockNoveltiesAction
 
         // calculate check out novelty time
         if ($timeClockLog->check_out_novelty_type_id && $timeClockLog->work_shift_id) {
-            $endNoveltyMinutes = $closestEndSlot->diffInMinutes($timeClockLog->checked_out_at);
+            $endTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
+                ? $closestStartSlot : $timeClockLog->checked_out_at;
+            $endNoveltyMinutes = $closestEndSlot->diffInMinutes($endTime);
 
             if ($timeClockLog->checkOutNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
                 $endNoveltyMinutes *= -1;
