@@ -94,6 +94,16 @@ class RegisterTimeClockNoveltiesActionCest
         ]));
 
         $this->workShifts->push(factory(WorkShift::class)->create([
+            'name' => '14-22 Sundays',
+            'meal_time_in_minutes' => 0,
+            'min_minutes_required_to_discount_meal_time' => 0,
+            'applies_on_days' => [7], // sundays
+            'time_slots' => [
+                ['start' => '14:00', 'end' => '22:00'],
+            ],
+        ]));
+
+        $this->workShifts->push(factory(WorkShift::class)->create([
             'name' => '6-14',
             'meal_time_in_minutes' => 0,
             'min_minutes_required_to_discount_meal_time' => 0,
@@ -464,6 +474,26 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'PP',
                         'total_time_in_minutes' => (60 * -8), // -8 hours, from 14:00 to 22:00
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // time clock log on workday
+                    'work_shift_name' => '14-22 Sundays',
+                    'checked_in_at' => '2019-07-21 16:00:00', // workday, two hours early
+                    'checked_out_at' => '2019-07-21 17:00:00', // workday, two hours early, before shift start
+                    'check_in_novelty_type_code' => 'PP', // for the start time not worked
+                    'check_out_novelty_type_code' => 'PP', // for the final time not worked
+                    'check_out_sub_cost_center_id' => 1,
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'PP',
+                        'total_time_in_minutes' => 60 * -7, // 2 hours from 12-16 and 5 hours from 17-22
+                    ],
+                    [
+                        'novelty_type_code' => 'HDF',
+                        'total_time_in_minutes' => (60 * 1), // 1 hours, from 16 to 17
                     ],
                 ],
             ],

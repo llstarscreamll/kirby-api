@@ -126,6 +126,11 @@ class NoveltyType extends Model
         $endTime = $checkedOutAt->between($this->minStartTimeSlot($checkedOutAt), $this->maxEndTimeSlot($checkedInAt))
             ? $checkedOutAt : $this->maxEndTimeSlot($checkedInAt);
 
+        // fix for novelty types where their time slots are 09-06 like (from one day to another)
+        if ($checkedOutAt->lessThan($this->minStartTimeSlot($checkedInAt))) {
+            $endTime = $startTime;
+        }
+
         $applicableMinutes = $startTime->diffInMinutes($endTime);
 
         if (empty($this->apply_on_time_slots)) {
