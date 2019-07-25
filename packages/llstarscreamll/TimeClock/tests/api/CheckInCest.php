@@ -3,6 +3,8 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
+use TimeClockPermissionsSeeder;
+use Illuminate\Support\Facades\Artisan;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
@@ -37,8 +39,10 @@ class CheckInCest
     public function _before(ApiTester $I)
     {
         $I->disableMiddleware();
+
+        Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
         $this->user = $I->amLoggedAsAdminUser();
-        $I->haveHttpHeader('Accept', 'application/json');
+        $this->subCostCenter = factory(SubCostCenter::class)->create();
 
         // novelty types
         factory(NoveltyType::class, 2)->create([
@@ -51,7 +55,7 @@ class CheckInCest
             'context_type' => 'elegible_by_user',
         ]);
 
-        $this->subCostCenter = factory(SubCostCenter::class)->create();
+        $I->haveHttpHeader('Accept', 'application/json');
     }
 
     /**
@@ -721,5 +725,19 @@ class CheckInCest
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldReturnUnathorizedIfUserDoesntHaveRequiredPermission(ApiTester $I)
+    {
+        $this->user->roles()->delete();
+        $this->user->permissions()->delete();
+
+        $I->sendPOST($this->endpoint, []);
+
+        $I->seeResponseCodeIs(403);
     }
 }

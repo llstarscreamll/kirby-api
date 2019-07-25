@@ -2,6 +2,8 @@
 
 namespace ClockTime;
 
+use TimeClockPermissionsSeeder;
+use Illuminate\Support\Facades\Artisan;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 
 /**
@@ -27,11 +29,13 @@ class SearchTimeClockLogsCest
     public function _before(ApiTester $I)
     {
         $I->disableMiddleware();
-        $this->user = $I->amLoggedAsAdminUser();
-        $I->haveHttpHeader('Accept', 'application/json');
 
+        Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
+        $this->user = $I->amLoggedAsAdminUser();
         // time clock logs
         factory(TimeClockLog::class, 2)->create();
+
+        $I->haveHttpHeader('Accept', 'application/json');
     }
 
     /**
@@ -47,5 +51,19 @@ class SearchTimeClockLogsCest
         $I->seeResponseJsonMatchesJsonPath('$.data.1.novelties');
         $I->seeResponseJsonMatchesJsonPath('$.data.1.employee.user');
         $I->seeResponseJsonMatchesJsonPath('$.data.1.work_shift');
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldReturnUnathorizedIfUserDoesntHaveRequiredPermission(ApiTester $I)
+    {
+        $this->user->roles()->delete();
+        $this->user->permissions()->delete();
+
+        $I->sendGET($this->endpoint, []);
+
+        $I->seeResponseCodeIs(403);
     }
 }

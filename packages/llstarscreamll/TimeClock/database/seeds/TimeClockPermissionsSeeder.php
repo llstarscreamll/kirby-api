@@ -14,7 +14,10 @@ class TimeClockPermissionsSeeder extends Seeder
      * @var array
      */
     private $permissions = [
+        ['name' => 'time-clock-logs.search'],
         ['name' => 'time-clock-logs.approvals.create'],
+        ['name' => 'time-clock-logs.check-in'],
+        ['name' => 'time-clock-logs.check-out'],
         ['name' => 'time-clock-logs.approvals.delete'],
     ];
 

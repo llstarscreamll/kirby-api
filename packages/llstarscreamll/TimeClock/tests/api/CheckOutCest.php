@@ -3,6 +3,8 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
+use TimeClockPermissionsSeeder;
+use Illuminate\Support\Facades\Artisan;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
@@ -42,8 +44,11 @@ class CheckOutCest
     public function _before(ApiTester $I)
     {
         $I->disableMiddleware();
+
+        Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
         $this->user = $I->amLoggedAsAdminUser();
-        $I->haveHttpHeader('Accept', 'application/json');
+        $this->firstSubCostCenter = factory(SubCostCenter::class)->create();
+        $this->secondSubCostCenter = factory(SubCostCenter::class)->create();
 
         // novelty types
         factory(NoveltyType::class, 2)->create([
@@ -56,8 +61,7 @@ class CheckOutCest
             'context_type' => 'elegible_by_user',
         ]);
 
-        $this->firstSubCostCenter = factory(SubCostCenter::class)->create();
-        $this->secondSubCostCenter = factory(SubCostCenter::class)->create();
+        $I->haveHttpHeader('Accept', 'application/json');
     }
 
     /**
@@ -502,5 +506,19 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldReturnUnathorizedIfUserDoesntHaveRequiredPermission(ApiTester $I)
+    {
+        $this->user->roles()->delete();
+        $this->user->permissions()->delete();
+
+        $I->sendPOST($this->endpoint, []);
+
+        $I->seeResponseCodeIs(403);
     }
 }

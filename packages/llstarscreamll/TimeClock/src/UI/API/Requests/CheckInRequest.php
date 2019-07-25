@@ -20,7 +20,7 @@ class CheckInRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('time-clock-logs.check-in');
     }
 
     /**

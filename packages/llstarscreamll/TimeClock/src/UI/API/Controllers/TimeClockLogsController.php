@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
 
 /**
  * Class TimeClockLogsController.
@@ -32,7 +33,7 @@ class TimeClockLogsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(SearchTimeClockLogsRequest $request)
     {
         $timeClockLogs = $this->timeClockLogRepository
             ->with(['employee.user', 'workShift', 'novelties.noveltyType'])
