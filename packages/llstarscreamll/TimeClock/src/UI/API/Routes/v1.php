@@ -1,8 +1,8 @@
 <?php
 
+use llstarscreamll\TimeClock\UI\API\Controllers\CheckInController;
+use llstarscreamll\TimeClock\UI\API\Controllers\CheckOutController;
 use llstarscreamll\TimeClock\UI\API\Controllers\TimeClockLogsController;
-use llstarscreamll\TimeClock\UI\API\RequestHandlers\CheckInRequestHandler;
-use llstarscreamll\TimeClock\UI\API\RequestHandlers\CheckOutRequestHandler;
 use llstarscreamll\TimeClock\UI\API\Controllers\TimeClockLogApprovalsController;
 
 /*
@@ -19,8 +19,8 @@ use llstarscreamll\TimeClock\UI\API\Controllers\TimeClockLogApprovalsController;
 Route::prefix('api/v1/')
     ->middleware(['api', 'auth:api'])
     ->group(function ($route) {
-        $route->post('time-clock/check-in', CheckInRequestHandler::class);
-        $route->post('time-clock/check-out', CheckOutRequestHandler::class);
+        $route->post('time-clock/check-in', CheckInController::class);
+        $route->post('time-clock/check-out', CheckOutController::class);
         $route->apiResource('time-clock-logs', TimeClockLogsController::class);
         $route->resource('time-clock-logs.approvals', TimeClockLogApprovalsController::class)->only(['store', 'destroy']);
     });
