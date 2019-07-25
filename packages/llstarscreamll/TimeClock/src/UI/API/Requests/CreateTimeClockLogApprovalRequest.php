@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class TimeClockLogApproveRequest.
+ * Class CreateTimeClockLogApprovalRequest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class TimeClockLogApproveRequest extends FormRequest
+class CreateTimeClockLogApprovalRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +20,7 @@ class TimeClockLogApproveRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('time-clock-logs.approve');
+        return $this->user()->can('time-clock-logs.approvals.create');
     }
 
     /**

@@ -7,16 +7,16 @@ use Illuminate\Support\Facades\Artisan;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 
 /**
- * Class TimeClockLogApproveCest.
+ * Class CreateTimeClockLogApprovalCest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class TimeClockLogApproveCest
+class CreateTimeClockLogApprovalCest
 {
     /**
      * @var string
      */
-    private $endpoint = 'api/v1/time-clock-logs/{id}/approve';
+    private $endpoint = 'api/v1/time-clock-logs/{time-clock-log-id}/approvals';
 
     /**
      * @var \llstarscreamll\Users\Models\User
@@ -47,7 +47,7 @@ class TimeClockLogApproveCest
      */
     public function shouldSetApprovalSuccessfully(ApiTester $I)
     {
-        $endpoint = str_replace('{id}', $this->timeClockLogs->first()->id, $this->endpoint);
+        $endpoint = str_replace('{time-clock-log-id}', $this->timeClockLogs->first()->id, $this->endpoint);
         $I->sendPOST($endpoint);
 
         $I->seeResponseCodeIs(201);
@@ -65,7 +65,7 @@ class TimeClockLogApproveCest
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
 
-        $endpoint = str_replace('{id}', $this->timeClockLogs->first()->id, $this->endpoint);
+        $endpoint = str_replace('{time-clock-log-id}', $this->timeClockLogs->first()->id, $this->endpoint);
         $I->sendPOST($endpoint);
 
         $I->seeResponseCodeIs(403);
