@@ -91,4 +91,15 @@ class DeleteTimeClockLogApprovalCest
             'time_clock_log_id' => $this->timeClockLogs->first()->id,
         ]);
     }
+
+    /**
+     * @param ApiTester $I
+     */
+    public function shouldReturnNotFoundIfTimeClockLogDoesntExists(ApiTester $I)
+    {
+        $endpoint = str_replace('{time-clock-log-id}', 111, $this->endpoint);
+        $I->sendDELETE($endpoint);
+
+        $I->seeResponseCodeIs(404);
+    }
 }
