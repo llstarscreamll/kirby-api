@@ -15,6 +15,7 @@ class TimeClockPermissionsSeeder extends Seeder
      */
     private $permissions = [
         ['name' => 'time-clock-logs.approve'],
+        ['name' => 'time-clock-logs.approvals.delete'],
     ];
 
     /**

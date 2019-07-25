@@ -21,6 +21,6 @@ Route::prefix('api/v1/')
     ->group(function ($route) {
         $route->post('time-clock/check-in', CheckInRequestHandler::class);
         $route->post('time-clock/check-out', CheckOutRequestHandler::class);
-        $route->post('time-clock-logs/{id}/approve', TimeClockLogApprovalsController::class);
         $route->apiResource('time-clock-logs', TimeClockLogsController::class);
+        $route->resource('time-clock-logs.approvals', TimeClockLogApprovalsController::class)->only(['store', 'destroy']);
     });

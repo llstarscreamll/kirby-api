@@ -56,4 +56,14 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
     {
         return $this->model->latest()->take($rows)->get($columns);
     }
+
+    /**
+     * @param string $timeClockLogId
+     * @param string $userId
+     * @return mixed
+     */
+    public function deleteApproval(string $timeClockLogId, string $userId)
+    {
+        return $this->find($timeClockLogId)->approvals()->detach($userId);
+    }
 }

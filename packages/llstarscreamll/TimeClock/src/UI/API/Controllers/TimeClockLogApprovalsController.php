@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\UI\API\Requests\TimeClockLogApproveRequest;
+use llstarscreamll\TimeClock\UI\API\Requests\DeleteTimeClockLogApprovalRequest;
 
 /**
  * Class TimeClockLogApprovalsController.
@@ -34,10 +35,24 @@ class TimeClockLogApprovalsController extends Controller
      * @param  string                      $timeClockLogId
      * @return \Illuminate\Http\Response
      */
-    public function __invoke(TimeClockLogApproveRequest $request, string $timeClockLogId)
+    public function store(TimeClockLogApproveRequest $request, string $timeClockLogId)
     {
         $this->timeClockLogRepository->sync($timeClockLogId, 'approvals', ['user_id' => $request->user()->id], false);
 
         return response()->json(['ok'], 201);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  DeleteTimeClockLogApprovalRequest $request
+     * @param  string                            $timeClockLogId
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(DeleteTimeClockLogApprovalRequest $request, string $timeClockLogId)
+    {
+        $this->timeClockLogRepository->deleteApproval($timeClockLogId, $request->user()->id);
+
+        return response()->json(['ok'], 200);
     }
 }
