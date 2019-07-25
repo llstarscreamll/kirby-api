@@ -2,7 +2,6 @@
 
 namespace llstarscreamll\TimeClock\UI\API\Requests;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Http\FormRequest;
 
