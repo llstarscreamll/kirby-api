@@ -4,6 +4,7 @@ namespace llstarscreamll\TimeClock\Models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
+use llstarscreamll\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\Novelty;
@@ -140,6 +141,14 @@ class TimeClockLog extends Model
     public function checkOutSubCostCenter()
     {
         return $this->belongsTo(SubCostCenter::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function approvals()
+    {
+        return $this->belongsToMany(User::class, 'time_clock_log_approvals');
     }
 
     // ######################################################################## #

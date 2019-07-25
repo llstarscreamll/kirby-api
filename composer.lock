@@ -2065,7 +2065,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/TimeClock",
-                "reference": "8d20acc1b5adf3922426c4ba6346467e1d2527b7"
+                "reference": "d7cce028db8f69e16c609a4e79afef3730e2d6c0"
             },
             "require": {
                 "illuminate/support": "~5"
@@ -2089,6 +2089,9 @@
                 }
             },
             "autoload": {
+                "classmap": [
+                    "database/seeds"
+                ],
                 "psr-4": {
                     "llstarscreamll\\TimeClock\\": "src/"
                 }

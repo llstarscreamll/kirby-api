@@ -3,6 +3,7 @@
 use llstarscreamll\TimeClock\UI\API\Controllers\TimeClockLogsController;
 use llstarscreamll\TimeClock\UI\API\RequestHandlers\CheckInRequestHandler;
 use llstarscreamll\TimeClock\UI\API\RequestHandlers\CheckOutRequestHandler;
+use llstarscreamll\TimeClock\UI\API\Controllers\TimeClockLogApprovalsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +21,6 @@ Route::prefix('api/v1/')
     ->group(function ($route) {
         $route->post('time-clock/check-in', CheckInRequestHandler::class);
         $route->post('time-clock/check-out', CheckOutRequestHandler::class);
+        $route->post('time-clock-logs/{id}/approve', TimeClockLogApprovalsController::class);
         $route->apiResource('time-clock-logs', TimeClockLogsController::class);
     });
