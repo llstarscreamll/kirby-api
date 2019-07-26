@@ -51,6 +51,7 @@ class SearchTimeClockLogsCest
         $I->seeResponseJsonMatchesJsonPath('$.data.1.novelties');
         $I->seeResponseJsonMatchesJsonPath('$.data.1.employee.user');
         $I->seeResponseJsonMatchesJsonPath('$.data.1.work_shift');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1.approvals');
     }
 
     /**
