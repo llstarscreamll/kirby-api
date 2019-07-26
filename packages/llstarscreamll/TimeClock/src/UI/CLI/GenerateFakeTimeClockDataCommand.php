@@ -73,17 +73,19 @@ class GenerateFakeTimeClockDataCommand extends Command
                 return $employee;
             });
         $this->clockers = User::inRandomOrder()->limit(10)->get()->random(5);
+        $approvers = User::inRandomOrder()->limit(10)->get()->random(5);
 
         $this->line("Proceed to create time clock data for {$employees->count()} employees, starting {$days} days ago");
 
         for ($i = $days; $i >= 0; $i--) {
             $daysAgo = $i;
-            $employees->map(function ($employee) use ($registerNoveltiesAction, $daysAgo) {
+            $employees->map(function ($employee) use ($registerNoveltiesAction, $daysAgo, $approvers) {
                 // create time clock logs for employee
                 $timeClocks = $employee->timeClockLogs()->createMany($this->createTimeClogLogsForEmployee($employee, $daysAgo));
 
-                $timeClocks->each(function ($timeClockLog) use ($registerNoveltiesAction) {
+                $timeClocks->each(function ($timeClockLog) use ($registerNoveltiesAction, $approvers) {
                     $registerNoveltiesAction->run($timeClockLog->id);
+                    $timeClockLog->approvals()->sync($approvers->random($this->faker->numberBetween(1, 3)));
                 });
 
                 return $employee;
