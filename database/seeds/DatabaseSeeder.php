@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            AuthorizationPackageSeeder::class,
             WorkShiftsPackageSeeder::class,
             DefaultNoveltyTypesSeed::class,
             TimeClockPackageSeeder::class,
+            AuthorizationPackageSeeder::class,
         ]);
     }
 }
