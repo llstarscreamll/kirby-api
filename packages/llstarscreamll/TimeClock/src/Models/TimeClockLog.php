@@ -148,7 +148,7 @@ class TimeClockLog extends Model
      */
     public function approvals()
     {
-        return $this->belongsToMany(User::class, 'time_clock_log_approvals');
+        return $this->belongsToMany(User::class, 'time_clock_log_approvals')->withTimestamps();
     }
 
     // ######################################################################## #
