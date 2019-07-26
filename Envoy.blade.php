@@ -156,6 +156,7 @@ ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 {{ logMessage("💻  Deploying code changes...") }}
 cd {{ $currentDir }}
 git pull origin {{ $branch }}
+composer install
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
