@@ -36,7 +36,7 @@ class TimeClockLogsController extends Controller
     public function index(SearchTimeClockLogsRequest $request)
     {
         $timeClockLogs = $this->timeClockLogRepository
-            ->with(['employee.user', 'workShift', 'novelties.noveltyType', 'approvals'])
+            ->with(['employee.user', 'workShift', 'novelties.noveltyType', 'approvals:users.id,users.first_name,users.last_name'])
             ->orderBy('updated_at', 'DESC')
             ->simplePaginate();
 
