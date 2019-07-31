@@ -23,6 +23,7 @@ class CreateTimeClockLogApprovalsTable extends Migration
             $table->unsignedBigInteger('time_clock_log_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
+            $table->unique(['time_clock_log_id', 'user_id']);
         });
     }
 
