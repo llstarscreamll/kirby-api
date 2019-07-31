@@ -34,6 +34,8 @@ class GetUserCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeResponseJsonMatchesJsonPath('$.data.name');
+        $I->seeResponseJsonMatchesJsonPath('$.data.first_name');
+        $I->seeResponseJsonMatchesJsonPath('$.data.last_name');
         $I->seeResponseJsonMatchesJsonPath('$.data.roles');
         $I->seeResponseJsonMatchesJsonPath('$.data.permissions');
     }
