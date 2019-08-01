@@ -64,11 +64,11 @@ class RegisterTimeClockNoveltiesAction
         $timeClockLog = $this->timeClockLogRepository->with([
             'workShift', 'checkInNovelty', 'checkOutNovelty', 'novelties',
         ])->find($timeClockLogId);
-        $aplicableNovelties = $this->getApplicableNovelties($timeClockLog);
+        $applicableNovelties = $this->getApplicableNovelties($timeClockLog);
 
         $date = now();
 
-        $novelties = $aplicableNovelties
+        $novelties = $applicableNovelties
             ->map(function ($noveltyType) use ($timeClockLog, $date) {
                 return [
                     'time_clock_log_id' => $timeClockLog->id,
