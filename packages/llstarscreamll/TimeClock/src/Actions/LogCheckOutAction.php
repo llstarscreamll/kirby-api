@@ -9,6 +9,7 @@ use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
+use llstarscreamll\TimeClock\Contracts\SettingRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Company\Contracts\SubCostCenterRepositoryInterface;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
@@ -24,6 +25,11 @@ use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 class LogCheckOutAction
 {
     use CheckInOut;
+
+    /**
+     * @var SettingRepositoryInterface
+     */
+    private $settingRepository;
 
     /**
      * @var IdentificationRepositoryInterface
@@ -51,6 +57,7 @@ class LogCheckOutAction
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
     /**
+     * @param SettingRepositoryInterface                           $settingRepository
      * @param NoveltyTypeRepositoryInterface                       $noveltyTypeRepository
      * @param TimeClockLogRepositoryInterface                      $timeClockLogRepository
      * @param SubCostCenterRepositoryInterface                     $subCostCenterRepository
@@ -58,12 +65,14 @@ class LogCheckOutAction
      * @param ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
+        SettingRepositoryInterface $settingRepository,
         NoveltyTypeRepositoryInterface $noveltyTypeRepository,
         TimeClockLogRepositoryInterface $timeClockLogRepository,
         SubCostCenterRepositoryInterface $subCostCenterRepository,
         IdentificationRepositoryInterface $identificationRepository,
         ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
     ) {
+        $this->settingRepository = $settingRepository;
         $this->noveltyTypeRepository = $noveltyTypeRepository;
         $this->timeClockLogRepository = $timeClockLogRepository;
         $this->subCostCenterRepository = $subCostCenterRepository;
@@ -87,6 +96,7 @@ class LogCheckOutAction
     public function run(User $registrar, string $identificationCode, ?int $subCostCenterId, ?int $noveltyTypeId, ?int $noveltySubCostCenterId): TimeClockLog
     {
         $noveltyType = null;
+        $noveltyTypeIsRequired = $this->subtractNoveltyTypeIsRequired();
 
         $identification = $this->identificationRepository
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
@@ -121,12 +131,16 @@ class LogCheckOutAction
             throw new InvalidNoveltyTypeException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $shiftPunctuality < 0 && ! $noveltyType) {
+        if ($workShift && $shiftPunctuality < 0 && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooEarlyToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
         if ($workShift && $shiftPunctuality > 0 && ! $noveltyType) {
             throw new TooLateToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
+        }
+
+        if (! $noveltyTypeId && $shiftPunctuality < 0 && ! $noveltyTypeIsRequired) {
+            $noveltyType = $this->noveltyTypeRepository->findDefaultForSubtraction();
         }
 
         $timeClockLogUpdate = [
