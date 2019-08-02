@@ -1,5 +1,4 @@
 <?php
-
 namespace llstarscreamll\Novelties\Models;
 
 use Carbon\Carbon;
@@ -17,7 +16,6 @@ use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 class NoveltyType extends Model
 {
     use SoftDeletes, CastsEnums;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -31,7 +29,6 @@ class NoveltyType extends Model
         'apply_on_time_slots',
         'operator',
     ];
-
     /**
      * The attributes that should be cast to enum types.
      *
@@ -41,7 +38,6 @@ class NoveltyType extends Model
         'operator' => NoveltyTypeOperator::class,
         'apply_on_days_of_type' => DayType::class,
     ];
-
     /**
      * The attributes that should be cast to native types.
      *
@@ -50,37 +46,12 @@ class NoveltyType extends Model
     protected $casts = [
         'apply_on_time_slots' => 'array',
     ];
-
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
-
-    /**
-     * @param array  $timeSlot
-     * @param Carbon $date
-     */
-    private function mapTimeSlot(array $timeSlot, Carbon $date = null): array
-    {
-        $date = $date ?? now();
-
-        [$hour, $seconds] = explode(':', $timeSlot['start']);
-        $start = $date->copy()->setTime($hour, $seconds);
-
-        [$hour, $seconds] = explode(':', $timeSlot['end']);
-        $end = $date->copy()->setTime($hour, $seconds);
-
-        if ($start->greaterThan($end)) {
-            $end = $end->addDay();
-        }
-
-        return [
-            'end' => $end,
-            'start' => $start,
-        ];
-    }
 
     /**
      * @param Carbon $relativeToTime
@@ -91,7 +62,7 @@ class NoveltyType extends Model
 
         return collect($this->apply_on_time_slots)
             ->map(function (array $timeSlot) use ($relativeToTime) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime);
 
                 return $timeSlot['start'];
             })->sort()->first();
@@ -106,10 +77,31 @@ class NoveltyType extends Model
 
         return collect($this->apply_on_time_slots)
             ->map(function (array $timeSlot) use ($relativeToTime) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, false);
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime);
 
                 return $timeSlot['end'];
             })->sort()->last();
+    }
+
+    /**
+     * @param array  $timeSlot
+     * @param Carbon $date
+     */
+    private function mapTimeSlot(array $timeSlot, Carbon $date = null): array
+    {
+        $date = $date ?? now();
+        [$hour, $seconds] = explode(':', $timeSlot['start']);
+        $start = $date->copy()->setTime($hour, $seconds);
+        [$hour, $seconds] = explode(':', $timeSlot['end']);
+        $end = $date->copy()->setTime($hour, $seconds);
+        if ($start->greaterThan($end)) {
+            $end = $end->addDay();
+        }
+
+        return [
+            'end' => $end,
+            'start' => $start,
+        ];
     }
 
     /**
@@ -123,6 +115,7 @@ class NoveltyType extends Model
 
         $startTime = $checkedInAt->between($this->minStartTimeSlot($checkedInAt), $this->maxEndTimeSlot($checkedInAt))
             ? $checkedInAt : $this->minStartTimeSlot($checkedInAt);
+
         $endTime = $checkedOutAt->between($this->minStartTimeSlot($checkedOutAt), $this->maxEndTimeSlot($checkedInAt))
             ? $checkedOutAt : $this->maxEndTimeSlot($checkedInAt);
 
@@ -132,6 +125,11 @@ class NoveltyType extends Model
         }
 
         $applicableMinutes = $startTime->diffInMinutes($endTime);
+
+        if (! $checkedInAt->between($this->minStartTimeSlot($checkedInAt), $this->maxEndTimeSlot($checkedInAt), false) &&
+            ! $checkedOutAt->between($this->minStartTimeSlot($checkedOutAt), $this->maxEndTimeSlot($checkedOutAt), false)) {
+            $applicableMinutes = 0;
+        }
 
         if (empty($this->apply_on_time_slots)) {
             $applicableMinutes = $checkedInAt->diffInMinutes($checkedOutAt);

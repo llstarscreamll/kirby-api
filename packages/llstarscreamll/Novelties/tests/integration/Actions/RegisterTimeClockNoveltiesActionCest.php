@@ -497,6 +497,45 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                 ],
             ],
+            // time lock logs with too late check in and early check out
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'check_in_novelty_type_code' => null, // empty novelty type
+                    'checked_in_at' => '2019-04-01 08:00:00', // 1 hour late
+                    'checked_out_at' => '2019-04-01 18:00:00', // on time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        // 10 hours (from 8am to 6pm), minimum minutes to subtract launch time not reached
+                        'total_time_in_minutes' => 60 * 10,
+                    ],
+                    [
+                        'novelty_type_code' => 'PP', // default novelty type when check_in_novelty_type_id is null
+                        'total_time_in_minutes' => 60 * -1, // 1 hour from 7am to 8am
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'check_out_novelty_type_code' => null, // empty novelty type
+                    'checked_in_at' => '2019-04-01 07:00:00', // on time
+                    'checked_out_at' => '2019-04-01 17:00:00', // one hour early
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        // 10 hours (from 7am to 5pm), minimum minutes to subtract launch time not reached
+                        'total_time_in_minutes' => 60 * 10,
+                    ],
+                    [
+                        'novelty_type_code' => 'PP', // default novelty type when check_in_novelty_type_id is null
+                        'total_time_in_minutes' => 60 * -1, // 1 hour from 17:00 to 18:00
+                    ],
+                ],
+            ],
         ];
     }
 

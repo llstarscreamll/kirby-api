@@ -244,11 +244,11 @@ class TimeClockLog extends Model
         }
 
         // same day
-        if ($dayType->is(DayType::Holiday) && $isTheSameDay && $this->checkedInOnHoliday) {
+        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && $isTheSameDay) {
             $timeInMinutes = $this->clocked_minutes;
         }
 
-        if ($dayType->is(DayType::Workday) && $isTheSameDay && ! $this->checkedInOnHoliday) {
+        if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday && $isTheSameDay) {
             $timeInMinutes = $this->clocked_minutes;
         }
 
@@ -289,7 +289,7 @@ class TimeClockLog extends Model
         if ($this->work_shift_id) {
             $beGraceTimeAware = true;
             $workShiftStart = $this->workShift->minStartTimeSlot($this->checked_in_at, $beGraceTimeAware);
-            $workShiftEnd = $this->workShift->maxEndTimeSlot($this->checked_in_at, $beGraceTimeAware);
+            $workShiftEnd = $this->workShift->maxEndTimeSlot($this->checked_out_at, $beGraceTimeAware);
 
             $hasClockedTimeOnWorkShift = $this->checked_in_at->between($workShiftStart, $workShiftEnd)
             || $this->checked_out_at->between($workShiftStart, $workShiftEnd)
@@ -297,5 +297,15 @@ class TimeClockLog extends Model
         }
 
         return $hasClockedTimeOnWorkShift;
+    }
+
+    public function checkInPunctuality(): ?int
+    {
+        return optional($this->workShift)->startPunctuality($this->checked_in_at);
+    }
+
+    public function checkOutPunctuality(): ?int
+    {
+        return optional($this->workShift)->endPunctuality($this->checked_out_at);
     }
 }

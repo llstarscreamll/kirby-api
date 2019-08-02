@@ -104,6 +104,10 @@ class RegisterTimeClockNoveltiesAction
         $timeClockLog->hasHolidaysChecks() ? array_push($dayTypes, DayType::Holiday) : null;
         $this->noveltyTypeRepository->whereDayType($dayTypes);
 
+        if ($timeClockLog->checkOutPunctuality() === -1 || $timeClockLog->checkInPunctuality() === 1) {
+            $this->noveltyTypeRepository->whereDefaultForSubtraction();
+        }
+
         $noveltyTypes = $noveltyTypeIds
             ? $this->noveltyTypeRepository->findOrWhereIn('id', $noveltyTypeIds)
             : $this->noveltyTypeRepository->get();
@@ -118,8 +122,8 @@ class RegisterTimeClockNoveltiesAction
                     $end = now()->setTime($hours, $seconds);
 
                     return $timeClockLog->workShift
-                        && (optional($timeClockLog->workShift->minStartTimeSlot())->between($noveltyType->minStartTimeSlot(), $noveltyType->maxEndTimeSlot())
-                        || optional($timeClockLog->workShift->maxEndTimeSlot())->between($noveltyType->minStartTimeSlot(), $noveltyType->maxEndTimeSlot()));
+                        && (optional($timeClockLog->workShift->minStartTimeSlot($timeClockLog->checked_in_at))->between($noveltyType->minStartTimeSlot($timeClockLog->checked_in_at), $noveltyType->maxEndTimeSlot($timeClockLog->checked_in_at))
+                        || optional($timeClockLog->workShift->maxEndTimeSlot($timeClockLog->checked_in_at, false, false))->between($noveltyType->minStartTimeSlot($timeClockLog->checked_in_at), $noveltyType->maxEndTimeSlot($timeClockLog->checked_in_at)));
                 })->count() > 0 || empty($noveltyType->apply_on_time_slots);
         });
 
@@ -134,19 +138,19 @@ class RegisterTimeClockNoveltiesAction
     private function solveTimeForNoveltyType(TimeClockLog $timeClockLog, NoveltyType $noveltyType)
     {
         $timeInMinutes = 0;
-        $workShift = $timeClockLog->workShift;
+        $workShift = optional($timeClockLog->workShift);
         $clockedMinutes = $timeClockLog->clocked_minutes;
         $checkInNoveltyTypeId = $timeClockLog->check_in_novelty_type_id;
         $checkOutNoveltyTypeId = $timeClockLog->check_out_novelty_type_id;
         [$startNoveltyMinutes, $clockedMinutes, $endNoveltyMinutes, $mealMinutes] = $this->calculateTimeClockLogTimesInMinutes($timeClockLog);
 
+        $checkedInAt = $timeClockLog->checked_in_at;
+        $checkedOutAt = $timeClockLog->checked_out_at;
+        $checkInPunctuality = $timeClockLog->checkInPunctuality();
+        $checkOutPunctuality = $timeClockLog->checkOutPunctuality();
+
         if ($timeClockLog->work_shift_id && $noveltyType->context_type === 'normal_work_shift_time' && $clockedMinutes[$noveltyType->apply_on_days_of_type->value]) {
             if ($workShift && $timeClockLog->hasClockedTimeOnWorkShift()) {
-                $checkedInAt = $timeClockLog->checked_in_at;
-                $checkedOutAt = $timeClockLog->checked_out_at;
-                $checkInPunctuality = $workShift->startPunctuality($checkedInAt);
-                $checkOutPunctuality = $workShift->endPunctuality($checkedOutAt);
-
                 // on time or early
                 $startTime = in_array($checkInPunctuality, [-1, 0])
                     ? $workShift->getClosestSlotFlagTime('start', $checkedInAt)
@@ -183,6 +187,14 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes += $endNoveltyMinutes;
         }
 
+        if (! $checkInNoveltyTypeId && $checkInPunctuality === 1 && $noveltyType->code == 'PP') {
+            $timeInMinutes += $startNoveltyMinutes;
+        }
+
+        if (! $checkOutNoveltyTypeId && $checkOutPunctuality === -1 && $noveltyType->code == 'PP') {
+            $timeInMinutes += $endNoveltyMinutes;
+        }
+
         if (! $timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
             $timeInMinutes = $clockedMinutes;
         }
@@ -213,29 +225,29 @@ class RegisterTimeClockNoveltiesAction
         $shouldDiscountMealTime = $clockedMinutes >= $workShift->min_minutes_required_to_discount_meal_time;
 
         // calculate check in novelty time
-        if ($timeClockLog->check_in_novelty_type_id && $timeClockLog->work_shift_id) {
+        if ($timeClockLog->work_shift_id) {
             $estimatedStartTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
                 ? $timeClockLog->checked_out_at : $closestStartSlot;
             $startNoveltyMinutes = $estimatedStartTime->diffInMinutes($timeClockLog->checked_in_at);
 
-            if ($timeClockLog->checkInNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
+            if (! $timeClockLog->checkInNovelty || $timeClockLog->checkInNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
                 $startNoveltyMinutes *= -1;
             }
         }
 
         // calculate check out novelty time
-        if ($timeClockLog->check_out_novelty_type_id && $timeClockLog->work_shift_id) {
+        if ($timeClockLog->work_shift_id) {
             $endTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
                 ? $closestStartSlot : $timeClockLog->checked_out_at;
             $endNoveltyMinutes = $closestEndSlot->diffInMinutes($endTime);
 
-            if ($timeClockLog->checkOutNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
+            if (! $timeClockLog->checkOutNovelty || $timeClockLog->checkOutNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
                 $endNoveltyMinutes *= -1;
             }
         }
 
-        $workMinutes[DayType::Workday] += $timeClockLog->getClockedTimeMinutesByDayType(DayType::Workday());
         $workMinutes[DayType::Holiday] += $timeClockLog->getClockedTimeMinutesByDayType(DayType::Holiday());
+        $workMinutes[DayType::Workday] += $timeClockLog->getClockedTimeMinutesByDayType(DayType::Workday());
 
         return [
             $startNoveltyMinutes,
