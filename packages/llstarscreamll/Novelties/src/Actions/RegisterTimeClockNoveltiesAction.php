@@ -105,7 +105,7 @@ class RegisterTimeClockNoveltiesAction
         $this->noveltyTypeRepository->whereDayType($dayTypes);
 
         if ($timeClockLog->checkOutPunctuality() === -1 || $timeClockLog->checkInPunctuality() === 1) {
-            $this->noveltyTypeRepository->whereDefaultForSubtraction();
+            $this->noveltyTypeRepository->orWhereDefaultForSubtraction();
         }
 
         $noveltyTypes = $noveltyTypeIds

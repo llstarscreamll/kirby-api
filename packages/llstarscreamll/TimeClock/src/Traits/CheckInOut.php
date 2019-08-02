@@ -16,6 +16,20 @@ use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 trait CheckInOut
 {
     /**
+     * @return bool
+     */
+    private function subtractNoveltyTypeIsRequired(): bool
+    {
+        $requiredNoveltySetting = $this->settingRepository
+            ->findByField('key', 'time-clock.require-novelty-type-on-late-check-in')
+            ->first();
+
+        $noveltyTypeIsRequired = optional($requiredNoveltySetting)->value;
+
+        return is_null($noveltyTypeIsRequired) ? true : $noveltyTypeIsRequired == true;
+    }
+
+    /**
      * @param Identification $identification
      * @param int            $workShiftId
      */

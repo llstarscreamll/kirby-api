@@ -5,6 +5,7 @@ namespace ClockTime;
 use Illuminate\Support\Carbon;
 use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
+use llstarscreamll\TimeClock\Models\Setting;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
@@ -53,6 +54,10 @@ class CheckInCest
         factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Addition,
             'context_type' => 'elegible_by_user',
+        ]);
+
+        factory(NoveltyType::class)->create([
+            'operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP',
         ]);
 
         $I->haveHttpHeader('Accept', 'application/json');
@@ -427,6 +432,43 @@ class CheckInCest
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 1]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 3]]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasSingleWorkShiftAndArrivesTooLateButNoveltyIsNotRequired(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, one hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
+        // set setting to NOT require novelty type when check in is too late
+        Setting::create([
+            'key' => 'time-clock.require-novelty-type-on-late-check-in',
+            'value' => false,
+        ]);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => 4,
+        ]);
     }
 
     /**
