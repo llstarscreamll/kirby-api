@@ -5,7 +5,6 @@ namespace ClockTime;
 use Illuminate\Support\Carbon;
 use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
-use llstarscreamll\TimeClock\Models\Setting;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
@@ -262,10 +261,7 @@ class CheckOutCest
             ->create();
 
         // set setting to NOT require novelty type when check out is too early
-        Setting::create([
-            'key' => 'time-clock.require-novelty-type-on-late-check-in',
-            'value' => false,
-        ]);
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
 
         $requestData = [
             'sub_cost_center_id' => $this->firstSubCostCenter->id,

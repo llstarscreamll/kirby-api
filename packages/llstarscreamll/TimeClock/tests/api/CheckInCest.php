@@ -5,7 +5,6 @@ namespace ClockTime;
 use Illuminate\Support\Carbon;
 use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
-use llstarscreamll\TimeClock\Models\Setting;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
@@ -450,11 +449,9 @@ class CheckInCest
 
         // fake current date time, one hour late
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
+
         // set setting to NOT require novelty type when check in is too late
-        Setting::create([
-            'key' => 'time-clock.require-novelty-type-on-late-check-in',
-            'value' => false,
-        ]);
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
 
         $requestData = [
             'identification_code' => $employee->identifications->first()->code,

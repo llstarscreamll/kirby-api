@@ -17,6 +17,7 @@ class TimeClockPackageSeeder extends Seeder
     public function run()
     {
         $this->call([
+            TimeClockSettingsSeeder::class,
             TimeClockPermissionsSeeder::class,
         ]);
     }

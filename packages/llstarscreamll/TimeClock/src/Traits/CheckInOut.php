@@ -21,7 +21,7 @@ trait CheckInOut
     private function subtractNoveltyTypeIsRequired(): bool
     {
         $requiredNoveltySetting = $this->settingRepository
-            ->findByField('key', 'time-clock.require-novelty-type-on-late-check-in')
+            ->findByField('key', 'time-clock.require-subtract-novelty-type-on-checks')
             ->first();
 
         $noveltyTypeIsRequired = optional($requiredNoveltySetting)->value;
