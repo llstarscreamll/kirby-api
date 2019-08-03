@@ -24,8 +24,10 @@ class WorkShift extends Model
      */
     protected $fillable = [
         'name',
-        'grace_minutes_for_start_times',
-        'grace_minutes_for_end_times',
+        'grace_minutes_before_start_times',
+        'grace_minutes_after_start_times',
+        'grace_minutes_before_end_times',
+        'grace_minutes_after_end_times',
         'meal_time_in_minutes',
         'applies_on_days',
         'min_minutes_required_to_discount_meal_time',
@@ -49,8 +51,10 @@ class WorkShift extends Model
      * @var array
      */
     protected $casts = [
-        'grace_minutes_for_start_times' => 'int',
-        'grace_minutes_for_end_times' => 'int',
+        'grace_minutes_before_start_times' => 'int',
+        'grace_minutes_after_start_times' => 'int',
+        'grace_minutes_before_end_times' => 'int',
+        'grace_minutes_after_end_times' => 'int',
         'meal_time_in_minutes' => 'int',
         'min_minutes_required_to_discount_meal_time' => 'int',
         'time_slots' => 'array',
@@ -97,6 +101,7 @@ class WorkShift extends Model
     }
 
     /**
+     * @todo return time in minutes, not hours
      * @return int diff in hours
      */
     public function getTotalTimeAttribute()
@@ -156,8 +161,8 @@ class WorkShift extends Model
                 return $time->diffInSeconds($timeSlot[$flag]);
             })
             ->map(function (array $timeSlot) use ($time, $flag) {
-                $flagGraceFrom = $timeSlot[$flag]->copy()->subMinutes($this->grace_minutes_for_end_times);
-                $flagGraceTo = $timeSlot[$flag]->copy()->addMinutes($this->grace_minutes_for_end_times);
+                $flagGraceFrom = $timeSlot[$flag]->copy()->subMinutes($this->{"grace_minutes_before_{$flag}_times"});
+                $flagGraceTo = $timeSlot[$flag]->copy()->addMinutes($this->{"grace_minutes_after_{$flag}_times"});
 
                 if ($time->between($flagGraceFrom, $flagGraceTo)) {
                     return 0;
@@ -182,8 +187,8 @@ class WorkShift extends Model
         $end = $date->copy()->setTime($hour, $seconds);
 
         if ($beGraceTimeAware) {
-            $start = $start->subMinutes($this->grace_minutes_for_start_times);
-            $end = $end->addMinutes($this->grace_minutes_for_end_times);
+            $start = $start->subMinutes($this->grace_minutes_before_start_times);
+            $end = $end->addMinutes($this->grace_minutes_after_end_times);
         }
 
         if ($start->greaterThan($end) && ! $relativeToEnd) {

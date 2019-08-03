@@ -100,10 +100,10 @@ class Employee extends Model
         $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function (WorkShift $workShift) use ($time) {
             $matchedTimeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
                 [$hour, $seconds] = explode(':', $timeSlot['start']);
-                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
+                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_before_start_time);
 
                 [$hour, $seconds] = explode(':', $timeSlot['end']);
-                $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_end_time);
+                $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_after_end_time);
 
                 if ($slotStartFrom->hour > (int) $hour) {
                     $slotEndTo = $slotEndTo->addDay();
@@ -133,8 +133,8 @@ class Employee extends Model
         return $this->workShifts->filter(function (WorkShift $workShift) use ($time) {
             $timeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
                 [$hour, $seconds] = explode(':', $timeSlot['start']);
-                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_for_start_time);
-                $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_for_start_time);
+                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_before_start_time);
+                $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_after_start_time);
 
                 if ($slotStartFrom->hour > (int) $hour) {
                     $slotStartFrom = $slotStartFrom->subDay();

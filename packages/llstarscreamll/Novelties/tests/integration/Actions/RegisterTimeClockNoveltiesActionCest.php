@@ -56,8 +56,10 @@ class RegisterTimeClockNoveltiesActionCest
             'name' => '7-18',
             'meal_time_in_minutes' => 60, // 1 hour
             'min_minutes_required_to_discount_meal_time' => 60 * 11, // 11 hours
-            'grace_minutes_for_start_times' => 15,
-            'grace_minutes_for_end_times' => 15,
+            'grace_minutes_before_start_times' => 15,
+            'grace_minutes_after_start_times' => 15,
+            'grace_minutes_before_end_times' => 15,
+            'grace_minutes_after_end_times' => 15,
             'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
             'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
         ]));

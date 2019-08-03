@@ -23,6 +23,7 @@ class WorkShiftCest
             [
                 'slot' => 'end',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
                     ],
@@ -34,6 +35,7 @@ class WorkShiftCest
             [
                 'slot' => 'start',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
                     ],
@@ -45,17 +47,19 @@ class WorkShiftCest
             [
                 'slot' => 'start',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
                     ],
                 ],
                 'testNow' => Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 00)),
                 'time' => now(),
-                'expected' => -1, // too eager
+                'expected' => -1, // too early
             ],
             [
                 'slot' => 'start',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
                     ],
@@ -67,6 +71,7 @@ class WorkShiftCest
             [
                 'slot' => 'end',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
                     ],
@@ -78,6 +83,7 @@ class WorkShiftCest
             [
                 'slot' => 'end',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '18:00'],
                     ],
@@ -89,6 +95,7 @@ class WorkShiftCest
             [
                 'slot' => 'end',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '12:00'],
                         ['start' => '14:00', 'end' => '18:00'],
@@ -101,6 +108,7 @@ class WorkShiftCest
             [
                 'slot' => 'end',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '12:00'],
                         ['start' => '14:00', 'end' => '18:00'],
@@ -113,6 +121,7 @@ class WorkShiftCest
             [
                 'slot' => 'end',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '12:00'],
                         ['start' => '14:00', 'end' => '18:00'],
@@ -125,6 +134,7 @@ class WorkShiftCest
             [
                 'slot' => 'end',
                 'workShiftData' => [
+                    'name' => 'test',
                     'time_slots' => [
                         ['start' => '07:00', 'end' => '12:00'],
                         ['start' => '14:00', 'end' => '18:00'],
@@ -144,7 +154,8 @@ class WorkShiftCest
      */
     public function testSlotPunctuality(UnitTester $I, Example $data)
     {
-        $workShift = new WorkShift($data['workShiftData']);
+        $workShift = WorkShift::create($data['workShiftData']);
+        $workShift->refresh();
 
         $result = $workShift->slotPunctuality($data['slot'], $data['time']);
 

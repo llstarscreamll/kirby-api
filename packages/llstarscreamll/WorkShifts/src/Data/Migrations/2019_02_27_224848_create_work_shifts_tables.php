@@ -21,10 +21,12 @@ class CreateWorkShiftsTables extends Migration
         Schema::create('work_shifts', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 50)->unique();
-            $table->unsignedInteger('grace_minutes_for_start_times')->nullable();
-            $table->unsignedInteger('grace_minutes_for_end_times')->nullable();
-            $table->unsignedInteger('meal_time_in_minutes')->nullable();
-            $table->unsignedInteger('min_minutes_required_to_discount_meal_time')->nullable();
+            $table->unsignedInteger('grace_minutes_before_start_times')->default(10);
+            $table->unsignedInteger('grace_minutes_after_start_times')->default(10);
+            $table->unsignedInteger('grace_minutes_before_end_times')->default(10);
+            $table->unsignedInteger('grace_minutes_after_end_times')->default(10);
+            $table->unsignedInteger('meal_time_in_minutes')->default(0);
+            $table->unsignedInteger('min_minutes_required_to_discount_meal_time')->default(0);
             $table->string('applies_on_days')->nullable();
             $table->json('time_slots');
             $table->timestamps();

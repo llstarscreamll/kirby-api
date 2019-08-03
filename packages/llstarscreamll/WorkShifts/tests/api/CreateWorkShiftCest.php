@@ -31,8 +31,10 @@ class CreateWorkShiftCest
     {
         $requestBody = [
             'name' => 'work shift one',
-            'grace_minutes_for_start_times' => 15,
-            'grace_minutes_for_end_times' => 15,
+            'grace_minutes_before_start_times' => 15,
+            'grace_minutes_after_start_times' => 15,
+            'grace_minutes_before_end_times' => 15,
+            'grace_minutes_after_end_times' => 15,
             'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
             'time_slots' => [
