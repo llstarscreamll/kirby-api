@@ -3,6 +3,7 @@
 namespace llstarscreamll\Authorization;
 
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Authorization\UI\CLI\Commands\RefreshAdminPermissionsCommand;
 
 /**
  * Class AuthorizationServiceProvider.
@@ -21,7 +22,7 @@ class AuthorizationServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
-        $this->loadMigrationsFrom(__DIR__.'/Data/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/Data/Migrations');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -36,7 +37,7 @@ class AuthorizationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/authorization.php', 'authorization');
+        $this->mergeConfigFrom(__DIR__ . '/../config/authorization.php', 'authorization');
 
         // Register the service the package provides.
         $this->app->singleton('authorization', function ($app) {
@@ -63,7 +64,7 @@ class AuthorizationServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/authorization.php' => config_path('authorization.php'),
+            __DIR__ . '/../config/authorization.php' => config_path('authorization.php'),
         ], 'authorization.config');
 
         // Publishing the views.
@@ -82,6 +83,8 @@ class AuthorizationServiceProvider extends ServiceProvider
         ], 'authorization.views');*/
 
         // Registering package commands.
-        // $this->commands([]);
+        $this->commands([
+            RefreshAdminPermissionsCommand::class
+        ]);
     }
 }
