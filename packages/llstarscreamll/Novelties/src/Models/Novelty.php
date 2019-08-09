@@ -4,6 +4,8 @@ namespace llstarscreamll\Novelties\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\TimeClock\Models\TimeClockLog;
 
 /**
  * Class Novelty.
@@ -43,5 +45,21 @@ class Novelty extends Model
     public function noveltyType()
     {
         return $this->belongsTo(NoveltyType::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function timeClockLog()
+    {
+        return $this->belongsTo(TimeClockLog::class);
     }
 }
