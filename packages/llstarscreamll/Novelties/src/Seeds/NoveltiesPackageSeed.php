@@ -18,6 +18,9 @@ class NoveltiesPackageSeed extends Seeder
      */
     public function run()
     {
-        $this->call(DefaultNoveltyTypesSeed::class);
+        $this->call([
+            NoveltiesPermissionsSeeder::class,
+            DefaultNoveltyTypesSeed::class
+        ]);
     }
 }
