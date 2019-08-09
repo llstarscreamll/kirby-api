@@ -1,8 +1,9 @@
 <?php
+
 namespace Novelties;
 
 /**
- * Inherited Methods
+ * Inherited Methods.
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void execute($callable)
@@ -15,12 +16,12 @@ namespace Novelties;
  * @method void pause()
  *
  * @SuppressWarnings(PHPMD)
-*/
+ */
 class ApiTester extends \Codeception\Actor
 {
     use _generated\ApiTesterActions;
 
-   /**
-    * Define custom actions here
-    */
+    /*
+     * Define custom actions here
+     */
 }

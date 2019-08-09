@@ -20,7 +20,7 @@ class NoveltiesPackageSeed extends Seeder
     {
         $this->call([
             NoveltiesPermissionsSeeder::class,
-            DefaultNoveltyTypesSeed::class
+            DefaultNoveltyTypesSeed::class,
         ]);
     }
 }

@@ -9,7 +9,7 @@ use llstarscreamll\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
 
 /**
  * Class NoveltiesController.
- * 
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class NoveltiesController
