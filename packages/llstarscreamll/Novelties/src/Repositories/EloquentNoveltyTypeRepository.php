@@ -21,6 +21,16 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     protected $allowedFilters = ['name'];
 
     /**
+     * Fields that are searchable by \Prettus\Repository\Criteria\RequestCriteria.
+     *
+     * @var array
+     */
+    protected $fieldSearchable = [
+        'code' => 'like',
+        'name' => 'like',
+    ];
+
+    /**
      * @var array
      */
     protected $allowedIncludes = [];
