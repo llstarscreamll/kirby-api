@@ -3,13 +3,13 @@
 namespace llstarscreamll\Authorization\UI\CLI\Commands;
 
 use Illuminate\Console\Command;
-use llstarscreamll\Authorization\Models\Permission;
-use llstarscreamll\Authorization\Models\Role;
 use Illuminate\Support\Facades\Cache;
+use llstarscreamll\Authorization\Models\Role;
+use llstarscreamll\Authorization\Models\Permission;
 
 /**
  * Class RefreshAdminPermissionsCommand.
- * 
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class RefreshAdminPermissionsCommand extends Command
