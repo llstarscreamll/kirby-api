@@ -16,7 +16,11 @@ class NoveltiesPermissionsSeeder extends Seeder
      * @var array
      */
     private $permissions = [
+        // novelties
         ['name' => 'novelties.get'],
+        ['name' => 'novelties.update'],
+        // novelty types
+        ['name' => 'novelty-types.search'],
     ];
 
     /**

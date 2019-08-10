@@ -3,6 +3,7 @@
 namespace llstarscreamll\Novelties\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use llstarscreamll\Employees\UI\API\Resources\EmployeeResource;
 
 /**
  * Class NoveltyResource.
@@ -19,6 +20,6 @@ class NoveltyResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return ['employee' => $this->whenLoaded('employee', EmployeeResource::make($this->employee))] + parent::toArray($request);
     }
 }
