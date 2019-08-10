@@ -3,8 +3,12 @@
 namespace llstarscreamll\Employees\UI\API\Controllers;
 
 use Symfony\Component\HttpFoundation\Response;
+use Prettus\Repository\Criteria\RequestCriteria;
 use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
+use llstarscreamll\Employees\UI\API\Resources\EmployeeResource;
+use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
 use llstarscreamll\Employees\UI\API\Requests\SyncEmployeesByCsvFileRequest;
+use llstarscreamll\Employees\UI\API\Requests\SearchEmployeesRequest;
 
 /**
  * Class EmployeeApiController.
@@ -13,6 +17,36 @@ use llstarscreamll\Employees\UI\API\Requests\SyncEmployeesByCsvFileRequest;
  */
 class EmployeeApiController
 {
+
+    /**
+     * @var \llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface
+     */
+    private $employeeRepository;
+
+    /**
+     * @param \llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface $noveltyRepository
+     */
+    public function __construct(EmployeeRepositoryInterface $employeeRepository)
+    {
+        $this->employeeRepository = $employeeRepository;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param \llstarscreamll\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest
+     * @return \Illuminate\Http\Response
+     */
+    public function index(SearchEmployeesRequest $request)
+    {
+        $noveltyTypes = $this->employeeRepository
+            ->pushCriteria(app(RequestCriteria::class))
+            ->with('user')
+            ->simplePaginate();
+
+        return EmployeeResource::collection($noveltyTypes);
+    }
+
     /**
      * @param SyncEmployeesByCsvFileRequest $request
      */
@@ -20,6 +54,6 @@ class EmployeeApiController
     {
         SyncEmployeesByCsvFileJob::dispatch($request->user()->id, $request->file('csv_file')->store('employees_sync'));
 
-        return response()->json('', Response::HTTP_ACCEPTED);
+        return response()->json([''], Response::HTTP_ACCEPTED);
     }
 }
