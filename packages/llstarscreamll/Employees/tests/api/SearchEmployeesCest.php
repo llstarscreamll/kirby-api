@@ -2,8 +2,6 @@
 
 namespace Employees;
 
-use Illuminate\Support\Facades\Queue;
-use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
 use llstarscreamll\Employees\Models\Employee;
 
 /**

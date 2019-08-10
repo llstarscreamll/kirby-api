@@ -7,8 +7,8 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
 use llstarscreamll\Employees\UI\API\Resources\EmployeeResource;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
-use llstarscreamll\Employees\UI\API\Requests\SyncEmployeesByCsvFileRequest;
 use llstarscreamll\Employees\UI\API\Requests\SearchEmployeesRequest;
+use llstarscreamll\Employees\UI\API\Requests\SyncEmployeesByCsvFileRequest;
 
 /**
  * Class EmployeeApiController.
@@ -17,7 +17,6 @@ use llstarscreamll\Employees\UI\API\Requests\SearchEmployeesRequest;
  */
 class EmployeeApiController
 {
-
     /**
      * @var \llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface
      */
