@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class GetNoveltyRequest.
- * 
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class GetNoveltyRequest extends FormRequest
@@ -29,7 +29,7 @@ class GetNoveltyRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => ['numeric']
+            'id' => ['numeric'],
         ];
     }
 }

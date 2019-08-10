@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * Class NoveltyResource.
- * 
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class NoveltyResource extends JsonResource

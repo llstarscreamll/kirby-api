@@ -1,10 +1,9 @@
 <?php
 
 use Faker\Generator as Faker;
-use llstarscreamll\Novelties\Models\NoveltyType;
-use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\Novelties\Models\NoveltyType;
 
 /*
 |--------------------------------------------------------------------------

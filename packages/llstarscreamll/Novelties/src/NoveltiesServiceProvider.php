@@ -52,8 +52,8 @@ class NoveltiesServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadRoutesFrom(__DIR__ . '/UI/API/V1/routes.php');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
         $this->loadServiceProviders();
 
         // Publishing is only necessary when using the CLI.
@@ -69,7 +69,7 @@ class NoveltiesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/novelties.php', 'novelties');
+        $this->mergeConfigFrom(__DIR__.'/../config/novelties.php', 'novelties');
     }
 
     /**
@@ -96,11 +96,11 @@ class NoveltiesServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        $this->app->make(EloquentFactory::class)->load(__DIR__ . '/../database/factories');
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__ . '/../config/novelties.php' => config_path('novelties.php'),
+            __DIR__.'/../config/novelties.php' => config_path('novelties.php'),
         ], 'novelties.config');
 
         // Publishing the views.
