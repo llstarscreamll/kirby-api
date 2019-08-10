@@ -19,6 +19,16 @@ class EloquentEmployeeRepository extends EloquentRepositoryAbstract implements E
     protected $allowedFilters = ['code', 'identification_number'];
 
     /**
+     * Fields that are searchable by \Prettus\Repository\Criteria\RequestCriteria.
+     *
+     * @var array
+     */
+    protected $fieldSearchable = [
+        'user.first_name' => 'like',
+        'user.last_name' => 'like',
+    ];
+
+    /**
      * @var array
      */
     protected $allowedIncludes = [];
