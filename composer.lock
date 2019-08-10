@@ -1957,7 +1957,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/Employees",
-                "reference": "5fd23b4909f400dc998455529e30a03524b5bd87"
+                "reference": "6a3a330ef46c704d2cb0d2592d6133808ed955a4"
             },
             "require": {
                 "illuminate/support": "~5",
@@ -1981,6 +1981,9 @@
                 }
             },
             "autoload": {
+                "classmap": [
+                    "database/seeds"
+                ],
                 "psr-4": {
                     "llstarscreamll\\Employees\\": "src/"
                 }
@@ -6696,16 +6699,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.9.1",
+            "version": "1.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72"
+                "reference": "007c053ae6f31bba39dfa19a7726f56e9763bbea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
-                "reference": "e6828efaba2c9b79f4499dae1d66ef8bfa7b2b72",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/007c053ae6f31bba39dfa19a7726f56e9763bbea",
+                "reference": "007c053ae6f31bba39dfa19a7726f56e9763bbea",
                 "shasum": ""
             },
             "require": {
@@ -6740,7 +6743,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2019-04-07T13:18:21+00:00"
+            "time": "2019-08-09T12:45:53+00:00"
         },
         {
             "name": "nunomaduro/collision",
