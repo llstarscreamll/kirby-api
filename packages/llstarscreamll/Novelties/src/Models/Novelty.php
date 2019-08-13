@@ -22,9 +22,11 @@ class Novelty extends Model
      * @var array
      */
     protected $fillable = [
-        'time_clock_log_id',
-        'novelty_type_id',
         'employee_id',
+        'novelty_type_id',
+        'time_clock_log_id',
+        'start_at',
+        'end_at',
         'total_time_in_minutes',
     ];
 

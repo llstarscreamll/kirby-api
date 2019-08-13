@@ -35,6 +35,8 @@ class CreateNoveltyTables extends Migration
             $table->unsignedBigInteger('time_clock_log_id')->nullable();
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('novelty_type_id');
+            $table->dateTime('start_at')->nullable();
+            $table->dateTime('end_at')->nullable();
             $table->integer('total_time_in_minutes');
             $table->timestamps();
             $table->softDeletes();
