@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\Novelties\Contracts;
 
+use Carbon\Carbon;
 use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
 
 /**
@@ -11,4 +12,5 @@ use llstarscreamll\Core\Contracts\BaseRepositoryInterface;
  */
 interface NoveltyRepositoryInterface extends BaseRepositoryInterface
 {
+    public function whereScheduledForEmployee($employeeId, string $field, Carbon $start, Carbon $end);
 }

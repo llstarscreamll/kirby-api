@@ -147,15 +147,16 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  string $flag   'start'|'end'
+     * @param  string $flag     'start'|'end'
      * @param  Carbon $time
+     * @param  Carbon $offset
      * @return int    -1 early, zero on time, 1 late
      */
-    public function slotPunctuality(string $flag, Carbon $time): ?int
+    public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null): ?int
     {
         return collect($this->time_slots)
-            ->map(function ($timeSlot) use ($time, $flag) {
-                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware = false, $flag === 'end');
+            ->map(function ($timeSlot) use ($time, $flag, $offSet) {
+                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware = false, $flag === 'end', $offSet);
             })
             ->sortBy(function (array $timeSlot) use ($time, $flag) {
                 return $time->diffInSeconds($timeSlot[$flag]);
@@ -175,8 +176,11 @@ class WorkShift extends Model
     /**
      * @param array  $timeSlot
      * @param Carbon $date
+     * @param bool   $beGraceTimeAware
+     * @param bool   $relativeToEnd
+     * @param Carbon $offSet
      */
-    private function mapTimeSlot(array $timeSlot, Carbon $date = null, bool $beGraceTimeAware = true, bool $relativeToEnd = false): array
+    private function mapTimeSlot(array $timeSlot, Carbon $date = null, bool $beGraceTimeAware = true, bool $relativeToEnd = false, Carbon $offSet = null): array
     {
         $date = $date ?? now();
 
@@ -199,10 +203,12 @@ class WorkShift extends Model
             $start = $start->subDay();
         }
 
-        return [
-            'end' => $end,
-            'start' => $start,
-        ];
+        // set the time offset if needed
+        if ($offSet) {
+            $relativeToEnd ? $end = $offSet : $start = $offSet;
+        }
+
+        return ['end' => $end, 'start' => $start];
     }
 
     /**

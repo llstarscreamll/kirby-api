@@ -11,6 +11,7 @@ use llstarscreamll\Employees\Models\Identification;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
+use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\SettingRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\AlreadyCheckedInException;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
@@ -46,6 +47,11 @@ class LogCheckInAction
     private $noveltyTypeRepository;
 
     /**
+     * @var NoveltyRepositoryInterface
+     */
+    private $noveltyRepository;
+
+    /**
      * @var SubCostCenterRepository
      */
     private $subCostCenterRepository;
@@ -62,6 +68,7 @@ class LogCheckInAction
 
     /**
      * @param SettingRepositoryInterface                           $settingRepository
+     * @param NoveltyRepositoryInterface                           $noveltyRepository
      * @param NoveltyTypeRepositoryInterface                       $noveltyTypeRepository
      * @param TimeClockLogRepositoryInterface                      $timeClockLogRepository
      * @param SubCostCenterRepositoryInterface                     $subCostCenterRepository
@@ -70,6 +77,7 @@ class LogCheckInAction
      */
     public function __construct(
         SettingRepositoryInterface $settingRepository,
+        NoveltyRepositoryInterface $noveltyRepository,
         NoveltyTypeRepositoryInterface $noveltyTypeRepository,
         TimeClockLogRepositoryInterface $timeClockLogRepository,
         SubCostCenterRepositoryInterface $subCostCenterRepository,
@@ -77,6 +85,7 @@ class LogCheckInAction
         ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
     ) {
         $this->settingRepository = $settingRepository;
+        $this->noveltyRepository = $noveltyRepository;
         $this->noveltyTypeRepository = $noveltyTypeRepository;
         $this->timeClockLogRepository = $timeClockLogRepository;
         $this->subCostCenterRepository = $subCostCenterRepository;
@@ -85,26 +94,32 @@ class LogCheckInAction
     }
 
     /**
-     * @param  User                          $registrar
-     * @param  string                        $identificationCode
-     * @param  int                           $workShiftId
-     * @param  null|int                      $noveltyType
-     * @param  null|int                      $subCostCenterId
+     * @param  User                            $registrar
+     * @param  string                          $identificationCode
+     * @param  int                             $workShiftId
+     * @param  null|int                        $noveltyType
+     * @param  null|int                        $subCostCenterId
+     * @throws InvalidNoveltyTypeException
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
-     * @throws InvalidNoveltyTypeException
+     * @throws MissingSubCostCenterException
      * @return TimeClockLog
      */
     public function run(User $registrar, string $identificationCode, ?int $workShiftId = null, ?int $noveltyTypeId = null, ?int $subCostCenterId = null): TimeClockLog
     {
         $noveltyType = null;
         $subCostCenter = null;
+        $checkInOffset = null;
+        $scheduledNovelty = null;
         $noveltyTypeIsRequired = $this->subtractNoveltyTypeIsRequired();
 
         $identification = $this->identificationRepository
             ->with(['employee.workShifts'])
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
+
+        $scheduledNovelty = $this->noveltyRepository->whereScheduledForEmployee($identification->employee->id, 'end_at', now()->startOfDay(), now());
+        $checkInOffset = optional($scheduledNovelty)->end_at;
 
         if ($noveltyTypeId) {
             $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);
@@ -121,7 +136,7 @@ class LogCheckInAction
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        $shiftPunctuality = optional($workShift)->slotPunctuality('start', now());
+        $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
 
         if ($workShift && $shiftPunctuality < 0 && ! $noveltyType) {
             throw new TooEarlyToCheckException($this->getTimeClockData('start', $identification, $workShiftId));

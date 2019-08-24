@@ -5,6 +5,7 @@ namespace ClockTime;
 use Illuminate\Support\Carbon;
 use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
+use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
@@ -765,6 +766,161 @@ class CheckInCest
         $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
     }
+
+    # ######################################################################## #
+    #                         Scheduled novelties tests                        #
+    # ######################################################################## #
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldNotSetDefaultNoveltyWhenArrivesInTimeForScheduledNovelty(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, one hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
+
+        // set setting to NOT require novelty type when check in is too late,
+        // this make to set a default novelty type id for the late check in
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        // create scheduled novelty, this will make not to set the default
+        // novelty for the late check in
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            'start_at' => now()->subHour(),
+            'end_at' => now(),
+        ];
+
+        factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $expectedTimeClockLog = [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => null,
+        ];
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldSetDefaultNoveltyWhenArrivesTooLateForScheduledNovelty(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, monday at 9am, two hours late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 9, 00));
+
+        // set setting to NOT require novelty type when check in is too late,
+        // this make to set a default novelty type id for the late check in
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        // create scheduled novelty from 7am to 8am, since employee arrives at
+        // 9am, he's 1 hour late to check in, so the default novelty type for
+        // check in should be setted
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            'start_at' => now()->subHours(2),
+            'end_at' => now()->subHour(),
+        ];
+
+        factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $expectedTimeClockLog = [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => 4,
+        ];
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldIgnoreCheckoutScheduledNovelties(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, monday at 7am, on time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 7, 00));
+
+        // set setting to NOT require novelty type when check in is too late,
+        // this make to set a default novelty type id for the late check in
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        // create scheduled novelty from 5pm to 6pm, since employee arrives at
+        // 7am, he's on time to check in, said novelty takes no effect for this
+        // check in action, because the novelty time is not in the check in time
+        // range
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            'start_at' => now()->setTime(17, 00), // 5pm
+            'end_at' => now()->setTime(18, 00), // 6pm
+        ];
+
+        factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $expectedTimeClockLog = [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => null,
+        ];
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
+    }
+
+    # ######################################################################## #
+    #                            Permissions tests                             #
+    # ######################################################################## #
 
     /**
      * @test

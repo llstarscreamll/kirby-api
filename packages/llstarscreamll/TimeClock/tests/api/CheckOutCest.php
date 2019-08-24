@@ -5,6 +5,7 @@ namespace ClockTime;
 use Illuminate\Support\Carbon;
 use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
+use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
@@ -556,6 +557,187 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
     }
+
+    # ######################################################################## #
+    #                         Scheduled novelties tests                        #
+    # ######################################################################## #
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasShiftAndLeavesOnTimeWithScheduledNovelty(ApiTester $I)
+    {
+        // fake current date time, monday at 5pm
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 17, 00));
+        $checkedInTime = now()->setTime(7, 00);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'check_in_novelty_type_id' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        // create scheduled novelty from 5pm to 6pm, since employee leaves at
+        // 5pm, he's on time to check out, so the default novelty type for check
+        // out should not be setted
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
+        ];
+
+        factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'check_out_novelty_type_id' => null,
+            'check_out_sub_cost_center_id' => null,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasShiftAndLeavesTooEarlyWithScheduledNovelty(ApiTester $I)
+    {
+        // fake current date time, monday at 4pm
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 16, 00));
+        $checkedInTime = now()->setTime(7, 00);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'check_in_novelty_type_id' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        // set setting to NOT require novelty type when check out is too early,
+        // this make to set a default novelty type id for the early check out
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        // create scheduled novelty from 5pm to 6pm, since employee leaves at
+        // 4pm, he's too late to check out, so the default novelty type for
+        // early check out should be setted
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
+        ];
+
+        factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'check_out_novelty_type_id' => 4,
+            'check_out_sub_cost_center_id' => $this->firstSubCostCenter->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasShiftAndLeavesOnTimeShouldIgnoreCheckInScheduledNovelty(ApiTester $I)
+    {
+        // fake current date time, monday at 6pm
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
+        $checkedInTime = now()->setTime(8, 00);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'check_in_novelty_type_id' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        // set setting to NOT require novelty type when check out is too early,
+        // this make to set a default novelty type id for the early check out
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        // create scheduled novelty from 7am to 8am, since employee leaves at
+        // 6pm, he's on time to check out, scheduled novelty has no effect in
+        // this scenario because of out of time range from said novelty
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            // The novelty should be attached to a time clock log because it's a
+            // past tense record
+            'time_clock_log_id' => $employee->timeClockLogs->first()->id,
+            'start_at' => now()->setTime(7, 00),
+            'end_at' => now()->setTime(8, 00),
+        ];
+
+        factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'check_out_novelty_type_id' => null,
+            'check_out_sub_cost_center_id' => null,
+        ]);
+    }
+
+    # ######################################################################## #
+    #                            Permissions tests                             #
+    # ######################################################################## #
 
     /**
      * @test
