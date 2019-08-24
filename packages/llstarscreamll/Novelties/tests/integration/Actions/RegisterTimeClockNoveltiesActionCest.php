@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Novelties\IntegrationTester;
 use Illuminate\Support\Collection;
 use llstarscreamll\Company\Models\Holiday;
+use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
@@ -499,7 +500,9 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                 ],
             ],
-            // time lock logs with too late check in and early check out
+            # ################################################################ #
+            #     Time lock logs with too late check in or early check out     #
+            # ################################################################ #
             [
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
@@ -538,6 +541,203 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                 ],
             ],
+            # ################################################################ #
+            #               Time lock logs with scheduled novelties            #
+            # ################################################################ #
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'check_out_novelty_type_code' => null, // empty novelty type
+                    'checked_in_at' => '2019-04-01 08:00:00', // on time, because of scheduled novelty
+                    'checked_out_at' => '2019-04-01 18:00:00', // on time
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check in
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00',
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 7am to 8am
+                    ],
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        // 10 hours (from 8am to 6pm), minimum minutes to subtract launch time not reached
+                        'total_time_in_minutes' => 60 * 10,
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 07:00 to 08:00
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'checked_in_at' => '2019-04-01 09:00:00', // too late, because of scheduled novelty
+                    'checked_out_at' => '2019-04-01 18:00:00', // on time
+                    'check_in_novelty_type_code' => 'PP', // novelty for too late check in
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check in
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00',
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 7am to 8am
+                    ],
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        // 9 hours (from 9am to 6pm), minimum minutes to subtract launch time not reached
+                        'total_time_in_minutes' => 60 * 9,
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 07:00 to 08:00
+                    ],
+                    [
+                        'novelty_type_code' => 'PP', // novelty for too late check in
+                        'total_time_in_minutes' => 60 * -1, // -1 hour from 08:00 to 09:00
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'check_out_novelty_type_code' => null, // empty novelty type
+                    'checked_in_at' => '2019-04-01 07:00:00', // on time
+                    'checked_out_at' => '2019-04-01 16:00:00', // on time, because of scheduled novelty
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check out
+                        'start_at' => '2019-04-01 16:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
+                        'total_time_in_minutes' => 60 * 2, // 2 hours from 4pm to 6pm
+                    ],
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        // 9 hours (from 7am to 4pm), minimum minutes to subtract launch time not reached
+                        'total_time_in_minutes' => 60 * 9,
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 2, // 2 hours from 4pm to 6pm
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'checked_in_at' => '2019-04-01 07:00:00', // on time
+                    'checked_out_at' => '2019-04-01 16:00:00', // too early, because of scheduled novelty
+                    'check_out_novelty_type_code' => 'PP', // novelty for too early check out
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check out
+                        'start_at' => '2019-04-01 17:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 5pm to 6pm
+                    ],
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        // 9 hours (from 7am to 4pm), minimum minutes to subtract launch time not reached
+                        'total_time_in_minutes' => 60 * 9,
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 5pm to 6pm
+                    ],
+                    [
+                        'novelty_type_code' => 'PP', // novelty for too early check out
+                        'total_time_in_minutes' => 60 * -1, // -1 hour from 16:00 to 17:00
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'check_out_novelty_type_code' => null, // empty novelty type
+                    'checked_in_at' => '2019-04-01 09:00:00', // on time, because of scheduled novelty
+                    'checked_out_at' => '2019-04-01 16:00:00', // on time, because of scheduled novelty
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check in
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 09:00:00',
+                        'total_time_in_minutes' => 60 * 2, // 2 hours from 7am to 9am
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check out
+                        'start_at' => '2019-04-01 16:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
+                        'total_time_in_minutes' => 60 * 2, // 2 hours from 4pm to 6pm
+                    ],
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        // 7 hours (from 9am to 4pm), minimum minutes to subtract launch time not reached
+                        'total_time_in_minutes' => 60 * 7,
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 2, // 2 hours from 7am to 9am
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 2, // 2 hours from 4pm to 6pm
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'check_out_novelty_type_code' => null, // empty novelty type
+                    'checked_in_at' => '2019-04-01 09:00:00', // too late, because of scheduled novelty
+                    'checked_out_at' => '2019-04-01 16:00:00', // too early, because of scheduled novelty
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check in
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00',
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 7am to 8am
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check out
+                        'start_at' => '2019-04-01 17:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 5pm to 6pm
+                    ],
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        // 7 hours (from 9am to 4pm), minimum minutes to subtract launch time not reached
+                        'total_time_in_minutes' => 60 * 7,
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 7am to 8am
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 5pm to 6pm
+                    ],
+                    [
+                        'novelty_type_code' => 'PP', // novelty for late check in and early check out
+                        'total_time_in_minutes' => 60 * -2, // -2 hours from 8am to 9am and 4pm to 5pm
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -548,11 +748,25 @@ class RegisterTimeClockNoveltiesActionCest
      */
     public function whenWorkShiftCheckInAndCheckOutIsOnTime(IntegrationTester $I, Example $data)
     {
+        $scheduledNovelties = $data['scheduledNovelties'] ?? [];
         $timeClockData = $this->mapTimeClockData($data['timeClockLog']);
         $timeClockLog = factory(TimeClockLog::class)->create($timeClockData);
 
-        $action = app(RegisterTimeClockNoveltiesAction::class);
+        // create scheduled novelties
+        foreach ($scheduledNovelties as $scheduledNovelty) {
+            $noveltyType = $this->noveltyTypes->firstWhere('code', $scheduledNovelty['novelty_type_code']);
 
+            factory(Novelty::class)->create([
+                'employee_id' => $timeClockLog->employee->id,
+                'novelty_type_id' => $noveltyType->id,
+                'start_at' => $scheduledNovelty['start_at'],
+                'end_at' => $scheduledNovelty['end_at'],
+                'total_time_in_minutes' => $scheduledNovelty['total_time_in_minutes'],
+                'time_clock_log_id' => null,
+            ]);
+        }
+
+        $action = app(RegisterTimeClockNoveltiesAction::class);
         $I->assertTrue($action->run($timeClockLog->id));
 
         // only one novelty should be created

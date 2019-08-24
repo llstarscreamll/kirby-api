@@ -2,11 +2,15 @@
 
 namespace llstarscreamll\Novelties\Actions;
 
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use llstarscreamll\Novelties\Enums\DayType;
+use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
@@ -39,6 +43,11 @@ class RegisterTimeClockNoveltiesAction
     private $timeClockLogRepository;
 
     /**
+     * @var Collection
+     */
+    private $scheduledNovelties;
+
+    /**
      * @param HolidayRepositoryInterface      $holidayRepository
      * @param NoveltyRepositoryInterface      $noveltyRepository
      * @param NoveltyTypeRepositoryInterface  $noveltyTypeRepository
@@ -57,13 +66,17 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param int $timeClockLogId
+     * @param  int    $timeClockLogId
+     * @return bool
      */
-    public function run(int $timeClockLogId)
+    public function run(int $timeClockLogId): bool
     {
         $timeClockLog = $this->timeClockLogRepository->with([
             'workShift', 'checkInNovelty', 'checkOutNovelty', 'novelties',
         ])->find($timeClockLogId);
+
+        $this->attachScheduledNovelties($timeClockLog);
+
         $applicableNovelties = $this->getApplicableNovelties($timeClockLog);
 
         $date = now();
@@ -89,11 +102,49 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
+     * @param  TimeClockLog $timeClockLog
+     * @return int
+     */
+    private function attachScheduledNovelties(TimeClockLog $timeClockLog): int
+    {
+        $scheduledNoveltiesIds = $this->scheduledNovelties($timeClockLog)->pluck('id')->all();
+
+        return $this->noveltyRepository->updateWhereIn('id', $scheduledNoveltiesIds, ['time_clock_log_id' => $timeClockLog->id]);
+    }
+
+    /**
+     * @param  TimeClockLog $timeClockLog
+     * @return Collection
+     */
+    private function scheduledNovelties(TimeClockLog $timeClockLog): Collection
+    {
+        if (! $this->scheduledNovelties) {
+            $beGraceTimeAware = true;
+            $employeeId = $timeClockLog->employee->id;
+
+            // scheduled novelties should not exists if work shift is empty
+            if (! $timeClockLog->workShift) {
+                return $this->scheduledNovelties = collect([]);
+            }
+
+            $start = $timeClockLog->workShift->minStartTimeSlot($timeClockLog->checked_in_at, $beGraceTimeAware);
+            $end = $timeClockLog->workShift->maxEndTimeSlot($timeClockLog->checked_out_at, $beGraceTimeAware);
+
+            $this->scheduledNovelties = $this->noveltyRepository
+                ->whereScheduledForEmployee($employeeId, 'start_at', $start, $end)
+                ->get();
+        }
+
+        return $this->scheduledNovelties;
+    }
+
+    /**
      * Get the applicable novelty types to $timeClockLog.
      *
-     * @param TimeClockLog $timeClockLog
+     * @param  TimeClockLog         $timeClockLog
+     * @return EloquentCollection
      */
-    private function getApplicableNovelties(TimeClockLog $timeClockLog)
+    private function getApplicableNovelties(TimeClockLog $timeClockLog): EloquentCollection
     {
         $noveltyTypeIds = array_filter([
             $timeClockLog->check_in_novelty_type_id,
@@ -133,9 +184,9 @@ class RegisterTimeClockNoveltiesAction
     /**
      * @param  TimeClockLog $timeClockLog
      * @param  NoveltyType  $noveltyType
-     * @return mixed
+     * @return int
      */
-    private function solveTimeForNoveltyType(TimeClockLog $timeClockLog, NoveltyType $noveltyType)
+    private function solveTimeForNoveltyType(TimeClockLog $timeClockLog, NoveltyType $noveltyType): int
     {
         $timeInMinutes = 0;
         $workShift = optional($timeClockLog->workShift);
@@ -206,7 +257,7 @@ class RegisterTimeClockNoveltiesAction
      * Calculate time clock times: start novelty type, work time and end novelty
      * type.
      *
-     * @param  $timeClockLog
+     * @param  TimeClockLog $timeClockLog
      * @return array
      */
     private function calculateTimeClockLogTimesInMinutes(TimeClockLog $timeClockLog): array
@@ -221,8 +272,8 @@ class RegisterTimeClockNoveltiesAction
         $clockedMinutes = $timeClockLog->clocked_minutes;
         $mealMinutes = $workShift->meal_time_in_minutes ?? 0;
         $closestEndSlot = $workShift->getClosestSlotFlagTime('end', $timeClockLog->checked_out_at);
-        $closestStartSlot = $workShift->getClosestSlotFlagTime('start', $timeClockLog->checked_in_at);
-        $shouldDiscountMealTime = $clockedMinutes >= $workShift->min_minutes_required_to_discount_meal_time;
+        $closestEndSlot = $workShift->getClosestSlotFlagTime('end', $timeClockLog->checked_out_at, $this->getEndTime($timeClockLog));
+        $closestStartSlot = $workShift->getClosestSlotFlagTime('start', $timeClockLog->checked_in_at, $this->getStartTime($timeClockLog));
 
         // calculate check in novelty time
         if ($timeClockLog->work_shift_id) {
@@ -239,6 +290,7 @@ class RegisterTimeClockNoveltiesAction
         if ($timeClockLog->work_shift_id) {
             $endTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
                 ? $closestStartSlot : $timeClockLog->checked_out_at;
+
             $endNoveltyMinutes = $closestEndSlot->diffInMinutes($endTime);
 
             if (! $timeClockLog->checkOutNovelty || $timeClockLog->checkOutNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
@@ -255,5 +307,51 @@ class RegisterTimeClockNoveltiesAction
             $endNoveltyMinutes,
             $mealMinutes,
         ];
+    }
+
+    /**
+     * @param  TimeClockLog  $timeClockLog
+     * @return null|Carbon
+     */
+    private function getStartTime(TimeClockLog $timeClockLog): ?Carbon
+    {
+        $scheduledNovelties = $this->scheduledNovelties($timeClockLog);
+
+        if (! $scheduledNovelties->count()) {
+            return null;
+        }
+
+        $closestScheduledNovelty = $scheduledNovelties
+            ->filter(function (Novelty $novelty) use ($timeClockLog) {
+                return $novelty->end_at->lessThan($timeClockLog->checked_in_at);
+            })
+            ->sortBy(function (Novelty $novelty) use ($timeClockLog) {
+                return $novelty->end_at->diffInMinutes($timeClockLog->checked_in_at);
+            })->first();
+
+        return optional($closestScheduledNovelty)->end_at ?? $timeClockLog->checked_in_at;
+    }
+
+    /**
+     * @param  TimeClockLog  $timeClockLog
+     * @return null|Carbon
+     */
+    private function getEndTime(TimeClockLog $timeClockLog): ?Carbon
+    {
+        $scheduledNovelties = $this->scheduledNovelties($timeClockLog);
+
+        if (! $scheduledNovelties->count()) {
+            return null;
+        }
+
+        $closestScheduledNovelty = $scheduledNovelties
+            ->filter(function (Novelty $novelty) use ($timeClockLog) {
+                return $novelty->start_at->greaterThan($timeClockLog->checked_out_at);
+            })
+            ->sortBy(function (Novelty $novelty) use ($timeClockLog) {
+                return $novelty->start_at->diffInMinutes($timeClockLog->checked_out_at);
+            })->first();
+
+        return optional($closestScheduledNovelty)->start_at ?? $timeClockLog->checked_out_at;
     }
 }

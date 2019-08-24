@@ -113,4 +113,13 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
 
         return $this->parserResult($model);
     }
+
+    public function updateWhereIn(string $field, array $values, array $updates)
+    {
+        $this->applyScope();
+        $result = $this->model->whereIn($field, $values)->update($updates);
+        $this->resetModel();
+
+        return $result;
+    } 
 }

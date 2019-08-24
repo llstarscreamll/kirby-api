@@ -28,14 +28,11 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
      */
     public function whereScheduledForEmployee($employeeId, string $field, Carbon $start, Carbon $end)
     {
-        $this->applyScope();
+        $this->model = $this->model
+            ->whereNull('time_clock_log_id')
+            ->where('employee_id', $employeeId)
+            ->whereBetween($field, [$start, $end]);
 
-        $model = $this->model->where('employee_id', $employeeId)
-            ->whereBetween($field, [$start, $end])
-            ->first();
-
-        $this->resetModel();
-
-        return $this->parserResult($model);
+        return $this;
     }
 }

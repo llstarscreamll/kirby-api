@@ -125,7 +125,7 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
      */
     public function orWhereDefaultForSubtraction()
     {
-        $this->model->orWhere(['operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP']);
+        $this->model = $this->model->orWhere(['operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP']);
 
         return $this;
     }

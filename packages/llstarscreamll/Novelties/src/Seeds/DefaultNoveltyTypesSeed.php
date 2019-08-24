@@ -28,6 +28,14 @@ class DefaultNoveltyTypesSeed extends Seeder
             'operator' => NoveltyTypeOperator::Subtraction,
         ],
         [
+            'code' => 'CM',
+            'name' => 'Cita médica',
+            'context_type' => null,
+            'apply_on_days_of_type' => null, // any day
+            'apply_on_time_slots' => null, // any time
+            'operator' => NoveltyTypeOperator::Addition,
+        ],
+        [
             'code' => 'HN',
             'name' => 'Hora normal',
             'context_type' => 'normal_work_shift_time',

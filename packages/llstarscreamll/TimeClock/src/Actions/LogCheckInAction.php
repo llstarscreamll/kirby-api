@@ -118,7 +118,7 @@ class LogCheckInAction
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        $scheduledNovelty = $this->noveltyRepository->whereScheduledForEmployee($identification->employee->id, 'end_at', now()->startOfDay(), now());
+        $scheduledNovelty = $this->noveltyRepository->whereScheduledForEmployee($identification->employee->id, 'end_at', now()->startOfDay(), now())->first();
         $checkInOffset = optional($scheduledNovelty)->end_at;
 
         if ($noveltyTypeId) {

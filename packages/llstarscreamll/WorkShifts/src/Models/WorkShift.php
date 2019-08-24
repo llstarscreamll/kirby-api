@@ -214,13 +214,14 @@ class WorkShift extends Model
     /**
      * @param  string  $flag
      * @param  Carbon  $time
+     * @param  Carbon  $offSet
      * @return mixed
      */
-    public function getClosestSlotFlagTime(string $flag, Carbon $time): ?Carbon
+    public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
     {
         $slot = collect($this->time_slots)
-            ->map(function (array $timeSlot) use ($time, $flag) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware = false, $flag === 'end');
+            ->map(function (array $timeSlot) use ($time, $flag, $offSet) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware = false, $flag === 'end', $offSet);
                 $timeSlot['diff'] = $time->diffInMinutes($timeSlot[$flag]);
 
                 return $timeSlot;
