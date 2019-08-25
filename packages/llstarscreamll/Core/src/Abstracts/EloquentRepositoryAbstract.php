@@ -121,5 +121,5 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
         $this->resetModel();
 
         return $result;
-    } 
+    }
 }
