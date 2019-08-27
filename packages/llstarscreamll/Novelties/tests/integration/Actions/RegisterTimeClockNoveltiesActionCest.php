@@ -746,7 +746,7 @@ class RegisterTimeClockNoveltiesActionCest
      * @dataProvider successCases
      * @param IntegrationTester $I
      */
-    public function whenWorkShiftCheckInAndCheckOutIsOnTime(IntegrationTester $I, Example $data)
+    public function testToRunAction(IntegrationTester $I, Example $data)
     {
         $scheduledNovelties = $data['scheduledNovelties'] ?? [];
         $timeClockData = $this->mapTimeClockData($data['timeClockLog']);

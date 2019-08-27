@@ -19,6 +19,7 @@ class NoveltiesPermissionsSeeder extends Seeder
         // novelties
         ['name' => 'novelties.get'],
         ['name' => 'novelties.update'],
+        ['name' => 'novelties.create-novelties-to-users'],
         // novelty types
         ['name' => 'novelty-types.search'],
     ];
