@@ -23,6 +23,6 @@ class CreateNoveltiesToUsersController
             $action->run($request->all());
         });
 
-        return response()->json(["ok"], 201);
+        return response()->json(['ok'], 201);
     }
 }
