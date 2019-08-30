@@ -34,7 +34,7 @@ class CreateNoveltiesToUsersRequest extends FormRequest
             'novelties' => ['required', 'array'],
             'novelties.*.novelty_type_id' => ['required', 'numeric', 'exists:novelty_types,id'],
             'novelties.*.start_at' => ['required', 'date_format:Y-m-d H:i:s'],
-            'novelties.*.end_at' => ['required', 'date_format:Y-m-d H:i:s'],
+            'novelties.*.end_at' => ['required', 'date_format:Y-m-d H:i:s', 'after:novelties.*.start_at'],
         ];
     }
 }
