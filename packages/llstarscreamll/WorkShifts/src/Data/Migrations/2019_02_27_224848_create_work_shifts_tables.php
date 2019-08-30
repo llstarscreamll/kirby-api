@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateWorkShiftsTables.
@@ -28,7 +28,7 @@ class CreateWorkShiftsTables extends Migration
             $table->unsignedInteger('meal_time_in_minutes')->default(0);
             $table->unsignedInteger('min_minutes_required_to_discount_meal_time')->default(0);
             $table->string('applies_on_days')->default('');
-            $table->json('time_slots')->default('[]');
+            $table->json('time_slots')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
