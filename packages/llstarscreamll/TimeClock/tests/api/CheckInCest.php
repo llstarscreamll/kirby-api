@@ -5,6 +5,7 @@ namespace ClockTime;
 use Illuminate\Support\Carbon;
 use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
+use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
@@ -61,6 +62,70 @@ class CheckInCest
         ]);
 
         $I->haveHttpHeader('Accept', 'application/json');
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenArrivesTooEarlyShouldReturnCorrectNoveltyTypes(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])
+            ->create();
+
+        NoveltyType::whereNotNull('id')->delete();
+
+        // daytime overtime
+        $expectedNoveltyType = factory(NoveltyType::class)->create([
+            'operator' => NoveltyTypeOperator::Addition,
+            'apply_on_days_of_type' => DayType::Workday,
+            'apply_on_time_slots' => [
+                ['start' => '06:00', 'end' => '21:00'],
+            ],
+            'context_type' => 'elegible_by_user',
+        ]);
+
+        // nighttime overtime
+        factory(NoveltyType::class)->create([
+            'operator' => NoveltyTypeOperator::Addition,
+            'apply_on_days_of_type' => DayType::Workday,
+            'apply_on_time_slots' => [
+                ['start' => '21:00', 'end' => '06:00'],
+            ],
+            'context_type' => 'elegible_by_user',
+        ]);
+
+        // festive daytime overtime
+        factory(NoveltyType::class)->create([
+            'operator' => NoveltyTypeOperator::Addition,
+            'apply_on_days_of_type' => DayType::Holiday,
+            'apply_on_time_slots' => [
+                ['start' => '06:00', 'end' => '21:00'],
+            ],
+            'context_type' => 'elegible_by_user',
+        ]);
+
+        // fake current date time, one hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00)); // monday
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        // only the expected novelty type should be returned
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1054]);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1');
+        $I->seeResponseContainsJson(['novelty_types' => ['id' => $expectedNoveltyType->id]]);
     }
 
     /**

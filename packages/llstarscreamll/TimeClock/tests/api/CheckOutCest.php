@@ -5,6 +5,7 @@ namespace ClockTime;
 use Illuminate\Support\Carbon;
 use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
+use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
@@ -351,6 +352,38 @@ class CheckOutCest
             ])
             ->create();
 
+        NoveltyType::whereNotNull('id')->delete();
+
+        // daytime overtime
+        $expectedNoveltyType = factory(NoveltyType::class)->create([
+            'operator' => NoveltyTypeOperator::Addition,
+            'apply_on_days_of_type' => DayType::Workday,
+            'apply_on_time_slots' => [
+                ['start' => '06:00', 'end' => '21:00'],
+            ],
+            'context_type' => 'elegible_by_user',
+        ]);
+
+        // nighttime overtime
+        factory(NoveltyType::class)->create([
+            'operator' => NoveltyTypeOperator::Addition,
+            'apply_on_days_of_type' => DayType::Workday,
+            'apply_on_time_slots' => [
+                ['start' => '21:00', 'end' => '06:00'],
+            ],
+            'context_type' => 'elegible_by_user',
+        ]);
+
+        // festive daytime overtime
+        factory(NoveltyType::class)->create([
+            'operator' => NoveltyTypeOperator::Addition,
+            'apply_on_days_of_type' => DayType::Holiday,
+            'apply_on_time_slots' => [
+                ['start' => '06:00', 'end' => '21:00'],
+            ],
+            'context_type' => 'elegible_by_user',
+        ]);
+
         $requestData = [
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
@@ -369,14 +402,12 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
-        // should return novelties that adds time
+        // should return expected novelty type according to day type and time ranges
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.1.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.2.id');
         $I->seeResponseContainsJson(['code' => 1053]);
-        $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 1]]);
-        $I->dontSeeResponseContainsJson(['novelty_types' => ['id' => 2]]);
-        $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
+        $I->seeResponseContainsJson(['novelty_types' => [['id' => $expectedNoveltyType->id]]]);
     }
 
     /**

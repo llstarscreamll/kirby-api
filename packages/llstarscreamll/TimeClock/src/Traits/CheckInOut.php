@@ -3,6 +3,7 @@
 namespace llstarscreamll\TimeClock\Traits;
 
 use Illuminate\Support\Collection;
+use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\Employees\Models\Identification;
@@ -82,9 +83,10 @@ trait CheckInOut
      */
     protected function getTimeClockData(string $flag, Identification $identification, ?int $workShiftId = null): array
     {
+        $currentDateTime = now();
         $applicableWorkShifts = $this->getApplicableWorkShifts($identification, $workShiftId);
         $workShift = $applicableWorkShifts->first();
-        $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, now()) : null;
+        $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, $currentDateTime) : null;
 
         if ($applicableWorkShifts->count() === 1) {
             // return novelty types based  punctuality and action
@@ -97,6 +99,16 @@ trait CheckInOut
             // when $applicableWorkShifts->count() === 0
             $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
         }
+
+        $isHoliday = $this->holidayRepository->countWhereIn('date', [$currentDateTime]);
+
+        $noveltyTypes = $noveltyTypes->filter(function (NoveltyType $noveltyType) use ($currentDateTime, $isHoliday) {
+            return ($noveltyType->isApplicableInAnyTime()
+                || $currentDateTime->between(
+                    $noveltyType->minStartTimeSlot($currentDateTime),
+                    $noveltyType->maxEndTimeSlot($currentDateTime)
+                )) && ($noveltyType->isApplicableInAnyDay() || $noveltyType->apply_on_days_of_type->is($isHoliday || $currentDateTime->isSunday() ? DayType::Holiday : DayType::Workday));
+        });
 
         // last selected sub cost centers based on time clock logs
         $subCostCenters = $this->timeClockLogRepository

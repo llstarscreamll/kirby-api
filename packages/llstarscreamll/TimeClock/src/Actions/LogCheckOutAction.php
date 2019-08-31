@@ -6,6 +6,7 @@ use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Traits\CheckInOut;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
 use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
 use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
@@ -58,11 +59,17 @@ class LogCheckOutAction
     private $subCostCenterRepository;
 
     /**
+     * @var HolidayRepositoryInterface
+     */
+    private $holidayRepository;
+
+    /**
      * @var ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
     /**
+     * @param HolidayRepositoryInterface                           $holidayRepository
      * @param SettingRepositoryInterface                           $settingRepository
      * @param NoveltyRepositoryInterface                           $noveltyRepository
      * @param NoveltyTypeRepositoryInterface                       $noveltyTypeRepository
@@ -72,6 +79,7 @@ class LogCheckOutAction
      * @param ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
+        HolidayRepositoryInterface $holidayRepository,
         SettingRepositoryInterface $settingRepository,
         NoveltyRepositoryInterface $noveltyRepository,
         NoveltyTypeRepositoryInterface $noveltyTypeRepository,
@@ -80,6 +88,7 @@ class LogCheckOutAction
         IdentificationRepositoryInterface $identificationRepository,
         ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
     ) {
+        $this->holidayRepository = $holidayRepository;
         $this->settingRepository = $settingRepository;
         $this->noveltyRepository = $noveltyRepository;
         $this->noveltyTypeRepository = $noveltyTypeRepository;

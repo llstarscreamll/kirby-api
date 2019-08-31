@@ -55,6 +55,26 @@ class NoveltyType extends Model
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
+     * Is this novelty applicable in any time?
+     *
+     * @return mixed
+     */
+    public function isApplicableInAnyTime(): bool
+    {
+        return empty($this->apply_on_time_slots);
+    }
+
+    /**
+     * Is this novelty applicable in any day?
+     *
+     * @return mixed
+     */
+    public function isApplicableInAnyDay(): bool
+    {
+        return empty($this->apply_on_days_of_type);
+    }
+
+    /**
      * @param Carbon $relativeToTime
      */
     public function minStartTimeSlot(Carbon $relativeToTime = null)
