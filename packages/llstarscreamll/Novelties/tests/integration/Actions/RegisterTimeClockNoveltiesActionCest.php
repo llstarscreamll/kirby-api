@@ -500,9 +500,9 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                 ],
             ],
-            // ################################################################ #
-            //     Time lock logs with too late check in or early check out     #
-            // ################################################################ #
+            // ############################################################### #
+            //     Time lock logs with too late check in or early check out    #
+            // ############################################################### #
             [
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
@@ -541,9 +541,9 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                 ],
             ],
-            // ################################################################ #
-            //               Time lock logs with scheduled novelties            #
-            // ################################################################ #
+            // ############################################################### #
+            //               Time lock logs with scheduled novelties           #
+            // ############################################################### #
             [
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
