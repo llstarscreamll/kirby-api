@@ -23,21 +23,25 @@ php artisan company:sync-holidays # use the --nex-year flag to sync next year ho
 ## Deploying
 
 Make sure to have your `.env` file, server and Github `ssh` keys correctly established on your local and remote instances. To make a full deploy execute:
+
 ```bash
 envoy run deploy
 ```
 
 To deploy only the code:
+
 ```bash
 envoy run deployOnlyCode
 ```
 
 If you want to deploy to specific server and branch execute:
+
 ```bash
 envoy run --target=lab --branch=staging
-``` 
+```
 
 To use `--target=lab` flag you must have in your environment `LAB_SERVERS`. Example:
+
 ```
 # set many servers separated by semicolon
 LAB_SERVERS="john_doe@1.2.3.4;john_doe@5.6.7.8"
