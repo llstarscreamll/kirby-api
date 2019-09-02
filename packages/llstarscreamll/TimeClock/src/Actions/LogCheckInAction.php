@@ -127,9 +127,6 @@ class LogCheckInAction
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        $scheduledNovelty = $this->noveltyRepository->whereScheduledForEmployee($identification->employee->id, 'end_at', now()->startOfDay(), now())->first();
-        $checkInOffset = optional($scheduledNovelty)->end_at;
-
         if ($noveltyTypeId) {
             $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);
         }
@@ -145,6 +142,10 @@ class LogCheckInAction
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
+        $scheduledNovelty = $this->noveltyRepository
+            ->whereScheduledForEmployee($identification->employee->id, 'end_at', now()->startOfDay(), now()->addMinutes(30))
+            ->first();
+        $checkInOffset = optional($scheduledNovelty)->end_at;
         $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
 
         if ($workShift && $shiftPunctuality < 0 && ! $noveltyType) {

@@ -983,6 +983,64 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
     }
 
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldBewareOfScheduledNoveltyOnTheMiddleOfWorkShift(ApiTester $I)
+    {
+        // fake current date time, monday at 12m, on time because of scheduled novelty
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 12, 00));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => now()->setTime(07, 00),
+                'checked_out_at' => now()->setTime(10, 00),
+                'checked_in_by_id' => $this->user->id,
+            ])->create();
+
+        // set setting to NOT require novelty type when check in is too late,
+        // this make to set a default novelty type id for the late check in
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        // create scheduled novelty from 10am to 12m, employee has checked in at
+        // 7am and checked out at 10am because the scheduled novelty from 10am to
+        // 12m, then the employee arrives at 12am, he's on time to check in to
+        // finish the remaining work shift time
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            'time_clock_log_id' => 1,
+            'start_at' => now()->setTime(10, 00), // 10pm
+            'end_at' => now()->setTime(12, 00), // 12m
+        ];
+
+        factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+        // dd(\DB::table('time_clock_logs')->get());
+        $expectedTimeClockLog = [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'checked_in_at' => now()->toDateTimeString(),
+            'check_in_novelty_type_id' => null,
+        ];
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
+    }
+
     // ######################################################################## #
     //                            Permissions tests                             #
     // ######################################################################## #

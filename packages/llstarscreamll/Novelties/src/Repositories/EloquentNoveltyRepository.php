@@ -29,7 +29,6 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     public function whereScheduledForEmployee($employeeId, string $field, Carbon $start, Carbon $end)
     {
         $this->model = $this->model
-            ->whereNull('time_clock_log_id')
             ->where('employee_id', $employeeId)
             ->whereBetween($field, [$start, $end]);
 
