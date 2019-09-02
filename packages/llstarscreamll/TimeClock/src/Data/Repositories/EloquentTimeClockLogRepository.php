@@ -17,6 +17,17 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
     /**
      * @var array
      */
+    protected $fieldSearchable = [
+        'employee.user.first_name' => 'like',
+        'employee.user.last_name' => 'like',
+        'employee.user.email' => 'like',
+        'employee.code' => 'like',
+        'employee.identification_number' => 'like',
+    ];
+
+    /**
+     * @var array
+     */
     protected $allowedFilters = ['name'];
 
     /**
@@ -58,8 +69,8 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
     }
 
     /**
-     * @param string $timeClockLogId
-     * @param string $userId
+     * @param  string  $timeClockLogId
+     * @param  string  $userId
      * @return mixed
      */
     public function deleteApproval(string $timeClockLogId, string $userId)

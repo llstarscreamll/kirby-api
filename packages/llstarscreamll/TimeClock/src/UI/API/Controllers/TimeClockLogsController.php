@@ -4,6 +4,7 @@ namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
+use Prettus\Repository\Criteria\RequestCriteria;
 use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
@@ -36,6 +37,7 @@ class TimeClockLogsController extends Controller
     public function index(SearchTimeClockLogsRequest $request)
     {
         $timeClockLogs = $this->timeClockLogRepository
+            ->pushCriteria(app(RequestCriteria::class))
             ->with([
                 'employee.user', 'workShift', 'novelties.noveltyType', 'subCostCenter',
                 'approvals:users.id,users.first_name,users.last_name',
