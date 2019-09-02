@@ -115,8 +115,8 @@ php artisan backup:run
 
 @task('migrateDatabase', ['on' => 'remote'])
 {{ logMessage("🙈  Migrating database...") }}
-cd {{ $newReleaseDir }};
-php artisan migrate --force;
+cd {{ $newReleaseDir }}
+php artisan migrate --force
 @endtask
 
 @task('setPermissions', ['on' => 'remote'])
