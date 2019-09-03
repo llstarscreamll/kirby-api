@@ -35,11 +35,17 @@ class CreateNoveltyTables extends Migration
             $table->unsignedBigInteger('time_clock_log_id')->nullable();
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('novelty_type_id');
+            $table->unsignedInteger('sub_cost_center_id')->nullable();
             $table->dateTime('start_at')->nullable();
             $table->dateTime('end_at')->nullable();
             $table->integer('total_time_in_minutes');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('time_clock_log_id')->references('id')->on('time_clock_logs');
+            $table->foreign('employee_id')->references('id')->on('employees');
+            $table->foreign('novelty_type_id')->references('id')->on('novelty_types');
+            $table->foreign('sub_cost_center_id')->references('id')->on('sub_cost_centers');
         });
     }
 

@@ -83,11 +83,14 @@ class RegisterTimeClockNoveltiesAction
 
         $novelties = $applicableNovelties
             ->map(function ($noveltyType) use ($timeClockLog, $date) {
+                [$timeInMinutes, $subCostCenterId] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
+
                 return [
                     'time_clock_log_id' => $timeClockLog->id,
                     'employee_id' => $timeClockLog->employee_id,
                     'novelty_type_id' => $noveltyType->id,
-                    'total_time_in_minutes' => $this->solveTimeForNoveltyType($timeClockLog, $noveltyType), // in minutes
+                    'sub_cost_center_id' => $subCostCenterId,
+                    'total_time_in_minutes' => $timeInMinutes,
                     'created_at' => $date,
                     'updated_at' => $date,
                 ];
@@ -109,7 +112,10 @@ class RegisterTimeClockNoveltiesAction
     {
         $scheduledNoveltiesIds = $this->scheduledNovelties($timeClockLog)->pluck('id')->all();
 
-        return $this->noveltyRepository->updateWhereIn('id', $scheduledNoveltiesIds, ['time_clock_log_id' => $timeClockLog->id]);
+        return $this->noveltyRepository->updateWhereIn('id', $scheduledNoveltiesIds, [
+            'time_clock_log_id' => $timeClockLog->id,
+            'sub_cost_center_id' => $timeClockLog->sub_cost_center_id,
+        ]);
     }
 
     /**
@@ -184,11 +190,12 @@ class RegisterTimeClockNoveltiesAction
     /**
      * @param  TimeClockLog $timeClockLog
      * @param  NoveltyType  $noveltyType
-     * @return int
+     * @return array
      */
-    private function solveTimeForNoveltyType(TimeClockLog $timeClockLog, NoveltyType $noveltyType): int
+    private function solveTimeForNoveltyType(TimeClockLog $timeClockLog, NoveltyType $noveltyType): array
     {
         $timeInMinutes = 0;
+        $subCostCenterId = $timeClockLog->sub_cost_center_id;
         $workShift = optional($timeClockLog->workShift);
         $clockedMinutes = $timeClockLog->clocked_minutes;
         $checkInNoveltyTypeId = $timeClockLog->check_in_novelty_type_id;
@@ -231,6 +238,7 @@ class RegisterTimeClockNoveltiesAction
             : array_sum($clockedMinutes);
 
         if ($checkInNoveltyTypeId === $noveltyType->id && $timeClockLog->work_shift_id) {
+            $subCostCenterId = $timeClockLog->check_in_sub_cost_center_id ?? $subCostCenterId;
             $timeInMinutes += $startNoveltyMinutes;
         }
 
@@ -250,7 +258,7 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes = $clockedMinutes;
         }
 
-        return $timeInMinutes;
+        return [$timeInMinutes, $subCostCenterId];
     }
 
     /**
