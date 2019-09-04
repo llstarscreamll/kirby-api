@@ -110,7 +110,10 @@ class RegisterTimeClockNoveltiesAction
      */
     private function attachScheduledNovelties(TimeClockLog $timeClockLog): int
     {
-        $scheduledNoveltiesIds = $this->scheduledNovelties($timeClockLog)->pluck('id')->all();
+        $scheduledNoveltiesIds = $this->scheduledNovelties($timeClockLog)
+            ->filter(function ($novelty) {return empty($novelty->time_clock_log_id);})
+            ->pluck('id')
+            ->all();
 
         return $this->noveltyRepository->updateWhereIn('id', $scheduledNoveltiesIds, [
             'time_clock_log_id' => $timeClockLog->id,
