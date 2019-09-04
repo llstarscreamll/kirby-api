@@ -203,19 +203,24 @@ class RegisterTimeClockNoveltiesActionCest
                     'check_out_novelty_type_code' => 'HADI', // additional time
                     'checked_in_at' => '2019-04-03 06:00:00', // 1 hour early
                     'checked_out_at' => '2019-04-03 19:00:00', // 1 hour late
+                    'sub_cost_center_id' => 1,
+                    'check_out_sub_cost_center_id' => 2,
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
                         'total_time_in_minutes' => 60 * 10, // 12 work hours - 1 hour launch - 1 early
+                        'sub_cost_center_id' => 1,
                     ],
                     [
                         'novelty_type_code' => 'HEDI', // extra daytime
                         'total_time_in_minutes' => 60 * 1, // 1 hour early
+                        'sub_cost_center_id' => 1,
                     ],
                     [
                         'novelty_type_code' => 'HADI', // additional time
                         'total_time_in_minutes' => 60 * 1, // 1 hour late
+                        'sub_cost_center_id' => 2,
                     ],
                 ],
             ],

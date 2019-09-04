@@ -243,6 +243,7 @@ class RegisterTimeClockNoveltiesAction
         }
 
         if ($checkOutNoveltyTypeId === $noveltyType->id && $timeClockLog->work_shift_id) {
+            $subCostCenterId = $timeClockLog->check_out_sub_cost_center_id ?? $subCostCenterId;
             $timeInMinutes += $endNoveltyMinutes;
         }
 
