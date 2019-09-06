@@ -18,6 +18,7 @@ class NoveltiesPermissionsSeeder extends Seeder
     private $permissions = [
         // novelties
         ['name' => 'novelties.get'],
+        ['name' => 'novelties.search'],
         ['name' => 'novelties.update'],
         ['name' => 'novelties.create-novelties-to-users'],
         // novelty types

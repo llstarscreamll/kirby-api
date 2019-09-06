@@ -3,10 +3,12 @@
 namespace llstarscreamll\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
+use Prettus\Repository\Criteria\RequestCriteria;
 use llstarscreamll\Novelties\UI\API\V1\Resources\NoveltyResource;
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
 use llstarscreamll\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
 use llstarscreamll\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
+use llstarscreamll\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
 
 /**
  * Class NoveltiesController.
@@ -31,11 +33,18 @@ class NoveltiesController
     /**
      * Display a listing of the resource.
      *
+     * @param  \llstarscreamll\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(SearchNoveltiesRequest $request)
     {
-        //
+        $novelties = $this->noveltyRepository
+            ->pushCriteria(app(RequestCriteria::class))
+            ->with(['employee.user', 'noveltyType'])
+            ->orderBy('updated_at', 'DESC')
+            ->simplePaginate();
+
+        return NoveltyResource::collection($novelties);
     }
 
     /**
