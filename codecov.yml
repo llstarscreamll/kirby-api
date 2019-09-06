@@ -1,0 +1,8 @@
+ignore:
+  - "app"
+  - "database"
+  - "config"
+  - "tests"
+  - "packages/llstarscreamll/**/tests"
+  - "packages/llstarscreamll/**/config"
+  - "packages/llstarscreamll/**/database"
