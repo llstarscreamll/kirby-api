@@ -3,6 +3,7 @@
 namespace Novelties;
 
 use llstarscreamll\Novelties\Models\Novelty;
+use llstarscreamll\Novelties\Models\NoveltyType;
 
 /**
  * Class SearchNoveltyTypesCest.
@@ -31,7 +32,7 @@ class SearchNoveltyTypesCest
      */
     public function searchSuccessfully(ApiTester $I)
     {
-        $novelties = factory(Novelty::class, 5)->create();
+        $noveltyTypes = factory(NoveltyType::class, 5)->create();
 
         $I->sendGET($this->endpoint);
 
