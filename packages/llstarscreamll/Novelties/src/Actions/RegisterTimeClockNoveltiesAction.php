@@ -3,6 +3,7 @@
 namespace llstarscreamll\Novelties\Actions;
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\Novelty;
@@ -82,19 +83,24 @@ class RegisterTimeClockNoveltiesAction
         $date = now();
 
         $novelties = $applicableNovelties
-            ->map(function ($noveltyType) use ($timeClockLog, $date) {
-                [$timeInMinutes, $subCostCenterId] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
+        // ->filter(function ($n) {return $n->code == 'HN';})
+        ->map(function ($noveltyType) use ($timeClockLog, $date) {
+            [$minutes, $subCostCenterId, $times] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
+            $startAt = Arr::first($times);
+            $endAt = Arr::last($times);
 
-                return [
-                    'time_clock_log_id' => $timeClockLog->id,
-                    'employee_id' => $timeClockLog->employee_id,
-                    'novelty_type_id' => $noveltyType->id,
-                    'sub_cost_center_id' => $subCostCenterId,
-                    'total_time_in_minutes' => $timeInMinutes,
-                    'created_at' => $date,
-                    'updated_at' => $date,
-                ];
-            })
+            return [
+                'time_clock_log_id' => $timeClockLog->id,
+                'employee_id' => $timeClockLog->employee_id,
+                'novelty_type_id' => $noveltyType->id,
+                'sub_cost_center_id' => $subCostCenterId,
+                'total_time_in_minutes' => $minutes,
+                'start_at' => optional($startAt)->toDateTimeString(),
+                'end_at' => optional($endAt)->toDateTimeString(),
+                'created_at' => $date,
+                'updated_at' => $date,
+            ];
+        })
             ->filter(function ($novelty) {
                 return $novelty['total_time_in_minutes'] !== 0 && $novelty['total_time_in_minutes'] !== 0.0;
             });
@@ -198,12 +204,13 @@ class RegisterTimeClockNoveltiesAction
     private function solveTimeForNoveltyType(TimeClockLog $timeClockLog, NoveltyType $noveltyType): array
     {
         $timeInMinutes = 0;
+        $noveltyTimes = [];
         $subCostCenterId = $timeClockLog->sub_cost_center_id;
         $workShift = optional($timeClockLog->workShift);
         $clockedMinutes = $timeClockLog->clocked_minutes;
         $checkInNoveltyTypeId = $timeClockLog->check_in_novelty_type_id;
         $checkOutNoveltyTypeId = $timeClockLog->check_out_novelty_type_id;
-        [$startNoveltyMinutes, $clockedMinutes, $endNoveltyMinutes, $mealMinutes] = $this->calculateTimeClockLogTimesInMinutes($timeClockLog);
+        [$startNoveltyMinutes, $clockedMinutes, $endNoveltyMinutes, $mealMinutes, $times] = $this->calculateTimeClockLogTimesInMinutes($timeClockLog);
 
         $checkedInAt = $timeClockLog->checked_in_at;
         $checkedOutAt = $timeClockLog->checked_out_at;
@@ -231,10 +238,18 @@ class RegisterTimeClockNoveltiesAction
                 ? $clockedMinutes[DayType::Workday]
                 : $clockedMinutes[DayType::Holiday];
 
+            $noveltyTimes = $noveltyType->apply_on_days_of_type->is(DayType::Holiday)
+                ? Arr::get($times, 'workdayTimes')
+                : Arr::get($times, 'holidayTimes');
+
             if ($shouldDiscountMealTime) {
                 $timeInMinutes -= $mealMinutes;
             }
         }
+
+        $noveltyTimes = $noveltyType->apply_on_days_of_type
+            ? optional($noveltyType->apply_on_days_of_type)->is(DayType::Holiday) ? Arr::get($times, 'holidayTimes') : Arr::get($times, 'workdayTimes')
+            : $this->getWiderTimes($times);
 
         $clockedMinutes = $noveltyType->apply_on_days_of_type
             ? $clockedMinutes[$noveltyType->apply_on_days_of_type->value]
@@ -262,7 +277,28 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes = $clockedMinutes;
         }
 
-        return [$timeInMinutes, $subCostCenterId];
+        return [$timeInMinutes, $subCostCenterId, $noveltyTimes];
+    }
+
+    /**
+     * @param array $times
+     */
+    private function getWiderTimes(array $times): array
+    {
+        $holidayTimes = $times['holidayTimes'];
+        $workdayTimes = $times['workdayTimes'];
+
+        if (empty($holidayTimes) || empty($workdayTimes)) {
+            return empty($holidayTimes) ? $workdayTimes : $holidayTimes;
+        }
+
+        [$holidayStartTime, $holidayEndTime] = $holidayTimes;
+        [$workdayStartTime, $workdayEndTime] = $workdayTimes;
+
+        return [
+            $holidayStartTime->lessThan($workdayStartTime) ? $holidayStartTime : $workdayStartTime,
+            $holidayEndTime->greaterThan($workdayEndTime) ? $holidayEndTime : $workdayEndTime,
+        ];
     }
 
     /**
@@ -274,6 +310,7 @@ class RegisterTimeClockNoveltiesAction
      */
     private function calculateTimeClockLogTimesInMinutes(TimeClockLog $timeClockLog): array
     {
+        $times = [];
         $workMinutes = [
             DayType::Holiday => 0,
             DayType::Workday => 0,
@@ -292,6 +329,7 @@ class RegisterTimeClockNoveltiesAction
             $estimatedStartTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
                 ? $timeClockLog->checked_out_at : $closestStartSlot;
             $startNoveltyMinutes = $estimatedStartTime->diffInMinutes($timeClockLog->checked_in_at);
+            $times['startNoveltyTimes'] = ['start' => $estimatedStartTime, 'end' => $timeClockLog];
 
             if (! $timeClockLog->checkInNovelty || $timeClockLog->checkInNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
                 $startNoveltyMinutes *= -1;
@@ -304,20 +342,26 @@ class RegisterTimeClockNoveltiesAction
                 ? $closestStartSlot : $timeClockLog->checked_out_at;
 
             $endNoveltyMinutes = $closestEndSlot->diffInMinutes($endTime);
+            $times['endNoveltyMinutes'] = ['start' => $closestEndSlot, 'end' => $endTime];
 
             if (! $timeClockLog->checkOutNovelty || $timeClockLog->checkOutNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
                 $endNoveltyMinutes *= -1;
             }
         }
 
-        $workMinutes[DayType::Holiday] += $timeClockLog->getClockedTimeMinutesByDayType(DayType::Holiday());
-        $workMinutes[DayType::Workday] += $timeClockLog->getClockedTimeMinutesByDayType(DayType::Workday());
+        [$holidayTimeInMinutes, $holidayTimes] = $timeClockLog->getClockedTimeMinutesByDayType(DayType::Holiday());
+        $workMinutes[DayType::Holiday] += $holidayTimeInMinutes;
+        $times['holidayTimes'] = $holidayTimes;
+        [$workdayTimeInMinutes, $workdayTimes] = $timeClockLog->getClockedTimeMinutesByDayType(DayType::Workday());
+        $workMinutes[DayType::Workday] += $workdayTimeInMinutes;
+        $times['workdayTimes'] = $workdayTimes;
 
         return [
             $startNoveltyMinutes,
             $workMinutes,
             $endNoveltyMinutes,
             $mealMinutes,
+            $times,
         ];
     }
 

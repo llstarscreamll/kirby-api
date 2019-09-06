@@ -753,16 +753,22 @@ class RegisterTimeClockNoveltiesActionCest
                         // 7 hours (from 9am to 4pm), minimum minutes to subtract launch time not reached
                         'total_time_in_minutes' => 60 * 7,
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
+                        'start_at' => '2019-04-01 09:00:00',
+                        'end_at' => '2019-04-01 16:00:00',
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
                         'total_time_in_minutes' => 60 * 1, // 1 hour from 7am to 8am
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00',
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
                         'total_time_in_minutes' => 60 * 1, // 1 hour from 5pm to 6pm
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
+                        'start_at' => '2019-04-01 17:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                     [
                         'novelty_type_code' => 'PP', // novelty for late check in and early check out
@@ -812,8 +818,12 @@ class RegisterTimeClockNoveltiesActionCest
 
         foreach ($data['createdNovelties'] as $novelty) {
             $noveltyType = $this->noveltyTypes->firstWhere('code', $novelty['novelty_type_code']);
+            $times = array_filter([
+                'start_at' => $novelty['start_at'] ?? null,
+                'end_at' => $novelty['end_at'] ?? null,
+            ]);
 
-            $I->seeRecord('novelties', [
+            $I->seeRecord('novelties', $times + [
                 'time_clock_log_id' => $timeClockLog->id,
                 'employee_id' => $timeClockLog->employee->id,
                 'novelty_type_id' => $noveltyType->id,

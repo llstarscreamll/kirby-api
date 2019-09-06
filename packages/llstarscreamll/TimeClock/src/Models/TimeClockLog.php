@@ -215,24 +215,29 @@ class TimeClockLog extends Model
      */
     public function getClockedTimeMinutesByDayType(DayType $dayType)
     {
+        $times = [];
         $timeInMinutes = 0;
         $isTheSameDay = $this->checked_in_at->isSameDay($this->checked_out_at);
 
         // not the same day
         if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && ! $this->checkedOutOnHoliday && ! $isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->diffInMinutes($this->checked_out_at->startOfDay());
+            $times = [$this->checked_in_at, $this->checked_out_at->startOfDay()];
         }
 
         if ($dayType->is(DayType::Holiday) && ! $this->checkedInOnHoliday && $this->checkedOutOnHoliday && ! $isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->endOfDay()->diffInMinutes($this->checked_out_at);
+            $times = [$this->checked_in_at->endOfDay(), $this->checked_out_at];
         }
 
         if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday && ! $this->checkedOutOnHoliday && ! $isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->endOfDay()->diffInMinutes($this->checked_out_at);
+            $times = [$this->checked_in_at->endOfDay(), $this->checked_out_at];
         }
 
         if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday && $this->checkedOutOnHoliday && ! $isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->diffInMinutes($this->checked_out_at->startOfDay());
+            $times = [$this->checked_in_at, $this->checked_out_at->startOfDay()];
         }
 
         if ($dayType->is(DayType::Workday) && ! $this->hasHolidaysChecks() && ! $isTheSameDay) {
@@ -246,13 +251,15 @@ class TimeClockLog extends Model
         // same day
         if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && $isTheSameDay) {
             $timeInMinutes = $this->clocked_minutes;
+            $times = [$this->checked_in_at, $this->checked_out_at];
         }
 
         if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday && $isTheSameDay) {
             $timeInMinutes = $this->clocked_minutes;
+            $times = [$this->checked_in_at, $this->checked_out_at];
         }
 
-        return $timeInMinutes;
+        return [$timeInMinutes, $times];
     }
 
     /**
