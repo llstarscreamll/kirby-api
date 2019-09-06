@@ -117,7 +117,9 @@ class RegisterTimeClockNoveltiesAction
     private function attachScheduledNovelties(TimeClockLog $timeClockLog): int
     {
         $scheduledNoveltiesIds = $this->scheduledNovelties($timeClockLog)
-            ->filter(function ($novelty) {return empty($novelty->time_clock_log_id);})
+            ->filter(function ($novelty) {
+                return empty($novelty->time_clock_log_id);
+            })
             ->pluck('id')
             ->all();
 
