@@ -6,3 +6,6 @@ ignore:
   - "packages/llstarscreamll/**/tests"
   - "packages/llstarscreamll/**/config"
   - "packages/llstarscreamll/**/database"
+  - "packages/llstarscreamll/**/src/Facades"
+  - "packages/llstarscreamll/**/src/Seeds"
+  - "packages/llstarscreamll/**/src/*ServiceProvider.php"
