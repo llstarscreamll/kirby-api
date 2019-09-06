@@ -14,6 +14,19 @@ use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
  */
 class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements NoveltyRepositoryInterface
 {
+    /**
+     * @var array
+     */
+    protected $fieldSearchable = [
+        'noveltyType.code' => '=',
+        'noveltyType.name' => 'like',
+        'employee.user.first_name' => 'like',
+        'employee.user.last_name' => 'like',
+        'employee.user.email' => 'like',
+        'employee.code' => 'like',
+        'employee.identification_number' => 'like',
+    ];
+
     public function model(): string
     {
         return Novelty::class;
