@@ -36,6 +36,7 @@ class CreateWorkShiftsTables extends Migration
         Schema::create('employee_work_shift', function (Blueprint $table) {
             $table->unsignedInteger('employee_id');
             $table->unsignedInteger('work_shift_id');
+
             $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
             $table->foreign('work_shift_id')->references('id')->on('work_shifts')->onDelete('cascade');
             $table->primary(['employee_id', 'work_shift_id']);

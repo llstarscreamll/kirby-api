@@ -34,15 +34,15 @@ class CreateTimeClockLogsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('employee_id')->references('id')->on('users');
-            $table->foreign('work_shift_id')->references('id')->on('work_shifts');
-            $table->foreign('sub_cost_center_id')->references('id')->on('sub_cost_centers');
-            $table->foreign('check_in_novelty_type_id')->references('id')->on('novelty_types');
-            $table->foreign('check_in_sub_cost_center_id')->references('id')->on('sub_cost_centers');
-            $table->foreign('check_out_novelty_type_id')->references('id')->on('novelty_types');
-            $table->foreign('check_out_sub_cost_center_id')->references('id')->on('sub_cost_centers');
-            $table->foreign('checked_in_by_id')->references('id')->on('users');
-            $table->foreign('checked_out_by_id')->references('id')->on('users');
+            $table->foreign('employee_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('work_shift_id')->references('id')->on('work_shifts')->onDelete('cascade');
+            $table->foreign('sub_cost_center_id')->references('id')->on('sub_cost_centers')->onDelete('cascade');
+            $table->foreign('check_in_novelty_type_id')->references('id')->on('novelty_types')->onDelete('cascade');
+            $table->foreign('check_in_sub_cost_center_id')->references('id')->on('sub_cost_centers')->onDelete('cascade');
+            $table->foreign('check_out_novelty_type_id')->references('id')->on('novelty_types')->onDelete('cascade');
+            $table->foreign('check_out_sub_cost_center_id')->references('id')->on('sub_cost_centers')->onDelete('cascade');
+            $table->foreign('checked_in_by_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('checked_out_by_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

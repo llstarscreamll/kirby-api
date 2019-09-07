@@ -30,10 +30,10 @@ class CreateNoveltyTables extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('time_clock_log_id')->references('id')->on('time_clock_logs');
-            $table->foreign('employee_id')->references('id')->on('employees');
-            $table->foreign('novelty_type_id')->references('id')->on('novelty_types');
-            $table->foreign('sub_cost_center_id')->references('id')->on('sub_cost_centers');
+            $table->foreign('time_clock_log_id')->references('id')->on('time_clock_logs')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('novelty_type_id')->references('id')->on('novelty_types')->onDelete('cascade');
+            $table->foreign('sub_cost_center_id')->references('id')->on('sub_cost_centers')->onDelete('cascade');
         });
     }
 
