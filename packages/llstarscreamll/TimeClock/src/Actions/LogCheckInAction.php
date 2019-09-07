@@ -147,12 +147,14 @@ class LogCheckInAction
             ->first();
         $checkInOffset = optional($scheduledNovelty)->end_at;
         $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
+        $isTooLate = $shiftPunctuality > 0;
+        $isTooEarly = $shiftPunctuality < 0;
 
-        if ($workShift && $shiftPunctuality < 0 && ! $noveltyType) {
+        if ($workShift && $isTooEarly && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooEarlyToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($workShift && $shiftPunctuality > 0 && ! $noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooLate && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooLateToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
@@ -160,8 +162,12 @@ class LogCheckInAction
             throw new MissingSubCostCenterException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if (! $noveltyTypeId && $shiftPunctuality > 0 && ! $noveltyTypeIsRequired) {
+        if ($isTooLate && ! $noveltyTypeId && ! $noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForSubtraction();
+        }
+
+        if ($isTooEarly && ! $noveltyTypeId && ! $noveltyTypeIsRequired) {
+            $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
         }
 
         $timeClockLog = [

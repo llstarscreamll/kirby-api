@@ -36,6 +36,16 @@ class CheckInCest
     private $subCostCenter;
 
     /**
+     * @var \llstarscreamll\Novelties\Models\NoveltyType
+     */
+    private $subtractTimeNovelty;
+
+    /**
+     * @var \llstarscreamll\Novelties\Models\NoveltyType
+     */
+    private $additionalTimeNovelty;
+
+    /**
      * @param ApiTester $I
      */
     public function _before(ApiTester $I)
@@ -57,8 +67,12 @@ class CheckInCest
             'context_type' => 'elegible_by_user',
         ]);
 
-        factory(NoveltyType::class)->create([
+        $this->subtractTimeNovelty = factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP',
+        ]);
+
+        $this->additionalTimeNovelty = factory(NoveltyType::class)->create([
+            'operator' => NoveltyTypeOperator::Addition, 'code' => 'HADI',
         ]);
 
         $I->haveHttpHeader('Accept', 'application/json');
@@ -530,7 +544,42 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
-            'check_in_novelty_type_id' => 4,
+            'check_in_novelty_type_id' => $this->subtractTimeNovelty->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasSingleWorkShiftAndArrivesTooEarlyButNoveltyIsNotRequired(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, monday, one hour early
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
+
+        // set setting to NOT require novelty type when check in is too early
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => $this->additionalTimeNovelty->id,
         ]);
     }
 
