@@ -87,17 +87,21 @@ trait CheckInOut
         $applicableWorkShifts = $this->getApplicableWorkShifts($identification, $workShiftId);
         $workShift = $applicableWorkShifts->first();
         $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, $currentDateTime) : null;
+        $isOnTime = $punctuality === 0;
+        $noveltyTypes = new Collection([]);
 
-        if ($applicableWorkShifts->count() === 1) {
-            // return novelty types based  punctuality and action
-            $noveltyTypes = ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
-                ? $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeSubtraction()
-                : $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
-        } elseif ($applicableWorkShifts->count() > 1) {
-            $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->get();
-        } else {
-            // when $applicableWorkShifts->count() === 0
-            $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
+        if (! $isOnTime) {
+            if ($applicableWorkShifts->count() === 1) {
+                // return novelty types based  punctuality and action
+                $noveltyTypes = ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')
+                    ? $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeSubtraction()
+                    : $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
+            } elseif ($applicableWorkShifts->count() > 1) {
+                $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->get();
+            } else {
+                // when $applicableWorkShifts->count() === 0
+                $noveltyTypes = $this->noveltyTypeRepository->whereContextType('elegible_by_user')->findForTimeAddition();
+            }
         }
 
         $isHoliday = $this->holidayRepository->countWhereIn('date', [$currentDateTime]);

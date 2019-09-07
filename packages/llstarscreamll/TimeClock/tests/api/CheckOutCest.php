@@ -595,8 +595,8 @@ class CheckOutCest
      */
     public function whenSubCostCenterIsMissing(ApiTester $I)
     {
-        // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 30));
+        // fake current date time, monday 6:00pm, on time to check out
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
         $checkedInTime = now()->setTime(7, 0);
 
         $employee = factory(Employee::class)
@@ -632,6 +632,8 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.punctuality');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.work_shifts');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types');
+        // no novelties, because employee is on time
+        $I->dontSeeResponseJsonMatchesJsonPath('$.errors.0.meta.novelty_types.0');
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
     }
 
