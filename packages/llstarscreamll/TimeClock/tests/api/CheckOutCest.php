@@ -59,6 +59,7 @@ class CheckOutCest
         ]);
 
         factory(NoveltyType::class)->create([
+            'code' => 'HADI',
             'operator' => NoveltyTypeOperator::Addition,
             'context_type' => 'elegible_by_user',
         ]);
@@ -279,6 +280,51 @@ class CheckOutCest
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'checked_out_at' => now()->toDateTimeString(),
             'check_out_novelty_type_id' => 4,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasShiftAndLeavesTooLateButNoveltyTypeIsNotRequired(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 20, 00));
+        $checkedInTime = now()->setTime(7, 0);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        // set setting to NOT require novelty type when check out is too early
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        $requestData = [
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'checked_out_at' => now()->toDateTimeString(),
+            'check_out_novelty_type_id' => 3,
         ]);
     }
 

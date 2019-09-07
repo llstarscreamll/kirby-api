@@ -147,21 +147,27 @@ class LogCheckOutAction
         }
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('end', now(), $checkOutOffset);
+        $isTooEarly = $shiftPunctuality < 0;
+        $isTooLate = $shiftPunctuality > 0;
 
         if (! $this->noveltyIsValid('end', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $shiftPunctuality < 0 && ! $noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooEarly && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooEarlyToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $shiftPunctuality > 0 && ! $noveltyType) {
+        if ($workShift && $isTooLate && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooLateToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if (! $noveltyTypeId && $shiftPunctuality < 0 && ! $noveltyTypeIsRequired) {
+        if (! $noveltyTypeId && $isTooEarly && ! $noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForSubtraction();
+        }
+
+        if (! $noveltyTypeId && $isTooLate && ! $noveltyTypeIsRequired) {
+            $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
         }
 
         $timeClockLogUpdate = [
