@@ -4,7 +4,7 @@ namespace llstarscreamll\Novelties\UI\API\V1\Controllers;
 
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
 use llstarscreamll\Novelties\UI\API\V1\Requests\CreateNoveltyApprovalRequest;
-use llstarscreamll\TimeClock\UI\API\Requests\DeleteTimeClockLogApprovalRequest;
+use llstarscreamll\Novelties\UI\API\V1\Requests\DeleteNoveltyApprovalRequest;
 
 /**
  * Class NoveltyApprovalsController.
@@ -43,11 +43,11 @@ class NoveltyApprovalsController
     /**
      * Display a listing of the resource.
      *
-     * @param  DeleteTimeClockLogApprovalRequest $request
-     * @param  string                            $timeClockLogId
+     * @param  DeleteNoveltyApprovalRequest $request
+     * @param  string                       $timeClockLogId
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DeleteTimeClockLogApprovalRequest $request, string $timeClockLogId)
+    public function destroy(DeleteNoveltyApprovalRequest $request, string $timeClockLogId)
     {
         $this->noveltyRepository->deleteApproval($timeClockLogId, $request->user()->id);
 

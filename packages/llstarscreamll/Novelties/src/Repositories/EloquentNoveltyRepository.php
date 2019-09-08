@@ -69,4 +69,14 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
         $novelties = $this->model->whereIn('id', $noveltiesIds)->get(['id']);
         $novelties->each->deleteApprove($approverId);
     }
+
+    /**
+     * @param  string  $noveltyId
+     * @param  string  $userId
+     * @return mixed
+     */
+    public function deleteApproval(string $noveltyId, string $userId)
+    {
+        return $this->find($noveltyId)->approvals()->detach($userId);
+    }
 }
