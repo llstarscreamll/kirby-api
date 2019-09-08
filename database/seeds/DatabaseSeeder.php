@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use llstarscreamll\Novelties\Seeds\DefaultNoveltyTypesSeed;
-use llstarscreamll\WorkShifts\Data\Seeders\WorkShiftsPackageSeeder;
 use llstarscreamll\Authorization\Data\Seeders\AuthorizationPackageSeeder;
 
 class DatabaseSeeder extends Seeder

@@ -2,6 +2,7 @@
 
 namespace Employees;
 
+use DefaultWorkShiftsSeeder;
 use Illuminate\Support\Facades\File;
 use llstarscreamll\Users\Models\User;
 use Illuminate\Support\Facades\Artisan;
@@ -14,7 +15,6 @@ use llstarscreamll\Users\Contracts\UserRepositoryInterface;
 use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
 use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
-use llstarscreamll\WorkShifts\Data\Seeders\DefaultWorkShiftsSeeder;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Employees\Notifications\FailedEmployeesSyncNotification;
