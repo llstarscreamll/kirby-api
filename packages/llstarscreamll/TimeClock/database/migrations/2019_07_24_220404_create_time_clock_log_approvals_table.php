@@ -23,7 +23,10 @@ class CreateTimeClockLogApprovalsTable extends Migration
             $table->unsignedBigInteger('time_clock_log_id');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
+
             $table->unique(['time_clock_log_id', 'user_id']);
+            $table->foreign('time_clock_log_id')->references('id')->on('time_clock_logs')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
