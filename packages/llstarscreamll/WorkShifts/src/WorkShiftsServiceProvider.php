@@ -5,7 +5,7 @@ namespace llstarscreamll\WorkShifts;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
-use llstarscreamll\WorkShifts\Data\Repositories\EloquentWorkShiftRepository;
+use llstarscreamll\WorkShifts\Repositories\EloquentWorkShiftRepository;
 
 /**
  * Class WorkShiftsServiceProvider.
@@ -30,7 +30,7 @@ class WorkShiftsServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        $this->loadMigrationsFrom(__DIR__.'/Data/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/UI/API/Routes/v1.php');
 
         // Publishing is only necessary when using the CLI.
@@ -46,7 +46,7 @@ class WorkShiftsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/Config/work-shifts.php', 'work-shifts');
+        $this->mergeConfigFrom(__DIR__.'/../config/work-shifts.php', 'work-shifts');
 
         // Register the service the package provides.
         $this->app->singleton('workShifts', function ($app) {

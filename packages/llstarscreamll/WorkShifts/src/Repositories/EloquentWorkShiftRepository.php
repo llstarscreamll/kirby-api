@@ -1,6 +1,6 @@
 <?php
 
-namespace llstarscreamll\WorkShifts\Data\Repositories;
+namespace llstarscreamll\WorkShifts\Repositories;
 
 use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
