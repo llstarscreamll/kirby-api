@@ -20,7 +20,7 @@ class CreateSubCostCentersTable extends Migration
     {
         Schema::create('sub_cost_centers', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('cost_center_id');
+            $table->unsignedBigInteger('cost_center_id');
             $table->string('code')->unique();
             $table->string('name');
             $table->timestamps();

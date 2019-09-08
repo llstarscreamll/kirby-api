@@ -19,8 +19,8 @@ class CreateEmployeesTable extends Migration
     public function up()
     {
         Schema::create('employees', function (Blueprint $table) {
-            $table->unsignedInteger('id')->unique();
-            $table->unsignedInteger('cost_center_id')->nullable();
+            $table->unsignedBigInteger('id')->unique();
+            $table->unsignedBigInteger('cost_center_id')->nullable();
             $table->string('code');
             $table->string('identification_number');
             $table->string('position');
@@ -32,7 +32,7 @@ class CreateEmployeesTable extends Migration
             $table->softDeletes();
 
             $table->foreign('id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('cost_center_id')->references('id')->on('cost_centers');
+            $table->foreign('cost_center_id')->references('id')->on('cost_centers')->onDelete('cascade');
         });
     }
 

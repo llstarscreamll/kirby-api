@@ -19,7 +19,7 @@ class CreateCostCentersTable extends Migration
     public function up()
     {
         Schema::create('cost_centers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('code')->unique();
             $table->string('name');
             $table->timestamps();
