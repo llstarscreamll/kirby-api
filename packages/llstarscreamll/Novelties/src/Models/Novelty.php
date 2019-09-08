@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\Novelties\Models;
 
+use llstarscreamll\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use llstarscreamll\Employees\Models\Employee;
@@ -37,9 +38,9 @@ class Novelty extends Model
      */
     protected $dates = ['start_at', 'end_at', 'created_at', 'updated_at', 'deleted_at'];
 
-    // ######################################################################## #
-    //                                 Relations                                #
-    // ######################################################################## #
+    // ####################################################################### #
+    //                                 Relations                               #
+    // ####################################################################### #
 
     /**
      * @return mixed
@@ -63,5 +64,35 @@ class Novelty extends Model
     public function timeClockLog()
     {
         return $this->belongsTo(TimeClockLog::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function approvals()
+    {
+        return $this->belongsToMany(User::class, 'novelty_approvals')->withTimestamps();
+    }
+
+    // ####################################################################### #
+    //                                  Methods                                #
+    // ####################################################################### #
+
+    /**
+     * @param  int    $approverId
+     * @return void
+     */
+    public function approve(int $approverId)
+    {
+        $this->approvals()->sync($approverId, false);
+    }
+
+    /**
+     * @param  int    $approverId
+     * @return void
+     */
+    public function deleteApprove(int $approverId)
+    {
+        $this->approvals()->detach($approverId);
     }
 }

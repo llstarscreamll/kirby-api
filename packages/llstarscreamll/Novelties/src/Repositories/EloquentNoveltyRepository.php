@@ -47,4 +47,26 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
 
         return $this;
     }
+
+    /**
+     * @param  array  $noveltiesIds
+     * @param  int    $approverId
+     * @return void
+     */
+    public function setApprovals(array $noveltiesIds, int $approverId)
+    {
+        $novelties = $this->model->whereIn('id', $noveltiesIds)->get(['id']);
+        $novelties->each->approve($approverId);
+    }
+
+    /**
+     * @param  array  $noveltiesIds
+     * @param  int    $approverId
+     * @return void
+     */
+    public function deleteApprovals(array $noveltiesIds, int $approverId)
+    {
+        $novelties = $this->model->whereIn('id', $noveltiesIds)->get(['id']);
+        $novelties->each->deleteApprove($approverId);
+    }
 }

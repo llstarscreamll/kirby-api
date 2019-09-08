@@ -19,6 +19,7 @@ class RegisterTimeClockNoveltiesListenerCest
      */
     public function _before(IntegrationTester $I)
     {
+        //
     }
 
     /**
