@@ -1,7 +1,5 @@
 <?php
 
-namespace llstarscreamll\Authorization\Data\Seeders;
-
 use Illuminate\Database\Seeder;
 use llstarscreamll\Authorization\Models\Role;
 use llstarscreamll\Authorization\Models\Permission;

@@ -1795,7 +1795,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/Authorization",
-                "reference": "6dc2cc718c82b2ed2490b37b9c792d86565717dd"
+                "reference": "4adfb9ba559a4b7ec6618e73f61a8210afca52fd"
             },
             "require": {
                 "illuminate/support": "~5",
@@ -1819,6 +1819,9 @@
                 }
             },
             "autoload": {
+                "classmap": [
+                    "database/seeds"
+                ],
                 "psr-4": {
                     "llstarscreamll\\Authorization\\": "src/"
                 }
@@ -2018,7 +2021,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/llstarscreamll/Novelties",
-                "reference": "d831c0c3695278be86fd7e2f66edba00add8454e"
+                "reference": "02e812bd9ab3965845800df4ee438cccc458ac5f"
             },
             "require": {
                 "bensampo/laravel-enum": "^1.19",
@@ -2042,6 +2045,9 @@
                 }
             },
             "autoload": {
+                "classmap": [
+                    "database/seeds"
+                ],
                 "psr-4": {
                     "llstarscreamll\\Novelties\\": "src/"
                 }

@@ -1,7 +1,5 @@
 <?php
 
-namespace llstarscreamll\Novelties\Seeds;
-
 use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
 use llstarscreamll\Novelties\Enums\DayType;

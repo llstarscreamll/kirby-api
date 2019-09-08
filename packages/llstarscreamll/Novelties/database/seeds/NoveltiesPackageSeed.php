@@ -1,7 +1,5 @@
 <?php
 
-namespace llstarscreamll\Novelties\Seeds;
-
 use Illuminate\Database\Seeder;
 
 /**

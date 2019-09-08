@@ -22,7 +22,7 @@ class AuthorizationServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
-        $this->loadMigrationsFrom(__DIR__.'/Data/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
