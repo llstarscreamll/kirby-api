@@ -4,6 +4,8 @@ namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
+use llstarscreamll\TimeClock\Events\TimeClockLogApprovalCreatedEvent;
+use llstarscreamll\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\UI\API\Requests\CreateTimeClockLogApprovalRequest;
 use llstarscreamll\TimeClock\UI\API\Requests\DeleteTimeClockLogApprovalRequest;
@@ -38,6 +40,7 @@ class TimeClockLogApprovalsController extends Controller
     public function store(CreateTimeClockLogApprovalRequest $request, string $timeClockLogId)
     {
         $this->timeClockLogRepository->sync($timeClockLogId, 'approvals', $request->user()->id, false);
+        TimeClockLogApprovalCreatedEvent::dispatch($timeClockLogId, $request->user()->id);
 
         return response()->json(['ok'], 201);
     }
@@ -52,6 +55,7 @@ class TimeClockLogApprovalsController extends Controller
     public function destroy(DeleteTimeClockLogApprovalRequest $request, string $timeClockLogId)
     {
         $this->timeClockLogRepository->deleteApproval($timeClockLogId, $request->user()->id);
+        TimeClockLogApprovalDeletedEvent::dispatch($timeClockLogId, $request->user()->id);
 
         return response()->json(['ok'], 200);
     }

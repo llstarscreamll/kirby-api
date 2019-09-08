@@ -5,6 +5,7 @@ namespace ClockTime;
 use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
+use llstarscreamll\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
 
 /**
  * Class DeleteTimeClockLogApprovalCest.
@@ -52,6 +53,7 @@ class DeleteTimeClockLogApprovalCest
     }
 
     /**
+     * @test
      * @param ApiTester $I
      */
     public function shouldDeleteApprovalSuccessfully(ApiTester $I)
@@ -64,6 +66,7 @@ class DeleteTimeClockLogApprovalCest
         $I->sendDELETE($endpoint);
 
         $I->seeResponseCodeIs(200);
+        $I->seeEventTriggered(TimeClockLogApprovalDeletedEvent::class);
         $I->dontSeeRecord('time_clock_log_approvals', [
             'user_id' => $this->user->id,
             'time_clock_log_id' => $this->timeClockLogs->first()->id,
@@ -71,6 +74,7 @@ class DeleteTimeClockLogApprovalCest
     }
 
     /**
+     * @test
      * @param ApiTester $I
      */
     public function shouldReturnUnathorizedIfUserDoesntHaveRequiredPermission(ApiTester $I)
@@ -93,6 +97,7 @@ class DeleteTimeClockLogApprovalCest
     }
 
     /**
+     * @test
      * @param ApiTester $I
      */
     public function shouldReturnNotFoundIfTimeClockLogDoesntExists(ApiTester $I)
