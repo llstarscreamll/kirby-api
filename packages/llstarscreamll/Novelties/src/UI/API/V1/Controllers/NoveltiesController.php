@@ -40,8 +40,8 @@ class NoveltiesController
     {
         $novelties = $this->noveltyRepository
             ->pushCriteria(app(RequestCriteria::class))
-            ->with(['employee.user', 'noveltyType'])
-            ->orderBy('updated_at', 'DESC')
+            ->with(['employee.user', 'noveltyType', 'approvals:users.id,users.first_name,users.last_name'])
+            ->orderBy('id', 'DESC')
             ->simplePaginate();
 
         return NoveltyResource::collection($novelties);
