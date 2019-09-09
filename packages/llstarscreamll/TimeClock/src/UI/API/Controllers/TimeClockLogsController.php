@@ -42,7 +42,7 @@ class TimeClockLogsController extends Controller
                 'employee.user', 'workShift', 'novelties.noveltyType', 'subCostCenter',
                 'approvals:users.id,users.first_name,users.last_name',
             ])
-            ->orderBy('updated_at', 'DESC')
+            ->orderBy('id', 'DESC')
             ->simplePaginate();
 
         return TimeClockLogResource::collection($timeClockLogs);
