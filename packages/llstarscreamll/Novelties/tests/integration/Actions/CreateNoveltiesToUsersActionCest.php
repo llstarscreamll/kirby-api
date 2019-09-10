@@ -7,6 +7,7 @@ use Codeception\Example;
 use Novelties\IntegrationTester;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Novelties\Models\NoveltyType;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Novelties\Actions\CreateNoveltiesToUsersAction;
 
 /**
@@ -21,7 +22,8 @@ class CreateNoveltiesToUsersActionCest
      */
     public function _before(IntegrationTester $I)
     {
-        factory(NoveltyType::class, 5)->create();
+        factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Subtraction]);
+        factory(NoveltyType::class, 4)->create();
     }
 
     /**
@@ -45,11 +47,13 @@ class CreateNoveltiesToUsersActionCest
                         'novelty_type_id' => 1,
                         'start_at' => '2018-01-01 10:00:00',
                         'end_at' => '2018-01-01 12:00:00',
+                        'total_time_in_minutes' => -120,
                     ],
                     [
                         'novelty_type_id' => 2,
                         'start_at' => '2018-02-20 14:00:00',
                         'end_at' => '2018-02-20 16:00:00',
+                        'total_time_in_minutes' => 120,
                     ],
                 ],
             ],
@@ -79,6 +83,7 @@ class CreateNoveltiesToUsersActionCest
                     'novelty_type_id' => $novelty['novelty_type_id'],
                     'start_at' => $novelty['start_at'],
                     'end_at' => $novelty['end_at'],
+                    'total_time_in_minutes' => $novelty['total_time_in_minutes'],
                 ]);
             }
         });
