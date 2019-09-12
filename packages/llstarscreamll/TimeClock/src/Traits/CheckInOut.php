@@ -89,8 +89,9 @@ trait CheckInOut
         $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, $currentDateTime) : null;
         $isOnTime = $punctuality === 0;
         $noveltyTypes = new Collection([]);
+        $noveltyIsRequired = $this->subtractNoveltyTypeIsRequired();
 
-        if (! $isOnTime) {
+        if (! $isOnTime && $noveltyIsRequired) {
             if ($applicableWorkShifts->count() === 1) {
                 // return novelty types based  punctuality and action
                 $noveltyTypes = ($punctuality > 0 && $flag === 'start') || ($punctuality < 0 && $flag === 'end')

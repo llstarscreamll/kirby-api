@@ -814,9 +814,55 @@ class CheckOutCest
         ]);
     }
 
-    // ######################################################################## #
-    //                            Permissions tests                             #
-    // ######################################################################## #
+    // ####################################################################### #
+    //            Automatic novelty deduction on eager/late check out          #
+    // ####################################################################### #
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasShifAndSubCostCenterIsMissingAndLeavesTooEarlyAndNoveltiesAreNotRequiredShouldNotReturnNoveltyTypes(ApiTester $I)
+    {
+        // fake current date time, monday at 4pm, too early
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 16, 00));
+        $checkedInTime = now()->setTime(7, 00);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'check_in_novelty_type_id' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        // set setting to NOT require novelty type when check out is too early,
+        // this make to set a default novelty type id for the early check out
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        $requestData = [
+            'sub_cost_center_id' => null, // without sub cost center!!
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->dontSeeResponseJsonMatchesJsonPath("errors.0.meta.novelty_types.0");
+        $I->dontSeeResponseJsonMatchesJsonPath("errors.0.meta.novelty_types.1");
+    }
+
+    // ####################################################################### #
+    //                            Permissions tests                            #
+    // ####################################################################### #
 
     /**
      * @test

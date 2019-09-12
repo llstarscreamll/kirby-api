@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Events\CheckedInEvent;
@@ -517,76 +518,6 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenHasSingleWorkShiftAndArrivesTooLateButNoveltyIsNotRequired(ApiTester $I)
-    {
-        $employee = factory(Employee::class)
-            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 18',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
-            ])->create();
-
-        // fake current date time, one hour late
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
-
-        // set setting to NOT require novelty type when check in is too late
-        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
-
-        $requestData = [
-            'identification_code' => $employee->identifications->first()->code,
-        ];
-
-        $I->sendPOST($this->endpoint, $requestData);
-
-        $I->seeResponseCodeIs(201);
-        $I->seeResponseJsonMatchesJsonPath('$.data.id');
-        $I->seeRecord('time_clock_logs', [
-            'employee_id' => $employee->id,
-            'work_shift_id' => $employee->workShifts->first()->id,
-            'check_in_novelty_type_id' => $this->subtractTimeNovelty->id,
-        ]);
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
-    public function whenHasSingleWorkShiftAndArrivesTooEarlyButNoveltyIsNotRequired(ApiTester $I)
-    {
-        $employee = factory(Employee::class)
-            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 18',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
-            ])->create();
-
-        // fake current date time, monday, one hour early
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
-
-        // set setting to NOT require novelty type when check in is too early
-        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
-
-        $requestData = [
-            'identification_code' => $employee->identifications->first()->code,
-        ];
-
-        $I->sendPOST($this->endpoint, $requestData);
-
-        $I->seeResponseCodeIs(201);
-        $I->seeResponseJsonMatchesJsonPath('$.data.id');
-        $I->seeRecord('time_clock_logs', [
-            'employee_id' => $employee->id,
-            'work_shift_id' => $employee->workShifts->first()->id,
-            'check_in_novelty_type_id' => $this->additionalTimeNovelty->id,
-        ]);
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
     public function whenHasSingleWorkShiftAndArrivesTooLateWithRightNoveltyType(ApiTester $I)
     {
         $employee = factory(Employee::class)
@@ -1090,9 +1021,133 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
     }
 
-    // ######################################################################## #
-    //                            Permissions tests                             #
-    // ######################################################################## #
+    // ####################################################################### #
+    //            Automatic novelty deduction on eager/late check in           #
+    // ####################################################################### #
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasSingleWorkShiftAndArrivesTooLateButNoveltyIsNotRequired(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, one hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
+
+        // set setting to NOT require novelty type when check in is too late
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => $this->subtractTimeNovelty->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasSingleWorkShiftAndArrivesTooEarlyButNoveltyIsNotRequired(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, monday, one hour early
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
+
+        // set setting to NOT require novelty type when check in is too early
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => $this->additionalTimeNovelty->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenEmployeeHasTwoWorkShiftsAndNoveltyIsNotRequiredShouldNotReturnNoveltyTypes(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 17',
+                'grace_minutes_before_start_times' => 25,
+                'grace_minutes_after_end_times' => 20,
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [
+                    ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
+                    ['start' => '13:30', 'end' => '17:00'],
+                ],
+            ])
+            ->create();
+
+        // create another work shift option for the employee
+        $novelty = factory(WorkShift::class)->create([
+            'name' => '7 to 18',
+            'grace_minutes_before_start_times' => 25,
+            'grace_minutes_after_end_times' => 20,
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [
+                ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
+                ['start' => '13:30', 'end' => '18:00'],
+            ]]);
+
+        $employee->workShifts()->attach($novelty);
+
+        // fake current date time, one hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 14, 57));
+
+        // set setting to NOT require novelty type when check in is too late
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+
+        ];
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(422);
+        $I->dontSeeResponseJsonMatchesJsonPath("errors.0.meta.novelty_types.0");
+        $I->dontSeeResponseJsonMatchesJsonPath("errors.0.meta.novelty_types.1");
+    }
+
+    // ####################################################################### #
+    //                            Permissions tests                            #
+    // ####################################################################### #
 
     /**
      * @test
