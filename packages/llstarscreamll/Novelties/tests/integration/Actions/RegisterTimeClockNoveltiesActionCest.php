@@ -66,6 +66,19 @@ class RegisterTimeClockNoveltiesActionCest
         ]));
 
         $this->workShifts->push(factory(WorkShift::class)->create([
+            'name' => '7-12 13:30-17:00',
+            'grace_minutes_before_start_times' => 25,
+            'grace_minutes_after_end_times' => 20,
+            'meal_time_in_minutes' => 60, // 1 hour
+            'min_minutes_required_to_discount_meal_time' => 0, // 11 hours
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [
+                ['start' => '07:00', 'end' => '12:00'],
+                ['start' => '13:30', 'end' => '17:00'],
+            ],
+        ]));
+
+        $this->workShifts->push(factory(WorkShift::class)->create([
             'name' => '7-17',
             'meal_time_in_minutes' => 60, // 1 hour
             'min_minutes_required_to_discount_meal_time' => 60 * 11, // 11 hours
@@ -133,6 +146,23 @@ class RegisterTimeClockNoveltiesActionCest
     protected function successCases()
     {
         return [
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-12 13:30-17:00',
+                    'checked_in_at' => '2019-04-01 11:49:00', // on time, with grace time
+                    'checked_out_at' => '2019-04-01 12:15:00', // on time, with grace time
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        'total_time_in_minutes' => 1 + 10,
+                    ],
+                    [
+                        'novelty_type_code' => 'PP',
+                        'total_time_in_minutes' => ((60 * 5) - 11) * -1,
+                    ],
+                ],
+            ],
             [
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',

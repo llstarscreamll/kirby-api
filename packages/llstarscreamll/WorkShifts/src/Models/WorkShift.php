@@ -132,9 +132,9 @@ class WorkShift extends Model
      * @param  Carbon $time
      * @return int
      */
-    public function startPunctuality(Carbon $time = null): int
+    public function startPunctuality(Carbon $time = null, $debug = false): int
     {
-        return $this->slotPunctuality('start', $time ?? now());
+        return $this->slotPunctuality('start', $time ?? now(), null, false, $debug);
     }
 
     /**
@@ -147,30 +147,56 @@ class WorkShift extends Model
     }
 
     /**
+     * @return mixed
+     */
+    private function foo(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false, $debug = false)
+    {
+        $foo = collect($this->time_slots)
+            ->map(function ($timeSlot) use ($time, $flag, $offSet, $beGraceTimeAware) {
+                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware, $flag === 'end', $offSet);
+            })
+            ->sortBy(function (array $timeSlot) use ($time, $flag) {
+                return $time->between($timeSlot['start'], $timeSlot['end'])
+                    ? 0 : $time->diffInMinutes($timeSlot[$flag]);
+            })->first();
+
+        return collect($this->time_slots)
+            ->map(function ($timeSlot) use ($time, $flag, $offSet, $beGraceTimeAware) {
+                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware, $flag === 'end', $offSet);
+            })
+            ->sortBy(function (array $timeSlot) use ($time, $flag) {
+                return $time->between($timeSlot['start'], $timeSlot['end']) ? 0 : $time->diffInMinutes($timeSlot[$flag]);
+            })->first();
+    }
+
+    /**
      * @param  string $flag     'start'|'end'
      * @param  Carbon $time
      * @param  Carbon $offset
      * @return int    -1 early, zero on time, 1 late
      */
-    public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null): ?int
+    public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false, $debug = true): ?int
     {
-        return collect($this->time_slots)
-            ->map(function ($timeSlot) use ($time, $flag, $offSet) {
-                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware = false, $flag === 'end', $offSet);
-            })
-            ->sortBy(function (array $timeSlot) use ($time, $flag) {
-                return $time->diffInSeconds($timeSlot[$flag]);
-            })
-            ->map(function (array $timeSlot) use ($time, $flag) {
-                $flagGraceFrom = $timeSlot[$flag]->copy()->subMinutes($this->{"grace_minutes_before_{$flag}_times"});
-                $flagGraceTo = $timeSlot[$flag]->copy()->addMinutes($this->{"grace_minutes_after_{$flag}_times"});
+        $timeSlot = $this->foo($flag, $time, $offSet, true);
+        [$end, $start] = array_values($timeSlot);
+        $targetTime = $flag == 'start' ? $start : $end;
 
-                if ($time->between($flagGraceFrom, $flagGraceTo)) {
-                    return 0;
-                }
+        $flagGraceStart = $targetTime->copy();
+        $flagGraceEnd = $targetTime->copy();
 
-                return $time->lessThan($flagGraceFrom) ? -1 : 1;
-            })->first();
+        if ($flag == 'start') {
+            $flagGraceEnd = $flagGraceEnd->addMinutes($this->{"grace_minutes_before_{$flag}_times"}+$this->{"grace_minutes_after_{$flag}_times"});
+        }
+
+        if ($flag == 'end') {
+            $flagGraceStart = $flagGraceStart->subMinutes($this->{"grace_minutes_before_{$flag}_times"}+$this->{"grace_minutes_after_{$flag}_times"});
+        }
+
+        if ($time->between($flagGraceStart, $flagGraceEnd)) {
+            return 0;
+        }
+
+        return $time->lessThan($flagGraceStart) ? -1 : 1;
     }
 
     /**
@@ -185,22 +211,22 @@ class WorkShift extends Model
         $date = $date ?? now();
 
         [$hour, $seconds] = explode(':', $timeSlot['start']);
-        $start = $date->copy()->setTime($hour, $seconds);
+        $start = $originalStart = $date->copy()->setTime($hour, $seconds);
 
         [$hour, $seconds] = explode(':', $timeSlot['end']);
-        $end = $date->copy()->setTime($hour, $seconds);
+        $end = $originalEnd = $date->copy()->setTime($hour, $seconds);
 
-        if ($beGraceTimeAware) {
-            $start = $start->subMinutes($this->grace_minutes_before_start_times);
-            $end = $end->addMinutes($this->grace_minutes_after_end_times);
-        }
-
-        if ($start->greaterThan($end) && ! $relativeToEnd) {
-            $end = $end->addDay();
+        if ($originalStart->greaterThan($originalEnd) && ! $relativeToEnd) {
+            $originalEnd = $originalEnd->addDay();
         }
 
         if ($relativeToEnd) {
-            $start = $start->subDay();
+            $originalStart = $originalStart->subDay();
+        }
+
+        if ($beGraceTimeAware) {
+            $start = $originalStart->copy()->subMinutes($this->grace_minutes_before_start_times);
+            $end = $originalEnd->copy()->addMinutes($this->grace_minutes_after_end_times);
         }
 
         // set the time offset if needed
@@ -208,7 +234,7 @@ class WorkShift extends Model
             $relativeToEnd ? $end = $offSet : $start = $offSet;
         }
 
-        return ['end' => $end, 'start' => $start];
+        return ['end' => $end, 'start' => $start, 'original_start' => $originalStart, 'original_end' => $originalEnd];
     }
 
     /**
@@ -217,17 +243,11 @@ class WorkShift extends Model
      * @param  Carbon  $offSet
      * @return mixed
      */
-    public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
+    public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null, $debug = false): ?Carbon
     {
-        $slot = collect($this->time_slots)
-            ->map(function (array $timeSlot) use ($time, $flag, $offSet) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware = false, $flag === 'end', $offSet);
-                $timeSlot['diff'] = $time->diffInMinutes($timeSlot[$flag]);
+        $timeSlot = $this->foo($flag, $time, $offSet, true, true);
 
-                return $timeSlot;
-            })->sortBy('diff')->first();
-
-        return $slot[$flag] ?? null;
+        return $offSet ?? $timeSlot["original_{$flag}"] ?? null;
     }
 
     /**

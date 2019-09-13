@@ -72,35 +72,31 @@ class RegisterTimeClockNoveltiesAction
      */
     public function run(int $timeClockLogId): bool
     {
+        $date = now();
         $timeClockLog = $this->timeClockLogRepository->with([
             'workShift', 'checkInNovelty', 'checkOutNovelty', 'novelties',
         ])->find($timeClockLogId);
-
         $this->attachScheduledNovelties($timeClockLog);
-
         $applicableNovelties = $this->getApplicableNovelties($timeClockLog);
 
-        $date = now();
-
         $novelties = $applicableNovelties
-        // ->filter(function ($n) {return $n->code == 'HN';})
-        ->map(function ($noveltyType) use ($timeClockLog, $date) {
-            [$minutes, $subCostCenterId, $times] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
-            $startAt = Arr::first($times);
-            $endAt = Arr::last($times);
+            ->map(function ($noveltyType) use ($timeClockLog, $date) {
+                [$minutes, $subCostCenterId, $times] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
+                $startAt = Arr::first($times);
+                $endAt = Arr::last($times);
 
-            return [
-                'time_clock_log_id' => $timeClockLog->id,
-                'employee_id' => $timeClockLog->employee_id,
-                'novelty_type_id' => $noveltyType->id,
-                'sub_cost_center_id' => $subCostCenterId,
-                'total_time_in_minutes' => $minutes,
-                'start_at' => optional($startAt)->toDateTimeString(),
-                'end_at' => optional($endAt)->toDateTimeString(),
-                'created_at' => $date,
-                'updated_at' => $date,
-            ];
-        })
+                return [
+                    'time_clock_log_id' => $timeClockLog->id,
+                    'employee_id' => $timeClockLog->employee_id,
+                    'novelty_type_id' => $noveltyType->id,
+                    'sub_cost_center_id' => $subCostCenterId,
+                    'total_time_in_minutes' => $minutes,
+                    'start_at' => optional($startAt)->toDateTimeString(),
+                    'end_at' => optional($endAt)->toDateTimeString(),
+                    'created_at' => $date,
+                    'updated_at' => $date,
+                ];
+            })
             ->filter(function ($novelty) {
                 return $novelty['total_time_in_minutes'] !== 0 && $novelty['total_time_in_minutes'] !== 0.0;
             });
@@ -172,7 +168,7 @@ class RegisterTimeClockNoveltiesAction
         $timeClockLog->hasHolidaysChecks() ? array_push($dayTypes, DayType::Holiday) : null;
         $this->noveltyTypeRepository->whereDayType($dayTypes);
 
-        if ($timeClockLog->checkOutPunctuality() === -1 || $timeClockLog->checkInPunctuality() === 1) {
+        if ($timeClockLog->checkInPunctuality() === 1 || $timeClockLog->checkOutPunctuality() === -1) {
             $this->noveltyTypeRepository->orWhereDefaultForSubtraction();
         }
 
@@ -184,10 +180,6 @@ class RegisterTimeClockNoveltiesAction
             // filter by time slots
             return collect($noveltyType->apply_on_time_slots)
                 ->filter(function (?array $timeSlot) use ($timeClockLog, $noveltyType) {
-                    [$hours, $seconds] = explode(':', $timeSlot['start']);
-                    $start = now()->setTime($hours, $seconds);
-                    [$hours, $seconds] = explode(':', $timeSlot['end']);
-                    $end = now()->setTime($hours, $seconds);
 
                     return $timeClockLog->workShift
                         && (optional($timeClockLog->workShift->minStartTimeSlot($timeClockLog->checked_in_at))->between($noveltyType->minStartTimeSlot($timeClockLog->checked_in_at), $noveltyType->maxEndTimeSlot($timeClockLog->checked_in_at))
@@ -216,8 +208,8 @@ class RegisterTimeClockNoveltiesAction
 
         $checkedInAt = $timeClockLog->checked_in_at;
         $checkedOutAt = $timeClockLog->checked_out_at;
-        $checkInPunctuality = $timeClockLog->checkInPunctuality();
         $checkOutPunctuality = $timeClockLog->checkOutPunctuality();
+        $checkInPunctuality = $timeClockLog->checkInPunctuality();
 
         if ($timeClockLog->work_shift_id && $noveltyType->context_type === 'normal_work_shift_time' && $clockedMinutes[$noveltyType->apply_on_days_of_type->value]) {
             if ($workShift && $timeClockLog->hasClockedTimeOnWorkShift()) {
@@ -234,7 +226,7 @@ class RegisterTimeClockNoveltiesAction
                 $timeInMinutes = $noveltyType->applicableTimeInMinutesFromTimeRange($startTime, $endTime);
             }
 
-            $shouldDiscountMealTime = $timeInMinutes >= optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time;
+            $shouldDiscountMealTime = optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time && $timeInMinutes >= optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time;
 
             $timeInMinutes -= $noveltyType->apply_on_days_of_type->is(DayType::Holiday)
                 ? $clockedMinutes[DayType::Workday]
@@ -320,9 +312,7 @@ class RegisterTimeClockNoveltiesAction
         $startNoveltyMinutes = 0;
         $endNoveltyMinutes = 0;
         $workShift = optional($timeClockLog->workShift);
-        $clockedMinutes = $timeClockLog->clocked_minutes;
         $mealMinutes = $workShift->meal_time_in_minutes ?? 0;
-        $closestEndSlot = $workShift->getClosestSlotFlagTime('end', $timeClockLog->checked_out_at);
         $closestEndSlot = $workShift->getClosestSlotFlagTime('end', $timeClockLog->checked_out_at, $this->getEndTime($timeClockLog));
         $closestStartSlot = $workShift->getClosestSlotFlagTime('start', $timeClockLog->checked_in_at, $this->getStartTime($timeClockLog));
 
@@ -330,7 +320,8 @@ class RegisterTimeClockNoveltiesAction
         if ($timeClockLog->work_shift_id) {
             $estimatedStartTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
                 ? $timeClockLog->checked_out_at : $closestStartSlot;
-            $startNoveltyMinutes = $estimatedStartTime->diffInMinutes($timeClockLog->checked_in_at);
+
+            $startNoveltyMinutes = $timeClockLog->checkInPunctuality() !== 0 ? $estimatedStartTime->diffInMinutes($timeClockLog->checked_in_at) : 0;
             $times['startNoveltyTimes'] = ['start' => $estimatedStartTime, 'end' => $timeClockLog];
 
             if (! $timeClockLog->checkInNovelty || $timeClockLog->checkInNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {

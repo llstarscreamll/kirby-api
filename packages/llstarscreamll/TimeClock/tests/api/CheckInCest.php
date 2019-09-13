@@ -1008,7 +1008,7 @@ class CheckInCest
         ];
 
         $I->sendPOST($this->endpoint, $requestData);
-        // dd(\DB::table('time_clock_logs')->get());
+
         $expectedTimeClockLog = [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,

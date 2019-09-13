@@ -308,7 +308,7 @@ class TimeClockLog extends Model
 
     public function checkInPunctuality(): ?int
     {
-        return optional($this->workShift)->startPunctuality($this->checked_in_at);
+        return optional($this->workShift)->startPunctuality($this->checked_in_at, true);
     }
 
     public function checkOutPunctuality(): ?int
