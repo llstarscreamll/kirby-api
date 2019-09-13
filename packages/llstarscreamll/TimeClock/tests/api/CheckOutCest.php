@@ -856,8 +856,8 @@ class CheckOutCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->dontSeeResponseJsonMatchesJsonPath("errors.0.meta.novelty_types.0");
-        $I->dontSeeResponseJsonMatchesJsonPath("errors.0.meta.novelty_types.1");
+        $I->dontSeeResponseJsonMatchesJsonPath('errors.0.meta.novelty_types.0');
+        $I->dontSeeResponseJsonMatchesJsonPath('errors.0.meta.novelty_types.1');
     }
 
     // ####################################################################### #

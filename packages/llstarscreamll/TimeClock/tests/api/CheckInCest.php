@@ -1124,7 +1124,7 @@ class CheckInCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ]]);
+            ], ]);
 
         $employee->workShifts()->attach($novelty);
 
@@ -1141,8 +1141,8 @@ class CheckInCest
         $I->sendPOST($this->endpoint, $requestData);
 
         $I->seeResponseCodeIs(422);
-        $I->dontSeeResponseJsonMatchesJsonPath("errors.0.meta.novelty_types.0");
-        $I->dontSeeResponseJsonMatchesJsonPath("errors.0.meta.novelty_types.1");
+        $I->dontSeeResponseJsonMatchesJsonPath('errors.0.meta.novelty_types.0');
+        $I->dontSeeResponseJsonMatchesJsonPath('errors.0.meta.novelty_types.1');
     }
 
     // ####################################################################### #

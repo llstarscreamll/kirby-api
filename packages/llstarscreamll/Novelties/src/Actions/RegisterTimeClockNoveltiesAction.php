@@ -180,7 +180,6 @@ class RegisterTimeClockNoveltiesAction
             // filter by time slots
             return collect($noveltyType->apply_on_time_slots)
                 ->filter(function (?array $timeSlot) use ($timeClockLog, $noveltyType) {
-
                     return $timeClockLog->workShift
                         && (optional($timeClockLog->workShift->minStartTimeSlot($timeClockLog->checked_in_at))->between($noveltyType->minStartTimeSlot($timeClockLog->checked_in_at), $noveltyType->maxEndTimeSlot($timeClockLog->checked_in_at))
                         || optional($timeClockLog->workShift->maxEndTimeSlot($timeClockLog->checked_in_at, false, false))->between($noveltyType->minStartTimeSlot($timeClockLog->checked_in_at), $noveltyType->maxEndTimeSlot($timeClockLog->checked_in_at)));
