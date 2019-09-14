@@ -158,9 +158,6 @@ cd {{ $currentDir }}
 git pull origin {{ $branch }}
 composer install
 php artisan optimize
-php artisan db:seed --class=llstarscreamll\\Novelties\\Seeds\\NoveltiesPermissionsSeeder
-php artisan db:seed --class=EmployeesPackageSeed
-php artisan authorization:refresh-admin-permissions
 php artisan queue:restart
 php artisan horizon:purge
 sudo php artisan horizon:terminate
