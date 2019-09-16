@@ -67,9 +67,9 @@ class WorkShift extends Model
      */
     private $daysSeparator = '|';
 
-    // ######################################################################## #
-    //                                  Mutators                                #
-    // ######################################################################## #
+    // ####################################################################### #
+    //                                  Mutators                               #
+    // ####################################################################### #
 
     /**
      * `applies_on_days` attribute is used as array but stored as string.
@@ -82,9 +82,9 @@ class WorkShift extends Model
         $this->attributes['applies_on_days'] = implode($this->daysSeparator, $appliesOnDays);
     }
 
-    // ######################################################################## #
-    //                                 Accessors                                #
-    // ######################################################################## #
+    // ####################################################################### #
+    //                                 Accessors                               #
+    // ####################################################################### #
 
     /**
      * `applies_on_days` attribute is used as array but stored as string.
@@ -124,17 +124,17 @@ class WorkShift extends Model
         return $totalTime;
     }
 
-    // ######################################################################## #
-    //                                Methods                                   #
-    // ######################################################################## #
+    // ####################################################################### #
+    //                                Methods                                  #
+    // ####################################################################### #
 
     /**
      * @param  Carbon $time
      * @return int
      */
-    public function startPunctuality(Carbon $time = null, $debug = false): int
+    public function startPunctuality(Carbon $time = null): int
     {
-        return $this->slotPunctuality('start', $time ?? now(), null, false, $debug);
+        return $this->slotPunctuality('start', $time ?? now(), null, false);
     }
 
     /**
@@ -149,22 +149,17 @@ class WorkShift extends Model
     /**
      * @return mixed
      */
-    private function foo(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false, $debug = false)
+    private function matchingTimeSlot(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false)
     {
-        $foo = collect($this->time_slots)
-            ->map(function ($timeSlot) use ($time, $flag, $offSet, $beGraceTimeAware) {
-                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware, $flag === 'end', $offSet);
-            })
-            ->sortBy(function (array $timeSlot) use ($time, $flag) {
-                return $time->between($timeSlot['start'], $timeSlot['end'])
-                    ? 0 : $time->diffInMinutes($timeSlot[$flag]);
-            })->first();
-
         return collect($this->time_slots)
             ->map(function ($timeSlot) use ($time, $flag, $offSet, $beGraceTimeAware) {
                 return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware, $flag === 'end', $offSet);
             })
             ->sortBy(function (array $timeSlot) use ($time, $flag) {
+                if ($flag === 'end' && $time->diffInMinutes($timeSlot[$flag === 'end' ? 'start' : 'end']) < 60) {
+                    return 100 * 100;
+                }
+
                 return $time->between($timeSlot['start'], $timeSlot['end']) ? 0 : $time->diffInMinutes($timeSlot[$flag]);
             })->first();
     }
@@ -175,9 +170,9 @@ class WorkShift extends Model
      * @param  Carbon $offset
      * @return int    -1 early, zero on time, 1 late
      */
-    public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false, $debug = true): ?int
+    public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false): ?int
     {
-        $timeSlot = $this->foo($flag, $time, $offSet, true);
+        $timeSlot = $this->matchingTimeSlot($flag, $time, $offSet, true);
         [$end, $start] = array_values($timeSlot);
         $targetTime = $flag == 'start' ? $start : $end;
 
@@ -220,10 +215,6 @@ class WorkShift extends Model
             $originalEnd = $originalEnd->addDay();
         }
 
-        if ($relativeToEnd) {
-            $originalStart = $originalStart->subDay();
-        }
-
         if ($beGraceTimeAware) {
             $start = $originalStart->copy()->subMinutes($this->grace_minutes_before_start_times);
             $end = $originalEnd->copy()->addMinutes($this->grace_minutes_after_end_times);
@@ -243,9 +234,9 @@ class WorkShift extends Model
      * @param  Carbon  $offSet
      * @return mixed
      */
-    public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null, $debug = false): ?Carbon
+    public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
     {
-        $timeSlot = $this->foo($flag, $time, $offSet, true, true);
+        $timeSlot = $this->matchingTimeSlot($flag, $time, $offSet, true, true);
 
         return $offSet ?? $timeSlot["original_{$flag}"] ?? null;
     }
