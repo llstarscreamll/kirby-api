@@ -127,10 +127,9 @@ class LogCheckOutAction
             $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);
         }
 
-        $lastCheckIn = $this->timeClockLogRepository->lastCheckInWithOutCheckOutFromEmployeeId(
-            $identification->employee_id,
-            ['id', 'work_shift_id', 'checked_in_at']
-        );
+        $lastCheckIn = $this->timeClockLogRepository
+            ->with(['workShift'])
+            ->lastCheckInWithOutCheckOutFromEmployeeId($identification->employee_id);
 
         if (! $lastCheckIn) {
             throw new MissingCheckInException();

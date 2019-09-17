@@ -121,6 +121,40 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
+    public function whenCheckInHasNotShiftAndHasNotSubCostCenter(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
+        $checkedInTime = now()->setTime(7, 0);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('timeClockLogs', [ // check in with novelty type but without sub cost center
+                'work_shift_id' => null, // empty shift
+                'check_in_novelty_type_id' => 3, // some novelty type setted
+                'check_in_sub_cost_center_id' => null, // empty sub cost center
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        // missing sub cost center field
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        // error, sub cost center is required
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseJsonMatchesJsonPath('$.errors.0.meta.sub_cost_centers');
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
     public function whenHasShiftAndLeavesOnTime(ApiTester $I)
     {
         // fake current date time

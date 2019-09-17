@@ -281,7 +281,8 @@ class TimeClockLog extends Model
      */
     public function requireSubCostCenter(Carbon $endTime): bool
     {
-        return ($this->check_in_novelty_type_id && $this->check_in_sub_cost_center_id)
+        return ($this->check_in_novelty_type_id && ! $this->check_in_sub_cost_center_id)
+            || (! $this->sub_cost_center_id && ! $this->check_in_sub_cost_center_id && ! $this->check_out_sub_cost_center_id)
             || ($this->work_shift_id && ! $this->sub_cost_center_id && $this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)))
             || ($this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)));
     }
