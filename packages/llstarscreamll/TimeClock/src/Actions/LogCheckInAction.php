@@ -142,11 +142,17 @@ class LogCheckInAction
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        $scheduledNovelty = $this->noveltyRepository
-            ->whereScheduledForEmployee($identification->employee->id, 'end_at', now()->startOfDay(), now()->addMinutes(30))
-            ->first();
-        $checkInOffset = optional($scheduledNovelty)->end_at;
-        $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
+        $shiftPunctuality = optional($workShift)->slotPunctuality('start', now());
+
+        // if is not on time, ask for past novelties
+        if ($shiftPunctuality !== 0) {
+            $scheduledNovelty = $this->noveltyRepository
+                ->whereScheduledForEmployee($identification->employee->id, 'end_at', now()->startOfDay(), now()->addMinutes(30))
+                ->first();
+            $checkInOffset = optional($scheduledNovelty)->end_at;
+            $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
+        }
+
         $isTooLate = $shiftPunctuality > 0;
         $isTooEarly = $shiftPunctuality < 0;
 
