@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\TimeClock\Actions;
 
+use Illuminate\Support\Arr;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Traits\CheckInOut;
 use llstarscreamll\WorkShifts\Models\WorkShift;
@@ -143,12 +144,17 @@ class LogCheckInAction
         }
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('start', now());
+        $timeSlot = optional($workShift)->matchingTimeSlot('start', now());
+        $one = Arr::get($timeSlot, 'start');
+        $two = Arr::get($timeSlot, 'end');
 
         // if is not on time, ask for past novelties
-        if ($shiftPunctuality !== 0) {
+        if ($workShift && $shiftPunctuality !== 0) {
             $scheduledNovelty = $this->noveltyRepository
-                ->whereScheduledForEmployee($identification->employee->id, 'end_at', now()->startOfDay(), now()->addMinutes(30))
+                ->whereScheduledForEmployee($identification->employee->id, 'end_at', $one, $two)
+                ->orderBy('created_at', 'DESC')
                 ->first();
+
             $checkInOffset = optional($scheduledNovelty)->end_at;
             $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
         }

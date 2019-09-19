@@ -149,7 +149,7 @@ class WorkShift extends Model
     /**
      * @return mixed
      */
-    private function matchingTimeSlot(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false)
+    public function matchingTimeSlot(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false)
     {
         return collect($this->time_slots)
             ->map(function ($timeSlot) use ($time, $flag, $offSet, $beGraceTimeAware) {
