@@ -98,7 +98,6 @@ class Employee extends Model
     public function getWorkShiftsThatMatchesTime(Carbon $time): ?Collection
     {
         $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function (WorkShift $workShift) use ($time) {
-
             $matchedTimeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
                 [$hour, $seconds] = explode(':', $timeSlot['start']);
                 $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_before_start_times);
