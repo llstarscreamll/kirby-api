@@ -183,7 +183,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function whenHasSingleWorkShiftWithTwoTimeSlotsAndFirstSlotLogAndArrivesOnTimeToTheSecondSlot(ApiTester $I)
+    public function whenHasSingleWorkShiftWithTwoTimeSlotsAndLogInFirstSlotAndArrivesOnTimeToTheSecondSlot(ApiTester $I)
     {
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
@@ -197,7 +197,7 @@ class CheckInCest
             ])
             ->create();
 
-        // fake current date time, one hour late
+        // fake current date time, monday, on time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 13, 35));
 
         // create another check in in another time
@@ -230,6 +230,56 @@ class CheckInCest
             'work_shift_id' => $employee->workShifts->first()->id,
             'check_in_novelty_type_id' => null, // with empty novelty type on check in because employee is on time
         ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasSingleWorkShiftWithTwoTimeSlotsAndLogInFirstSlotAndArrivesTooLateToTheSecondSlot(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [
+                    ['start' => '07:00', 'end' => '12:00'],
+                    ['start' => '13:30', 'end' => '18:00'], // should check in from 13:20 to 13:40
+                ],
+            ])
+            ->create();
+
+        // fake current date time, monday, too late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 14, 00));
+
+        // create another check in in another time
+        $previousTimeClockLog = factory(TimeClockLog::class)->create([
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'checked_in_at' => now()->setTime(07, 07),
+            'check_in_sub_cost_center_id' => $this->subCostCenter->id,
+            'checked_out_at' => now()->setTime(12, 02),
+        ]);
+
+        factory(Novelty::class)->create([
+            'time_clock_log_id' => $previousTimeClockLog->id,
+            'novelty_type_id' => $this->additionalTimeNovelty->first()->id,
+            'employee_id' => $employee->id,
+            'start_at' => now()->setTime(07, 07),
+            'end_at' => now()->setTime(12, 02),
+            'total_time_in_minutes' => 60 * 5,
+        ]);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        // work shift deducted, but is too late, then a novelty type must be specified
+        $I->seeResponseCodeIs(422);
+        $I->seeResponseContainsJson(['code' => 1053]);
     }
 
     /**
