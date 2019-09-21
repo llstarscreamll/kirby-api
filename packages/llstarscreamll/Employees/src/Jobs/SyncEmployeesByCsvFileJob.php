@@ -148,7 +148,6 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
             $userRepository->deleteWhereIn('id', $employeesToDelete->all());
             $employeeRepository->deleteWhereNotIn('id', $syncedEmployeesIds);
         } catch (Exception $e) {
-            logger()->error('Error sincronizando empleados: ', [$e->getMessage()]);
             $userRepository->find($this->userId)->notify(new FailedEmployeesSyncNotification($e->getMessage()));
 
             return false;
