@@ -72,15 +72,15 @@ class RegisterTimeClockNoveltiesAction
      */
     public function run(int $timeClockLogId): bool
     {
-        $date = now();
+        $currentDate = now();
         $timeClockLog = $this->timeClockLogRepository->with([
             'workShift', 'checkInNovelty', 'checkOutNovelty', 'novelties',
         ])->find($timeClockLogId);
-        $this->attachScheduledNovelties($timeClockLog);
-        $applicableNovelties = $this->getApplicableNovelties($timeClockLog);
 
-        $novelties = $applicableNovelties
-            ->map(function ($noveltyType) use ($timeClockLog, $date) {
+        $this->attachScheduledNovelties($timeClockLog);
+
+        $novelties = $this->getApplicableNovelties($timeClockLog)
+            ->map(function ($noveltyType) use ($timeClockLog, $currentDate) {
                 [$minutes, $subCostCenterId, $times] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
                 $startAt = Arr::first($times);
                 $endAt = Arr::last($times);
@@ -93,12 +93,12 @@ class RegisterTimeClockNoveltiesAction
                     'total_time_in_minutes' => $minutes,
                     'start_at' => optional($startAt)->toDateTimeString(),
                     'end_at' => optional($endAt)->toDateTimeString(),
-                    'created_at' => $date,
-                    'updated_at' => $date,
+                    'created_at' => $currentDate,
+                    'updated_at' => $currentDate,
                 ];
             })
             ->filter(function ($novelty) {
-                return $novelty['total_time_in_minutes'] !== 0 && $novelty['total_time_in_minutes'] !== 0.0;
+                return ! empty($novelty['total_time_in_minutes']);
             });
 
         $this->noveltyRepository->insert($novelties->all());
@@ -200,7 +200,6 @@ class RegisterTimeClockNoveltiesAction
         $noveltyTimes = [];
         $subCostCenterId = $timeClockLog->sub_cost_center_id;
         $workShift = optional($timeClockLog->workShift);
-        $clockedMinutes = $timeClockLog->clocked_minutes;
         $checkInNoveltyTypeId = $timeClockLog->check_in_novelty_type_id;
         $checkOutNoveltyTypeId = $timeClockLog->check_out_novelty_type_id;
         [$startNoveltyMinutes, $clockedMinutes, $endNoveltyMinutes, $mealMinutes, $times] = $this->calculateTimeClockLogTimesInMinutes($timeClockLog);
@@ -231,17 +230,13 @@ class RegisterTimeClockNoveltiesAction
                 ? $clockedMinutes[DayType::Workday]
                 : $clockedMinutes[DayType::Holiday];
 
-            $noveltyTimes = $noveltyType->apply_on_days_of_type->is(DayType::Holiday)
-                ? Arr::get($times, 'workdayTimes')
-                : Arr::get($times, 'holidayTimes');
-
             if ($shouldDiscountMealTime) {
                 $timeInMinutes -= $mealMinutes;
             }
         }
 
         $noveltyTimes = $noveltyType->apply_on_days_of_type
-            ? optional($noveltyType->apply_on_days_of_type)->is(DayType::Holiday) ? Arr::get($times, 'holidayTimes') : Arr::get($times, 'workdayTimes')
+            ? $noveltyType->apply_on_days_of_type->is(DayType::Holiday) ? Arr::get($times, 'holidayTimes') : Arr::get($times, 'workdayTimes')
             : $this->getWiderTimes($times);
 
         $clockedMinutes = $noveltyType->apply_on_days_of_type
@@ -282,7 +277,7 @@ class RegisterTimeClockNoveltiesAction
         $workdayTimes = $times['workdayTimes'];
 
         if (empty($holidayTimes) || empty($workdayTimes)) {
-            return empty($holidayTimes) ? $workdayTimes : $holidayTimes;
+            return $holidayTimes ?? $workdayTimes;
         }
 
         [$holidayStartTime, $holidayEndTime] = $holidayTimes;
@@ -312,8 +307,8 @@ class RegisterTimeClockNoveltiesAction
         $endNoveltyMinutes = 0;
         $workShift = optional($timeClockLog->workShift);
         $mealMinutes = $workShift->meal_time_in_minutes ?? 0;
-        $closestEndSlot = $workShift->getClosestSlotFlagTime('end', $timeClockLog->checked_out_at, $this->getEndTime($timeClockLog));
-        $closestStartSlot = $workShift->getClosestSlotFlagTime('start', $timeClockLog->checked_in_at, $this->getStartTime($timeClockLog));
+        $closestEndSlot = $workShift->getClosestSlotFlagTime('end', $timeClockLog->checked_out_at, $this->getTimeFlag('end', $timeClockLog));
+        $closestStartSlot = $workShift->getClosestSlotFlagTime('start', $timeClockLog->checked_in_at, $this->getTimeFlag('start', $timeClockLog));
 
         // calculate check in novelty time
         if ($timeClockLog->work_shift_id) {
@@ -330,11 +325,11 @@ class RegisterTimeClockNoveltiesAction
 
         // calculate check out novelty time
         if ($timeClockLog->work_shift_id) {
-            $endTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
+            $estimatedEndTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
                 ? $closestStartSlot : $timeClockLog->checked_out_at;
 
-            $endNoveltyMinutes = $closestEndSlot->diffInMinutes($endTime);
-            $times['endNoveltyMinutes'] = ['start' => $closestEndSlot, 'end' => $endTime];
+            $endNoveltyMinutes = $closestEndSlot->diffInMinutes($estimatedEndTime);
+            $times['endNoveltyMinutes'] = ['start' => $closestEndSlot, 'end' => $estimatedEndTime];
 
             if (! $timeClockLog->checkOutNovelty || $timeClockLog->checkOutNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
                 $endNoveltyMinutes *= -1;
@@ -344,6 +339,7 @@ class RegisterTimeClockNoveltiesAction
         [$holidayTimeInMinutes, $holidayTimes] = $timeClockLog->getClockedTimeMinutesByDayType(DayType::Holiday());
         $workMinutes[DayType::Holiday] += $holidayTimeInMinutes;
         $times['holidayTimes'] = $holidayTimes;
+
         [$workdayTimeInMinutes, $workdayTimes] = $timeClockLog->getClockedTimeMinutesByDayType(DayType::Workday());
         $workMinutes[DayType::Workday] += $workdayTimeInMinutes;
         $times['workdayTimes'] = $workdayTimes;
@@ -361,8 +357,11 @@ class RegisterTimeClockNoveltiesAction
      * @param  TimeClockLog  $timeClockLog
      * @return null|Carbon
      */
-    private function getStartTime(TimeClockLog $timeClockLog): ?Carbon
+    private function getTimeFlag(string $flag, TimeClockLog $timeClockLog): ?Carbon
     {
+        $logAction = $flag === 'start' ? 'checked_in_at' : 'checked_out_at';
+        $comparison = $flag === 'start' ? 'lessThan' : 'greaterThan';
+        $comparisonFlag = $flag === 'start' ? 'end_at' : 'start_at';
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog);
 
         if (! $scheduledNovelties->count()) {
@@ -370,36 +369,13 @@ class RegisterTimeClockNoveltiesAction
         }
 
         $closestScheduledNovelty = $scheduledNovelties
-            ->filter(function (Novelty $novelty) use ($timeClockLog) {
-                return $novelty->end_at->lessThan($timeClockLog->checked_in_at);
+            ->filter(function (Novelty $novelty) use ($timeClockLog, $comparisonFlag, $comparison, $logAction) {
+                return $novelty->{$comparisonFlag}->{$comparison}($timeClockLog->{$logAction});
             })
-            ->sortBy(function (Novelty $novelty) use ($timeClockLog) {
-                return $novelty->end_at->diffInMinutes($timeClockLog->checked_in_at);
+            ->sortBy(function (Novelty $novelty) use ($timeClockLog, $comparisonFlag, $logAction) {
+                return $novelty->{$comparisonFlag}->diffInMinutes($timeClockLog->{$logAction});
             })->first();
 
-        return optional($closestScheduledNovelty)->end_at ?? $timeClockLog->checked_in_at;
-    }
-
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @return null|Carbon
-     */
-    private function getEndTime(TimeClockLog $timeClockLog): ?Carbon
-    {
-        $scheduledNovelties = $this->scheduledNovelties($timeClockLog);
-
-        if (! $scheduledNovelties->count()) {
-            return null;
-        }
-
-        $closestScheduledNovelty = $scheduledNovelties
-            ->filter(function (Novelty $novelty) use ($timeClockLog) {
-                return $novelty->start_at->greaterThan($timeClockLog->checked_out_at);
-            })
-            ->sortBy(function (Novelty $novelty) use ($timeClockLog) {
-                return $novelty->start_at->diffInMinutes($timeClockLog->checked_out_at);
-            })->first();
-
-        return optional($closestScheduledNovelty)->start_at ?? $timeClockLog->checked_out_at;
+        return optional($closestScheduledNovelty)->{$comparisonFlag} ?? $timeClockLog->{$logAction};
     }
 }
