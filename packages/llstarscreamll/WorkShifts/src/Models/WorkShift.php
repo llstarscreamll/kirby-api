@@ -270,4 +270,43 @@ class WorkShift extends Model
                 return $timeSlot['end'];
             })->sort()->last();
     }
+
+    /**
+     * @return null
+     */
+    public function deadTimeRange(?Carbon $relativeToTime)
+    {
+        $relativeToTime = $relativeToTime ?? now();
+        $slotsCount = count($this->time_slots ?? []);
+
+        if ($slotsCount <= 1) {
+            return collect([]);
+        }
+
+        $deadSlots = [];
+
+        for ($i = 0; $i < $slotsCount; $i++) {
+            if ($i === 0) {
+                $deadSlots[] = $this->time_slots[$i]['end'];
+                continue;
+            }
+
+            if ($slotsCount === ($i + 1)) {
+                $deadSlots[] = $this->time_slots[$i]['start'];
+                continue;
+            }
+
+            $deadSlots[] = $this->time_slots[$i]['start'];
+            $deadSlots[] = $this->time_slots[$i]['end'];
+        }
+
+        return collect($deadSlots)
+            ->chunk(2)
+            ->mapSpread(function ($even, $odd) use ($relativeToTime) {
+                return $this->mapTimeSlot(
+                    ['start' => $even, 'end' => $odd],
+                    $relativeToTime, false
+                );
+            });
+    }
 }
