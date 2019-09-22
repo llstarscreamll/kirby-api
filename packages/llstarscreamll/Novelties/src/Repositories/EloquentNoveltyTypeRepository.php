@@ -134,6 +134,17 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
      * @todo make configurable the default novelty type for subtraction
      * @return mixed
      */
+    public function orWhereDefaultForAddition()
+    {
+        $this->model = $this->model->orWhere(['operator' => NoveltyTypeOperator::Addition, 'code' => 'HADI']);
+
+        return $this;
+    }
+
+    /**
+     * @todo make configurable the default novelty type for subtraction
+     * @return mixed
+     */
     public function findDefaultForSubtraction()
     {
         $this->applyScope();

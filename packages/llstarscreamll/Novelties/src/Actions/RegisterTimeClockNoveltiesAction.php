@@ -172,6 +172,10 @@ class RegisterTimeClockNoveltiesAction
             $this->noveltyTypeRepository->orWhereDefaultForSubtraction();
         }
 
+        if ($timeClockLog->work_shift_id && $timeClockLog->workShift->deadTimeRange()->count() > 0) {
+            $this->noveltyTypeRepository->orWhereDefaultForAddition();
+        }
+
         $noveltyTypes = $noveltyTypeIds
             ? $this->noveltyTypeRepository->findOrWhereIn('id', $noveltyTypeIds)
             : $this->noveltyTypeRepository->get();
@@ -198,6 +202,7 @@ class RegisterTimeClockNoveltiesAction
     {
         $timeInMinutes = 0;
         $noveltyTimes = [];
+        $deadTimeInMinutes = 0;
         $subCostCenterId = $timeClockLog->sub_cost_center_id;
         $workShift = optional($timeClockLog->workShift);
         $checkInNoveltyTypeId = $timeClockLog->check_in_novelty_type_id;
@@ -208,6 +213,21 @@ class RegisterTimeClockNoveltiesAction
         $checkedOutAt = $timeClockLog->checked_out_at;
         $checkOutPunctuality = $timeClockLog->checkOutPunctuality();
         $checkInPunctuality = $timeClockLog->checkInPunctuality();
+        $tooLateCheckIn = $checkInPunctuality === 1;
+        $tooEarlyCheckOut = $checkOutPunctuality === -1;
+
+        // solve dead time on work shift
+        if ($timeClockLog->work_shift_id) {
+            $deadTimeInMinutes = $workShift->deadTimeRange($checkedInAt)
+                ->filter(function ($deadTimeSlot) use ($checkedInAt, $checkedOutAt) {
+                    return $deadTimeSlot['start']->between($checkedInAt, $checkedOutAt)
+                    && $deadTimeSlot['end']->between($checkedInAt, $checkedOutAt);
+                })
+                ->map(function ($deadTimeSlot) {
+                    return $deadTimeSlot['start']->diffInMinutes($deadTimeSlot['end']);
+                })
+                ->sum();
+        }
 
         if ($timeClockLog->work_shift_id && $noveltyType->context_type === 'normal_work_shift_time' && $clockedMinutes[$noveltyType->apply_on_days_of_type->value]) {
             if ($workShift && $timeClockLog->hasClockedTimeOnWorkShift()) {
@@ -222,6 +242,7 @@ class RegisterTimeClockNoveltiesAction
                     : $checkedOutAt;
 
                 $timeInMinutes = $noveltyType->applicableTimeInMinutesFromTimeRange($startTime, $endTime);
+                $timeInMinutes -= $deadTimeInMinutes;
             }
 
             $shouldDiscountMealTime = optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time && $timeInMinutes >= optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time;
@@ -253,16 +274,20 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes += $endNoveltyMinutes;
         }
 
-        if (! $checkInNoveltyTypeId && $checkInPunctuality === 1 && $noveltyType->code == 'PP') {
+        if (! $checkInNoveltyTypeId && $tooLateCheckIn && $noveltyType->code == 'PP') {
             $timeInMinutes += $startNoveltyMinutes;
         }
 
-        if (! $checkOutNoveltyTypeId && $checkOutPunctuality === -1 && $noveltyType->code == 'PP') {
+        if (! $checkOutNoveltyTypeId && $tooEarlyCheckOut && $noveltyType->code == 'PP') {
             $timeInMinutes += $endNoveltyMinutes;
         }
 
         if (! $timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
             $timeInMinutes = $clockedMinutes;
+        }
+
+        if ($noveltyType->code === 'HADI') {
+            $timeInMinutes += $deadTimeInMinutes;
         }
 
         return [$timeInMinutes, $subCostCenterId, $noveltyTimes];

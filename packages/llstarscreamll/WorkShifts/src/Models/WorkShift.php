@@ -274,7 +274,7 @@ class WorkShift extends Model
     /**
      * @return null
      */
-    public function deadTimeRange(?Carbon $relativeToTime)
+    public function deadTimeRange(?Carbon $relativeToTime = null)
     {
         $relativeToTime = $relativeToTime ?? now();
         $slotsCount = count($this->time_slots ?? []);
