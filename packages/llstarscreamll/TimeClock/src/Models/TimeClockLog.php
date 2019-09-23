@@ -75,9 +75,9 @@ class TimeClockLog extends Model
         'deleted_at',
     ];
 
-    // ######################################################################## #
-    //                                 Relations                                #
-    // ######################################################################## #
+    // ####################################################################### #
+    //                                 Relations                               #
+    // ####################################################################### #
 
     /**
      * @return mixed
@@ -151,9 +151,9 @@ class TimeClockLog extends Model
         return $this->belongsToMany(User::class, 'time_clock_log_approvals')->withTimestamps();
     }
 
-    // ######################################################################## #
-    //                                 Accessors                                #
-    // ######################################################################## #
+    // ####################################################################### #
+    //                                 Accessors                               #
+    // ####################################################################### #
 
     /**
      * @return float
@@ -183,14 +183,22 @@ class TimeClockLog extends Model
         return $holidaysCount || $this->checked_out_at->isSunday();
     }
 
-    // ######################################################################## #
-    //                                  Methods                                 #
-    // ######################################################################## #
+    // ####################################################################### #
+    //                                  Methods                                #
+    // ####################################################################### #
 
     /**
-     * @return mixed
+     * @return bool
      */
-    private function holidayRepository()
+    public function hasWorkShift(): bool
+    {
+        return ! ! $this->work_shift_id;
+    }
+
+    /**
+     * @return HolidayRepositoryInterface
+     */
+    private function holidayRepository(): HolidayRepositoryInterface
     {
         if (! $this->holidayRepository) {
             $this->holidayRepository = App::make(HolidayRepositoryInterface::class);
@@ -314,6 +322,6 @@ class TimeClockLog extends Model
 
     public function checkOutPunctuality(): ?int
     {
-        return optional($this->workShift)->endPunctuality($this->checked_out_at);
+        return optional($this->workShift)->endPunctuality($this->checked_out_at, true);
     }
 }

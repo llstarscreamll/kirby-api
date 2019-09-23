@@ -113,7 +113,7 @@ class RegisterTimeClockNoveltiesAction
     private function attachScheduledNovelties(TimeClockLog $timeClockLog): int
     {
         $scheduledNoveltiesIds = $this->scheduledNovelties($timeClockLog)
-            ->filter(function ($novelty) {
+            ->filter(function (Novelty $novelty) {
                 return empty($novelty->time_clock_log_id);
             })
             ->pluck('id')
@@ -133,10 +133,9 @@ class RegisterTimeClockNoveltiesAction
     {
         if (! $this->scheduledNovelties) {
             $beGraceTimeAware = true;
-            $employeeId = $timeClockLog->employee->id;
 
             // scheduled novelties should not exists if work shift is empty
-            if (! $timeClockLog->workShift) {
+            if (! $timeClockLog->hasWorkShift()) {
                 return $this->scheduledNovelties = collect([]);
             }
 
@@ -144,7 +143,7 @@ class RegisterTimeClockNoveltiesAction
             $end = $timeClockLog->workShift->maxEndTimeSlot($timeClockLog->checked_out_at, $beGraceTimeAware);
 
             $this->scheduledNovelties = $this->noveltyRepository
-                ->whereScheduledForEmployee($employeeId, 'start_at', $start, $end)
+                ->whereScheduledForEmployee($timeClockLog->employee_id, 'start_at', $start, $end)
                 ->get();
         }
 
@@ -172,7 +171,7 @@ class RegisterTimeClockNoveltiesAction
             $this->noveltyTypeRepository->orWhereDefaultForSubtraction();
         }
 
-        if ($timeClockLog->work_shift_id && $timeClockLog->workShift->deadTimeRange()->count() > 0) {
+        if ($timeClockLog->hasWorkShift() && $timeClockLog->workShift->hasDeadTimes()) {
             $this->noveltyTypeRepository->orWhereDefaultForAddition();
         }
 
@@ -181,13 +180,21 @@ class RegisterTimeClockNoveltiesAction
             : $this->noveltyTypeRepository->get();
 
         $noveltyTypes = $noveltyTypes->filter(function (NoveltyType $noveltyType) use ($timeClockLog) {
-            // filter by time slots
-            return collect($noveltyType->apply_on_time_slots)
-                ->filter(function (?array $timeSlot) use ($timeClockLog, $noveltyType) {
-                    return $timeClockLog->workShift
-                        && (optional($timeClockLog->workShift->minStartTimeSlot($timeClockLog->checked_in_at))->between($noveltyType->minStartTimeSlot($timeClockLog->checked_in_at), $noveltyType->maxEndTimeSlot($timeClockLog->checked_in_at))
-                        || optional($timeClockLog->workShift->maxEndTimeSlot($timeClockLog->checked_in_at, false, false))->between($noveltyType->minStartTimeSlot($timeClockLog->checked_in_at), $noveltyType->maxEndTimeSlot($timeClockLog->checked_in_at)));
-                })->count() > 0 || empty($noveltyType->apply_on_time_slots);
+            if (empty($noveltyType->apply_on_time_slots)) {
+                return true;
+            }
+
+            $start = $noveltyType->minStartTimeSlot($timeClockLog->checked_in_at);
+            $end = $noveltyType->maxEndTimeSlot($timeClockLog->checked_in_at);
+
+            $relativeTo = $timeClockLog->checked_in_at;
+            $beGraceTimeAware = false;
+            $relativeToEnd = false;
+
+            return $timeClockLog->hasWorkShift() && (
+                $timeClockLog->workShift->isMinStartTimeSlotInRage($start, $end, $relativeTo) ||
+                $timeClockLog->workShift->isMaxEndTimeSlotInRange($start, $end, $relativeTo, $beGraceTimeAware, $relativeToEnd)
+            );
         });
 
         return $noveltyTypes;
@@ -217,19 +224,11 @@ class RegisterTimeClockNoveltiesAction
         $tooEarlyCheckOut = $checkOutPunctuality === -1;
 
         // solve dead time on work shift
-        if ($timeClockLog->work_shift_id) {
-            $deadTimeInMinutes = $workShift->deadTimeRange($checkedInAt)
-                ->filter(function ($deadTimeSlot) use ($checkedInAt, $checkedOutAt) {
-                    return $deadTimeSlot['start']->between($checkedInAt, $checkedOutAt)
-                    && $deadTimeSlot['end']->between($checkedInAt, $checkedOutAt);
-                })
-                ->map(function ($deadTimeSlot) {
-                    return $deadTimeSlot['start']->diffInMinutes($deadTimeSlot['end']);
-                })
-                ->sum();
+        if ($timeClockLog->hasWorkShift()) {
+            $deadTimeInMinutes = $workShift->deadTimeInMinutesFromTimeRange($checkedInAt, $checkedOutAt);
         }
 
-        if ($timeClockLog->work_shift_id && $noveltyType->context_type === 'normal_work_shift_time' && $clockedMinutes[$noveltyType->apply_on_days_of_type->value]) {
+        if ($timeClockLog->hasWorkShift() && $noveltyType->context_type === 'normal_work_shift_time' && $clockedMinutes[$noveltyType->apply_on_days_of_type->value]) {
             if ($workShift && $timeClockLog->hasClockedTimeOnWorkShift()) {
                 // on time or early
                 $startTime = in_array($checkInPunctuality, [-1, 0])
@@ -245,9 +244,9 @@ class RegisterTimeClockNoveltiesAction
                 $timeInMinutes -= $deadTimeInMinutes;
             }
 
-            $shouldDiscountMealTime = optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time && $timeInMinutes >= optional($timeClockLog->workShift)->min_minutes_required_to_discount_meal_time;
+            $shouldDiscountMealTime = $timeClockLog->workShift->canMealTimeApply($timeInMinutes);
 
-            $timeInMinutes -= $noveltyType->apply_on_days_of_type->is(DayType::Holiday)
+            $timeInMinutes -= $noveltyType->canApplyOnDayType(DayType::Holiday())
                 ? $clockedMinutes[DayType::Workday]
                 : $clockedMinutes[DayType::Holiday];
 
@@ -257,36 +256,36 @@ class RegisterTimeClockNoveltiesAction
         }
 
         $noveltyTimes = $noveltyType->apply_on_days_of_type
-            ? $noveltyType->apply_on_days_of_type->is(DayType::Holiday) ? Arr::get($times, 'holidayTimes') : Arr::get($times, 'workdayTimes')
+            ? $noveltyType->canApplyOnDayType(DayType::Holiday()) ? Arr::get($times, 'holidayTimes') : Arr::get($times, 'workdayTimes')
             : $this->getWiderTimes($times);
 
         $clockedMinutes = $noveltyType->apply_on_days_of_type
             ? $clockedMinutes[$noveltyType->apply_on_days_of_type->value]
             : array_sum($clockedMinutes);
 
-        if ($checkInNoveltyTypeId === $noveltyType->id && $timeClockLog->work_shift_id) {
+        if ($checkInNoveltyTypeId === $noveltyType->id && $timeClockLog->hasWorkShift()) {
             $subCostCenterId = $timeClockLog->check_in_sub_cost_center_id ?? $subCostCenterId;
             $timeInMinutes += $startNoveltyMinutes;
         }
 
-        if ($checkOutNoveltyTypeId === $noveltyType->id && $timeClockLog->work_shift_id) {
+        if ($checkOutNoveltyTypeId === $noveltyType->id && $timeClockLog->hasWorkShift()) {
             $subCostCenterId = $timeClockLog->check_out_sub_cost_center_id ?? $subCostCenterId;
             $timeInMinutes += $endNoveltyMinutes;
         }
 
-        if (! $checkInNoveltyTypeId && $tooLateCheckIn && $noveltyType->code == 'PP') {
+        if (! $checkInNoveltyTypeId && $tooLateCheckIn && $noveltyType->isDefaultForSubtraction()) {
             $timeInMinutes += $startNoveltyMinutes;
         }
 
-        if (! $checkOutNoveltyTypeId && $tooEarlyCheckOut && $noveltyType->code == 'PP') {
+        if (! $checkOutNoveltyTypeId && $tooEarlyCheckOut && $noveltyType->isDefaultForSubtraction()) {
             $timeInMinutes += $endNoveltyMinutes;
         }
 
-        if (! $timeClockLog->work_shift_id && $checkInNoveltyTypeId) {
+        if (! $timeClockLog->hasWorkShift() && $checkInNoveltyTypeId) {
             $timeInMinutes = $clockedMinutes;
         }
 
-        if ($noveltyType->code === 'HADI') {
+        if ($noveltyType->isDefaultForAddition()) {
             $timeInMinutes += $deadTimeInMinutes;
         }
 
@@ -336,7 +335,7 @@ class RegisterTimeClockNoveltiesAction
         $closestStartSlot = $workShift->getClosestSlotFlagTime('start', $timeClockLog->checked_in_at, $this->getTimeFlag('start', $timeClockLog));
 
         // calculate check in novelty time
-        if ($timeClockLog->work_shift_id) {
+        if ($timeClockLog->hasWorkShift()) {
             $estimatedStartTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
                 ? $timeClockLog->checked_out_at : $closestStartSlot;
 
@@ -349,7 +348,7 @@ class RegisterTimeClockNoveltiesAction
         }
 
         // calculate check out novelty time
-        if ($timeClockLog->work_shift_id) {
+        if ($timeClockLog->hasWorkShift()) {
             $estimatedEndTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
                 ? $closestStartSlot : $timeClockLog->checked_out_at;
 

@@ -129,27 +129,48 @@ class WorkShift extends Model
     // ####################################################################### #
 
     /**
-     * @param  Carbon $time
+     * @param  int    $timeInMinutes
+     * @return bool
+     */
+    public function canMealTimeApply(int $timeInMinutes): bool
+    {
+        return $this->mealTimeInMinutes() && $timeInMinutes >= $this->mealTimeInMinutes();
+    }
+
+    /**
      * @return int
      */
-    public function startPunctuality(Carbon $time = null): int
+    public function mealTimeInMinutes(): int
+    {
+        return $this->min_minutes_required_to_discount_meal_time;
+    }
+
+    /**
+     * @param  Carbon|null $time
+     * @return int
+     */
+    public function startPunctuality(?Carbon $time = null): int
     {
         return $this->slotPunctuality('start', $time ?? now(), null, false);
     }
 
     /**
-     * @param  Carbon $time
+     * @param  Carbon|null $time
      * @return int
      */
-    public function endPunctuality(Carbon $time = null): int
+    public function endPunctuality(?Carbon $time = null): int
     {
         return $this->slotPunctuality('end', $time ?? now());
     }
 
     /**
-     * @return mixed
+     * @param  string       $flag
+     * @param  Carbon       $time
+     * @param  Carbon|null  $offSet
+     * @param  bool         $beGraceTimeAware
+     * @return array|null
      */
-    public function matchingTimeSlot(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false)
+    public function matchingTimeSlot(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false): ?array
     {
         return collect($this->time_slots)
             ->map(function ($timeSlot) use ($time, $flag, $offSet, $beGraceTimeAware) {
@@ -165,10 +186,10 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  string $flag     'start'|'end'
-     * @param  Carbon $time
-     * @param  Carbon $offset
-     * @return int    -1 early, zero on time, 1 late
+     * @param  string   $flag     'start'|'end'
+     * @param  Carbon   $time
+     * @param  Carbon   $offset
+     * @return int|null -1 early, zero on time, 1 late
      */
     public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false): ?int
     {
@@ -195,11 +216,12 @@ class WorkShift extends Model
     }
 
     /**
-     * @param array  $timeSlot
-     * @param Carbon $date
-     * @param bool   $beGraceTimeAware
-     * @param bool   $relativeToEnd
-     * @param Carbon $offSet
+     * @param  array   $timeSlot
+     * @param  Carbon  $date
+     * @param  bool    $beGraceTimeAware
+     * @param  bool    $relativeToEnd
+     * @param  Carbon  $offSet
+     * @return array
      */
     private function mapTimeSlot(array $timeSlot, Carbon $date = null, bool $beGraceTimeAware = true, bool $relativeToEnd = false, Carbon $offSet = null): array
     {
@@ -229,10 +251,10 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  string  $flag
-     * @param  Carbon  $time
-     * @param  Carbon  $offSet
-     * @return mixed
+     * @param  string        $flag
+     * @param  Carbon        $time
+     * @param  Carbon        $offSet
+     * @return Carbon|null
      */
     public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
     {
@@ -242,7 +264,9 @@ class WorkShift extends Model
     }
 
     /**
-     * @param Carbon $relativeToTime
+     * @param  Carbon        $relativeToTime
+     * @param  bool          $beGraceTimeAware
+     * @return Carbon|null
      */
     public function minStartTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false): ?Carbon
     {
@@ -257,9 +281,24 @@ class WorkShift extends Model
     }
 
     /**
-     * @param Carbon $relativeToTime
+     * @param  Carbon $start
+     * @param  Carbon $end
+     * @param  Carbon $relativeToTime
+     * @param  null   $beGraceTimeAware
+     * @return bool
      */
-    public function maxEndTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true)
+    public function isMinStartTimeSlotInRage(Carbon $start, Carbon $end, Carbon $relativeToTime = null, $beGraceTimeAware = false): bool
+    {
+        return $this->minStartTimeSlot($relativeToTime, $beGraceTimeAware)->between($start, $end);
+    }
+
+    /**
+     * @param  Carbon|null   $relativeToTime
+     * @param  bool          $beGraceTimeAware
+     * @param  bool          $relativeToEnd
+     * @return Carbon|null
+     */
+    public function maxEndTimeSlot(?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): ?Carbon
     {
         $relativeToTime = $relativeToTime ?? now();
 
@@ -272,9 +311,23 @@ class WorkShift extends Model
     }
 
     /**
-     * @return null
+     * @param  Carbon $start
+     * @param  Carbon $end
+     * @param  Carbon $relativeToTime
+     * @param  null   $beGraceTimeAware
+     * @param  false  $relativeToEnd
+     * @return bool
      */
-    public function deadTimeRange(?Carbon $relativeToTime = null)
+    public function isMaxEndTimeSlotInRange(Carbon $start, Carbon $end, ?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): bool
+    {
+        return $this->maxEndTimeSlot($relativeToTime, $beGraceTimeAware, $relativeToEnd)->between($start, $end);
+    }
+
+    /**
+     * @param  Carbon|null  $relativeToTime
+     * @return Collection
+     */
+    public function deadTimeRanges(?Carbon $relativeToTime = null): Collection
     {
         $relativeToTime = $relativeToTime ?? now();
         $slotsCount = count($this->time_slots ?? []);
@@ -308,5 +361,42 @@ class WorkShift extends Model
                     $relativeToTime, false
                 );
             });
+    }
+
+    /**
+     * @param  Carbon|null $relativeToTime
+     * @return bool
+     */
+    public function hasDeadTimes(?Carbon $relativeToTime = null): bool
+    {
+        return $this->deadTimeRanges($relativeToTime)->count() > 0;
+    }
+
+    /**
+     * @param  Carbon       $start
+     * @param  Carbon       $end
+     * @return Collection
+     */
+    public function deadTimesSlotsFromTimeRange(Carbon $start, Carbon $end): Collection
+    {
+        return $this->deadTimeRanges($start)
+            ->filter(function ($deadTimeSlot) use ($start, $end) {
+                return $deadTimeSlot['start']->between($start, $end)
+                && $deadTimeSlot['end']->between($start, $end);
+            });
+    }
+
+    /**
+     * @param  Carbon $start
+     * @param  Carbon $end
+     * @return int
+     */
+    public function deadTimeInMinutesFromTimeRange(Carbon $start, Carbon $end): int
+    {
+        return $this->deadTimesSlotsFromTimeRange($start, $end)
+            ->map(function ($deadTimeSlot) {
+                return $deadTimeSlot['start']->diffInMinutes($deadTimeSlot['end']);
+            })
+            ->sum();
     }
 }

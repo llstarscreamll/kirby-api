@@ -238,12 +238,12 @@ class WorkShiftCest
      * @param UnitTester $I
      * @param Example    $data
      */
-    public function testDeadTimeRange(UnitTester $I, Example $data)
+    public function testdeadTimeRanges(UnitTester $I, Example $data)
     {
         $workShift = WorkShift::create($data['workShiftData']);
         $workShift->refresh();
 
-        $result = $workShift->deadTimeRange(Arr::get($data, 'relativeToTime'));
+        $result = $workShift->deadTimeRanges(Arr::get($data, 'relativeToTime'));
 
         $I->assertInstanceOf(Collection::class, $result);
         $I->assertCount(count($data['expected']), $result);

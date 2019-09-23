@@ -54,10 +54,43 @@ class NoveltyType extends Model
      */
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+    // ####################################################################### #
+    //                                  Methods                                #
+    // ####################################################################### #
+
+    /**
+     * @return bool
+     */
+    public function isDefaultForAddition(): bool
+    {
+        return $this->operator &&
+        $this->operator->is(NoveltyTypeOperator::Addition) &&
+        $this->code === 'HADI';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefaultForSubtraction(): bool
+    {
+        return $this->operator &&
+        $this->operator->is(NoveltyTypeOperator::Subtraction) &&
+        $this->code === 'PP';
+    }
+
+    /**
+     * @param  DayType $dayType
+     * @return mixed
+     */
+    public function canApplyOnDayType(DayType $dayType): bool
+    {
+        return $this->apply_on_days_of_type->is($dayType);
+    }
+
     /**
      * Is this novelty applicable in any time?
      *
-     * @return mixed
+     * @return bool
      */
     public function isApplicableInAnyTime(): bool
     {
@@ -67,7 +100,7 @@ class NoveltyType extends Model
     /**
      * Is this novelty applicable in any day?
      *
-     * @return mixed
+     * @return bool
      */
     public function isApplicableInAnyDay(): bool
     {
