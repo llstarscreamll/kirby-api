@@ -192,7 +192,7 @@ class TimeClockLog extends Model
      */
     public function hasWorkShift(): bool
     {
-        return ! ! $this->work_shift_id;
+        return (bool) $this->work_shift_id;
     }
 
     /**
