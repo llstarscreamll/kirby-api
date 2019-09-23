@@ -125,7 +125,10 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
      */
     public function orWhereDefaultForSubtraction()
     {
-        $this->model = $this->model->orWhere(['operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP']);
+        $this->model = $this->model->orWhere([
+            'operator' => NoveltyTypeOperator::Subtraction,
+            'code' => NoveltyType::DEFAULT_FOR_SUBTRACTION,
+        ]);
 
         return $this;
     }
@@ -136,7 +139,10 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
      */
     public function orWhereDefaultForAddition()
     {
-        $this->model = $this->model->orWhere(['operator' => NoveltyTypeOperator::Addition, 'code' => 'HADI']);
+        $this->model = $this->model->orWhere([
+            'operator' => NoveltyTypeOperator::Addition,
+            'code' => NoveltyType::DEFAULT_FOR_ADDITION,
+        ]);
 
         return $this;
     }
@@ -150,7 +156,10 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
         $this->applyScope();
 
         $model = $this->model
-            ->where(['operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP'])
+            ->where([
+                'operator' => NoveltyTypeOperator::Subtraction,
+                'code' => NoveltyType::DEFAULT_FOR_SUBTRACTION,
+            ])
             ->first();
 
         $this->resetModel();
@@ -167,7 +176,10 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
         $this->applyScope();
 
         $model = $this->model
-            ->where(['operator' => NoveltyTypeOperator::Addition, 'code' => 'HADI'])
+            ->where([
+                'operator' => NoveltyTypeOperator::Addition,
+                'code' => NoveltyType::DEFAULT_FOR_ADDITION,
+            ])
             ->first();
 
         $this->resetModel();

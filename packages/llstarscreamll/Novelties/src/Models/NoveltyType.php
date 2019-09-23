@@ -17,6 +17,10 @@ use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 class NoveltyType extends Model
 {
     use SoftDeletes, CastsEnums;
+
+    const DEFAULT_FOR_ADDITION = 'HADI';
+    const DEFAULT_FOR_SUBTRACTION = 'PP';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -65,7 +69,7 @@ class NoveltyType extends Model
     {
         return $this->operator &&
         $this->operator->is(NoveltyTypeOperator::Addition) &&
-        $this->code === 'HADI';
+        $this->code === self::DEFAULT_FOR_ADDITION;
     }
 
     /**
@@ -75,7 +79,7 @@ class NoveltyType extends Model
     {
         return $this->operator &&
         $this->operator->is(NoveltyTypeOperator::Subtraction) &&
-        $this->code === 'PP';
+        $this->code === self::DEFAULT_FOR_SUBTRACTION;
     }
 
     /**
