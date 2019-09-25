@@ -386,7 +386,12 @@ class RegisterTimeClockNoveltiesAction
         $logAction = $flag === 'start' ? 'checked_in_at' : 'checked_out_at';
         $comparison = $flag === 'start' ? 'lessThan' : 'greaterThan';
         $comparisonFlag = $flag === 'start' ? 'end_at' : 'start_at';
-        $scheduledNovelties = $this->scheduledNovelties($timeClockLog);
+        $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
+            ->filter(function (Novelty $novelty) use ($timeClockLog) {
+                return ! $novelty->time_clock_log_id || $novelty->timeClockLog->checked_in_at->between(
+                    $timeClockLog->checked_in_at, $timeClockLog->checked_out_at,
+                );
+            });
 
         if (! $scheduledNovelties->count()) {
             return null;
