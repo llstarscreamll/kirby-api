@@ -1,4 +1,4 @@
-# llstarscreamll Laravel
+# Laravel Kirby
 
 [![Build Status](https://travis-ci.com/llstarscreamll/laravel.svg?branch=develop)](https://travis-ci.com/llstarscreamll/laravel)
 [![StyleCI](https://github.styleci.io/repos/171598863/shield?branch=develop)](https://github.styleci.io/repos/171598863)
