@@ -15,6 +15,7 @@ class EmployeesPermissionsSeeder extends Seeder
      */
     private $permissions = [
         ['name' => 'employees.search'],
+        ['name' => 'employees.sync-by-csv-file'],
     ];
 
     /**

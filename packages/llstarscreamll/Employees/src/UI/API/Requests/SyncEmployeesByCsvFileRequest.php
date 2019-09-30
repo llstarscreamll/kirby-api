@@ -18,7 +18,7 @@ class SyncEmployeesByCsvFileRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return $this->user()->can('employees.sync-by-csv-file');
     }
 
     /**
