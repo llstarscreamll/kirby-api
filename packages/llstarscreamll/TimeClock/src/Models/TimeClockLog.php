@@ -163,37 +163,9 @@ class TimeClockLog extends Model
         return $this->checked_in_at->diffInMinutes($this->checked_out_at);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCheckedInOnHolidayAttribute(): bool
-    {
-        $holidaysCount = $this->holidayRepository()->countWhereIn('date', [$this->checked_in_at->toDateString()]);
-
-        return $holidaysCount || $this->checked_in_at->isSunday();
-    }
-
-    /**
-     * @return bool
-     */
-    public function getCheckedOutOnHolidayAttribute(): bool
-    {
-        $holidaysCount = $this->holidayRepository()->countWhereIn('date', [$this->checked_out_at->toDateString()]);
-
-        return $holidaysCount || $this->checked_out_at->isSunday();
-    }
-
     // ####################################################################### #
     //                                  Methods                                #
     // ####################################################################### #
-
-    /**
-     * @return bool
-     */
-    public function hasWorkShift(): bool
-    {
-        return (bool) $this->work_shift_id;
-    }
 
     /**
      * @return HolidayRepositoryInterface
@@ -208,14 +180,41 @@ class TimeClockLog extends Model
     }
 
     /**
+     * @return bool
+     */
+    public function hasWorkShift(): bool
+    {
+        return (bool) $this->work_shift_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function checkedInOnHoliday(): bool
+    {
+        $holidaysCount = $this->holidayRepository()->countWhereIn('date', [$this->checked_in_at->toDateString()]);
+
+        return $holidaysCount || $this->checked_in_at->isSunday();
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkedOutOnHoliday(): bool
+    {
+        $holidaysCount = $this->holidayRepository()->countWhereIn('date', [$this->checked_out_at->toDateString()]);
+
+        return $holidaysCount || $this->checked_out_at->isSunday();
+    }
+
+    /**
      * Was checked_in_at or checked_out_at made on sunday?
      *
      * @return bool
      */
     public function hasHolidaysChecks(): bool
     {
-        // checked_in_on_holiday and checked_out_on_holiday are accessors
-        return $this->checked_in_on_holiday || $this->checked_out_on_holiday;
+        return $this->checkedInOnHoliday() || $this->checkedOutOnHoliday();
     }
 
     /**
@@ -228,22 +227,22 @@ class TimeClockLog extends Model
         $isTheSameDay = $this->checked_in_at->isSameDay($this->checked_out_at);
 
         // not the same day
-        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && ! $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday() && ! $this->checkedOutOnHoliday() && ! $isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->diffInMinutes($this->checked_out_at->startOfDay());
             $times = [$this->checked_in_at, $this->checked_out_at->startOfDay()];
         }
 
-        if ($dayType->is(DayType::Holiday) && ! $this->checkedInOnHoliday && $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Holiday) && ! $this->checkedInOnHoliday() && $this->checkedOutOnHoliday() && ! $isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->endOfDay()->diffInMinutes($this->checked_out_at);
             $times = [$this->checked_in_at->endOfDay(), $this->checked_out_at];
         }
 
-        if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday && ! $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday() && ! $this->checkedOutOnHoliday() && ! $isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->endOfDay()->diffInMinutes($this->checked_out_at);
             $times = [$this->checked_in_at->endOfDay(), $this->checked_out_at];
         }
 
-        if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday && $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday() && $this->checkedOutOnHoliday() && ! $isTheSameDay) {
             $timeInMinutes += $this->checked_in_at->diffInMinutes($this->checked_out_at->startOfDay());
             $times = [$this->checked_in_at, $this->checked_out_at->startOfDay()];
         }
@@ -252,17 +251,17 @@ class TimeClockLog extends Model
             $timeInMinutes += $this->clocked_minutes;
         }
 
-        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && $this->checkedOutOnHoliday && ! $isTheSameDay) {
+        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday() && $this->checkedOutOnHoliday() && ! $isTheSameDay) {
             $timeInMinutes += $this->clocked_minutes;
         }
 
         // same day
-        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday && $isTheSameDay) {
+        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday() && $isTheSameDay) {
             $timeInMinutes = $this->clocked_minutes;
             $times = [$this->checked_in_at, $this->checked_out_at];
         }
 
-        if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday && $isTheSameDay) {
+        if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday() && $isTheSameDay) {
             $timeInMinutes = $this->clocked_minutes;
             $times = [$this->checked_in_at, $this->checked_out_at];
         }
