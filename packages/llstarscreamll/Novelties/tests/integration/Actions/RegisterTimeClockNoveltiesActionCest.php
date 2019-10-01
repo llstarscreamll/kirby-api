@@ -303,21 +303,6 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'timeClockLog' => [
-                    // without work shift
-                    'work_shift_name' => null,
-                    'check_in_novelty_type_code' => 'HADI', // additional time
-                    'checked_in_at' => '2019-03-31 08:00:00',
-                    'checked_out_at' => '2019-03-31 14:00:00',
-                ],
-                'createdNovelties' => [
-                    [
-                        'novelty_type_code' => 'HADI',
-                        'total_time_in_minutes' => 60 * 6, // 6 hours
-                    ],
-                ],
-            ],
-            [
-                'timeClockLog' => [
                     'work_shift_name' => '7-17',
                     'checked_in_at' => '2019-04-01 07:00:00', // on time
                     'checked_out_at' => '2019-04-01 12:30:00', // on time
@@ -851,6 +836,38 @@ class RegisterTimeClockNoveltiesActionCest
                         'novelty_type_code' => 'PP', // novelty for late check in and early check out
                         'total_time_in_minutes' => 60 * -2, // -2 hours from 8am to 9am and 4pm to 5pm
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
+                    ],
+                ],
+            ],
+            // ############################################################### #
+            //                  Time lock logs without work shift              #
+            // ############################################################### #
+            [
+                'timeClockLog' => [
+                    // without work shift
+                    'work_shift_name' => null,
+                    'check_in_novelty_type_code' => 'HADI', // additional time
+                    'checked_in_at' => '2019-03-31 08:00:00',
+                    'checked_out_at' => '2019-03-31 14:00:00',
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HADI',
+                        'total_time_in_minutes' => 60 * 6, // 6 hours
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => null, // without work shift
+                    'check_in_novelty_type_code' => null, // without checkin novelty type
+                    'checked_in_at' => '2019-03-31 08:00:00',
+                    'checked_out_at' => '2019-03-31 14:00:00',
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HADI',
+                        'total_time_in_minutes' => 60 * 6, // 6 hours
                     ],
                 ],
             ],

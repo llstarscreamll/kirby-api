@@ -171,7 +171,7 @@ class RegisterTimeClockNoveltiesAction
             $this->noveltyTypeRepository->orWhereDefaultForSubtraction();
         }
 
-        if ($timeClockLog->hasWorkShift() && $timeClockLog->workShift->hasDeadTimes()) {
+        if ($timeClockLog->hasHolidaysChecks() || ($timeClockLog->hasWorkShift() && $timeClockLog->workShift->hasDeadTimes())) {
             $this->noveltyTypeRepository->orWhereDefaultForAddition();
         }
 
@@ -180,7 +180,7 @@ class RegisterTimeClockNoveltiesAction
             : $this->noveltyTypeRepository->get();
 
         $noveltyTypes = $noveltyTypes->filter(function (NoveltyType $noveltyType) use ($timeClockLog) {
-            if (empty($noveltyType->apply_on_time_slots)) {
+            if (empty($noveltyType->apply_on_time_slots) || $noveltyType->isDefaultForAddition() || $noveltyType->isDefaultForSubtraction()) {
                 return true;
             }
 
@@ -281,7 +281,7 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes += $endNoveltyMinutes;
         }
 
-        if (! $timeClockLog->hasWorkShift() && $checkInNoveltyTypeId) {
+        if (! $timeClockLog->hasWorkShift() && ($noveltyType->id === $checkInNoveltyTypeId || $noveltyType->isDefaultForAddition())) {
             $timeInMinutes = $clockedMinutes;
         }
 
