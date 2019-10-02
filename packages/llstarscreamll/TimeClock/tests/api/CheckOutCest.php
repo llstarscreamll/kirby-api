@@ -112,6 +112,7 @@ class CheckOutCest
             'check_in_sub_cost_center_id' => $this->secondSubCostCenter->id,
             'checked_in_at' => $checkedInTime->toDateTimeString(),
             'checked_out_at' => now()->toDateTimeString(),
+            'expected_check_out_at' => null,
             'checked_in_by_id' => $this->user->id,
             'checked_out_by_id' => $this->user->id,
         ]);
@@ -191,6 +192,7 @@ class CheckOutCest
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'checked_in_at' => $checkedInTime->toDateTimeString(),
             'checked_out_at' => now()->toDateTimeString(),
+            'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
             'checked_out_by_id' => $this->user->id,
         ]);
@@ -313,6 +315,7 @@ class CheckOutCest
             'employee_id' => $employee->id,
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'checked_out_at' => now()->toDateTimeString(),
+            'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
             'check_out_novelty_type_id' => 4,
         ]);
     }
@@ -358,6 +361,7 @@ class CheckOutCest
             'employee_id' => $employee->id,
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'checked_out_at' => now()->toDateTimeString(),
+            'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
             'check_out_novelty_type_id' => 3,
         ]);
     }
@@ -366,7 +370,7 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function whenHasTooEarlyCheckInWithSelectedShiftButLeavesBeforeShiftStart(ApiTester $I)
+    public function whenHasTooEarlyCheckInWithSelectedWorkShiftButLeavesBeforeShiftStart(ApiTester $I)
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 06, 50)); // 10 minutes before work shift start
@@ -402,6 +406,7 @@ class CheckOutCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'sub_cost_center_id' => null,
+            'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
             'check_out_novelty_type_id' => 1,
             'check_out_sub_cost_center_id' => null,
         ]);
@@ -529,6 +534,7 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
+            'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'check_out_novelty_type_id' => 3,
             'check_out_sub_cost_center_id' => $this->secondSubCostCenter->id,
@@ -723,6 +729,7 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
+            'expected_check_out_at' => now()->setTime(17, 00)->toDateTimeString(),
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'check_out_novelty_type_id' => null,
             'check_out_sub_cost_center_id' => null,
@@ -760,7 +767,7 @@ class CheckOutCest
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
 
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
-        // 4pm, he's too late to check out, so the default novelty type for
+        // 4pm, he's too early to check out, so the default novelty type for
         // early check out should be setted
         $noveltyData = [
             'employee_id' => $employee->id,
@@ -781,6 +788,7 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
+            'expected_check_out_at' => now()->setTime(17, 00)->toDateTimeString(),
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'check_out_novelty_type_id' => 4,
             'check_out_sub_cost_center_id' => $this->firstSubCostCenter->id,
@@ -842,6 +850,7 @@ class CheckOutCest
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
+            'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'check_out_novelty_type_id' => null,
             'check_out_sub_cost_center_id' => null,

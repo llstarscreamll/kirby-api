@@ -2,6 +2,7 @@
 
 namespace llstarscreamll\TimeClock\Actions;
 
+use Illuminate\Support\Arr;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Traits\CheckInOut;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
@@ -146,6 +147,8 @@ class LogCheckOutAction
         }
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('end', now(), $checkOutOffset);
+        $timeSlot = optional($workShift)->matchingTimeSlot('end', now(), $checkOutOffset);
+        $expectedEnd = Arr::get($timeSlot, 'end');
         $isTooEarly = $shiftPunctuality < 0;
         $isTooLate = $shiftPunctuality > 0;
 
@@ -171,6 +174,7 @@ class LogCheckOutAction
 
         $timeClockLogUpdate = [
             'checked_out_at' => now(),
+            'expected_check_out_at' => $expectedEnd,
             'checked_out_by_id' => $registrar->id,
             'sub_cost_center_id' => $subCostCenterId,
             'check_out_novelty_type_id' => optional($noveltyType)->id,
