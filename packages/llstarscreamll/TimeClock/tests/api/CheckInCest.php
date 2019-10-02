@@ -174,6 +174,7 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
+            'expected_check_in_at' => now()->setTime(07, 00)->toDateTimeString(),
             'checked_in_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
         ]);
@@ -227,6 +228,8 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'check_in_sub_cost_center_id' => null,
+            'expected_check_in_at' => now()->setTime(13, 30)->toDateTimeString(),
+            'checked_in_at' => now()->toDateTimeString(),
             'work_shift_id' => $employee->workShifts->first()->id,
             'check_in_novelty_type_id' => null, // with empty novelty type on check in because employee is on time
         ]);
@@ -318,6 +321,7 @@ class CheckInCest
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
             'checked_in_at' => now()->toDateTimeString(),
+            'expected_check_in_at' => now()->setTime(07, 00)->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
         ]);
     }
@@ -356,6 +360,7 @@ class CheckInCest
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
             'checked_in_at' => now()->toDateTimeString(),
+            'expected_check_in_at' => now()->setTime(07, 00)->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
         ]);
     }
@@ -387,6 +392,7 @@ class CheckInCest
             'employee_id' => $employee->id,
             'work_shift_id' => null,
             'checked_in_at' => now()->toDateTimeString(),
+            'expected_check_in_at' => null,
             'checked_in_by_id' => $this->user->id,
         ]);
     }
@@ -564,6 +570,8 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => null, // empty work shift
+            'expected_check_in_at' => null,
+            'checked_in_at' => now()->toDateTimeString(),
             'check_in_novelty_type_id' => 3,
             'check_in_sub_cost_center_id' => $this->subCostCenter->id,
         ]);
@@ -863,6 +871,7 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', [
             'employee_id' => $employee->id,
             'work_shift_id' => 1,
+            'expected_check_in_at' => now()->setTime(07, 00)->toDateTimeString(),
             'check_in_novelty_type_id' => 3, // addition novelty type
         ]);
     }
@@ -1228,7 +1237,7 @@ class CheckInCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 

@@ -6,7 +6,6 @@ use Illuminate\Support\Arr;
 use llstarscreamll\Users\Models\User;
 use llstarscreamll\TimeClock\Traits\CheckInOut;
 use llstarscreamll\WorkShifts\Models\WorkShift;
-use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Employees\Models\Identification;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
@@ -145,18 +144,21 @@ class LogCheckInAction
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('start', now());
         $timeSlot = optional($workShift)->matchingTimeSlot('start', now());
-        $one = Arr::get($timeSlot, 'start');
-        $two = Arr::get($timeSlot, 'end');
+        $expectedStart = Arr::get($timeSlot, 'start');
+        $expectedEnd = Arr::get($timeSlot, 'end');
 
         // if is not on time, ask for past novelties
         if ($workShift && $shiftPunctuality !== 0) {
             $scheduledNovelty = $this->noveltyRepository
-                ->whereScheduledForEmployee($identification->employee->id, 'end_at', $one, $two)
+                ->whereScheduledForEmployee($identification->employee->id, 'end_at', $expectedStart, $expectedEnd)
                 ->orderBy('created_at', 'DESC')
                 ->first();
 
             $checkInOffset = optional($scheduledNovelty)->end_at;
             $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
+            $timeSlot = optional($workShift)->matchingTimeSlot('start', now(), $checkInOffset);
+            $expectedStart = Arr::get($timeSlot, 'start');
+            $expectedEnd = Arr::get($timeSlot, 'end');
         }
 
         $isTooLate = $shiftPunctuality > 0;
@@ -185,6 +187,7 @@ class LogCheckInAction
         $timeClockLog = [
             'employee_id' => $identification->employee_id,
             'checked_in_at' => now(),
+            'expected_check_in_at' => $expectedStart,
             'checked_in_by_id' => $registrar->id,
             'work_shift_id' => optional($workShift)->id,
             'check_in_novelty_type_id' => optional($noveltyType)->id,
