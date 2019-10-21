@@ -28,8 +28,8 @@ updateSymlinks
 optimizeInstallation
 {{-- backup --}}
 migrateDatabase
-setPermissions
 blessNewRelease
+setPermissions
 cleanOldReleases
 finishDeploy
 @endstory
@@ -47,7 +47,7 @@ git pull origin {{ $branch }}
 
 @task('cloneRepository', ['on' => 'remote'])
 {{ logMessage("🌀  Cloning repository...") }}
-[ -d {{ $releasesDir }} ] || mkdir {{ $releasesDir }};
+[ -d {{ $releasesDir }} ] || mkdir -p {{ $releasesDir }};
 cd {{ $releasesDir }};
 
 # Create the release dir
@@ -73,7 +73,7 @@ echo "{{ $newReleaseName }}" > public/release-name.txt
 @task('runComposer', ['on' => 'remote'])
 {{ logMessage("🚚  Running Composer...") }}
 cd {{ $newReleaseDir }};
-composer install --prefer-dist --no-scripts --no-dev -a -q -o;
+php7.3 /usr/local/bin/composer install --prefer-dist --no-scripts -a -q -o
 @endtask
 
 @task('runYarn', ['on' => 'local'])
@@ -104,19 +104,19 @@ ln -nfs {{ $baseDir }}/.env .env;
 @task('optimizeInstallation', ['on' => 'remote'])
 {{ logMessage("✨  Optimizing installation...") }}
 cd {{ $newReleaseDir }};
-php artisan clear-compiled;
+php7.3 artisan clear-compiled;
 @endtask
 
 @task('backup', ['on' => 'remote'])
 {{ logMessage("📀  Backing up database...") }}
 cd {{ $newReleaseDir }}
-php artisan backup:run
+php7.3 artisan backup:run
 @endtask
 
 @task('migrateDatabase', ['on' => 'remote'])
 {{ logMessage("🙈  Migrating database...") }}
 cd {{ $newReleaseDir }}
-php artisan migrate --force
+php7.3 artisan migrate --force
 @endtask
 
 @task('setPermissions', ['on' => 'remote'])
@@ -130,12 +130,12 @@ sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 {{ logMessage("🙏  Blessing new release...") }}
 ln -nfs {{ $newReleaseDir }} {{ $currentDir }};
 cd {{ $newReleaseDir }}
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
-php artisan queue:restart
-php artisan horizon:purge
-sudo php artisan horizon:terminate
+php7.3 artisan config:cache
+php7.3 artisan route:cache
+php7.3 artisan view:cache
+php7.3 artisan queue:restart
+php7.3 artisan horizon:purge
+sudo php7.3 artisan horizon:terminate
 
 sudo service php7.3-fpm restart
 @endtask
@@ -157,9 +157,9 @@ ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 cd {{ $currentDir }}
 git pull origin {{ $branch }}
 composer install
-php artisan optimize
-php artisan queue:restart
-php artisan horizon:purge
-sudo php artisan horizon:terminate
+php7.3 artisan optimize
+php7.3 artisan queue:restart
+php7.3 artisan horizon:purge
+sudo php7.3 artisan horizon:terminate
 sudo service php7.3-fpm restart
 @endtask
