@@ -2,7 +2,7 @@
 require __DIR__.'/vendor/autoload.php';
 \Dotenv\Dotenv::create(__DIR__, '.env')->load();
 
-$site = env('SITE');
+$site = env(strtoupper($target ?? 'lab').'_SITE');
 $userAndServer = explode(';', env(strtoupper($target ?? 'lab').'_SERVERS'));
 $repository = "llstarscreamll/laravel.git";
 $baseDir = "~/{$site}";
@@ -73,7 +73,8 @@ echo "{{ $newReleaseName }}" > public/release-name.txt
 @task('runComposer', ['on' => 'remote'])
 {{ logMessage("🚚  Running Composer...") }}
 cd {{ $newReleaseDir }};
-php7.3 /usr/local/bin/composer install --prefer-dist --no-scripts -a -q -o
+COMPOSER=$(which composer)
+php7.3 $COMPOSER install --prefer-dist --no-scripts -a -q -o
 @endtask
 
 @task('runYarn', ['on' => 'local'])
