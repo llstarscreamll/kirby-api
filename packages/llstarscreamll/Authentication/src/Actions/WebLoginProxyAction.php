@@ -22,7 +22,7 @@ class WebLoginProxyAction
     public function __construct()
     {
         $this->baseData = [
-            'client_id'     => config('authentication.clients.web.id'),
+            'client_id' => config('authentication.clients.web.id'),
             'client_secret' => config('authentication.clients.web.secret'),
         ];
     }
@@ -35,15 +35,16 @@ class WebLoginProxyAction
     {
         $requestPayload = $this->baseData + [
             'grant_type' => 'password',
-            'scope'      => '',
-            'username'   => $email,
-            'password'   => $password,
+            'scope' => '',
+            'username' => $email,
+            'password' => $password,
         ];
 
         $authFullApiUrl = config('app.url').self::AUTH_ROUTE;
         $headers = ['HTTP_ACCEPT' => 'application/json'];
         $request = Request::create($authFullApiUrl, 'POST', $requestPayload, [], [], $headers);
         $response = App::handle($request);
+        logger($response->getContent());
         $content = \GuzzleHttp\json_decode($response->getContent(), true);
         $statusCode = $response->getStatusCode();
 
