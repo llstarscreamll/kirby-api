@@ -50,11 +50,19 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
      */
     public function lastCheckInWithOutCheckOutFromEmployeeId(int $userId, array $columns = ['*']): ?TimeClockLog
     {
-        return $this->model->where(['employee_id' => $userId])
+        $this->applyCriteria();
+        $this->applyScope();
+
+        $result = $this->model->where(['employee_id' => $userId])
             ->whereNotNull('checked_in_at')
             ->whereNull('checked_out_at')
             ->orderBy('created_at', 'desc')
             ->first($columns);
+
+        $this->resetModel();
+        $this->resetScope();
+
+        return $result;
     }
 
     /**
@@ -63,9 +71,21 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
      * @param  array                            $columns
      * @return \Illuminate\Support\Collection
      */
-    public function lastEmployeeLogs(int $employeeId, int $rows = 3, array $columns = ['*']): Collection
+    public function lastEmployeeLogs(int $employeeId, int $rows = 5, array $columns = ['*']): Collection
     {
-        return $this->model->latest()->take($rows)->get($columns);
+        $this->applyCriteria();
+        $this->applyScope();
+
+        $result = $this->model
+            ->whereEmployeeId($employeeId)
+            ->latest()
+            ->take($rows)
+            ->get($columns);
+
+        $this->resetModel();
+        $this->resetScope();
+
+        return $result;
     }
 
     /**

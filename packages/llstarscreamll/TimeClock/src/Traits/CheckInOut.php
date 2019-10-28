@@ -117,11 +117,14 @@ trait CheckInOut
 
         // last selected sub cost centers based on time clock logs
         $subCostCenters = $this->timeClockLogRepository
+            ->with(['subCostCenter', 'checkInSubCostCenter', 'checkOutSubCostCenter'])
             ->lastEmployeeLogs($identification->employee->id)
             ->map(function ($timeClockLog) {
                 return $timeClockLog->relatedSubCostCenters();
-            })->collapse()
-            ->unique('id');
+            })
+            ->collapse()
+            ->unique('id')
+            ->values();
 
         return [
             'action' => $flag === 'start' ? 'check_in' : 'check_out',
