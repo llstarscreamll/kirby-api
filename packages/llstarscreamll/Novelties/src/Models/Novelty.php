@@ -26,8 +26,8 @@ class Novelty extends Model
         'employee_id',
         'novelty_type_id',
         'time_clock_log_id',
-        'start_at',
-        'end_at',
+        'scheduled_start_at',
+        'scheduled_end_at',
         'total_time_in_minutes',
     ];
 
@@ -36,7 +36,7 @@ class Novelty extends Model
      *
      * @var array
      */
-    protected $dates = ['start_at', 'end_at', 'created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['scheduled_start_at', 'scheduled_end_at', 'created_at', 'updated_at', 'deleted_at'];
 
     // ####################################################################### #
     //                                 Relations                               #

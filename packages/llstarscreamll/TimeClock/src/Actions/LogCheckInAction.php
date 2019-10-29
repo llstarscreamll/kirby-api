@@ -150,11 +150,11 @@ class LogCheckInAction
         // if is not on time, ask for past novelties
         if ($workShift && $shiftPunctuality !== 0) {
             $scheduledNovelty = $this->noveltyRepository
-                ->whereScheduledForEmployee($identification->employee->id, 'end_at', $expectedStart, $expectedEnd)
+                ->whereScheduledForEmployee($identification->employee->id, 'scheduled_end_at', $expectedStart, $expectedEnd)
                 ->orderBy('created_at', 'DESC')
                 ->first();
 
-            $checkInOffset = optional($scheduledNovelty)->end_at;
+            $checkInOffset = optional($scheduledNovelty)->scheduled_end_at;
             $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
             $timeSlot = optional($workShift)->matchingTimeSlot('start', now(), $checkInOffset);
             $expectedStart = Arr::get($timeSlot, 'start');

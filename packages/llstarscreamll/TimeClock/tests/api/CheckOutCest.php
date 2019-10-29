@@ -712,8 +712,8 @@ class CheckOutCest
         // out should not be setted
         $noveltyData = [
             'employee_id' => $employee->id,
-            'start_at' => now()->setTime(17, 00),
-            'end_at' => now()->setTime(18, 00),
+            'scheduled_start_at' => now()->setTime(17, 00),
+            'scheduled_end_at' => now()->setTime(18, 00),
         ];
 
         factory(Novelty::class)->create($noveltyData);
@@ -771,8 +771,8 @@ class CheckOutCest
         // early check out should be setted
         $noveltyData = [
             'employee_id' => $employee->id,
-            'start_at' => now()->setTime(17, 00),
-            'end_at' => now()->setTime(18, 00),
+            'scheduled_start_at' => now()->setTime(17, 00),
+            'scheduled_end_at' => now()->setTime(18, 00),
         ];
 
         factory(Novelty::class)->create($noveltyData);
@@ -833,8 +833,8 @@ class CheckOutCest
             // The novelty should be attached to a time clock log because it's a
             // past tense record
             'time_clock_log_id' => $employee->timeClockLogs->first()->id,
-            'start_at' => now()->setTime(7, 00),
-            'end_at' => now()->setTime(8, 00),
+            'scheduled_start_at' => now()->setTime(7, 00),
+            'scheduled_end_at' => now()->setTime(8, 00),
         ];
 
         factory(Novelty::class)->create($noveltyData);

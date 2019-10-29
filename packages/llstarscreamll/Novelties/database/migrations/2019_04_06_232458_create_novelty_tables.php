@@ -24,8 +24,8 @@ class CreateNoveltyTables extends Migration
             $table->unsignedBigInteger('employee_id');
             $table->unsignedInteger('novelty_type_id');
             $table->unsignedInteger('sub_cost_center_id')->nullable();
-            $table->dateTime('start_at')->nullable();
-            $table->dateTime('end_at')->nullable();
+            $table->dateTime('scheduled_start_at')->nullable();
+            $table->dateTime('scheduled_end_at')->nullable();
             $table->integer('total_time_in_minutes');
             $table->timestamps();
             $table->softDeletes();

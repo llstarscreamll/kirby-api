@@ -121,8 +121,8 @@ class LogCheckOutAction
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        $scheduledNovelty = $this->noveltyRepository->whereScheduledForEmployee($identification->employee->id, 'start_at', now(), now()->endOfDay())->first();
-        $checkOutOffset = optional($scheduledNovelty)->start_at;
+        $scheduledNovelty = $this->noveltyRepository->whereScheduledForEmployee($identification->employee->id, 'scheduled_start_at', now(), now()->endOfDay())->first();
+        $checkOutOffset = optional($scheduledNovelty)->scheduled_start_at;
 
         if ($noveltyTypeId) {
             $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);

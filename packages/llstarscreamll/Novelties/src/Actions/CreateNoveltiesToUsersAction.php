@@ -47,12 +47,12 @@ class CreateNoveltiesToUsersAction
 
         $data = (new Collection($data['novelties']))->map(function ($novelty) use ($employeeIds, $currentDate, $noveltyTypes) {
             $noveltyType = $noveltyTypes->where('id', $novelty['novelty_type_id'])->first();
-            $start = Carbon::parse($novelty['start_at']);
-            $end = Carbon::parse($novelty['end_at']);
+            $start = Carbon::parse($novelty['scheduled_start_at']);
+            $end = Carbon::parse($novelty['scheduled_end_at']);
             $diff = $noveltyType->operator->is(NoveltyTypeOperator::Addition) ? $start->diffInMinutes($end) : $start->diffInMinutes($end) * -1;
 
-            $novelty['start_at'] = $start;
-            $novelty['end_at'] = $end;
+            $novelty['scheduled_start_at'] = $start;
+            $novelty['scheduled_end_at'] = $end;
             $novelty['total_time_in_minutes'] = $diff;
             $novelty['created_at'] = $currentDate;
             $novelty['updated_at'] = $currentDate;

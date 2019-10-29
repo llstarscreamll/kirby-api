@@ -17,8 +17,6 @@ use llstarscreamll\Novelties\Models\NoveltyType;
  */
 
 $factory->define(Novelty::class, function (Faker $faker) {
-    $randomCode = $faker->bothify('##??');
-
     return [
         'time_clock_log_id' => null,
         'employee_id' => factory(Employee::class)->create()->id,

@@ -82,8 +82,6 @@ class RegisterTimeClockNoveltiesAction
         $novelties = $this->getApplicableNovelties($timeClockLog)
             ->map(function ($noveltyType) use ($timeClockLog, $currentDate) {
                 [$minutes, $subCostCenterId, $times] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
-                $startAt = Arr::first($times);
-                $endAt = Arr::last($times);
 
                 return [
                     'time_clock_log_id' => $timeClockLog->id,
@@ -91,8 +89,6 @@ class RegisterTimeClockNoveltiesAction
                     'novelty_type_id' => $noveltyType->id,
                     'sub_cost_center_id' => $subCostCenterId,
                     'total_time_in_minutes' => $minutes,
-                    'start_at' => optional($startAt)->toDateTimeString(),
-                    'end_at' => optional($endAt)->toDateTimeString(),
                     'created_at' => $currentDate,
                     'updated_at' => $currentDate,
                 ];
@@ -143,7 +139,7 @@ class RegisterTimeClockNoveltiesAction
             $end = $timeClockLog->workShift->maxEndTimeSlot($timeClockLog->checked_out_at, $beGraceTimeAware);
 
             $this->scheduledNovelties = $this->noveltyRepository
-                ->whereScheduledForEmployee($timeClockLog->employee_id, 'start_at', $start, $end)
+                ->whereScheduledForEmployee($timeClockLog->employee_id, 'scheduled_start_at', $start, $end)
                 ->get();
         }
 
@@ -385,7 +381,7 @@ class RegisterTimeClockNoveltiesAction
     {
         $logAction = $flag === 'start' ? 'checked_in_at' : 'checked_out_at';
         $comparison = $flag === 'start' ? 'lessThan' : 'greaterThan';
-        $comparisonFlag = $flag === 'start' ? 'end_at' : 'start_at';
+        $comparisonFlag = $flag === 'start' ? 'scheduled_end_at' : 'scheduled_start_at';
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
             ->filter(function (Novelty $novelty) use ($timeClockLog) {
                 return ! $novelty->time_clock_log_id || $novelty->timeClockLog->checked_in_at->between(
