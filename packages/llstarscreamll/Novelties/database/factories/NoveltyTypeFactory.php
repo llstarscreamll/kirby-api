@@ -16,7 +16,7 @@ use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
  */
 
 $factory->define(NoveltyType::class, function (Faker $faker) {
-    $randomCode = $faker->bothify('##??');
+    $randomCode = $faker->unique()->bothify('##??');
 
     return [
         'code' => "NT-$randomCode",
