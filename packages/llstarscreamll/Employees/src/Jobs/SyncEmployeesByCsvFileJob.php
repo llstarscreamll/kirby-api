@@ -122,10 +122,10 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
             ->process($reader, $this->fileColumns);
 
         try {
-            foreach ($records as $row => $record) {
+            foreach ($records as $record) {
                 $record = array_map('trim', $record);
                 // store cost center
-                $costCenter = $this->storeCostcenter($record['cost_center'], $costCenterRepository);
+                $costCenter = $this->storeCostCenter($record['cost_center'], $costCenterRepository);
 
                 $record['cost_center_id'] = $costCenter->id;
 
@@ -162,7 +162,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
      * @param string                        $costCenter
      * @param CostCenterRepositoryInterface $costCenterRepository
      */
-    private function storeCostcenter(string $costCenter, CostCenterRepositoryInterface $costCenterRepository): CostCenter
+    private function storeCostCenter(string $costCenter, CostCenterRepositoryInterface $costCenterRepository): CostCenter
     {
         [$code, $name] = array_map('trim', explode(':', $costCenter));
 
