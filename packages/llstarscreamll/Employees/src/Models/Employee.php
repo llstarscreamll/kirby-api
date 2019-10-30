@@ -60,7 +60,7 @@ class Employee extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'id');
+        return $this->belongsTo(User::class, 'id')->withTrashed();
     }
 
     /**
@@ -80,7 +80,7 @@ class Employee extends Model
      */
     public function workShifts()
     {
-        return $this->belongsToMany(WorkShift::class);
+        return $this->belongsToMany(WorkShift::class)->withTrashed();
     }
 
     /**

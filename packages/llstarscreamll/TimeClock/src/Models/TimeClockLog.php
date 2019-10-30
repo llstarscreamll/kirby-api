@@ -94,7 +94,7 @@ class TimeClockLog extends Model
      */
     public function employee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class)->withTrashed();
     }
 
     /**
@@ -126,7 +126,7 @@ class TimeClockLog extends Model
      */
     public function subCostCenter()
     {
-        return $this->belongsTo(SubCostCenter::class);
+        return $this->belongsTo(SubCostCenter::class)->withTrashed();
     }
 
     /**
@@ -134,7 +134,7 @@ class TimeClockLog extends Model
      */
     public function checkInSubCostCenter()
     {
-        return $this->belongsTo(SubCostCenter::class);
+        return $this->belongsTo(SubCostCenter::class)->withTrashed();
     }
 
     /**
@@ -142,7 +142,7 @@ class TimeClockLog extends Model
      */
     public function checkOutSubCostCenter()
     {
-        return $this->belongsTo(SubCostCenter::class);
+        return $this->belongsTo(SubCostCenter::class)->withTrashed();
     }
 
     /**
@@ -150,7 +150,7 @@ class TimeClockLog extends Model
      */
     public function approvals()
     {
-        return $this->belongsToMany(User::class, 'time_clock_log_approvals')->withTimestamps();
+        return $this->belongsToMany(User::class, 'time_clock_log_approvals')->withTimestamps()->withTrashed();
     }
 
     // ####################################################################### #

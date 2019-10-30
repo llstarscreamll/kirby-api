@@ -47,7 +47,7 @@ class Novelty extends Model
      */
     public function noveltyType()
     {
-        return $this->belongsTo(NoveltyType::class);
+        return $this->belongsTo(NoveltyType::class)->withTrashed();
     }
 
     /**
@@ -55,7 +55,7 @@ class Novelty extends Model
      */
     public function employee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class)->withTrashed();
     }
 
     /**
@@ -63,7 +63,7 @@ class Novelty extends Model
      */
     public function timeClockLog()
     {
-        return $this->belongsTo(TimeClockLog::class);
+        return $this->belongsTo(TimeClockLog::class)->withTrashed();
     }
 
     /**
@@ -71,7 +71,7 @@ class Novelty extends Model
      */
     public function approvals()
     {
-        return $this->belongsToMany(User::class, 'novelty_approvals')->withTimestamps();
+        return $this->belongsToMany(User::class, 'novelty_approvals')->withTimestamps()->withTrashed();
     }
 
     // ####################################################################### #
