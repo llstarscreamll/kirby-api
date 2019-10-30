@@ -44,7 +44,7 @@ class WebLoginProxyAction
         $headers = ['HTTP_ACCEPT' => 'application/json'];
         $request = Request::create($authFullApiUrl, 'POST', $requestPayload, [], [], $headers);
         $response = App::handle($request);
-        logger($response->getContent());
+
         $content = \GuzzleHttp\json_decode($response->getContent(), true);
         $statusCode = $response->getStatusCode();
 
