@@ -144,7 +144,7 @@ class SyncEmployeesByCsvFileJob implements ShouldQueue
             $costCenterRepository->deleteWhereNotIn('id', $this->costCenters->pluck('id')->all());
             // delete missing employees and their related users
             $syncedEmployeesIds = $this->employees->pluck('id')->all();
-            $employeesToDelete = $employeeRepository->findWhereNotIn('id', $syncedEmployeesIds, ['id']);
+            $employeesToDelete = $employeeRepository->findWhereNotIn('id', $syncedEmployeesIds, ['id'])->pluck('id');
             $userRepository->deleteWhereIn('id', $employeesToDelete->all());
             $employeeRepository->deleteWhereNotIn('id', $syncedEmployeesIds);
         } catch (Exception $e) {
