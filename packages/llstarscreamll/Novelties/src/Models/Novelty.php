@@ -29,6 +29,7 @@ class Novelty extends Model
         'scheduled_start_at',
         'scheduled_end_at',
         'total_time_in_minutes',
+        'comment',
     ];
 
     /**

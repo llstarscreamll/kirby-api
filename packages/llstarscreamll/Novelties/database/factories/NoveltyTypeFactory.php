@@ -22,5 +22,6 @@ $factory->define(NoveltyType::class, function (Faker $faker) {
         'code' => "NT-$randomCode",
         'name' => "Novelty $randomCode",
         'operator' => $faker->randomElement(NoveltyTypeOperator::getValues()),
+        'requires_comment' => $faker->boolean(),
     ];
 });

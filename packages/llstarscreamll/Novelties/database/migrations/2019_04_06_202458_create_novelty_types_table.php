@@ -26,6 +26,7 @@ class CreateNoveltyTypesTable extends Migration
             $table->string('apply_on_days_of_type')->nullable();
             $table->json('apply_on_time_slots')->nullable();
             $table->string('operator')->nullable();
+            $table->boolean('requires_comment')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

@@ -39,11 +39,13 @@ class CreateNoveltiesToUsersCest
                     'novelty_type_id' => factory(NoveltyType::class)->create()->id,
                     'scheduled_start_at' => '2018-01-01 10:00:00',
                     'scheduled_end_at' => '2018-01-01 12:00:00',
+                    'comment' => '',
                 ],
                 [
                     'novelty_type_id' => factory(NoveltyType::class)->create()->id,
                     'scheduled_start_at' => '2018-02-20 14:00:00',
                     'scheduled_end_at' => '2018-02-20 16:00:00',
+                    'comment' => 'test comment',
                 ],
             ],
         ];
