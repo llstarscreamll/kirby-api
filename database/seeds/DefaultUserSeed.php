@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use llstarscreamll\Users\Models\User;
+use Kirby\Users\Models\User;
 
 class DefaultUserSeed extends Seeder
 {

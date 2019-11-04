@@ -67,7 +67,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model'  => \llstarscreamll\Users\Models\User::class,
+            'model'  => \Kirby\Users\Models\User::class,
         ],
 
         // 'users' => [

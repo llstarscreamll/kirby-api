@@ -1,0 +1,48 @@
+{
+    "name": "kirby/work-shifts",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "https://github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/work-shifts",
+    "keywords": [
+        "Laravel",
+        "WorkShifts"
+    ],
+    "require": {
+        "illuminate/support": "~5",
+        "kirby/core": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds"
+        ],
+        "psr-4": {
+            "Kirby\\WorkShifts\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kirby\\WorkShifts\\WorkShiftsServiceProvider"
+            ],
+            "aliases": {
+                "WorkShifts": "Kirby\\WorkShifts\\Facades\\WorkShifts"
+            }
+        }
+    }
+}

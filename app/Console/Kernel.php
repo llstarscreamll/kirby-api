@@ -4,7 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use llstarscreamll\Company\UI\CLI\SyncHolidaysCommand;
+use Kirby\Company\UI\CLI\SyncHolidaysCommand;
 
 class Kernel extends ConsoleKernel
 {
