@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Lcobucci\JWT\Parser;
 use Kirby\Authentication\Actions\WebLoginProxyAction;
 use Kirby\Authentication\Http\Requests\LoginRequest;
 use Kirby\Authentication\Http\Requests\SignUpRequest;
 use Kirby\Users\UI\API\Resources\UserResource;
+use Lcobucci\JWT\Parser;
 
 /**
  * Class ApiAuthenticationController.

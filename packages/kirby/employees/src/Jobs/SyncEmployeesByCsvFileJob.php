@@ -11,8 +11,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Hash;
-use League\Csv\Reader;
-use League\Csv\Statement;
 use Kirby\Company\Contracts\CostCenterRepositoryInterface;
 use Kirby\Company\Models\CostCenter;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
@@ -21,6 +19,8 @@ use Kirby\Employees\Notifications\FailedEmployeesSyncNotification;
 use Kirby\Employees\Notifications\SuccessfulEmployeesSyncNotification;
 use Kirby\Users\Contracts\UserRepositoryInterface;
 use Kirby\WorkShifts\Contracts\WorkShiftRepositoryInterface;
+use League\Csv\Reader;
+use League\Csv\Statement;
 
 /**
  * Class SyncEmployeesByCsvFileJob.
