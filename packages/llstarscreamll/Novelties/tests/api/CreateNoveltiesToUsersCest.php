@@ -37,14 +37,14 @@ class CreateNoveltiesToUsersCest
             'novelties' => [
                 [
                     'novelty_type_id' => factory(NoveltyType::class)->create()->id,
-                    'scheduled_start_at' => '2018-01-01 10:00:00',
-                    'scheduled_end_at' => '2018-01-01 12:00:00',
+                    'scheduled_start_at' => '2019-01-01T10:00:00.000Z',
+                    'scheduled_end_at' => '2019-01-01T12:00:00.000Z',
                     'comment' => '',
                 ],
                 [
                     'novelty_type_id' => factory(NoveltyType::class)->create()->id,
-                    'scheduled_start_at' => '2018-02-20 14:00:00',
-                    'scheduled_end_at' => '2018-02-20 16:00:00',
+                    'scheduled_start_at' => '2019-02-20T14:00:00.000Z',
+                    'scheduled_end_at' => '2019-02-20T16:00:00.000Z',
                     'comment' => 'test comment',
                 ],
             ],
