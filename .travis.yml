@@ -12,6 +12,7 @@ cache:
     - $HOME/.composer/cache
 
 install:
+  - composer global require hirak/prestissimo
   - composer install
   - php artisan passport:keys
 
