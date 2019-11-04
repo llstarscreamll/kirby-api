@@ -1,8 +1,9 @@
-# Laravel Kirby
+# Kirby API
 
 [![Build Status](https://travis-ci.com/llstarscreamll/laravel.svg?branch=develop)](https://travis-ci.com/llstarscreamll/laravel)
 [![StyleCI](https://github.styleci.io/repos/171598863/shield?branch=develop)](https://github.styleci.io/repos/171598863)
 [![codecov](https://codecov.io/gh/llstarscreamll/laravel/branch/develop/graph/badge.svg)](https://codecov.io/gh/llstarscreamll/laravel)
+![GitHub](https://img.shields.io/github/license/llstarscreamll/kirby-api?logo=github)
 
 This project aims to be as a base for Laravel packages development used for multipurpose stuff, since I'm tired to writing the same things over and over again. The laravel libraries are located on the packages folder under de llstarscreamll vendor name.
 
@@ -41,17 +42,6 @@ envoy run --target=lab --branch=staging
 To use `--target=lab` flag you must have in your environment `LAB_SERVERS`. Example:
 
 ```
-# set many servers separated by semicolon
+# separate servers with semicolons
 LAB_SERVERS="john_doe@1.2.3.4;john_doe@5.6.7.8"
 ```
-
-For lab servers, some times you need to reset the Postgres database:
-
-```bash
-sudo -u postgres psql -c "DROP SCHEMA public CASCADE;
-create SCHEMA public;
-grant usage on schema public to public;
-grant create on schema public to public;" database_name
-```
-
-Replace `database_name`.
