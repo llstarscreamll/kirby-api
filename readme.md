@@ -5,7 +5,16 @@
 [![codecov](https://codecov.io/gh/llstarscreamll/laravel/branch/develop/graph/badge.svg)](https://codecov.io/gh/llstarscreamll/laravel)
 ![GitHub](https://img.shields.io/github/license/llstarscreamll/kirby-api?logo=github)
 
-This project aims to be as a base for Laravel packages development used for multipurpose stuff, since I'm tired to writing the same things over and over again. The laravel libraries are located on the packages folder under de llstarscreamll vendor name.
+This project aims to be as a base for reutilizable Laravel packages used for multipurpose stuff. The laravel libraries are located on the `packages` folder under de **Kirby** vendor name. Here are some things this package currently does:
+
+- Authentication API
+- Employees API
+- Employees Time Clock API
+- Work shifts API
+- Employee Novelties API
+- Novelty types API
+- Company API
+- Users API
 
 ## Install
 
