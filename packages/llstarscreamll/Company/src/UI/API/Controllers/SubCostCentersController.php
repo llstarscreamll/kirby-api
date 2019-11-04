@@ -3,9 +3,9 @@
 namespace llstarscreamll\Company\UI\API\Controllers;
 
 use Illuminate\Http\Request;
-use Prettus\Repository\Criteria\RequestCriteria;
-use llstarscreamll\Company\UI\API\Resources\SubCostCenterResource;
 use llstarscreamll\Company\Contracts\SubCostCenterRepositoryInterface;
+use llstarscreamll\Company\UI\API\Resources\SubCostCenterResource;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class SubCostCentersController.

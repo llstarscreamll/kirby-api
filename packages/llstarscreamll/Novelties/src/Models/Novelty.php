@@ -2,11 +2,11 @@
 
 namespace llstarscreamll\Novelties\Models;
 
-use llstarscreamll\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
+use llstarscreamll\Users\Models\User;
 
 /**
  * Class Novelty.

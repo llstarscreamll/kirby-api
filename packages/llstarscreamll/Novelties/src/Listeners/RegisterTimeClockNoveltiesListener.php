@@ -3,8 +3,8 @@
 namespace llstarscreamll\Novelties\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 
 /**
  * Class RegisterTimeClockNoveltiesListener.

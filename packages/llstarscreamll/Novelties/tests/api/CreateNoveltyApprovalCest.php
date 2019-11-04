@@ -2,9 +2,9 @@
 
 namespace Novelties;
 
-use NoveltiesPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
 use llstarscreamll\Novelties\Models\Novelty;
+use NoveltiesPermissionsSeeder;
 
 /**
  * Class CreateNoveltyApprovalCest.

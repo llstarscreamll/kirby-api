@@ -2,11 +2,11 @@
 
 namespace Novelties\Listeners;
 
-use Mockery;
-use Novelties\IntegrationTester;
 use Illuminate\Support\Collection;
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
 use llstarscreamll\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
+use Mockery;
+use Novelties\IntegrationTester;
 
 /**
  * Class DeleteTimeClockLogNoveltiesApprovalListenerCest.

@@ -2,8 +2,8 @@
 
 namespace llstarscreamll\TimeClock\UI\API\Requests;
 
-use Illuminate\Support\Facades\Request;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Request;
 
 /**
  * Class DeleteTimeClockLogApprovalRequest.

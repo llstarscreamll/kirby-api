@@ -2,8 +2,8 @@
 
 namespace Authentication\Helper;
 
-use llstarscreamll\Users\Models\User;
 use llstarscreamll\Authorization\Models\Permission;
+use llstarscreamll\Users\Models\User;
 
 /**
  * Class Api.

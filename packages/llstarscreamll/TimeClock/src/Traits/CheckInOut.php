@@ -3,11 +3,11 @@
 namespace llstarscreamll\TimeClock\Traits;
 
 use Illuminate\Support\Collection;
-use llstarscreamll\Novelties\Enums\DayType;
-use llstarscreamll\WorkShifts\Models\WorkShift;
-use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\Employees\Models\Identification;
+use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use llstarscreamll\Novelties\Models\NoveltyType;
+use llstarscreamll\WorkShifts\Models\WorkShift;
 
 /**
  * Trait CheckInOut.

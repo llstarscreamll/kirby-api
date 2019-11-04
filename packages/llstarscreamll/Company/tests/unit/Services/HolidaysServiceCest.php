@@ -2,12 +2,12 @@
 
 namespace Company\Services;
 
-use Company\UnitTester;
+use BlastCloud\Guzzler\Guzzler;
 use Codeception\Example;
+use Company\UnitTester;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use BlastCloud\Guzzler\Guzzler;
-use GuzzleHttp\Exception\RequestException;
 use llstarscreamll\Company\Services\HolidaysService;
 
 /**

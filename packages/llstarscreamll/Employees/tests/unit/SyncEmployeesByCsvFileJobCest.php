@@ -3,22 +3,22 @@
 namespace Employees;
 
 use DefaultWorkShiftsSeeder;
-use Illuminate\Support\Facades\File;
-use llstarscreamll\Users\Models\User;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Storage;
+use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
 use llstarscreamll\Company\Models\CostCenter;
+use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
+use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Employees\Models\Identification;
-use llstarscreamll\Users\Contracts\UserRepositoryInterface;
-use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
-use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
-use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
-use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
-use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Employees\Notifications\FailedEmployeesSyncNotification;
 use llstarscreamll\Employees\Notifications\SuccessfulEmployeesSyncNotification;
+use llstarscreamll\Users\Contracts\UserRepositoryInterface;
+use llstarscreamll\Users\Models\User;
+use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 
 /**
  * Class SyncEmployeesByCsvFileJobCest.

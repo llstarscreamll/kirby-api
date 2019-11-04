@@ -3,15 +3,15 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
-use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
-use llstarscreamll\Novelties\Enums\DayType;
-use llstarscreamll\Novelties\Models\Novelty;
-use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Company\Models\SubCostCenter;
+use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\Novelties\Enums\DayType;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Events\CheckedOutEvent;
-use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use TimeClockPermissionsSeeder;
 
 /**
  * Class CheckOutCest.

@@ -2,9 +2,9 @@
 
 namespace llstarscreamll\Company\Data\Repositories;
 
+use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
 use llstarscreamll\Company\Models\CostCenter;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
-use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
 
 /**
  * Class EloquentCostCenterRepository.

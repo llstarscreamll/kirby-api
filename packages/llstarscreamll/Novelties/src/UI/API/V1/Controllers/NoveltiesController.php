@@ -3,12 +3,12 @@
 namespace llstarscreamll\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
-use Prettus\Repository\Criteria\RequestCriteria;
-use llstarscreamll\Novelties\UI\API\V1\Resources\NoveltyResource;
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
 use llstarscreamll\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
-use llstarscreamll\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
 use llstarscreamll\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
+use llstarscreamll\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
+use llstarscreamll\Novelties\UI\API\V1\Resources\NoveltyResource;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class NoveltiesController.

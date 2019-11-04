@@ -2,8 +2,8 @@
 
 namespace llstarscreamll\WorkShifts;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use Illuminate\Support\ServiceProvider;
 use llstarscreamll\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use llstarscreamll\WorkShifts\Repositories\EloquentWorkShiftRepository;
 

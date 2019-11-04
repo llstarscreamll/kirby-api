@@ -4,10 +4,10 @@ namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
-use Prettus\Repository\Criteria\RequestCriteria;
-use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
+use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class TimeClockLogsController.

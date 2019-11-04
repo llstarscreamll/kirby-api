@@ -2,8 +2,8 @@
 
 namespace llstarscreamll\Employees;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use Illuminate\Support\ServiceProvider;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
 use llstarscreamll\Employees\Data\Repositories\EloquentEmployeeRepository;

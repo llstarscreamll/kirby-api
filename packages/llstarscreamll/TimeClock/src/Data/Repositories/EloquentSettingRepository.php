@@ -2,9 +2,9 @@
 
 namespace llstarscreamll\TimeClock\Data\Repositories;
 
-use llstarscreamll\TimeClock\Models\Setting;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
 use llstarscreamll\TimeClock\Contracts\SettingRepositoryInterface;
+use llstarscreamll\TimeClock\Models\Setting;
 
 /**
  * Class EloquentSettingRepository.

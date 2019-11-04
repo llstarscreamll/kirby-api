@@ -2,11 +2,11 @@
 
 namespace llstarscreamll\Novelties\UI\API\V1\Controllers;
 
-use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\DB;
 use llstarscreamll\Novelties\Actions\CreateNoveltiesToUsersAction;
 use llstarscreamll\Novelties\UI\API\V1\Requests\CreateNoveltiesToUsersRequest;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CreateNoveltiesToUsersController.

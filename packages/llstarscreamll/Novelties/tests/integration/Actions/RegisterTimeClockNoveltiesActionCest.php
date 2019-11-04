@@ -2,19 +2,19 @@
 
 namespace Novelties\Actions;
 
-use Mockery;
 use Carbon\Carbon;
 use Codeception\Example;
 use Illuminate\Support\Arr;
-use Novelties\IntegrationTester;
 use Illuminate\Support\Collection;
 use llstarscreamll\Company\Models\Holiday;
-use llstarscreamll\Novelties\Models\Novelty;
-use llstarscreamll\WorkShifts\Models\WorkShift;
 use llstarscreamll\Company\Models\SubCostCenter;
+use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
-use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use llstarscreamll\WorkShifts\Models\WorkShift;
+use Mockery;
+use Novelties\IntegrationTester;
 
 /**
  * Class RegisterTimeClockNoveltiesActionCest.

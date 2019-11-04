@@ -5,9 +5,9 @@ namespace llstarscreamll\Novelties\Actions;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Class CreateNoveltiesToUsersAction.

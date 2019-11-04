@@ -3,9 +3,9 @@
 namespace llstarscreamll\Novelties\Repositories;
 
 use Carbon\Carbon;
-use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
+use llstarscreamll\Novelties\Models\Novelty;
 
 /**
  * Class EloquentNoveltyRepository.

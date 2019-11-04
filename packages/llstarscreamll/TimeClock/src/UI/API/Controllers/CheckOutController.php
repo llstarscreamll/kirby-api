@@ -2,17 +2,17 @@
 
 namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
-use Symfony\Component\HttpFoundation\Response;
-use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use llstarscreamll\TimeClock\Actions\LogCheckOutAction;
-use llstarscreamll\TimeClock\UI\API\Requests\CheckOutRequest;
-use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
-use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
-use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
-use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
+use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
+use llstarscreamll\TimeClock\Exceptions\MissingCheckInException;
 use llstarscreamll\TimeClock\Exceptions\MissingSubCostCenterException;
+use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
+use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
+use llstarscreamll\TimeClock\UI\API\Requests\CheckOutRequest;
+use llstarscreamll\TimeClock\UI\API\Resources\TimeClockLogResource;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CheckOutController.

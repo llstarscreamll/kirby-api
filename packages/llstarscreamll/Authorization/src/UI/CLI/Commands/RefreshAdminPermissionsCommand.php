@@ -4,8 +4,8 @@ namespace llstarscreamll\Authorization\UI\CLI\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Cache;
-use llstarscreamll\Authorization\Models\Role;
 use llstarscreamll\Authorization\Models\Permission;
+use llstarscreamll\Authorization\Models\Role;
 
 /**
  * Class RefreshAdminPermissionsCommand.

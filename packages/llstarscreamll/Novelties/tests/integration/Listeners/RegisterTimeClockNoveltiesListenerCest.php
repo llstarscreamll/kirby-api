@@ -2,10 +2,10 @@
 
 namespace Novelties\Listeners;
 
+use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use Mockery;
 use Novelties\IntegrationTester;
-use llstarscreamll\TimeClock\Events\CheckedOutEvent;
-use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 
 /**
  * Class RegisterTimeClockNoveltiesListenerCest.

@@ -2,9 +2,9 @@
 
 namespace llstarscreamll\Company\Data\Repositories;
 
+use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
 use llstarscreamll\Company\Models\Holiday;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
-use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
 
 /**
  * Class EloquentHolidayRepository.

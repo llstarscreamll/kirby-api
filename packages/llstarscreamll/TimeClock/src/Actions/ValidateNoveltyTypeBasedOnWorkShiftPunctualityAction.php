@@ -2,13 +2,13 @@
 
 namespace llstarscreamll\TimeClock\Actions;
 
-use llstarscreamll\WorkShifts\Models\WorkShift;
-use llstarscreamll\Novelties\Models\NoveltyType;
-use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
-use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
-use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
-use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use llstarscreamll\Novelties\Models\NoveltyType;
+use llstarscreamll\TimeClock\Exceptions\InvalidNoveltyTypeException;
+use llstarscreamll\TimeClock\Exceptions\TooEarlyToCheckException;
+use llstarscreamll\TimeClock\Exceptions\TooLateToCheckException;
+use llstarscreamll\WorkShifts\Models\WorkShift;
 
 /**
  * Class ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction.

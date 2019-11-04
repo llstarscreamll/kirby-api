@@ -3,9 +3,9 @@
 namespace llstarscreamll\TimeClock\Data\Repositories;
 
 use Illuminate\Support\Collection;
-use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\Models\TimeClockLog;
 
 /**
  * Class EloquentTimeClockLogRepository.
