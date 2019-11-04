@@ -3,10 +3,10 @@
 namespace llstarscreamll\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
-use Prettus\Repository\Criteria\RequestCriteria;
-use llstarscreamll\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use llstarscreamll\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest;
+use llstarscreamll\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class NoveltyTypesController.

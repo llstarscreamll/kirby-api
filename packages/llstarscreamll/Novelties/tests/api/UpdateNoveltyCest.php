@@ -2,8 +2,8 @@
 
 namespace Novelties;
 
-use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Novelties\Models\NoveltyType;
 
 /**

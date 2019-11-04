@@ -3,17 +3,17 @@
 namespace llstarscreamll\TimeClock\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\App;
-use llstarscreamll\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\App;
+use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
+use llstarscreamll\Company\Models\SubCostCenter;
+use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Models\Novelty;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use llstarscreamll\Employees\Models\Employee;
-use llstarscreamll\WorkShifts\Models\WorkShift;
-use llstarscreamll\Company\Models\SubCostCenter;
 use llstarscreamll\Novelties\Models\NoveltyType;
-use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
+use llstarscreamll\Users\Models\User;
+use llstarscreamll\WorkShifts\Models\WorkShift;
 
 /**
  * Class TimeClockLog.

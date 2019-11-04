@@ -4,9 +4,9 @@ namespace llstarscreamll\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
 use llstarscreamll\Core\Http\Controller;
+use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Events\TimeClockLogApprovalCreatedEvent;
 use llstarscreamll\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
-use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\UI\API\Requests\CreateTimeClockLogApprovalRequest;
 use llstarscreamll\TimeClock\UI\API\Requests\DeleteTimeClockLogApprovalRequest;
 

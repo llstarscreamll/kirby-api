@@ -2,14 +2,14 @@
 
 namespace llstarscreamll\Novelties\Providers;
 
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use llstarscreamll\Novelties\Listeners\CreateTimeClockLogNoveltiesApprovalListener;
+use llstarscreamll\Novelties\Listeners\DeleteTimeClockLogNoveltiesApprovalListener;
+use llstarscreamll\Novelties\Listeners\RegisterTimeClockNoveltiesListener;
 use llstarscreamll\TimeClock\Events\CheckedOutEvent;
 use llstarscreamll\TimeClock\Events\TimeClockLogApprovalCreatedEvent;
 use llstarscreamll\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
-use llstarscreamll\Novelties\Listeners\RegisterTimeClockNoveltiesListener;
-use llstarscreamll\Novelties\Listeners\CreateTimeClockLogNoveltiesApprovalListener;
-use llstarscreamll\Novelties\Listeners\DeleteTimeClockLogNoveltiesApprovalListener;
-use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 /**
  * Class EventServiceProvider.

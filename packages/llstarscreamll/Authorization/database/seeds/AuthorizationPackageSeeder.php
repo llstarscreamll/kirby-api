@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use llstarscreamll\Authorization\Models\Role;
 use llstarscreamll\Authorization\Models\Permission;
+use llstarscreamll\Authorization\Models\Role;
 
 /**
  * Class AuthorizationPackageSeeder.

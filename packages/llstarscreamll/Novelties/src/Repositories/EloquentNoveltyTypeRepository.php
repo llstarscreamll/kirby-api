@@ -3,10 +3,10 @@
 namespace llstarscreamll\Novelties\Repositories;
 
 use Illuminate\Support\Collection;
-use llstarscreamll\Novelties\Models\NoveltyType;
-use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use llstarscreamll\Novelties\Models\NoveltyType;
 
 /**
  * Class EloquentNoveltyTypeRepository.

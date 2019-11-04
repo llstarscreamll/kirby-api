@@ -2,9 +2,9 @@
 
 namespace llstarscreamll\Employees\Data\Repositories;
 
-use llstarscreamll\Employees\Models\Identification;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
 use llstarscreamll\Employees\Contracts\IdentificationRepositoryInterface;
+use llstarscreamll\Employees\Models\Identification;
 
 /**
  * Class EloquentIdentificationRepository.

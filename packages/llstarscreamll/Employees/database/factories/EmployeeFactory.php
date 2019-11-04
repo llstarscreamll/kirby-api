@@ -1,8 +1,8 @@
 <?php
 
 use Faker\Generator as Faker;
-use llstarscreamll\Users\Models\User;
 use llstarscreamll\Employees\Models\Employee;
+use llstarscreamll\Users\Models\User;
 
 /*
 |--------------------------------------------------------------------------

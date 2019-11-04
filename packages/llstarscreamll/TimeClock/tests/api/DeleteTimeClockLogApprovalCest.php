@@ -2,10 +2,10 @@
 
 namespace ClockTime;
 
-use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
-use llstarscreamll\TimeClock\Models\TimeClockLog;
 use llstarscreamll\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
+use llstarscreamll\TimeClock\Models\TimeClockLog;
+use TimeClockPermissionsSeeder;
 
 /**
  * Class DeleteTimeClockLogApprovalCest.

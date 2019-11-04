@@ -2,9 +2,9 @@
 
 namespace llstarscreamll\Employees\Data\Repositories;
 
-use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
+use llstarscreamll\Employees\Models\Employee;
 
 /**
  * Class EloquentEmployeeRepository.

@@ -2,8 +2,8 @@
 
 namespace llstarscreamll\TimeClock\Exceptions;
 
-use Exception;
 use Carbon\Carbon;
+use Exception;
 
 /**
  * Class AlreadyCheckedInException.

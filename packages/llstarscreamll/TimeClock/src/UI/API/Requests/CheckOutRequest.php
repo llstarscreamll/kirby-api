@@ -2,8 +2,8 @@
 
 namespace llstarscreamll\TimeClock\UI\API\Requests;
 
-use Illuminate\Support\Arr;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class CheckOutRequest.

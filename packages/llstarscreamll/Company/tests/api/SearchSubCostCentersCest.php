@@ -2,8 +2,8 @@
 
 namespace Company;
 
-use Symfony\Component\HttpFoundation\Response;
 use llstarscreamll\Company\Models\SubCostCenter;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class SearchSubCostCentersCest.

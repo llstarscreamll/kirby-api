@@ -5,12 +5,12 @@ namespace llstarscreamll\TimeClock\UI\CLI;
 use Faker\Generator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use llstarscreamll\Users\Models\User;
 use llstarscreamll\Employees\Models\Employee;
-use llstarscreamll\WorkShifts\Models\WorkShift;
+use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
-use llstarscreamll\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use llstarscreamll\Users\Models\User;
+use llstarscreamll\WorkShifts\Models\WorkShift;
 
 /**
  * Class GenerateFakeTimeClockDataCommand.

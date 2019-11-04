@@ -2,13 +2,13 @@
 
 namespace llstarscreamll\TimeClock;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use Illuminate\Support\ServiceProvider;
 use llstarscreamll\TimeClock\Contracts\SettingRepositoryInterface;
-use llstarscreamll\TimeClock\UI\CLI\GenerateFakeTimeClockDataCommand;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use llstarscreamll\TimeClock\Data\Repositories\EloquentSettingRepository;
 use llstarscreamll\TimeClock\Data\Repositories\EloquentTimeClockLogRepository;
+use llstarscreamll\TimeClock\UI\CLI\GenerateFakeTimeClockDataCommand;
 
 /**
  * Class TimeClockServiceProvider.

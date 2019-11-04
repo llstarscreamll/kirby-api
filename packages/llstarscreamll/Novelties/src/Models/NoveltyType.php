@@ -2,11 +2,11 @@
 
 namespace llstarscreamll\Novelties\Models;
 
-use Carbon\Carbon;
 use BenSampo\Enum\Traits\CastsEnums;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use llstarscreamll\Novelties\Enums\DayType;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use llstarscreamll\Novelties\Enums\DayType;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 
 /**

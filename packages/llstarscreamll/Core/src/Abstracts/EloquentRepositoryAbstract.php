@@ -2,11 +2,11 @@
 
 namespace llstarscreamll\Core\Abstracts;
 
+use Illuminate\Database\Eloquent\Builder;
+use llstarscreamll\Core\Filters\QuerySearchFilter;
+use Prettus\Repository\Eloquent\BaseRepository;
 use Spatie\QueryBuilder\Filter;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Database\Eloquent\Builder;
-use Prettus\Repository\Eloquent\BaseRepository;
-use llstarscreamll\Core\Filters\QuerySearchFilter;
 
 /**
  * Class EloquentRepositoryAbstract.

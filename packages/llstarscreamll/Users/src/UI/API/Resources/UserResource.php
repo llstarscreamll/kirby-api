@@ -3,8 +3,8 @@
 namespace llstarscreamll\Users\UI\API\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use llstarscreamll\Authorization\UI\API\Resources\RoleResource;
 use llstarscreamll\Authorization\UI\API\Resources\PermissionResource;
+use llstarscreamll\Authorization\UI\API\Resources\RoleResource;
 
 /**
  * Class UserResource.

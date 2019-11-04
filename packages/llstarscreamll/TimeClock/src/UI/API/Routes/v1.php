@@ -2,8 +2,8 @@
 
 use llstarscreamll\TimeClock\UI\API\Controllers\CheckInController;
 use llstarscreamll\TimeClock\UI\API\Controllers\CheckOutController;
-use llstarscreamll\TimeClock\UI\API\Controllers\TimeClockLogsController;
 use llstarscreamll\TimeClock\UI\API\Controllers\TimeClockLogApprovalsController;
+use llstarscreamll\TimeClock\UI\API\Controllers\TimeClockLogsController;
 
 /*
 |--------------------------------------------------------------------------

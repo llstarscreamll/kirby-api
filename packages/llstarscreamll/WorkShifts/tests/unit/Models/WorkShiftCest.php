@@ -4,10 +4,10 @@ namespace WorkShifts\Models;
 
 use Carbon\Carbon;
 use Codeception\Example;
-use WorkShifts\UnitTester;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use llstarscreamll\WorkShifts\Models\WorkShift;
+use WorkShifts\UnitTester;
 
 /**
  * Class WorkShiftCest.

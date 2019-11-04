@@ -2,11 +2,11 @@
 
 namespace llstarscreamll\Company\UI\CLI;
 
-use Illuminate\Support\Arr;
 use Illuminate\Console\Command;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
 use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
+use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
 
 /**
  * Class SyncHolidaysCommand.

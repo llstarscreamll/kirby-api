@@ -2,9 +2,9 @@
 
 namespace llstarscreamll\Users;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use llstarscreamll\Users\Contracts\UserRepositoryInterface;
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use llstarscreamll\Users\Data\Repositories\EloquentUserRepository;
 
 /**

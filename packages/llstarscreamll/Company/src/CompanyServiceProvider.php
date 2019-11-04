@@ -2,17 +2,17 @@
 
 namespace llstarscreamll\Company;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
+use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
+use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
+use llstarscreamll\Company\Contracts\SubCostCenterRepositoryInterface;
+use llstarscreamll\Company\Data\Repositories\EloquentCostCenterRepository;
+use llstarscreamll\Company\Data\Repositories\EloquentHolidayRepository;
+use llstarscreamll\Company\Data\Repositories\EloquentSubCostCenterRepository;
 use llstarscreamll\Company\Services\HolidaysService;
 use llstarscreamll\Company\UI\CLI\SyncHolidaysCommand;
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
-use llstarscreamll\Company\Contracts\HolidaysServiceInterface;
-use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
-use llstarscreamll\Company\Contracts\CostCenterRepositoryInterface;
-use llstarscreamll\Company\Contracts\SubCostCenterRepositoryInterface;
-use llstarscreamll\Company\Data\Repositories\EloquentHolidayRepository;
-use llstarscreamll\Company\Data\Repositories\EloquentCostCenterRepository;
-use llstarscreamll\Company\Data\Repositories\EloquentSubCostCenterRepository;
 
 /**
  * Class CompanyServiceProvider.

@@ -2,9 +2,9 @@
 
 namespace llstarscreamll\Users\Data\Repositories;
 
-use llstarscreamll\Users\Models\User;
-use llstarscreamll\Users\Contracts\UserRepositoryInterface;
 use llstarscreamll\Core\Abstracts\EloquentRepositoryAbstract;
+use llstarscreamll\Users\Contracts\UserRepositoryInterface;
+use llstarscreamll\Users\Models\User;
 
 /**
  * Class EloquentUserRepository.

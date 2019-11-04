@@ -3,10 +3,10 @@
 namespace llstarscreamll\WorkShifts\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 /**
  * Class WorkShift.

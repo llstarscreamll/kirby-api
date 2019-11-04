@@ -2,12 +2,12 @@
 
 namespace llstarscreamll\Users\Models;
 
-use Laravel\Passport\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use llstarscreamll\Employees\Models\Employee;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
+use llstarscreamll\Employees\Models\Employee;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * Class User.

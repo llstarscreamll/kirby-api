@@ -2,10 +2,10 @@
 
 namespace Novelties\Listeners;
 
-use Mockery;
-use Novelties\IntegrationTester;
 use llstarscreamll\Novelties\Models\Novelty;
 use llstarscreamll\Novelties\Repositories\EloquentNoveltyRepository;
+use Mockery;
+use Novelties\IntegrationTester;
 
 /**
  * Class EloquentNoveltyRepositoryCest.

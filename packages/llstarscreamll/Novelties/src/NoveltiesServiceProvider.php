@@ -2,12 +2,12 @@
 
 namespace llstarscreamll\Novelties;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
-use llstarscreamll\Novelties\Providers\EventServiceProvider;
+use Illuminate\Support\ServiceProvider;
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
-use llstarscreamll\Novelties\Repositories\EloquentNoveltyRepository;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use llstarscreamll\Novelties\Providers\EventServiceProvider;
+use llstarscreamll\Novelties\Repositories\EloquentNoveltyRepository;
 use llstarscreamll\Novelties\Repositories\EloquentNoveltyTypeRepository;
 
 /**

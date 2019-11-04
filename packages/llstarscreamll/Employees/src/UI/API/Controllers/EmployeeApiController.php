@@ -2,13 +2,13 @@
 
 namespace llstarscreamll\Employees\UI\API\Controllers;
 
-use Symfony\Component\HttpFoundation\Response;
-use Prettus\Repository\Criteria\RequestCriteria;
-use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
-use llstarscreamll\Employees\UI\API\Resources\EmployeeResource;
 use llstarscreamll\Employees\Contracts\EmployeeRepositoryInterface;
+use llstarscreamll\Employees\Jobs\SyncEmployeesByCsvFileJob;
 use llstarscreamll\Employees\UI\API\Requests\SearchEmployeesRequest;
 use llstarscreamll\Employees\UI\API\Requests\SyncEmployeesByCsvFileRequest;
+use llstarscreamll\Employees\UI\API\Resources\EmployeeResource;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class EmployeeApiController.

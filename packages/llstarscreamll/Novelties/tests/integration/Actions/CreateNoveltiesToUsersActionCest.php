@@ -2,13 +2,13 @@
 
 namespace Novelties\Actions;
 
-use Mockery;
 use Codeception\Example;
-use Novelties\IntegrationTester;
 use llstarscreamll\Employees\Models\Employee;
-use llstarscreamll\Novelties\Models\NoveltyType;
-use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Novelties\Actions\CreateNoveltiesToUsersAction;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use llstarscreamll\Novelties\Models\NoveltyType;
+use Mockery;
+use Novelties\IntegrationTester;
 
 /**
  * Class CreateNoveltiesToUsersActionCest.

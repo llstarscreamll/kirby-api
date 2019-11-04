@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 use llstarscreamll\Novelties\Enums\DayType;
-use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use llstarscreamll\Novelties\Models\NoveltyType;
 
 /**
  * Class DefaultNoveltyTypesSeed.

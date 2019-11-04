@@ -1,9 +1,9 @@
 <?php
 
 use Faker\Generator as Faker;
-use llstarscreamll\Users\Models\User;
 use llstarscreamll\Employees\Models\Employee;
 use llstarscreamll\TimeClock\Models\TimeClockLog;
+use llstarscreamll\Users\Models\User;
 
 $factory->define(TimeClockLog::class, function (Faker $faker) {
     $start = $faker->dateTime('1 day ago');

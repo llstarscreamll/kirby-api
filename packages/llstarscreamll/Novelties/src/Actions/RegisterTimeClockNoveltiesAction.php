@@ -3,18 +3,18 @@
 namespace llstarscreamll\Novelties\Actions;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use llstarscreamll\Novelties\Enums\DayType;
-use llstarscreamll\Novelties\Models\Novelty;
-use llstarscreamll\Novelties\Models\NoveltyType;
-use llstarscreamll\TimeClock\Models\TimeClockLog;
-use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
 use llstarscreamll\Company\Contracts\HolidayRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use llstarscreamll\Novelties\Contracts\NoveltyRepositoryInterface;
 use llstarscreamll\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use llstarscreamll\Novelties\Enums\DayType;
+use llstarscreamll\Novelties\Enums\NoveltyTypeOperator;
+use llstarscreamll\Novelties\Models\Novelty;
+use llstarscreamll\Novelties\Models\NoveltyType;
 use llstarscreamll\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use llstarscreamll\TimeClock\Models\TimeClockLog;
 
 /**
  * Class RegisterTimeClockNoveltiesAction.
