@@ -24,8 +24,17 @@ class EmployeeResource extends JsonResource
             'first_name' => $this->user->first_name,
             'last_name' => $this->user->last_name,
             'email' => $this->user->email,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'cost_center_id' => $this->cost_center_id,
+            'code' => $this->code,
+            'identification_number' => $this->identification_number,
+            'position' => $this->position,
+            'location' => $this->location,
+            'address' => $this->address,
+            'phone' => $this->phone,
+            'salary' => $this->salary,
+            'created_at' => optional($this->created_at)->toIsoString(),
+            'updated_at' => optional($this->updated_at)->toIsoString(),
+            'deleted_at' => optional($this->updated_at)->toIsoString(),
         ];
     }
 }
