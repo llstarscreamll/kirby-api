@@ -3,6 +3,9 @@
 namespace Kirby\Employees\UI\API\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Kirby\Company\UI\API\Resources\CostCenterResource;
+use Kirby\Employees\UI\API\Resources\IdentificationResource;
+use Kirby\WorkShifts\UI\API\Resources\WorkShiftResource;
 
 /**
  * Class EmployeeResource.
@@ -32,6 +35,9 @@ class EmployeeResource extends JsonResource
             'address' => $this->address,
             'phone' => $this->phone,
             'salary' => $this->salary,
+            'cost_center' => new CostCenterResource($this->whenLoaded('costCenter')),
+            'work_shifts' => WorkShiftResource::collection($this->whenLoaded('workShifts')),
+            'identifications' => IdentificationResource::collection($this->whenLoaded('identifications')),
             'created_at' => optional($this->created_at)->toIsoString(),
             'updated_at' => optional($this->updated_at)->toIsoString(),
             'deleted_at' => optional($this->updated_at)->toIsoString(),

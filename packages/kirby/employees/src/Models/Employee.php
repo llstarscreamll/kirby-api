@@ -3,12 +3,13 @@
 namespace Kirby\Employees\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
-use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Users\Models\User;
+use Illuminate\Support\Collection;
+use Kirby\Company\Models\CostCenter;
 use Kirby\WorkShifts\Models\WorkShift;
+use Illuminate\Database\Eloquent\Model;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Employee.
@@ -61,6 +62,16 @@ class Employee extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id')->withTrashed();
+    }
+
+    /**
+     * Related cost center.
+     *
+     * @return mixed
+     */
+    public function costCenter()
+    {
+        return $this->belongsTo(CostCenter::class)->withTrashed();
     }
 
     /**
