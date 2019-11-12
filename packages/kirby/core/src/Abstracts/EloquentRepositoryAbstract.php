@@ -2,11 +2,13 @@
 
 namespace Kirby\Core\Abstracts;
 
+use Spatie\QueryBuilder\Filter;
+use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Kirby\Core\Filters\QuerySearchFilter;
 use Prettus\Repository\Eloquent\BaseRepository;
-use Spatie\QueryBuilder\Filter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * Class EloquentRepositoryAbstract.
@@ -121,5 +123,39 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
         $this->resetModel();
 
         return $result;
+    }
+
+    /**
+     * Paginate the response
+     *
+     * Apply pagination. Use '?limit=' to specify the amount of entities to be
+     * returned per page. The client can request all data (skipping pagination)
+     * by applying ?limit=0 to the request, if 'repository.pagination.maxLimit'
+     * is set to true.
+     *
+     * @param null   $limit
+     * @param array  $columns
+     * @param string $method
+     *
+     * @return  mixed
+     */
+    public function paginate($limit = null, $columns = ['*'], $method = "paginate")
+    {
+        // the priority is for the function parameter, if not available then take
+        // it from the request if available and if not keep it null.
+        $limit = $limit ?: Request::get('limit');
+        $maxPaginationLimit = Config::get('repository.pagination.maxLimit');
+
+        // check, if skipping pagination is allowed and the requested by the user
+        if (Config::get('repository.pagination.skip') && $limit == "0") {
+            return parent::all($columns);
+        }
+
+        // check for the maximum entries per pagination
+        if (is_int($maxPaginationLimit) && $maxPaginationLimit > 0 && $limit > $maxPaginationLimit) {
+            $limit = $maxPaginationLimit;
+        }
+
+        return parent::paginate($limit, $columns, $method);
     }
 }

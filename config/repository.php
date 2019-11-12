@@ -16,6 +16,8 @@ return [
     */
     'pagination' => [
         'limit' => 10,
+        'maxLimit' => 100,
+        'skip' => true,
     ],
 
     /*
