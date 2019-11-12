@@ -37,22 +37,22 @@ class UpdateEmployeeCest
         $costCenter = factory(CostCenter::class)->create();
         $morningWorkShift = factory(WorkShift::class)->create();
         $afternoonWorkShift = factory(WorkShift::class)->create();
-        $pinIdentification = ["name" => "PIN", "code" => "123"];
-        $eCardIdentification = ["name" => "E-card", "code" => "Code-3"];
+        $pinIdentification = ['name' => 'PIN', 'code' => '123'];
+        $eCardIdentification = ['name' => 'E-card', 'code' => 'Code-3'];
 
         $requestPayload = [
-            "first_name" => "Bruce",
-            "last_name" => "Banner",
-            "code" => "987",
-            "identification_number" => "654",
-            "location" => "Medellín",
-            "address" => "Calle 3#2-1",
-            "phone" => "3219876543",
-            "position" => "designer",
-            "salary" => 5000000,
-            "cost_center" => $costCenter->toArray(),
-            "work_shifts" => [$morningWorkShift->toArray(), $afternoonWorkShift->toArray()],
-            "identifications" => [$pinIdentification, $eCardIdentification],
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center' => $costCenter->toArray(),
+            'work_shifts' => [$morningWorkShift->toArray(), $afternoonWorkShift->toArray()],
+            'identifications' => [$pinIdentification, $eCardIdentification],
         ];
 
         $I->sendPUT(str_replace('{id}', $employee->id, $this->endpoint), $requestPayload);
@@ -61,18 +61,18 @@ class UpdateEmployeeCest
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('employees', [
             'id' => $employee->id,
-            "code" => "987",
-            "identification_number" => "654",
-            "location" => "Medellín",
-            "address" => "Calle 3#2-1",
-            "phone" => "3219876543",
-            "position" => "designer",
-            "salary" => 5000000,
-            "cost_center_id" => $costCenter->id,
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center_id' => $costCenter->id,
         ]);
         $I->seeRecord('users', [
-            "first_name" => "Bruce",
-            "last_name" => "Banner",
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
         ]);
         $I->seeRecord('employee_work_shift', [
             'employee_id' => $employee->id,
@@ -84,7 +84,6 @@ class UpdateEmployeeCest
         ]);
         $I->seeRecord('identifications', ['employee_id' => $employee->id] + $pinIdentification);
         $I->seeRecord('identifications', ['employee_id' => $employee->id] + $eCardIdentification);
-
     }
 
     /**
@@ -94,18 +93,18 @@ class UpdateEmployeeCest
     public function shouldReturnNotFoundIfEmployeeDoesNotExists(ApiTester $I)
     {
         $requestPayload = [
-            "first_name" => "Bruce",
-            "last_name" => "Banner",
-            "code" => "987",
-            "identification_number" => "654",
-            "location" => "Medellín",
-            "address" => "Calle 3#2-1",
-            "phone" => "3219876543",
-            "position" => "designer",
-            "salary" => 5000000,
-            "cost_center" => factory(CostCenter::class)->create(),
-            "work_shifts" => [factory(WorkShift::class)->create()],
-            "identifications" => [["name" => "PIN", "code" => "123"]],
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center' => factory(CostCenter::class)->create(),
+            'work_shifts' => [factory(WorkShift::class)->create()],
+            'identifications' => [['name' => 'PIN', 'code' => '123']],
         ];
 
         $I->sendPUT(str_replace('{id}', 999, $this->endpoint), $requestPayload);

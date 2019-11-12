@@ -2,8 +2,8 @@
 
 namespace Kirby\Employees\UI\API\Requests;
 
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Class UpdateEmployeeRequest.
@@ -30,19 +30,19 @@ class UpdateEmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            "first_name" => ['required', 'string'],
-            "last_name" => ['required', 'string'],
-            "code" => ['required', 'string'],
-            "identification_number" => ['required', 'string'],
-            "location" => ['required', 'string'],
-            "address" => ['required', 'string'],
-            "phone" => ['required', 'string'],
-            "position" => ['required', 'string'],
-            "salary" => ['required', 'numeric'],
-            "cost_center.id" => ['required', 'numeric'],
-            "work_shifts.*.id" => ['required', 'numeric'],
-            "identifications.*.name" => ['required', 'string', 'max: 255'],
-            "identifications.*.code" => [
+            'first_name' => ['required', 'string'],
+            'last_name' => ['required', 'string'],
+            'code' => ['required', 'string'],
+            'identification_number' => ['required', 'string'],
+            'location' => ['required', 'string'],
+            'address' => ['required', 'string'],
+            'phone' => ['required', 'string'],
+            'position' => ['required', 'string'],
+            'salary' => ['required', 'numeric'],
+            'cost_center.id' => ['required', 'numeric'],
+            'work_shifts.*.id' => ['required', 'numeric'],
+            'identifications.*.name' => ['required', 'string', 'max: 255'],
+            'identifications.*.code' => [
                 'required',
                 'string',
                 'max:255',

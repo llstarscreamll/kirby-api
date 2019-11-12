@@ -3,17 +3,17 @@
 namespace Kirby\Employees\UI\API\Controllers;
 
 use Illuminate\Support\Arr;
-use Symfony\Component\HttpFoundation\Response;
-use Prettus\Repository\Criteria\RequestCriteria;
-use Kirby\Users\Contracts\UserRepositoryInterface;
-use Kirby\Employees\Jobs\SyncEmployeesByCsvFileJob;
-use Kirby\Employees\UI\API\Resources\EmployeeResource;
-use Kirby\Employees\UI\API\Requests\GetEmployeeRequest;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
-use Kirby\Employees\UI\API\Requests\UpdateEmployeeRequest;
-use Kirby\Employees\UI\API\Requests\SearchEmployeesRequest;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
+use Kirby\Employees\Jobs\SyncEmployeesByCsvFileJob;
+use Kirby\Employees\UI\API\Requests\GetEmployeeRequest;
+use Kirby\Employees\UI\API\Requests\SearchEmployeesRequest;
 use Kirby\Employees\UI\API\Requests\SyncEmployeesByCsvFileRequest;
+use Kirby\Employees\UI\API\Requests\UpdateEmployeeRequest;
+use Kirby\Employees\UI\API\Resources\EmployeeResource;
+use Kirby\Users\Contracts\UserRepositoryInterface;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class EmployeeApiController.

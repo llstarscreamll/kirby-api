@@ -2,9 +2,9 @@
 
 namespace Kirby\Employees\Data\Repositories;
 
-use Kirby\Employees\Models\Identification;
 use Kirby\Core\Abstracts\EloquentRepositoryAbstract;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
+use Kirby\Employees\Models\Identification;
 
 /**
  * Class EloquentIdentificationRepository.

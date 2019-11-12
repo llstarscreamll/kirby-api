@@ -4,12 +4,12 @@ namespace Kirby\WorkShifts\UI\API\Controllers;
 
 use Illuminate\Http\Request;
 use Kirby\Core\Http\Controller;
-use Kirby\WorkShifts\UI\API\Resources\WorkShiftResource;
-use Kirby\WorkShifts\UI\API\Requests\ShowWorkShiftRequest;
 use Kirby\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use Kirby\WorkShifts\UI\API\Requests\CreateWorkShiftRequest;
 use Kirby\WorkShifts\UI\API\Requests\DeleteWorkShiftRequest;
+use Kirby\WorkShifts\UI\API\Requests\ShowWorkShiftRequest;
 use Kirby\WorkShifts\UI\API\Requests\UpdateWorkShiftRequest;
+use Kirby\WorkShifts\UI\API\Resources\WorkShiftResource;
 
 /**
  * Class WorkShiftController.
