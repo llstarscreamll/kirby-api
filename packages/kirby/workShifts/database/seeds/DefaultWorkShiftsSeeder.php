@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 use Kirby\WorkShifts\Models\WorkShift;
 
 /**

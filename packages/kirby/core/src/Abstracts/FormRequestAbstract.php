@@ -2,8 +2,8 @@
 
 namespace Kirby\Core\Abstracts;
 
-use Illuminate\Support\Arr;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
 /**
  * Class FormRequestAbstract.

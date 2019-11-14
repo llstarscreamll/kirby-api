@@ -2,13 +2,13 @@
 
 namespace Kirby\Core\Abstracts;
 
-use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Support\Facades\Config;
-use Spatie\QueryBuilder\AllowedFilter;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 use Kirby\Core\Filters\QuerySearchFilter;
 use Prettus\Repository\Eloquent\BaseRepository;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * Class EloquentRepositoryAbstract.

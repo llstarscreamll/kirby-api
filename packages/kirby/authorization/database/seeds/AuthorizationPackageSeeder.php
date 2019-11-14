@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
-use Kirby\Authorization\Models\Role;
+use Illuminate\Support\Arr;
 use Kirby\Authorization\Models\Permission;
+use Kirby\Authorization\Models\Role;
 
 /**
  * Class AuthorizationPackageSeeder.
