@@ -2,13 +2,13 @@
 
 namespace Kirby\Core\Abstracts;
 
-use Illuminate\Database\Eloquent\Builder;
+use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Support\Facades\Config;
+use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Database\Eloquent\Builder;
 use Kirby\Core\Filters\QuerySearchFilter;
 use Prettus\Repository\Eloquent\BaseRepository;
-use Spatie\QueryBuilder\Filter;
-use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * Class EloquentRepositoryAbstract.
@@ -60,7 +60,7 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
             : $this->model->query();
 
         $allowedFilters = $enableQuerySearchFilter
-            ? array_merge($this->allowedFilters, [Filter::custom('search', new QuerySearchFilter($this->allowedFilters))])
+            ? array_merge($this->allowedFilters, [AllowedFilter::custom('search', new QuerySearchFilter($this->allowedFilters))])
             : $this->allowedFilters;
 
         $this->model = QueryBuilder::for($query)

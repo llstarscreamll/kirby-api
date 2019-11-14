@@ -2,6 +2,7 @@
 
 namespace Kirby\Core\Abstracts;
 
+use Illuminate\Support\Arr;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -17,7 +18,7 @@ class FormRequestAbstract extends FormRequest
      * @var array
      */
     protected $access = [
-        'roles'       => [],
+        'roles' => [],
         'permissions' => [],
     ];
 
@@ -67,8 +68,8 @@ class FormRequestAbstract extends FormRequest
     protected function hasAccess(): bool
     {
         if (isset($this->access) && is_array($this->access)) {
-            $permissions = array_get($this->access, 'permissions', []);
-            $roles = array_get($this->access, 'roles', []);
+            $permissions = Arr::get($this->access, 'permissions', []);
+            $roles = Arr::get($this->access, 'roles', []);
 
             return $this->user()->hasAnyRole($roles) || $this->user()->hasAnyPermission($permissions);
         }

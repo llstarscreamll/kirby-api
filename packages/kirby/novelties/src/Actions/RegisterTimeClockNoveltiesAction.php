@@ -3,18 +3,18 @@
 namespace Kirby\Novelties\Actions;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Kirby\TimeClock\Models\TimeClockLog;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 /**
  * Class RegisterTimeClockNoveltiesAction.

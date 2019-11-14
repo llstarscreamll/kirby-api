@@ -2,6 +2,8 @@
 
 namespace WorkShifts;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class CreateWorkShiftCest.
  *
@@ -47,9 +49,9 @@ class CreateWorkShiftCest
 
         $I->seeResponseCodeIs(201);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
-        $I->seeRecord('work_shifts', array_except($requestBody, 'time_slots'));
-        $record = $I->grabRecord('work_shifts', array_except($requestBody, 'time_slots'));
-        $I->assertEquals(array_get($requestBody, 'time_slots'), json_decode($record['time_slots'], true));
+        $I->seeRecord('work_shifts', Arr::except($requestBody, 'time_slots'));
+        $record = $I->grabRecord('work_shifts', Arr::except($requestBody, 'time_slots'));
+        $I->assertEquals(Arr::get($requestBody, 'time_slots'), json_decode($record['time_slots'], true));
     }
 
     /**

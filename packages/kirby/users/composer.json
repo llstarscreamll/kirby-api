@@ -15,7 +15,7 @@
         "Users"
     ],
     "require": {
-        "illuminate/support": "~5",
+        "illuminate/support": "~6",
         "prettus/l5-repository": "^2.6"
     },
     "require-dev": {

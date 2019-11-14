@@ -15,7 +15,7 @@
         "Authentication"
     ],
     "require": {
-        "illuminate/support": "~5",
+        "illuminate/support": "~6",
         "laravel/passport": "~7",
         "barryvdh/laravel-cors": "^0.11.2"
     },

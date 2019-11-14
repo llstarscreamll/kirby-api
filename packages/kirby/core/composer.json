@@ -15,8 +15,8 @@
         "Core"
     ],
     "require": {
-        "illuminate/support": "~5",
-        "spatie/laravel-query-builder": "^1.15"
+        "illuminate/support": "~6",
+        "spatie/laravel-query-builder": "2.*"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",

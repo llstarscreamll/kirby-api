@@ -2,6 +2,8 @@
 
 namespace WorkShifts;
 
+use Illuminate\Support\Arr;
+
 /**
  * Class UpdateWorkShiftByIdCest.
  *
@@ -66,7 +68,7 @@ class UpdateWorkShiftByIdCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeResponseContainsJson(['data' => ['id' => $this->workShift['id']]]);
-        $I->seeRecord('work_shifts', array_except($this->requestData, 'time_slots'));
+        $I->seeRecord('work_shifts', Arr::except($this->requestData, 'time_slots'));
     }
 
     /**

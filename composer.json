@@ -17,7 +17,7 @@
         "php": "^7.2",
         "barryvdh/laravel-cors": "^0.11.2",
         "fideloper/proxy": "^4.0",
-        "laravel/framework": "5.8.*",
+        "laravel/framework": "6.*",
         "laravel/horizon": "^3.1",
         "laravel/telescope": "^2.1",
         "laravel/tinker": "^1.0",
@@ -31,7 +31,7 @@
         "kirby/users": "*",
         "kirby/work-shifts": "*",
         "predis/predis": "^1.1",
-        "spatie/laravel-backup": "5.*",
+        "spatie/laravel-backup": "6.*",
         "wikimedia/composer-merge-plugin": "^1.4"
     },
     "require-dev": {

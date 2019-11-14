@@ -15,7 +15,7 @@
         "Company"
     ],
     "require": {
-        "illuminate/support": "~5"
+        "illuminate/support": "~6"
     },
     "require-dev": {
         "blastcloud/guzzler": "^1.5",

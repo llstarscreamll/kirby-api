@@ -1,8 +1,9 @@
 <?php
 
+use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
-use Kirby\Authorization\Models\Permission;
 use Kirby\Authorization\Models\Role;
+use Kirby\Authorization\Models\Permission;
 
 /**
  * Class AuthorizationPackageSeeder.
@@ -27,7 +28,7 @@ class AuthorizationPackageSeeder extends Seeder
     {
         collect($this->defaultRoles)
             ->map(function ($role) {
-                $keys = array_only($role, ['name']);
+                $keys = Arr::only($role, ['name']);
 
                 return Role::updateOrCreate($keys, $role);
             })

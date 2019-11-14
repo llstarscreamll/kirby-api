@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
 use Kirby\WorkShifts\Models\WorkShift;
 
@@ -52,7 +53,7 @@ class DefaultWorkShiftsSeeder extends Seeder
     public function run()
     {
         collect($this->defaultWorkShifts)->map(function ($shift) {
-            $keys = array_only($shift, ['name']);
+            $keys = Arr::only($shift, ['name']);
 
             return WorkShift::updateOrCreate($keys, $shift);
         });
