@@ -3,11 +3,11 @@
 namespace Kirby\TimeClock\Traits;
 
 use Illuminate\Support\Collection;
-use Kirby\Employees\Models\Identification;
 use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\WorkShifts\Models\WorkShift;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\Employees\Models\Identification;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Trait CheckInOut.
@@ -28,6 +28,20 @@ trait CheckInOut
         $noveltyTypeIsRequired = optional($requiredNoveltySetting)->value;
 
         return is_null($noveltyTypeIsRequired) ? true : $noveltyTypeIsRequired == true;
+    }
+
+    /**
+     * @return bool
+     */
+    private function adjustScheduledNoveltyTimesBasedOnChecks(): bool
+    {
+        $adjustNoveltySetting = $this->settingRepository
+            ->findByField('key', 'time-clock.adjust-scheduled-novelties-times-based-on-checks')
+            ->first();
+
+        $noveltyTypeIsRequired = optional($adjustNoveltySetting)->value;
+
+        return $noveltyTypeIsRequired == true;
     }
 
     /**

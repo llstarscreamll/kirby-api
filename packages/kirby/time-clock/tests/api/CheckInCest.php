@@ -6,6 +6,7 @@ use Illuminate\Support\Carbon;
 use TimeClockPermissionsSeeder;
 use Kirby\Novelties\Enums\DayType;
 use Kirby\Novelties\Models\Novelty;
+use Kirby\TimeClock\Models\Setting;
 use Kirby\Employees\Models\Employee;
 use Kirby\WorkShifts\Models\WorkShift;
 use Illuminate\Support\Facades\Artisan;
@@ -1018,12 +1019,67 @@ class CheckInCest
         $expectedTimeClockLog = [
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
-            'check_in_novelty_type_id' => 4,
+            'check_in_novelty_type_id' => $this->subtractTimeNovelty->id,
         ];
 
         $I->seeResponseCodeIs(201);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
         $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldUpdateScheduledNoveltyDatesWhenArrivesTooLateToSaidNovelty(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, monday at 9am, two hours late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 9, 00));
+
+        // set setting to NOT require novelty type when check in is too late,
+        // this make to set a default novelty type id for the late check in
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks'])->update(['value' => true]);
+
+        // create scheduled novelty from 7am to 8am, since employee arrives at
+        // 9am, he's 1 hour late to check in, so the default novelty type for
+        // check in should be setted
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            'scheduled_start_at' => now()->subHours(2),
+            'scheduled_end_at' => now()->subHour(),
+        ];
+
+        $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $expectedTimeClockLog = [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => null,
+        ];
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
+        $I->seeRecord('novelties', [
+            'id' => $scheduledNovelty->id,
+            'scheduled_start_at' => now()->subHours(2),
+            'scheduled_end_at' => now(),
+        ]);
     }
 
     /**

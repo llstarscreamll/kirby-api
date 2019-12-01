@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
+use Illuminate\Database\Seeder;
 use Kirby\TimeClock\Models\Setting;
 
 /**
@@ -16,6 +16,7 @@ class TimeClockSettingsSeeder extends Seeder
      */
     private $settings = [
         ['key' => 'time-clock.require-subtract-novelty-type-on-checks', 'value' => false],
+        ['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks', 'value' => false],
     ];
 
     /**
