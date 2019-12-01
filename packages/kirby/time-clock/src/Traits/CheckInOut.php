@@ -3,11 +3,11 @@
 namespace Kirby\TimeClock\Traits;
 
 use Illuminate\Support\Collection;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\WorkShifts\Models\WorkShift;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Employees\Models\Identification;
+use Kirby\Novelties\Enums\DayType;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\WorkShifts\Models\WorkShift;
 
 /**
  * Trait CheckInOut.
