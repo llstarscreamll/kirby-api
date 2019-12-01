@@ -3,17 +3,17 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
+use TimeClockPermissionsSeeder;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Employees\Models\Employee;
+use Kirby\WorkShifts\Models\WorkShift;
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Company\Models\SubCostCenter;
-use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
-use Kirby\TimeClock\Events\CheckedInEvent;
 use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\WorkShifts\Models\WorkShift;
-use TimeClockPermissionsSeeder;
+use Kirby\TimeClock\Events\CheckedInEvent;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Class CheckInCest.
@@ -1237,7 +1237,7 @@ class CheckInCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 
