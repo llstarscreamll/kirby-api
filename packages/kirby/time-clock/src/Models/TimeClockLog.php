@@ -3,17 +3,17 @@
 namespace Kirby\TimeClock\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\App;
-use Kirby\Company\Contracts\HolidayRepositoryInterface;
-use Kirby\Company\Models\SubCostCenter;
-use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Users\Models\User;
+use Kirby\Novelties\Enums\DayType;
+use Illuminate\Support\Facades\App;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Employees\Models\Employee;
 use Kirby\WorkShifts\Models\WorkShift;
+use Illuminate\Database\Eloquent\Model;
+use Kirby\Company\Models\SubCostCenter;
+use Kirby\Novelties\Models\NoveltyType;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Kirby\Company\Contracts\HolidayRepositoryInterface;
 
 /**
  * Class TimeClockLog.
@@ -316,13 +316,19 @@ class TimeClockLog extends Model
         return $hasClockedTimeOnWorkShift;
     }
 
-    public function checkInPunctuality(): ?int
+    /**
+     * @param Carbon $offSet
+     */
+    public function checkInPunctuality(Carbon $offSet = null): ?int
     {
-        return optional($this->workShift)->startPunctuality($this->checked_in_at, true);
+        return optional($this->workShift)->startPunctuality($this->checked_in_at, $offSet);
     }
 
-    public function checkOutPunctuality(): ?int
+    /**
+     * @param Carbon $offSet
+     */
+    public function checkOutPunctuality(Carbon $offSet = null): ?int
     {
-        return optional($this->workShift)->endPunctuality($this->checked_out_at, true);
+        return optional($this->workShift)->endPunctuality($this->checked_out_at, $offSet);
     }
 }

@@ -2,19 +2,20 @@
 
 namespace Novelties\Actions;
 
+use Mockery;
 use Carbon\Carbon;
 use Codeception\Example;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
+use Kirby\Novelties\Novelties;
+use Novelties\IntegrationTester;
 use Kirby\Company\Models\Holiday;
-use Kirby\Company\Models\SubCostCenter;
-use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use Illuminate\Support\Collection;
 use Kirby\Novelties\Models\Novelty;
+use Kirby\WorkShifts\Models\WorkShift;
+use Kirby\Company\Models\SubCostCenter;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\WorkShifts\Models\WorkShift;
-use Mockery;
-use Novelties\IntegrationTester;
+use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 
 /**
  * Class RegisterTimeClockNoveltiesActionCest.
@@ -1007,20 +1008,94 @@ class RegisterTimeClockNoveltiesActionCest
         $result = $action->run($afternoonLog->id);
 
         $I->assertTrue($result);
+
         $I->seeRecord('novelties', [ // ordinary time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
             'total_time_in_minutes' => (60 * 3) - 30,
         ]);
+
         $I->seeRecord('novelties', [ // missing time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'PP')->first()->id,
             'total_time_in_minutes' => -60,
         ]);
+
         $I->seeRecord('novelties', [ // additional time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
             'total_time_in_minutes' => 30,
         ]);
+
+        $afternoonLogNovelties = $I->grabNumRecords('novelties', ['time_clock_log_id' => $afternoonLog->id]);
+        $I->assertEquals($afternoonLogNovelties, 3);
+    }
+
+    /**
+     * @test
+     * @param IntegrationTester $I
+     */
+    public function shouldBeAwareFromPreviousClockedTimeOnSameWorkShift(IntegrationTester $I)
+    {
+        Carbon::setTestNow(Carbon::parse('2019-04-01'));
+
+        // morning log with attached addition novelty due to late check out
+        $morningLog = factory(TimeClockLog::class)->create([
+            'work_shift_id' => $this->workShifts->where('name', '7-18')->first()->id,
+            'checked_in_at' => now()->setTime(06, 58),
+            'checked_out_at' => now()->setTime(12, 02),
+            'check_out_novelty_type_id' => null,
+            'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
+        ]);
+
+        factory(Novelty::class)->create([
+            'employee_id' => $morningLog->employee_id,
+            'time_clock_log_id' => $morningLog->id,
+            'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
+            'scheduled_start_at' => now()->setTime(07, 00),
+            'scheduled_end_at' => now()->setTime(12, 00),
+            'total_time_in_minutes' => 60 * 5,
+        ]);
+
+        // scheduled novelty for morning log
+        factory(Novelty::class)->create([
+            'employee_id' => $morningLog->employee_id,
+            'time_clock_log_id' => $morningLog->id,
+            'novelty_type_id' => $this->noveltyTypes->where('code', 'PP')->first()->id,
+            'scheduled_start_at' => now()->setTime(12, 00),
+            'scheduled_end_at' => now()->setTime(14, 00), // next check in should be at 2pm
+            'total_time_in_minutes' => 60 * 2,
+        ]);
+
+        // afternoon log, after scheduled novelty
+        $afternoonLog = factory(TimeClockLog::class)->create([
+            'work_shift_id' => $this->workShifts->where('name', '7-18')->first()->id,
+            'employee_id' => $morningLog->employee_id,
+            'checked_in_at' => now()->setTime(14, 00), // on time
+            'checked_out_at' => now()->setTime(18, 30), // late check out, 0.5 hours late
+            'check_in_novelty_type_id' => null,
+            'check_out_novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
+            'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
+        ]);
+
+        $action = app(RegisterTimeClockNoveltiesAction::class);
+        $result = $action->run($afternoonLog->id);
+
+        $I->assertTrue($result);
+
+        $I->seeRecord('novelties', [ // ordinary time
+            'time_clock_log_id' => $afternoonLog->id,
+            'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
+            'total_time_in_minutes' => 60 * 4,
+        ]);
+
+        $I->seeRecord('novelties', [ // additional time
+            'time_clock_log_id' => $afternoonLog->id,
+            'novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
+            'total_time_in_minutes' => 30,
+        ]);
+
+        $afternoonLogNovelties = $I->grabNumRecords('novelties', ['time_clock_log_id' => $afternoonLog->id]);
+        $I->assertEquals($afternoonLogNovelties, 2);
     }
 }

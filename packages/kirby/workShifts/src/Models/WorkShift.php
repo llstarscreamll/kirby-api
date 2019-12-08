@@ -3,10 +3,10 @@
 namespace Kirby\WorkShifts\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class WorkShift.
@@ -149,18 +149,18 @@ class WorkShift extends Model
      * @param  Carbon|null $time
      * @return int
      */
-    public function startPunctuality(?Carbon $time = null): int
+    public function startPunctuality(?Carbon $time = null, Carbon $offSet = null): int
     {
-        return $this->slotPunctuality('start', $time ?? now(), null, false);
+        return $this->slotPunctuality('start', $time ?? now(), $offSet, false);
     }
 
     /**
      * @param  Carbon|null $time
      * @return int
      */
-    public function endPunctuality(?Carbon $time = null): int
+    public function endPunctuality(?Carbon $time = null, Carbon $offSet = null): int
     {
-        return $this->slotPunctuality('end', $time ?? now());
+        return $this->slotPunctuality('end', $time ?? now(), $offSet);
     }
 
     /**
@@ -198,7 +198,7 @@ class WorkShift extends Model
         $targetTime = $flag == 'start' ? $start : $end;
 
         $flagGraceStart = $targetTime->copy();
-        $flagGraceEnd = $targetTime->copy();
+        $flagGraceEnd = $targetTime->copy()->addSecond(); // second to fix end offsets
 
         if ($flag == 'start') {
             $flagGraceEnd = $flagGraceEnd->addMinutes($this->{"grace_minutes_before_{$flag}_times"}+$this->{"grace_minutes_after_{$flag}_times"});

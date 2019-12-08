@@ -121,7 +121,10 @@ class LogCheckOutAction
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
 
-        $scheduledNovelty = $this->noveltyRepository->whereScheduledForEmployee($identification->employee->id, 'scheduled_start_at', now(), now()->endOfDay())->first();
+        $scheduledNovelty = $this->noveltyRepository
+            ->whereScheduledForEmployee($identification->employee_id, 'scheduled_start_at', now()->subHour(), now()->endOfDay())
+            ->orderBy('id', 'DESC')
+            ->first();
 
         if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
             $scheduledNovelty = $this->noveltyRepository->update(

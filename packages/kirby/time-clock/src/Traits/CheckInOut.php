@@ -3,11 +3,11 @@
 namespace Kirby\TimeClock\Traits;
 
 use Illuminate\Support\Collection;
-use Kirby\Employees\Models\Identification;
 use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\WorkShifts\Models\WorkShift;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\Employees\Models\Identification;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Trait CheckInOut.
@@ -98,9 +98,20 @@ trait CheckInOut
     protected function getTimeClockData(string $flag, Identification $identification, ?int $workShiftId = null): array
     {
         $currentDateTime = now();
+        $targetFlag = $flag === 'start' ? 'end' : 'start';
+        $noveltyAttr = "scheduled_{$targetFlag}_at";
+
+        $scheduledNovelty = $this->noveltyRepository
+            ->whereScheduledForEmployee($identification->employee_id, $noveltyAttr, now()->subHour(), now()->endOfDay())
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        $checkOffset = optional($scheduledNovelty)->$noveltyAttr;
+
         $applicableWorkShifts = $this->getApplicableWorkShifts($identification, $workShiftId);
         $workShift = $applicableWorkShifts->first();
-        $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, $currentDateTime) : null;
+        $punctuality = $applicableWorkShifts->count() === 1 ? optional($workShift)->slotPunctuality($flag, $currentDateTime, $checkOffset) : null;
+
         $isOnTime = $punctuality === 0;
         $noveltyTypes = new Collection([]);
         $noveltyIsRequired = $this->subtractNoveltyTypeIsRequired();

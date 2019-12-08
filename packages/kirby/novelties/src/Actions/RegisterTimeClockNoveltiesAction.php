@@ -3,18 +3,18 @@
 namespace Kirby\Novelties\Actions;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Kirby\TimeClock\Models\TimeClockLog;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 /**
  * Class RegisterTimeClockNoveltiesAction.
@@ -163,7 +163,17 @@ class RegisterTimeClockNoveltiesAction
         $timeClockLog->hasHolidaysChecks() ? array_push($dayTypes, DayType::Holiday) : null;
         $this->noveltyTypeRepository->whereDayType($dayTypes);
 
-        if ($timeClockLog->checkInPunctuality() === 1 || $timeClockLog->checkOutPunctuality() === -1) {
+        $scheduledNovelty = $this->noveltyRepository
+            ->whereScheduledForEmployee(
+                $timeClockLog->employee->id,
+                'scheduled_end_at',
+                $timeClockLog->checked_in_at->copy()->subMinutes(30),
+                $timeClockLog->checked_in_at->copy()->addMinutes(30)
+            )
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        if ($timeClockLog->checkInPunctuality(optional($scheduledNovelty)->scheduled_end_at) === 1 || $timeClockLog->checkOutPunctuality() === -1) {
             $this->noveltyTypeRepository->orWhereDefaultForSubtraction();
         }
 
