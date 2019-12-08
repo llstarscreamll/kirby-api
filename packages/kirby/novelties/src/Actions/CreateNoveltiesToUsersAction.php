@@ -5,9 +5,9 @@ namespace Kirby\Novelties\Actions;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Class CreateNoveltiesToUsersAction.
