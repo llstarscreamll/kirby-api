@@ -151,7 +151,7 @@ class LogCheckInAction
         if ($workShift && $shiftPunctuality !== 0) {
             $scheduledNovelty = $this->noveltyRepository
                 ->whereScheduledForEmployee($identification->employee->id, 'scheduled_end_at', $expectedStart, $expectedEnd)
-                ->orderBy('created_at', 'DESC')
+                ->orderBy('id', 'DESC')
                 ->first();
 
             if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
