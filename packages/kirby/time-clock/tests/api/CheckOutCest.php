@@ -3,16 +3,16 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
-use TimeClockPermissionsSeeder;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\TimeClock\Models\Setting;
-use Kirby\Employees\Models\Employee;
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Company\Models\SubCostCenter;
+use Kirby\Employees\Models\Employee;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Events\CheckedOutEvent;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\TimeClock\Models\Setting;
+use TimeClockPermissionsSeeder;
 
 /**
  * Class CheckOutCest.
