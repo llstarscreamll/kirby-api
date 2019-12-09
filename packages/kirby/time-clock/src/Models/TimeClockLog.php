@@ -3,17 +3,17 @@
 namespace Kirby\TimeClock\Models;
 
 use Carbon\Carbon;
-use Kirby\Users\Models\User;
-use Kirby\Novelties\Enums\DayType;
-use Illuminate\Support\Facades\App;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Employees\Models\Employee;
-use Kirby\WorkShifts\Models\WorkShift;
 use Illuminate\Database\Eloquent\Model;
-use Kirby\Company\Models\SubCostCenter;
-use Kirby\Novelties\Models\NoveltyType;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\App;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
+use Kirby\Company\Models\SubCostCenter;
+use Kirby\Employees\Models\Employee;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\Users\Models\User;
+use Kirby\WorkShifts\Models\WorkShift;
 
 /**
  * Class TimeClockLog.
