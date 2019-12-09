@@ -2,20 +2,20 @@
 
 namespace Novelties\Actions;
 
-use Mockery;
 use Carbon\Carbon;
 use Codeception\Example;
 use Illuminate\Support\Arr;
-use Kirby\Novelties\Novelties;
-use Novelties\IntegrationTester;
-use Kirby\Company\Models\Holiday;
 use Illuminate\Support\Collection;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\WorkShifts\Models\WorkShift;
+use Kirby\Company\Models\Holiday;
 use Kirby\Company\Models\SubCostCenter;
-use Kirby\Novelties\Models\NoveltyType;
-use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\Novelties\Novelties;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\WorkShifts\Models\WorkShift;
+use Mockery;
+use Novelties\IntegrationTester;
 
 /**
  * Class RegisterTimeClockNoveltiesActionCest.

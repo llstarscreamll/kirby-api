@@ -2,13 +2,13 @@
 
 namespace Novelties\Actions;
 
-use Mockery;
 use Codeception\Example;
-use Novelties\IntegrationTester;
 use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Models\NoveltyType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\Actions\CreateNoveltiesToUsersAction;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Novelties\Models\NoveltyType;
+use Mockery;
+use Novelties\IntegrationTester;
 
 /**
  * Class CreateNoveltiesToUsersActionCest.
