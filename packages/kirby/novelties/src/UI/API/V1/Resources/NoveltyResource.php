@@ -35,10 +35,9 @@ class NoveltyResource extends JsonResource
             "created_at" => optional($this->created_at)->toISOString(),
             "updated_at" => optional($this->updated_at)->toISOString(),
             "deleted_at" => optional($this->deleted_at)->toISOString(),
-
             'employee' => $this->whenLoaded('employee', EmployeeResource::make($this->employee)),
             'novelty_type' => $this->whenLoaded('noveltyType', NoveltyTypeResource::make($this->noveltyType)),
-            'time_clock_log' => $this->whenLoaded('timeClockLog', TimeClockLogResource::make($this->timeClockLog)),
+            'time_clock_log' => $this->whenLoaded('timeClockLog'),
             'sub_cost_center' => $this->whenLoaded('subCostCenter', SubCostCenterResource::make($this->subCostCenter)),
         ];
     }
