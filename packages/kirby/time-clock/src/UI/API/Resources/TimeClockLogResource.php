@@ -3,10 +3,9 @@
 namespace Kirby\TimeClock\UI\API\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Kirby\Employees\UI\API\Resources\EmployeeResource;
+use Kirby\Company\UI\API\Resources\SubCostCenterResource;
 use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
 use Kirby\WorkShifts\UI\API\Resources\WorkShiftResource;
-use Kirby\Company\UI\API\Resources\SubCostCenterResource;
 
 /**
  * Class TimeClockLogResource.

@@ -5,7 +5,6 @@ namespace Kirby\Novelties\UI\API\V1\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Kirby\Company\UI\API\Resources\SubCostCenterResource;
 use Kirby\Employees\UI\API\Resources\EmployeeResource;
-use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
 
 /**
  * Class NoveltyResource.
