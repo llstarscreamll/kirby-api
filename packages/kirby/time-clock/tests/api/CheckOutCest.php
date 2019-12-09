@@ -3,16 +3,16 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
+use TimeClockPermissionsSeeder;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\TimeClock\Models\Setting;
+use Kirby\Employees\Models\Employee;
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Company\Models\SubCostCenter;
-use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Events\CheckedOutEvent;
-use Kirby\TimeClock\Models\Setting;
-use TimeClockPermissionsSeeder;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Class CheckOutCest.
@@ -828,12 +828,12 @@ class CheckOutCest
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks'])->update(['value' => true]);
 
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
-        // 4pm, he's too early to check out, so the default novelty type for
-        // early check out should be setted
+        // 4pm, he's too early to check out
         $noveltyData = [
             'employee_id' => $employee->id,
             'scheduled_start_at' => now()->setTime(17, 00),
             'scheduled_end_at' => now()->setTime(18, 00),
+            'total_time_in_minutes' => 60,
         ];
 
         $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
@@ -858,6 +858,7 @@ class CheckOutCest
         $I->seeRecord('novelties', [
             'id' => $scheduledNovelty->id,
             'scheduled_start_at' => now(),
+            'total_time_in_minutes' => 120,
         ]);
     }
 

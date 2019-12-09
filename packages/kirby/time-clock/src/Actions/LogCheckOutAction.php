@@ -3,22 +3,22 @@
 namespace Kirby\TimeClock\Actions;
 
 use Illuminate\Support\Arr;
-use Kirby\Company\Contracts\HolidayRepositoryInterface;
-use Kirby\Company\Contracts\SubCostCenterRepositoryInterface;
-use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
-use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
-use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Kirby\TimeClock\Exceptions\InvalidNoveltyTypeException;
-use Kirby\TimeClock\Exceptions\MissingCheckInException;
-use Kirby\TimeClock\Exceptions\MissingSubCostCenterException;
-use Kirby\TimeClock\Exceptions\TooEarlyToCheckException;
-use Kirby\TimeClock\Exceptions\TooLateToCheckException;
-use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\TimeClock\Traits\CheckInOut;
 use Kirby\Users\Models\User;
+use Kirby\TimeClock\Traits\CheckInOut;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Company\Contracts\HolidayRepositoryInterface;
+use Kirby\TimeClock\Exceptions\MissingCheckInException;
+use Kirby\TimeClock\Exceptions\TooLateToCheckException;
+use Kirby\TimeClock\Exceptions\TooEarlyToCheckException;
+use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
+use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
+use Kirby\TimeClock\Exceptions\InvalidNoveltyTypeException;
+use Kirby\Company\Contracts\SubCostCenterRepositoryInterface;
+use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use Kirby\TimeClock\Exceptions\MissingSubCostCenterException;
+use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
 
 /**
  * Class LogCheckOutAction.
@@ -124,7 +124,13 @@ class LogCheckOutAction
         $scheduledNovelty = $this->noveltyRepository->whereScheduledForEmployee($identification->employee->id, 'scheduled_start_at', now(), now()->endOfDay())->first();
 
         if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
-            $scheduledNovelty = $this->noveltyRepository->update(['scheduled_start_at' => now()], $scheduledNovelty->id);
+            $scheduledNovelty = $this->noveltyRepository->update(
+                [
+                    'scheduled_start_at' => now(),
+                    'total_time_in_minutes' => $scheduledNovelty->scheduled_end_at->diffInMinutes(now()),
+                ],
+                $scheduledNovelty->id
+            );
         }
 
         $checkOutOffset = optional($scheduledNovelty)->scheduled_start_at;

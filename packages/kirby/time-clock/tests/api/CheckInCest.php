@@ -3,18 +3,18 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
+use TimeClockPermissionsSeeder;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\TimeClock\Models\Setting;
+use Kirby\Employees\Models\Employee;
+use Kirby\WorkShifts\Models\WorkShift;
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Company\Models\SubCostCenter;
-use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
-use Kirby\TimeClock\Events\CheckedInEvent;
-use Kirby\TimeClock\Models\Setting;
 use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\WorkShifts\Models\WorkShift;
-use TimeClockPermissionsSeeder;
+use Kirby\TimeClock\Events\CheckedInEvent;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Class CheckInCest.
@@ -1054,8 +1054,9 @@ class CheckInCest
         // check in should be setted
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->subHours(2),
-            'scheduled_end_at' => now()->subHour(),
+            'scheduled_start_at' => now()->setTime(7, 0), // 7am
+            'scheduled_end_at' => now()->setTime(8, 0), // 8am
+            'total_time_in_minutes' => 60,
         ];
 
         $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
@@ -1079,6 +1080,7 @@ class CheckInCest
             'id' => $scheduledNovelty->id,
             'scheduled_start_at' => now()->subHours(2),
             'scheduled_end_at' => now(),
+            'total_time_in_minutes' => 120,
         ]);
     }
 
@@ -1293,7 +1295,7 @@ class CheckInCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 
