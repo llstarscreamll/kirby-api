@@ -39,6 +39,9 @@ class CheckOutController
                 $request->novelty_type_id,
                 $request->novelty_sub_cost_center_id
             );
+            
+            event(new CheckedOutEvent($timeClockLog->id));
+
         } catch (MissingCheckInException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
@@ -81,8 +84,6 @@ class CheckOutController
                 'errors' => $errors,
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
-
-        event(new CheckedOutEvent($timeClockLog->id));
 
         return new TimeClockLogResource($timeClockLog);
     }
