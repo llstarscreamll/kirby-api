@@ -72,6 +72,8 @@ class TimeClockLog extends Model
     protected $dates = [
         'checked_in_at',
         'checked_out_at',
+        'expected_check_in_at',
+        'expected_check_out_at',
         'created_at',
         'updated_at',
         'deleted_at',
