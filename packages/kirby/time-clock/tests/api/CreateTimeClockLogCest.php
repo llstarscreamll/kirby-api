@@ -2,10 +2,10 @@
 
 namespace ClockTime;
 
-use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
-use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\TimeClock\Events\CheckedOutEvent;
+use Kirby\TimeClock\Models\TimeClockLog;
+use TimeClockPermissionsSeeder;
 
 /**
  * Class CreateTimeClockLogCest.
@@ -30,7 +30,7 @@ class CreateTimeClockLogCest
     public function _before(ApiTester $I)
     {
         Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
-        
+
         $this->user = $I->amLoggedAsAdminUser();
 
         $I->haveHttpHeader('Accept', 'application/json');
