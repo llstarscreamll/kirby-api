@@ -35,11 +35,11 @@ class TimeClockLogResource extends JsonResource
             'check_out_sub_cost_center_id' => $this->check_out_sub_cost_center_id,
             'checked_in_by_id' => $this->checked_in_by_id,
             'checked_out_by_id' => $this->checked_out_by_id,
+            'expected_check_in_at' => optional($this->expected_check_in_at)->toISOString(),
+            'expected_check_out_at' => optional($this->expected_check_out_at)->toISOString(),
             'created_at' => optional($this->created_at)->toISOString(),
             'updated_at' => optional($this->updated_at)->toISOString(),
             'deleted_at' => optional($this->deleted_at)->toISOString(),
-            'expected_check_in_at' => optional($this->expected_check_in_at)->toISOString(),
-            'expected_check_out_at' => optional($this->expected_check_out_at)->toISOString(),
 
             'work_shift' => $this->whenLoaded('workShift', WorkShiftResource::make($this->workShift)),
             'employee' => $this->whenLoaded('employee'),

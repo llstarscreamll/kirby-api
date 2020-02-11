@@ -4,10 +4,12 @@ namespace Kirby\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
 use Kirby\Core\Http\Controller;
-use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Kirby\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
-use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
+use Kirby\TimeClock\Events\CheckedOutEvent;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
+use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest;
+use Kirby\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
 
 /**
  * Class TimeClockLogsController.
@@ -51,11 +53,18 @@ class TimeClockLogsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
+     * @param \Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(CreateTimeClockLogRequest $request)
     {
-        //
+        $timeClockLog = $this->timeClockLogRepository->create($request->validated());
+
+        if ($timeClockLog->checked_out_at) {
+            event(new CheckedOutEvent($timeClockLog->id));
+        }
+
+        return new TimeClockLogResource($timeClockLog);
     }
 
     /**
