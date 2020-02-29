@@ -172,7 +172,7 @@ class RegisterTimeClockNoveltiesActionCest
                         'scheduled_start_at' => '2019-04-01 08:00:00',
                         'scheduled_end_at' => '2019-04-01 12:00:00',
                         'total_time_in_minutes' => 60 * 4, // 4 hours from 7am to 12m
-                    ]
+                    ],
                 ],
                 'createdNovelties' => [
                     [

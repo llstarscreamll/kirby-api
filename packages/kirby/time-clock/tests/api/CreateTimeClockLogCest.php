@@ -2,12 +2,12 @@
 
 namespace ClockTime;
 
-use TimeClockPermissionsSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Company\Models\SubCostCenter;
-use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Employees\Models\Identification;
 use Kirby\TimeClock\Events\CheckedOutEvent;
+use Kirby\TimeClock\Models\TimeClockLog;
+use TimeClockPermissionsSeeder;
 
 /**
  * Class CreateTimeClockLogCest.
