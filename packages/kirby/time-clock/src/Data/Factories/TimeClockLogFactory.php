@@ -22,6 +22,6 @@ $factory->define(TimeClockLog::class, function (Faker $faker) {
         'checked_in_by_id' => $userId = factory(User::class)->create()->id,
         'checked_out_by_id' => $userId,
         'expected_check_in_at' => $start,
-        'expected_check_out_at' => $end
+        'expected_check_out_at' => $end,
     ];
 });

@@ -4,12 +4,12 @@ namespace Kirby\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Request;
 use Kirby\Core\Http\Controller;
-use Kirby\TimeClock\Events\CheckedOutEvent;
-use Prettus\Repository\Criteria\RequestCriteria;
-use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest;
 use Kirby\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
+use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class TimeClockLogsController.
