@@ -5,6 +5,7 @@ namespace Kirby\TimeClock\UI\API\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Kirby\Company\UI\API\Resources\SubCostCenterResource;
 use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
+use Kirby\Users\UI\API\Resources\UserResource;
 use Kirby\WorkShifts\UI\API\Resources\WorkShiftResource;
 
 /**
@@ -49,7 +50,7 @@ class TimeClockLogResource extends JsonResource
             'sub_cost_center' => $this->whenLoaded('subCostCenter', SubCostCenterResource::make($this->subCostCenter)),
             'check_in_sub_cost_center' => $this->whenLoaded('checkInSubCostCenter', SubCostCenterResource::make($this->checkInSubCostCenter)),
             'check_out_sub_cost_center' => $this->whenLoaded('checkOutSubCostCenter', SubCostCenterResource::make($this->checkOutSubCostCenter)),
-            'approvals' => $this->whenLoaded('approvals', NoveltyResource::collection($this->approvals)),
+            'approvals' => $this->whenLoaded('approvals', UserResource::collection($this->approvals)),
         ];
     }
 }
