@@ -45,7 +45,7 @@ envoy run deployOnlyCode
 If you want to deploy to specific server and branch execute:
 
 ```bash
-envoy run --target=lab --branch=staging
+envoy run deploy --target=lab --branch=staging
 ```
 
 To use `--target=lab` flag you must have in your environment `LAB_SERVERS`. Example:

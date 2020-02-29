@@ -41,8 +41,6 @@ class CreateTimeClockLogRequest extends FormRequest
             'check_out_sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
             'checked_in_by_id' => ['nullable', 'numeric', 'exists:users,id'],
             'checked_out_by_id' => ['nullable', 'numeric', 'exists:users,id'],
-            'expected_check_in_at' => ['nullable', 'date'],
-            'expected_check_out_at' => ['nullable', 'date'],
         ];
     }
 }

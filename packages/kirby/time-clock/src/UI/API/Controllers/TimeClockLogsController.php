@@ -2,14 +2,20 @@
 
 namespace Kirby\TimeClock\UI\API\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kirby\Core\Http\Controller;
-use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 use Kirby\TimeClock\Events\CheckedOutEvent;
+use Kirby\TimeClock\Actions\LogCheckInAction;
+use Kirby\TimeClock\Actions\LogCheckOutAction;
+use Symfony\Component\HttpFoundation\Response;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
+use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
+use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest;
 use Kirby\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
-use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
-use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class TimeClockLogsController.
@@ -53,18 +59,52 @@ class TimeClockLogsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest $request
+     * @param  \Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateTimeClockLogRequest $request)
-    {
-        $timeClockLog = $this->timeClockLogRepository->create($request->validated());
+    public function store(
+        CreateTimeClockLogRequest $request,
+        EmployeeRepositoryInterface $employeeRepository,
+        LogCheckInAction $logCheckInAction,
+        LogCheckOutAction $logCheckOutAction
+    ) {
+        $timeClockLogData = $request->validated();
+        $timeClockLogData['checked_in_at'] = Carbon::parse($timeClockLogData['checked_in_at']);
+        $timeClockLogData['checked_out_at'] = $timeClockLogData['checked_out_at']
+            ? Carbon::parse($timeClockLogData['checked_out_at'])
+            : null;
 
-        if ($timeClockLog->checked_out_at) {
-            event(new CheckedOutEvent($timeClockLog->id));
-        }
+        $employee = $employeeRepository
+            ->with(['identifications'])
+            ->find($request->employee_id);
 
-        return new TimeClockLogResource($timeClockLog);
+        DB::transaction(function () use ($request, $timeClockLogData, $employee, $logCheckInAction, $logCheckOutAction) {
+            Carbon::setTestNow($timeClockLogData['checked_in_at']);
+            $timeClockLog = $logCheckInAction->run(
+                $request->user(),
+                $employee->identifications->first()->code,
+                $request->work_shift_id,
+                $request->check_in_novelty_type_id,
+                $request->check_in_sub_cost_center_id,
+            );
+
+            if ($request->checked_out_at) {
+                Carbon::setTestNow($timeClockLogData['checked_out_at']);
+                $logCheckOutAction->run(
+                    $request->user(),
+                    $employee->identifications->first()->code,
+                    $request->sub_cost_center_id,
+                    $request->check_out_novelty_type_id,
+                    $request->check_out_sub_cost_center_id,
+                );
+
+                event(new CheckedOutEvent($timeClockLog->id));
+            }
+        });
+
+        Carbon::setTestNow();
+
+        return response(['ok'], Response::HTTP_CREATED);
     }
 
     /**

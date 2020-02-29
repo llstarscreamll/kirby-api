@@ -161,6 +161,32 @@ class RegisterTimeClockNoveltiesActionCest
         return [
             [
                 'timeClockLog' => [
+                    'work_shift_name' => '7-12 13:30-17:00',
+                    'check_in_novelty_type_code' => 'PP',
+                    'checked_in_at' => '2019-04-01 06:48:00', // too early
+                    'checked_out_at' => '2019-04-01 08:00:00', // early for novelty
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check out
+                        'scheduled_start_at' => '2019-04-01 08:00:00',
+                        'scheduled_end_at' => '2019-04-01 12:00:00',
+                        'total_time_in_minutes' => 60 * 4, // 4 hours from 7am to 12m
+                    ]
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        'total_time_in_minutes' => (60 * 1) + 0,
+                    ],
+                    [
+                        'novelty_type_code' => 'CM',
+                        'total_time_in_minutes' => 60 * 4, // from 7am to 12m
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
                     'work_shift_name' => '7-16',
                     'check_in_novelty_type_code' => 'HADI',
                     'checked_in_at' => '2019-04-01 05:00:00', // too early
