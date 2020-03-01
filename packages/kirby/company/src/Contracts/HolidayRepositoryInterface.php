@@ -11,4 +11,5 @@ use Kirby\Core\Contracts\BaseRepositoryInterface;
  */
 interface HolidayRepositoryInterface extends BaseRepositoryInterface
 {
+    public function countWhereIn(string $field, array $values);
 }
