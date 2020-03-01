@@ -2,20 +2,20 @@
 
 namespace Novelties\Actions;
 
+use Mockery;
 use Carbon\Carbon;
 use Codeception\Example;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Kirby\Company\Models\Holiday;
-use Kirby\Company\Models\SubCostCenter;
-use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Novelties\Novelties;
-use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\WorkShifts\Models\WorkShift;
-use Mockery;
 use Novelties\IntegrationTester;
+use Kirby\Company\Models\Holiday;
+use Illuminate\Support\Collection;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\WorkShifts\Models\WorkShift;
+use Kirby\Company\Models\SubCostCenter;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 
 /**
  * Class RegisterTimeClockNoveltiesActionCest.
@@ -172,7 +172,7 @@ class RegisterTimeClockNoveltiesActionCest
                         'scheduled_start_at' => '2019-04-01 08:00:00',
                         'scheduled_end_at' => '2019-04-01 12:00:00',
                         'total_time_in_minutes' => 60 * 4, // 4 hours from 7am to 12m
-                    ]
+                    ],
                 ],
                 'createdNovelties' => [
                     [
@@ -933,7 +933,7 @@ class RegisterTimeClockNoveltiesActionCest
             'employee_id' => optional($timeClockLog->employee)->id,
         ]);
 
-        $I->assertEquals(count($data['createdNovelties']), $createdRecordsCount);
+        $I->assertEquals(count($data['createdNovelties']), $createdRecordsCount, 'created novelties count');
 
         foreach ($data['createdNovelties'] as $novelty) {
             $noveltyType = $this->noveltyTypes->firstWhere('code', $novelty['novelty_type_code']);
