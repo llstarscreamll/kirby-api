@@ -1,9 +1,9 @@
 <?php
 
-use Kirby\Users\Models\User;
 use Faker\Generator as Faker;
 use Kirby\Company\Models\CostCenter;
 use Kirby\Employees\Models\Employee;
+use Kirby\Users\Models\User;
 
 /*
 |--------------------------------------------------------------------------
