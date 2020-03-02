@@ -18,21 +18,25 @@ class DefaultWorkShiftsSeeder extends Seeder
         [
             'name' => '06-14',
             'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_zone' => 'America/Bogota',
             'time_slots' => [['start' => '06:00', 'end' => '14:00']],
         ],
         [
             'name' => '14-22',
             'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_zone' => 'America/Bogota',
             'time_slots' => [['start' => '14:00', 'end' => '22:00']],
         ],
         [
             'name' => '22-06',
             'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_zone' => 'America/Bogota',
             'time_slots' => [['start' => '22:00', 'end' => '06:00']],
         ],
         [
             'name' => '07-18',
             'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_zone' => 'America/Bogota',
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'],
                 ['start' => '13:00', 'end' => '18:00'],
@@ -41,6 +45,7 @@ class DefaultWorkShiftsSeeder extends Seeder
         [
             'name' => '07-14',
             'applies_on_days' => [6], // sunday
+            'time_zone' => 'America/Bogota',
             'time_slots' => [['start' => '07:00', 'end' => '14:00']],
         ],
     ];

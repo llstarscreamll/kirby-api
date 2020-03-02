@@ -3,18 +3,18 @@
 namespace Kirby\Novelties\Actions;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Kirby\TimeClock\Models\TimeClockLog;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 /**
  * Class RegisterTimeClockNoveltiesAction.
@@ -273,28 +273,30 @@ class RegisterTimeClockNoveltiesAction
             $subCostCenterId = $timeClockLog->check_in_sub_cost_center_id ?? $subCostCenterId;
             $timeInMinutes += $startNoveltyMinutes;
         }
-
+        
+        
         if ($checkOutNoveltyTypeId === $noveltyType->id && $timeClockLog->hasWorkShift()) {
             $subCostCenterId = $timeClockLog->check_out_sub_cost_center_id ?? $subCostCenterId;
             $timeInMinutes += $endNoveltyMinutes;
         }
-
+        
         if (! $checkInNoveltyTypeId && $tooLateCheckIn && $noveltyType->isDefaultForSubtraction()) {
             $timeInMinutes += $startNoveltyMinutes;
         }
-
+        
         if (! $checkOutNoveltyTypeId && $tooEarlyCheckOut && $noveltyType->isDefaultForSubtraction()) {
             $timeInMinutes += $endNoveltyMinutes;
         }
-
+        
+        
         if (! $timeClockLog->hasWorkShift() && ($noveltyType->id === $checkInNoveltyTypeId || $noveltyType->isDefaultForAddition())) {
             $timeInMinutes = $clockedMinutes;
         }
-
+        
         if ($noveltyType->isDefaultForAddition()) {
             $timeInMinutes += $deadTimeInMinutes;
         }
-
+        
         return [$timeInMinutes, $subCostCenterId, $noveltyTimes];
     }
 
@@ -337,15 +339,20 @@ class RegisterTimeClockNoveltiesAction
         $endNoveltyMinutes = 0;
         $workShift = optional($timeClockLog->workShift);
         $mealMinutes = $workShift->meal_time_in_minutes ?? 0;
-        $closestEndSlot = $workShift->getClosestSlotFlagTime('end', $timeClockLog->checked_out_at, $this->getTimeFlag('end', $timeClockLog));
-        $closestStartSlot = $workShift->getClosestSlotFlagTime('start', $timeClockLog->checked_in_at, $this->getTimeFlag('start', $timeClockLog));
+        $closestStartSlot = $workShift->getClosestSlotFlagTime('start', $timeClockLog->checked_in_at, $this->getTimeFlagOffSet('start', $timeClockLog));
+        $closestEndSlot = $workShift->getClosestSlotFlagTime('end', $timeClockLog->checked_out_at, $this->getTimeFlagOffSet('end', $timeClockLog));
 
         // calculate check in novelty time
         if ($timeClockLog->hasWorkShift()) {
+            // check out is before closest work shift start slot?
             $estimatedStartTime = $timeClockLog->checked_out_at->lessThan($closestStartSlot)
-                ? $timeClockLog->checked_out_at : $closestStartSlot;
+                ? $timeClockLog->checked_out_at
+                : $closestStartSlot;
 
-            $startNoveltyMinutes = $timeClockLog->checkInPunctuality() !== 0 ? $estimatedStartTime->diffInMinutes($timeClockLog->checked_in_at) : 0;
+            $startNoveltyMinutes = $timeClockLog->checkInPunctuality() !== 0
+                ? $estimatedStartTime->diffInMinutes($timeClockLog->checked_in_at)
+                : 0;
+
             $times['startNoveltyTimes'] = ['start' => $estimatedStartTime, 'end' => $timeClockLog];
 
             if (! $timeClockLog->checkInNovelty || $timeClockLog->checkInNovelty->operator->is(NoveltyTypeOperator::Subtraction)) {
@@ -387,11 +394,12 @@ class RegisterTimeClockNoveltiesAction
      * @param  TimeClockLog  $timeClockLog
      * @return null|Carbon
      */
-    private function getTimeFlag(string $flag, TimeClockLog $timeClockLog): ?Carbon
+    private function getTimeFlagOffSet(string $flag, TimeClockLog $timeClockLog): ?Carbon
     {
         $logAction = $flag === 'start' ? 'checked_in_at' : 'checked_out_at';
-        $comparison = $flag === 'start' ? 'lessThan' : 'greaterThan';
+        $comparison = $flag === 'start' ? 'lessThanOrEqualTo' : 'greaterThanOrEqualTo';
         $comparisonFlag = $flag === 'start' ? 'scheduled_end_at' : 'scheduled_start_at';
+
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
             ->filter(function (Novelty $novelty) use ($timeClockLog) {
                 return ! $novelty->time_clock_log_id || $novelty->timeClockLog->checked_in_at->between(
@@ -411,6 +419,6 @@ class RegisterTimeClockNoveltiesAction
                 return $novelty->{$comparisonFlag}->diffInMinutes($timeClockLog->{$logAction});
             })->first();
 
-        return optional($closestScheduledNovelty)->{$comparisonFlag} ?? $timeClockLog->{$logAction};
+        return optional($closestScheduledNovelty)->{$comparisonFlag}; // ?? $timeClockLog->{$logAction};
     }
 }

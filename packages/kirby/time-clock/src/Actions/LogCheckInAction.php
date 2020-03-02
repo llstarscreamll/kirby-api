@@ -3,25 +3,25 @@
 namespace Kirby\TimeClock\Actions;
 
 use Illuminate\Support\Arr;
-use Kirby\Company\Contracts\HolidayRepositoryInterface;
-use Kirby\Company\Contracts\SubCostCenterRepositoryInterface;
-use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
-use Kirby\Employees\Models\Identification;
-use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
-use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Kirby\TimeClock\Exceptions\AlreadyCheckedInException;
-use Kirby\TimeClock\Exceptions\CanNotDeductWorkShiftException;
-use Kirby\TimeClock\Exceptions\InvalidNoveltyTypeException;
-use Kirby\TimeClock\Exceptions\MissingSubCostCenterException;
-use Kirby\TimeClock\Exceptions\TooEarlyToCheckException;
-use Kirby\TimeClock\Exceptions\TooLateToCheckException;
-use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\TimeClock\Traits\CheckInOut;
 use Kirby\Users\Models\User;
+use Kirby\TimeClock\Traits\CheckInOut;
 use Kirby\WorkShifts\Models\WorkShift;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Employees\Models\Identification;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Company\Contracts\HolidayRepositoryInterface;
+use Kirby\TimeClock\Exceptions\TooLateToCheckException;
+use Kirby\TimeClock\Exceptions\TooEarlyToCheckException;
+use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
+use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
+use Kirby\TimeClock\Exceptions\AlreadyCheckedInException;
+use Kirby\TimeClock\Exceptions\InvalidNoveltyTypeException;
+use Kirby\Company\Contracts\SubCostCenterRepositoryInterface;
+use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use Kirby\TimeClock\Exceptions\MissingSubCostCenterException;
+use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Kirby\TimeClock\Exceptions\CanNotDeductWorkShiftException;
+use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
 
 /**
  * Class LogCheckInAction.
@@ -147,10 +147,13 @@ class LogCheckInAction
         $expectedStart = Arr::get($timeSlot, 'start');
         $expectedEnd = Arr::get($timeSlot, 'end');
 
-        // if is not on time, ask for past novelties
+        // if is not on time, ask for scheduled novelties
         if ($workShift && $shiftPunctuality !== 0) {
+            // scheduled novelties can be discovered until 30 minutes early
+            // arrival, early arrivals than 30 minutes for said novelties
+            // can't be discovered
             $scheduledNovelty = $this->noveltyRepository
-                ->whereScheduledForEmployee($identification->employee->id, 'scheduled_end_at', $expectedStart, $expectedEnd)
+                ->whereScheduledForEmployee($identification->employee->id, 'scheduled_end_at', $expectedStart, now()->addMinutes(30))
                 ->orderBy('id', 'DESC')
                 ->first();
 

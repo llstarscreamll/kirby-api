@@ -28,6 +28,7 @@ class CreateWorkShiftsTables extends Migration
             $table->unsignedInteger('meal_time_in_minutes')->default(0);
             $table->unsignedInteger('min_minutes_required_to_discount_meal_time')->default(0);
             $table->string('applies_on_days')->default('');
+            $table->string('time_zone')->default('UTC');
             $table->json('time_slots')->nullable();
             $table->timestamps();
             $table->softDeletes();

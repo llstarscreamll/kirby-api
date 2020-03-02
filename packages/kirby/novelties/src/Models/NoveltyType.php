@@ -2,11 +2,11 @@
 
 namespace Kirby\Novelties\Models;
 
-use BenSampo\Enum\Traits\CastsEnums;
 use Carbon\Carbon;
+use Kirby\Novelties\Enums\DayType;
+use BenSampo\Enum\Traits\CastsEnums;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Kirby\Novelties\Enums\DayType;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
@@ -18,6 +18,9 @@ class NoveltyType extends Model
 {
     use SoftDeletes, CastsEnums;
 
+    /**
+     * @todo this constant flags should be configurable not hard coded.
+     */
     const DEFAULT_FOR_ADDITION = 'HADI';
     const DEFAULT_FOR_SUBTRACTION = 'PP';
 
@@ -30,6 +33,7 @@ class NoveltyType extends Model
         'code',
         'name',
         'context_type',
+        'time_zone',
         'apply_on_days_of_type',
         'apply_on_time_slots',
         'operator',
@@ -150,10 +154,14 @@ class NoveltyType extends Model
     private function mapTimeSlot(array $timeSlot, Carbon $date = null): array
     {
         $date = $date ?? now();
+        $date->setTimezone($this->time_zone);
+
         [$hour, $seconds] = explode(':', $timeSlot['start']);
         $start = $date->copy()->setTime($hour, $seconds);
+
         [$hour, $seconds] = explode(':', $timeSlot['end']);
         $end = $date->copy()->setTime($hour, $seconds);
+
         if ($start->greaterThan($end)) {
             $end = $end->addDay();
         }

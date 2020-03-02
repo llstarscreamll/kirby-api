@@ -2,20 +2,21 @@
 
 namespace Novelties\Actions;
 
+use Mockery;
 use Carbon\Carbon;
 use Codeception\Example;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use Kirby\Company\Models\Holiday;
-use Kirby\Company\Models\SubCostCenter;
-use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Novelties\Novelties;
-use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\WorkShifts\Models\WorkShift;
-use Mockery;
 use Novelties\IntegrationTester;
+use Kirby\Company\Models\Holiday;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\WorkShifts\Models\WorkShift;
+use Kirby\Company\Models\SubCostCenter;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 
 /**
  * Class RegisterTimeClockNoveltiesActionCest.
@@ -44,6 +45,10 @@ class RegisterTimeClockNoveltiesActionCest
      */
     public function _before(IntegrationTester $I)
     {
+        // default novelty types from seeds are used on this test suite, so put
+        // the time zone as UTC to prevent overhead with time zone differences
+        DB::table('novelty_types')->update(['time_zone' => 'UTC']);
+
         $this->noveltyTypes = NoveltyType::all();
         $this->workShifts = new Collection();
 
@@ -76,6 +81,19 @@ class RegisterTimeClockNoveltiesActionCest
             'grace_minutes_after_end_times' => 15,
             'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
             'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+        ]));
+
+        $this->workShifts->push(factory(WorkShift::class)->create([
+            'name' => '6-14 America/Bogota',
+            'meal_time_in_minutes' => 0,
+            'min_minutes_required_to_discount_meal_time' => 0, // 11 hours
+            'grace_minutes_before_start_times' => 15,
+            'grace_minutes_after_start_times' => 15,
+            'grace_minutes_before_end_times' => 15,
+            'grace_minutes_after_end_times' => 15,
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [['start' => '06:00', 'end' => '14:00']], // should check in at 7am
+            'time_zone' => 'America/Bogota', // no UTC time zone!!
         ]));
 
         $this->workShifts->push(factory(WorkShift::class)->create([
@@ -643,6 +661,35 @@ class RegisterTimeClockNoveltiesActionCest
             // ############################################################### #
             //               Time lock logs with scheduled novelties           #
             // ############################################################### #
+            [ // time zone on this scenario is UTC but work shift is America/Bogota!!
+                'timeClockLog' => [
+                    'work_shift_name' => '6-14 America/Bogota', // work shift with non UTC time zone
+                    'sub_cost_center_id' => 1,
+                    'check_out_novelty_type_code' => null, // empty novelty type
+                    'checked_in_at' => '2019-04-01 11:00:00', // on time, because work shift
+                    'checked_out_at' => '2019-04-01 15:00:00', // on time, because scheduled novelty
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check out
+                        'scheduled_start_at' => '2019-04-01 15:00:00',
+                        'scheduled_end_at' => '2019-04-01 16:00:00',
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 10am to 11am
+                    ],
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        'total_time_in_minutes' => 60 * 4, // from 7am to 9am
+                        'sub_cost_center_id' => 1, // from time clock log sub cost center id
+                    ],
+                    [
+                        'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 07:00 to 08:00
+                        'sub_cost_center_id' => 1, // from time clock log sub cost center id
+                    ],
+                ],
+            ],
             [
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
@@ -683,9 +730,9 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
                 'scheduledNovelties' => [
                     [
-                        'novelty_type_code' => 'CM', // scheduled novelty for check in
+                        'novelty_type_code' => 'CM',
                         'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 08:00:00',
+                        'scheduled_end_at' => '2019-04-01 08:00:00', // this would be the expected time to check in
                         'total_time_in_minutes' => 60 * 1, // 1 hour from 7am to 8am
                     ],
                 ],
@@ -860,6 +907,42 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'PP', // novelty for late check in and early check out
                         'total_time_in_minutes' => 60 * -2, // -2 hours from 8am to 9am and 4pm to 5pm
+                        'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'check_in_novelty_type_code' => 'PP', // because check in is 1 hour late
+                    'checked_in_at' => '2019-04-01 08:00:00', // too late, because work shift
+                    'checked_out_at' => '2019-04-01 10:00:00', // on time, because scheduled novelty
+                    'sub_cost_center_id' => 1,
+                ],
+                'scheduledNovelties' => [
+                    [
+                        'novelty_type_code' => 'CM', // scheduled novelty for check in
+                        'scheduled_start_at' => '2019-04-01 10:00:00',
+                        'scheduled_end_at' => '2019-04-01 11:00:00',
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 7am to 8am
+                    ]
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HN',
+                        'total_time_in_minutes' => 60 * 2, // from 8am to 10am
+                        'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
+                    ],
+                    [
+                        'novelty_type_code' => 'CM',
+                        'total_time_in_minutes' => 60 * 1, // 1 hour from 10am to 11am
+                        'sub_cost_center_id' => 1,
+                        'scheduled_start_at' => '2019-04-01 10:00:00',
+                        'scheduled_end_at' => '2019-04-01 11:00:00',
+                    ],
+                    [
+                        'novelty_type_code' => 'PP', // novelty for late check in and early check out
+                        'total_time_in_minutes' => 60 * -1, // -1 hours from 7am to 8am
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                 ],

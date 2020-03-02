@@ -23,6 +23,7 @@ class CreateNoveltyTypesTable extends Migration
             $table->string('code')->unique();
             $table->string('name');
             $table->string('context_type')->nullable();
+            $table->string('time_zone')->default('UTC');
             $table->string('apply_on_days_of_type')->nullable();
             $table->json('apply_on_time_slots')->nullable();
             $table->string('operator')->nullable();

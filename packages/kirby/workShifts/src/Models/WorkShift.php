@@ -31,6 +31,7 @@ class WorkShift extends Model
         'meal_time_in_minutes',
         'applies_on_days',
         'min_minutes_required_to_discount_meal_time',
+        'time_zone',
         'time_slots',
     ];
 
@@ -226,6 +227,7 @@ class WorkShift extends Model
     private function mapTimeSlot(array $timeSlot, Carbon $date = null, bool $beGraceTimeAware = true, bool $relativeToEnd = false, Carbon $offSet = null): array
     {
         $date = $date ?? now();
+        $date->setTimezone($this->time_zone);
 
         [$hour, $seconds] = explode(':', $timeSlot['start']);
         $start = $originalStart = $date->copy()->setTime($hour, $seconds);
@@ -258,7 +260,7 @@ class WorkShift extends Model
      */
     public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
     {
-        $timeSlot = $this->matchingTimeSlot($flag, $time, $offSet, true, true);
+        $timeSlot = $this->matchingTimeSlot($flag, $time, $offSet, $beGraceTimeAware = true);
 
         return $offSet ?? $timeSlot["original_{$flag}"] ?? null;
     }

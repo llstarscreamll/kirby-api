@@ -934,7 +934,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldNotSetDefaultNoveltyWhenArrivesInTimeForScheduledNovelty(ApiTester $I)
+    public function shouldNotSetDefaultNoveltyWhenArrivesOnTimeForScheduledNovelty(ApiTester $I)
     {
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
@@ -1031,7 +1031,7 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldUpdateScheduledNoveltyDatesWhenArrivesTooLateToSaidNovelty(ApiTester $I)
+    public function shouldUpdateScheduledNoveltyEndDateWhenArrivesTooLateToSaidNoveltyEnd(ApiTester $I)
     {
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
@@ -1051,7 +1051,8 @@ class CheckInCest
 
         // create scheduled novelty from 7am to 8am, since employee arrives at
         // 9am, he's 1 hour late to check in, so the default novelty type for
-        // check in should be setted
+        // check in should NOT be setted and novelty scheduled_end_at attribute
+        // should be adjusted to the employee entry time (9am)
         $noveltyData = [
             'employee_id' => $employee->id,
             'scheduled_start_at' => now()->setTime(7, 0), // 7am
@@ -1078,9 +1079,69 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
         $I->seeRecord('novelties', [
             'id' => $scheduledNovelty->id,
-            'scheduled_start_at' => now()->subHours(2),
-            'scheduled_end_at' => now(),
+            'scheduled_start_at' => now()->setTime(7, 0),
+            'scheduled_end_at' => now()->setTime(9, 0),
             'total_time_in_minutes' => 120,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldNotUpdateScheduledNoveltyEndDateWhenArrivesTooLateToWorkShift(ApiTester $I)
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, monday at 8am, two hours late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
+
+        // set setting to NOT require novelty type when check in is too late,
+        // this make to set a default novelty type id for the late check in
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks'])->update(['value' => true]);
+
+        // create scheduled novelty from 10am to 11am, since employee arrives at
+        // 8am (too late), he's 1 hour late to check in, so the default novelty
+        // type for check in should be setted and the scheduled novelty attr
+        // 'scheduled_end_at' should NOT be adjusted since this es not the
+        // time to burn that scheduled novelty
+        $noveltyData = [
+            'employee_id' => $employee->id,
+            'scheduled_start_at' => now()->setTime(10, 0), // 10am
+            'scheduled_end_at' => now()->setTime(11, 0), // 11am
+            'total_time_in_minutes' => 60,
+        ];
+
+        $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $expectedTimeClockLog = [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => $this->subtractTimeNovelty->id,
+        ];
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
+        // scheduled novelty should not be updated
+        $I->seeRecord('novelties', [
+            'id' => $scheduledNovelty->id,
+            'scheduled_start_at' => now()->setTime(10, 0)->toDateTimeString(), // 10am
+            'scheduled_end_at' => now()->setTime(11, 0)->toDateTimeString(), // 11am
+            'total_time_in_minutes' => 60,
         ]);
     }
 

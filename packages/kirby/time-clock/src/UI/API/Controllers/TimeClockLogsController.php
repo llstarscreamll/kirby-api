@@ -4,18 +4,18 @@ namespace Kirby\TimeClock\UI\API\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Kirby\Core\Http\Controller;
-use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
+use Illuminate\Support\Facades\DB;
+use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\Actions\LogCheckInAction;
 use Kirby\TimeClock\Actions\LogCheckOutAction;
+use Symfony\Component\HttpFoundation\Response;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
+use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest;
 use Kirby\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
-use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
-use Prettus\Repository\Criteria\RequestCriteria;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class TimeClockLogsController.
@@ -104,7 +104,7 @@ class TimeClockLogsController extends Controller
 
         Carbon::setTestNow();
 
-        return response(['ok'], Response::HTTP_CREATED);
+        return response(['data' => 'ok'], Response::HTTP_CREATED);
     }
 
     /**
