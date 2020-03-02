@@ -5,8 +5,6 @@ namespace Kirby\TimeClock\UI\CLI;
 use Faker\Generator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Kirby\Company\Models\CostCenter;
-use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 use Kirby\Novelties\Models\NoveltyType;

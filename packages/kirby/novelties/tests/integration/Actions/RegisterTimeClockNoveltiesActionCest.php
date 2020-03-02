@@ -2,21 +2,21 @@
 
 namespace Novelties\Actions;
 
-use Mockery;
 use Carbon\Carbon;
 use Codeception\Example;
 use Illuminate\Support\Arr;
-use Kirby\Novelties\Novelties;
-use Novelties\IntegrationTester;
-use Kirby\Company\Models\Holiday;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\WorkShifts\Models\WorkShift;
+use Kirby\Company\Models\Holiday;
 use Kirby\Company\Models\SubCostCenter;
-use Kirby\Novelties\Models\NoveltyType;
-use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Novelties\Models\NoveltyType;
+use Kirby\Novelties\Novelties;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\WorkShifts\Models\WorkShift;
+use Mockery;
+use Novelties\IntegrationTester;
 
 /**
  * Class RegisterTimeClockNoveltiesActionCest.
@@ -925,7 +925,7 @@ class RegisterTimeClockNoveltiesActionCest
                         'scheduled_start_at' => '2019-04-01 10:00:00',
                         'scheduled_end_at' => '2019-04-01 11:00:00',
                         'total_time_in_minutes' => 60 * 1, // 1 hour from 7am to 8am
-                    ]
+                    ],
                 ],
                 'createdNovelties' => [
                     [

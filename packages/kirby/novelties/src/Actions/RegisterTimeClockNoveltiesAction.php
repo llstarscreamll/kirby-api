@@ -3,18 +3,18 @@
 namespace Kirby\Novelties\Actions;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Novelties\Models\NoveltyType;
-use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Kirby\TimeClock\Models\TimeClockLog;
 
 /**
  * Class RegisterTimeClockNoveltiesAction.
@@ -273,30 +273,28 @@ class RegisterTimeClockNoveltiesAction
             $subCostCenterId = $timeClockLog->check_in_sub_cost_center_id ?? $subCostCenterId;
             $timeInMinutes += $startNoveltyMinutes;
         }
-        
-        
+
         if ($checkOutNoveltyTypeId === $noveltyType->id && $timeClockLog->hasWorkShift()) {
             $subCostCenterId = $timeClockLog->check_out_sub_cost_center_id ?? $subCostCenterId;
             $timeInMinutes += $endNoveltyMinutes;
         }
-        
+
         if (! $checkInNoveltyTypeId && $tooLateCheckIn && $noveltyType->isDefaultForSubtraction()) {
             $timeInMinutes += $startNoveltyMinutes;
         }
-        
+
         if (! $checkOutNoveltyTypeId && $tooEarlyCheckOut && $noveltyType->isDefaultForSubtraction()) {
             $timeInMinutes += $endNoveltyMinutes;
         }
-        
-        
+
         if (! $timeClockLog->hasWorkShift() && ($noveltyType->id === $checkInNoveltyTypeId || $noveltyType->isDefaultForAddition())) {
             $timeInMinutes = $clockedMinutes;
         }
-        
+
         if ($noveltyType->isDefaultForAddition()) {
             $timeInMinutes += $deadTimeInMinutes;
         }
-        
+
         return [$timeInMinutes, $subCostCenterId, $noveltyTimes];
     }
 

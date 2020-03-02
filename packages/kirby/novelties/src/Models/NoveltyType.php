@@ -2,11 +2,11 @@
 
 namespace Kirby\Novelties\Models;
 
-use Carbon\Carbon;
-use Kirby\Novelties\Enums\DayType;
 use BenSampo\Enum\Traits\CastsEnums;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kirby\Novelties\Enums\DayType;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
