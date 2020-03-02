@@ -127,7 +127,7 @@ class SyncEmployeesByCsvFileJobCest
             'id' => 3,
             'code' => '123',
             'identification_number' => '456',
-            'cost_center_id' => 3, // newly created cost center
+            'cost_center_id' => 4, // newly created cost center
             'position' => 'developer',
             'location' => 'Bogotá',
             'address' => 'Calle 1#2-3',
@@ -139,7 +139,7 @@ class SyncEmployeesByCsvFileJobCest
             'id' => 4,
             'code' => '987',
             'identification_number' => '654',
-            'cost_center_id' => 4, // newly created cost center
+            'cost_center_id' => 5, // newly created cost center
             'position' => 'designer',
             'location' => 'Medellín',
             'address' => 'Calle 3#2-1',
