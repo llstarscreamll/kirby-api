@@ -32,7 +32,7 @@ class CreateTimeClockLogRequest extends FormRequest
         return [
             'employee_id' => ['nullable', 'numeric', 'exists:employees,id'],
             'sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
-            'work_shift_id' => ['nullable', 'numeric', 'exists:work_shifts,id'],
+            'work_shift_id' => ['nullable', 'numeric'],
             'checked_in_at' => ['nullable', 'date'],
             'check_in_novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],
             'check_in_sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
