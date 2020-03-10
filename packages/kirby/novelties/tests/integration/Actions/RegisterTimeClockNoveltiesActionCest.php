@@ -966,11 +966,25 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
-                'timeClockLog' => [
+                'timeClockLog' => [ // check in/out without work shift on holiday
                     'work_shift_name' => null, // without work shift
                     'check_in_novelty_type_code' => null, // without checkin novelty type
                     'checked_in_at' => '2019-03-31 08:00:00',
                     'checked_out_at' => '2019-03-31 14:00:00',
+                ],
+                'createdNovelties' => [
+                    [
+                        'novelty_type_code' => 'HADI',
+                        'total_time_in_minutes' => 60 * 6, // 6 hours
+                    ],
+                ],
+            ],
+            [
+                'timeClockLog' => [ // check in/out without work shift on workday
+                    'work_shift_name' => null, // without work shift
+                    'check_in_novelty_type_code' => null, // without checkin novelty type
+                    'checked_in_at' => '2019-01-10 08:00:00',
+                    'checked_out_at' => '2019-01-10 14:00:00',
                 ],
                 'createdNovelties' => [
                     [
