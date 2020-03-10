@@ -2,7 +2,6 @@
 
 namespace Kirby\TimeClock\UI\API\Controllers;
 
-use Illuminate\Http\Request;
 use Kirby\Core\Http\Controller;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\Events\TimeClockLogApprovalCreatedEvent;
