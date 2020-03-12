@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Novelties\Models\NoveltyType;
 
 /**
  * Class DefaultNoveltyTypesSeed.

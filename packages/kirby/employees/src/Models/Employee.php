@@ -3,13 +3,13 @@
 namespace Kirby\Employees\Models;
 
 use Carbon\Carbon;
-use Kirby\Users\Models\User;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Kirby\Company\Models\CostCenter;
-use Kirby\WorkShifts\Models\WorkShift;
-use Illuminate\Database\Eloquent\Model;
 use Kirby\TimeClock\Models\TimeClockLog;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Kirby\Users\Models\User;
+use Kirby\WorkShifts\Models\WorkShift;
 
 /**
  * Class Employee.
