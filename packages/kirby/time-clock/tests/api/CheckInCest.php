@@ -3,18 +3,18 @@
 namespace ClockTime;
 
 use Illuminate\Support\Carbon;
+use TimeClockPermissionsSeeder;
+use Kirby\Novelties\Enums\DayType;
+use Kirby\Novelties\Models\Novelty;
+use Kirby\TimeClock\Models\Setting;
+use Kirby\Employees\Models\Employee;
+use Kirby\WorkShifts\Models\WorkShift;
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Company\Models\SubCostCenter;
-use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Enums\DayType;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
-use Kirby\TimeClock\Events\CheckedInEvent;
-use Kirby\TimeClock\Models\Setting;
 use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\WorkShifts\Models\WorkShift;
-use TimeClockPermissionsSeeder;
+use Kirby\TimeClock\Events\CheckedInEvent;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Class CheckInCest.
@@ -176,6 +176,54 @@ class CheckInCest
             'employee_id' => $employee->id,
             'work_shift_id' => $employee->workShifts->first()->id,
             'expected_check_in_at' => now()->setTime(07, 00)->toDateTimeString(),
+            'checked_in_at' => now()->toDateTimeString(),
+            'checked_in_by_id' => $this->user->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function whenHasThreeConcatenatedWorkShiftsEachOneWithEightHours(ApiTester $I)
+    {
+        // fake current date time
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 22, 00));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '22 to 06',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '22:00', 'end' => '06:00']], // night work shift
+            ])
+            ->create();
+
+        $employee->workShifts()->attach(factory(WorkShift::class)->create([
+            'name' => '14 to 22',
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [['start' => '14:00', 'end' => '22:00']], // night work shift
+        ]));
+
+        $employee->workShifts()->attach(factory(WorkShift::class)->create([
+            'name' => '06 to 14',
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [['start' => '06:00', 'end' => '14:00']], // night work shift
+        ]));
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeEventTriggered(CheckedInEvent::class);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->where('name', '22 to 06')->first()->id,
+            'expected_check_in_at' => now()->setTime(22, 00)->toDateTimeString(),
             'checked_in_at' => now()->toDateTimeString(),
             'checked_in_by_id' => $this->user->id,
         ]);
@@ -500,7 +548,7 @@ class CheckInCest
     public function whenHasShiftsWithOverlapOnTimeAndDays(ApiTester $I)
     {
         // fake current date time
-        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00));
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00)); // monday, workday
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
@@ -523,6 +571,7 @@ class CheckInCest
 
         $I->sendPOST($this->endpoint, $requestData);
 
+        // work shift cant be deducted since have collisions in day and start time
         $I->seeResponseCodeIs(422);
         $I->seeResponseContainsJson(['code' => 1051]);
         $I->seeResponseJsonMatchesJsonPath('$.errors.0.code');
@@ -1356,7 +1405,7 @@ class CheckInCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 
