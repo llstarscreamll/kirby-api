@@ -3,13 +3,13 @@
 namespace Kirby\Employees\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Kirby\Users\Models\User;
 use Illuminate\Support\Collection;
 use Kirby\Company\Models\CostCenter;
-use Kirby\TimeClock\Models\TimeClockLog;
-use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
+use Illuminate\Database\Eloquent\Model;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Employee.
@@ -108,23 +108,24 @@ class Employee extends Model
      */
     public function getWorkShiftsThatMatchesTime(Carbon $time): ?Collection
     {
-        $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function (WorkShift $workShift) use ($time) {
-            $matchedTimeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
-                [$hour, $seconds] = explode(':', $timeSlot['start']);
-                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_before_start_times);
+        $workShiftsMatchedBySlotTimesAndDays = $this->workShifts
+            ->filter(function (WorkShift $workShift) use ($time) {
+                $matchedTimeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
+                    [$hour, $seconds] = explode(':', $timeSlot['start']);
+                    $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_before_start_times);
 
-                [$hour, $seconds] = explode(':', $timeSlot['end']);
-                $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_after_end_times);
+                    [$hour, $seconds] = explode(':', $timeSlot['end']);
+                    $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_after_end_times);
 
-                if ($slotStartFrom->hour > (int) $hour) {
-                    $slotEndTo = $slotEndTo->addDay();
-                }
+                    if ($slotStartFrom->hour > (int) $hour) {
+                        $slotEndTo = $slotEndTo->addDay();
+                    }
 
-                return $time->between($slotStartFrom, $slotEndTo) && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
+                    return $time->between($slotStartFrom, $slotEndTo) && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
+                });
+
+                return $matchedTimeSlots->count();
             });
-
-            return $matchedTimeSlots->count();
-        });
 
         if ($workShiftsMatchedBySlotTimesAndDays->count() === 0) {
             $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function ($workShift) use ($time) {
