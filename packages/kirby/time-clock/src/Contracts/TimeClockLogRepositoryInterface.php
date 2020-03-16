@@ -11,4 +11,5 @@ use Kirby\Core\Contracts\BaseRepositoryInterface;
  */
 interface TimeClockLogRepositoryInterface extends BaseRepositoryInterface
 {
+    public function findByEmployeeId(int $employeeId): TimeClockLogRepositoryInterface;
 }

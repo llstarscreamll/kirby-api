@@ -5,6 +5,7 @@ namespace Kirby\TimeClock\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Company\Models\SubCostCenter;
@@ -181,6 +182,18 @@ class TimeClockLog extends Model
         }
 
         return $this->holidayRepository;
+    }
+
+    /**
+     * All related sub cost centers.
+     */
+    public function allSubCostCenters(): Collection
+    {
+        return (new Collection([
+            $this->subCostCenter,
+            $this->checkInSubCostCenter,
+            $this->checkOutSubCostCenter,
+        ]))->filter();
     }
 
     /**

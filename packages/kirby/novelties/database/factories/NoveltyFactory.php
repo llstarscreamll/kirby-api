@@ -21,6 +21,10 @@ $factory->define(Novelty::class, function (Faker $faker) {
         'time_clock_log_id' => null,
         'employee_id' => factory(Employee::class)->create()->id,
         'novelty_type_id' => factory(NoveltyType::class)->create()->id,
+        'sub_cost_center_id' => null,
+        'scheduled_start_at' => null,
+        'scheduled_end_at' => null,
         'total_time_in_minutes' => $faker->numberBetween(100, 1000),
+        'comment' => null,
     ];
 });

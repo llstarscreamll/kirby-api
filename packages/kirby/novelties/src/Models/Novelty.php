@@ -33,6 +33,18 @@ class Novelty extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'employee_id' => 'int',
+        'novelty_type_id' => 'int',
+        'time_clock_log_id' => 'int',
+        'total_time_in_minutes' => 'int',
+    ];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array

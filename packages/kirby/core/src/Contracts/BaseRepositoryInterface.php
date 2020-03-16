@@ -2,12 +2,14 @@
 
 namespace Kirby\Core\Contracts;
 
+use Prettus\Repository\Contracts\RepositoryInterface;
+
 /**
  * Interface BaseRepositoryInterface.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-interface BaseRepositoryInterface
+interface BaseRepositoryInterface extends RepositoryInterface
 {
     /**
      * Retrieve data array for populate field select.

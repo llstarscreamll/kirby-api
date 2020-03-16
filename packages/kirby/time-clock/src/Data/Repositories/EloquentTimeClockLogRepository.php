@@ -97,4 +97,14 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
     {
         return $this->find($timeClockLogId)->approvals()->detach($userId);
     }
+
+    /**
+     * @param int $employeeId
+     */
+    public function findByEmployeeId(int $employeeId): TimeClockLogRepositoryInterface
+    {
+        $this->model->where('employee_id', $employeeId);
+
+        return $this;
+    }
 }
