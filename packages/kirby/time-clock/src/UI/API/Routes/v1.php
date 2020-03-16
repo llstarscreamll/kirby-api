@@ -3,9 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Kirby\TimeClock\UI\API\Controllers\CheckInController;
 use Kirby\TimeClock\UI\API\Controllers\CheckOutController;
-use Kirby\TimeClock\UI\API\Controllers\TimeClockLogsController;
 use Kirby\TimeClock\UI\API\Controllers\ReportByEmployeeController;
 use Kirby\TimeClock\UI\API\Controllers\TimeClockLogApprovalsController;
+use Kirby\TimeClock\UI\API\Controllers\TimeClockLogsController;
 
 /*
 |--------------------------------------------------------------------------

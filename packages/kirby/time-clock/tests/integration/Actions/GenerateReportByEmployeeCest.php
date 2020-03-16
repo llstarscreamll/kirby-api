@@ -20,7 +20,9 @@ class GenerateReportByEmployeeCest
     /**
      * @param IntegrationTester $I
      */
-    public function _before(IntegrationTester $I) {}
+    public function _before(IntegrationTester $I)
+    {
+    }
 
     /**
      * @param IntegrationTester $I
@@ -96,8 +98,8 @@ class GenerateReportByEmployeeCest
 
         // attach same approvers to novelties second and third novelties
         $approvers = factory(User::class, 2)->create();
-        $secondTimeClockNovelties->each(fn($novelty) => $novelty->approvals()->sync($approvers));
-        $thirdTimeClockNovelties->each(fn($novelty) => $novelty->approvals()->sync($approvers));
+        $secondTimeClockNovelties->each(fn ($novelty) => $novelty->approvals()->sync($approvers));
+        $thirdTimeClockNovelties->each(fn ($novelty) => $novelty->approvals()->sync($approvers));
 
         $action = app(GenerateReportByEmployee::class);
         $result = $action->run($tonyStark->id, $startDate, $endDate);
@@ -112,7 +114,7 @@ class GenerateReportByEmployeeCest
             ],
             'novelties' => $secondTimeClockNovelties
                 ->concat($thirdTimeClockNovelties)
-                ->map(fn($novelty) => [
+                ->map(fn ($novelty) => [
                     'id' => $novelty->id,
                     'novelty_type' => $novelty->noveltyType->name,
                     'total_time_in_minutes' => $novelty->total_time_in_minutes,
@@ -129,7 +131,7 @@ class GenerateReportByEmployeeCest
                     ['id' => $firstScc->id, 'code' => $firstScc->code, 'name' => $firstScc->name],
                 ],
                 'novelties' => $firstTimeClockNovelties
-                    ->map(fn($novelty) => [
+                    ->map(fn ($novelty) => [
                         'id' => $novelty->id,
                         'novelty_type' => $novelty->noveltyType->name,
                         'total_time_in_minutes' => $novelty->total_time_in_minutes,

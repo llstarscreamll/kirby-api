@@ -42,7 +42,7 @@ class GenerateReportByEmployee
                 $endDate->endOfDay()->toDateTimeString(),
             ]);
 
-        return $logs->groupBy(fn($log) => $log->checked_in_at->toDateString())
+        return $logs->groupBy(fn ($log) => $log->checked_in_at->toDateString())
             ->map
             ->reduce(function ($accumulator, $log) {
                 $subCostCenters = Arr::get($accumulator, 'sub_cost_centers', new Collection([]));
@@ -66,11 +66,11 @@ class GenerateReportByEmployee
                     ->all();
 
                 $reportRow['novelties_comments_count'] = $reportRow['novelties']
-                    ->reject(fn($novelty) => empty($novelty->comment))
+                    ->reject(fn ($novelty) => empty($novelty->comment))
                     ->count();
 
                 $reportRow['novelties'] = $reportRow['novelties']
-                    ->map(fn($novelty) => [
+                    ->map(fn ($novelty) => [
                         'id' => $novelty->id,
                         'novelty_type' => $novelty->noveltyType->name,
                         'total_time_in_minutes' => $novelty->total_time_in_minutes,

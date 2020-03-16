@@ -67,7 +67,7 @@ class ReportByEmployeeCest
 
         $actionMock = Mockery::mock(GenerateReportByEmployee::class)
             ->shouldReceive('run')
-            ->withArgs(fn($arg1, $arg2, $arg3) => $arg1 === $employeeId && $startDate->isSameAs($arg2) && $endDate->isSameAs($arg3))
+            ->withArgs(fn ($arg1, $arg2, $arg3) => $arg1 === $employeeId && $startDate->isSameAs($arg2) && $endDate->isSameAs($arg3))
             ->andReturn($expectedResponse)
             ->getMock();
 

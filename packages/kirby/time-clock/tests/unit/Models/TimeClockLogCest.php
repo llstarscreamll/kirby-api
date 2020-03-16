@@ -19,7 +19,9 @@ class TimeClockLogCest
     /**
      * @param UnitTester $I
      */
-    public function _before(UnitTester $I) {}
+    public function _before(UnitTester $I)
+    {
+    }
 
     /**
      * @return array
@@ -100,7 +102,7 @@ class TimeClockLogCest
 
         $I->assertEquals($data['expected']['holiday_minutes'], $holidayResult[0], 'holiday minutes');
         $I->assertEquals($data['expected']['workday_minutes'], $workdayResult[0], 'workday minutes');
-        $I->assertEquals($data['expected']['holiday_time_range'], array_map(fn($date) => (string) $date, $holidayResult[1]));
-        $I->assertEquals($data['expected']['workday_time_range'], array_map(fn($date) => (string) $date, $workdayResult[1]));
+        $I->assertEquals($data['expected']['holiday_time_range'], array_map(fn ($date) => (string) $date, $holidayResult[1]));
+        $I->assertEquals($data['expected']['workday_time_range'], array_map(fn ($date) => (string) $date, $workdayResult[1]));
     }
 }

@@ -1,8 +1,9 @@
 <?php
+
 namespace ClockTime;
 
 /**
- * Inherited Methods
+ * Inherited Methods.
  * @method void wantToTest($text)
  * @method void wantTo($text)
  * @method void execute($callable)
@@ -15,12 +16,12 @@ namespace ClockTime;
  * @method void pause()
  *
  * @SuppressWarnings(PHPMD)
-*/
+ */
 class IntegrationTester extends \Codeception\Actor
 {
     use _generated\IntegrationTesterActions;
 
-   /**
-    * Define custom actions here
-    */
+    /**
+     * Define custom actions here.
+     */
 }
