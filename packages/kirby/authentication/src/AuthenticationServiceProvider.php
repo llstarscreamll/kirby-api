@@ -8,7 +8,7 @@ use Laravel\Passport\Passport;
 
 /**
  * Class AuthenticationServiceProvider.
- * 
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class AuthenticationServiceProvider extends ServiceProvider
