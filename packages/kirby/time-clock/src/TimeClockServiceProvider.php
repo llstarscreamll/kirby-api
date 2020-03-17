@@ -8,7 +8,6 @@ use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\Data\Repositories\EloquentSettingRepository;
 use Kirby\TimeClock\Data\Repositories\EloquentTimeClockLogRepository;
-use Kirby\TimeClock\UI\CLI\GenerateFakeTimeClockDataCommand;
 
 /**
  * Class TimeClockServiceProvider.
