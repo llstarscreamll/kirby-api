@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\TimeClock\Data\Repositories;
+namespace Kirby\TimeClock\Repositories;
 
 use Illuminate\Support\Collection;
 use Kirby\Core\Abstracts\EloquentRepositoryAbstract;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\TimeClock\Data\Repositories;
+namespace Kirby\TimeClock\Repositories;
 
 use Kirby\Core\Abstracts\EloquentRepositoryAbstract;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;

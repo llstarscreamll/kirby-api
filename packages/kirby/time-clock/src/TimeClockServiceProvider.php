@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
-use Kirby\TimeClock\Data\Repositories\EloquentSettingRepository;
-use Kirby\TimeClock\Data\Repositories\EloquentTimeClockLogRepository;
+use Kirby\TimeClock\Repositories\EloquentSettingRepository;
+use Kirby\TimeClock\Repositories\EloquentTimeClockLogRepository;
 use Kirby\TimeClock\UI\CLI\GenerateFakeTimeClockDataCommand;
 
 /**
