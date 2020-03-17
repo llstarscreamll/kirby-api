@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\Controllers;
+namespace Kirby\TimeClock\UI\API\V1\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -11,9 +11,9 @@ use Kirby\TimeClock\Actions\LogCheckIn;
 use Kirby\TimeClock\Actions\LogCheckOut;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\Events\CheckedOutEvent;
-use Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest;
-use Kirby\TimeClock\UI\API\Requests\SearchTimeClockLogsRequest;
-use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
+use Kirby\TimeClock\UI\API\V1\Requests\CreateTimeClockLogRequest;
+use Kirby\TimeClock\UI\API\V1\Requests\SearchTimeClockLogsRequest;
+use Kirby\TimeClock\UI\API\V1\Resources\TimeClockLogResource;
 use Prettus\Repository\Criteria\RequestCriteria;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -59,7 +59,7 @@ class TimeClockLogsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest $request
+     * @param  \Kirby\TimeClock\UI\API\V1\Requests\CreateTimeClockLogRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(

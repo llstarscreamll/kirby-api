@@ -1,16 +1,17 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\Requests;
+namespace Kirby\TimeClock\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Request;
 
 /**
- * Class ReportByEmployeeRequest.
+ * Class CheckInRequest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class ReportByEmployeeRequest extends FormRequest
+class CheckInRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,7 +20,7 @@ class ReportByEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('time-clock.report-by-employee');
+        return $this->user()->can('time-clock-logs.check-in');
     }
 
     /**
@@ -30,8 +31,10 @@ class ReportByEmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date', 'after:start_date'],
+            'identification_code' => ['required', 'exists:identifications,code'],
+            'novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],
+            'work_shift_id' => ['nullable', 'numeric'],
+            'sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
         ];
     }
 

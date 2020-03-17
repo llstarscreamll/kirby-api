@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\Requests;
+namespace Kirby\TimeClock\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Request;

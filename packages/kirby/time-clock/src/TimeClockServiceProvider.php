@@ -35,7 +35,7 @@ class TimeClockServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'time-clock');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/UI/API/Routes/v1.php');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {

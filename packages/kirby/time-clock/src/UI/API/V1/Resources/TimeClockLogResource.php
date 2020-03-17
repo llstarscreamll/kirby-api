@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\Resources;
+namespace Kirby\TimeClock\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Kirby\Company\UI\API\Resources\SubCostCenterResource;

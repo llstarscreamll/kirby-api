@@ -1,64 +1,71 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\Controllers;
+namespace Kirby\TimeClock\UI\API\V1\Controllers;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Kirby\TimeClock\Actions\LogCheckOut;
-use Kirby\TimeClock\Events\CheckedOutEvent;
+use Kirby\TimeClock\Actions\LogCheckIn;
+use Kirby\TimeClock\Events\CheckedInEvent;
+use Kirby\TimeClock\Exceptions\AlreadyCheckedInException;
+use Kirby\TimeClock\Exceptions\CanNotDeductWorkShiftException;
 use Kirby\TimeClock\Exceptions\InvalidNoveltyTypeException;
-use Kirby\TimeClock\Exceptions\MissingCheckInException;
 use Kirby\TimeClock\Exceptions\MissingSubCostCenterException;
 use Kirby\TimeClock\Exceptions\TooEarlyToCheckException;
 use Kirby\TimeClock\Exceptions\TooLateToCheckException;
-use Kirby\TimeClock\UI\API\Requests\CheckOutRequest;
-use Kirby\TimeClock\UI\API\Resources\TimeClockLogResource;
+use Kirby\TimeClock\UI\API\V1\Requests\CheckInRequest;
+use Kirby\TimeClock\UI\API\V1\Resources\TimeClockLogResource;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class CheckOutController.
+ * Class CheckInController.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CheckOutController
+class CheckInController
 {
     /**
-     * @param CheckOutRequest   $request
-     * @param LogCheckOut $logCheckOutAction
+     * @param CheckInRequest   $request
+     * @param LogCheckIn $logCheckInAction
      */
     public function __invoke(
-        CheckOutRequest $request,
-        LogCheckOut $logCheckOutAction
+        CheckInRequest $request,
+        LogCheckIn $logCheckInAction
     ) {
         $errors = [];
 
         try {
-            $timeClockLog = $logCheckOutAction->run(
+            $timeClockLog = $logCheckInAction->run(
                 $request->user(),
                 $request->identification_code,
-                $request->sub_cost_center_id,
+                $request->work_shift_id,
                 $request->novelty_type_id,
-                $request->novelty_sub_cost_center_id
+                $request->sub_cost_center_id,
             );
-
-            event(new CheckedOutEvent($timeClockLog->id));
-        } catch (MissingCheckInException $exception) {
+        } catch (AlreadyCheckedInException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
-                'title' => 'No se ha registrado entrada.',
-                'detail' => 'No se puede registrar salida si no hay registro de entrada.',
+                'title' => 'Ya se registra una entrada.',
+                'detail' => "Ya se ha registrado entrada en {$exception->checkedInAt}.",
             ]);
         } catch (TooEarlyToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
-                'title' => 'Es temprano para registrar la salida.',
-                'detail' => 'Si se sale temprano del turno, se debe registrar un tipo de novedad.',
+                'title' => 'Es temprano para registrar la entrada.',
+                'detail' => 'Si se llega temprano al turno, se debe registrar una novedad.',
                 'meta' => $exception->timeClockData,
             ]);
         } catch (TooLateToCheckException $exception) {
             array_push($errors, [
                 'code' => $exception->getCode(),
-                'title' => 'Es tarde para registrar la salida.',
-                'detail' => 'Si se sale tarde del turno, se debe registrar un tipo de novedad.',
+                'title' => 'Es tarde para registrar la entrada.',
+                'detail' => 'Si se llega tarde al turno, se debe registrar una novedad.',
+                'meta' => $exception->timeClockData,
+            ]);
+        } catch (CanNotDeductWorkShiftException $exception) {
+            array_push($errors, [
+                'code' => $exception->getCode(),
+                'title' => 'No fue posible deducir el turno.',
+                'detail' => 'No se logró deducir el turno, se debe elegir uno '
+                ."de {$exception->timeClockData['work_shifts']->count()} posibles.",
                 'meta' => $exception->timeClockData,
             ]);
         } catch (InvalidNoveltyTypeException $exception) {
@@ -72,17 +79,19 @@ class CheckOutController
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'Datos inválidos.',
-                'detail' => 'Sub centro de costo es un campo obligatorio.',
+                'detail' => 'Cuando se registra novedad que suma tiempo, se debe proveer el sub centro de costo.',
                 'meta' => $exception->timeClockData,
             ]);
         }
 
         if ($errors) {
             throw new HttpResponseException(response()->json([
-                'message' => 'No se pudo registrar la salida',
+                'message' => 'No se pudo registrar la entrada',
                 'errors' => $errors,
             ], Response::HTTP_UNPROCESSABLE_ENTITY));
         }
+
+        event(new CheckedInEvent($timeClockLog->id));
 
         return new TimeClockLogResource($timeClockLog);
     }

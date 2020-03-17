@@ -1,13 +1,13 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\Controllers;
+namespace Kirby\TimeClock\UI\API\V1\Controllers;
 
 use Kirby\Core\Http\Controller;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\Events\TimeClockLogApprovalCreatedEvent;
 use Kirby\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
-use Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogApprovalRequest;
-use Kirby\TimeClock\UI\API\Requests\DeleteTimeClockLogApprovalRequest;
+use Kirby\TimeClock\UI\API\V1\Requests\CreateTimeClockLogApprovalRequest;
+use Kirby\TimeClock\UI\API\V1\Requests\DeleteTimeClockLogApprovalRequest;
 
 /**
  * Class TimeClockLogApprovalsController.

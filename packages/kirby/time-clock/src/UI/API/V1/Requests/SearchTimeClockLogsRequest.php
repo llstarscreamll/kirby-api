@@ -1,16 +1,16 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\Requests;
+namespace Kirby\TimeClock\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Request;
 
 /**
- * Class CreateTimeClockLogApprovalRequest.
+ * Class SearchTimeClockLogsRequest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CreateTimeClockLogApprovalRequest extends FormRequest
+class SearchTimeClockLogsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,7 +19,7 @@ class CreateTimeClockLogApprovalRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('time-clock-logs.approvals.create');
+        return $this->user()->can('time-clock-logs.search');
     }
 
     /**
