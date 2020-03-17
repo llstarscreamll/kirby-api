@@ -100,10 +100,5 @@ class TimeClockServiceProvider extends ServiceProvider
         /*$this->publishes([
         __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
         ], 'time-clock.translations');*/
-
-        // Registering package commands.
-        $this->commands([
-            GenerateFakeTimeClockDataCommand::class,
-        ]);
     }
 }
