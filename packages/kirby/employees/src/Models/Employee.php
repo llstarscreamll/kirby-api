@@ -142,28 +142,4 @@ class Employee extends Model
 
         return $workShiftsMatchedBySlotTimesAndDays;
     }
-
-    /**
-     * @param  Carbon      $time
-     * @return WorkShift
-     */
-    public function getWorkShiftsByClosestStartRangeTime(Carbon $time): ?Collection
-    {
-        return $this->workShifts->filter(function (WorkShift $workShift) use ($time) {
-            $timeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
-                [$hour, $seconds] = explode(':', $timeSlot['start']);
-                $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_before_start_times);
-                $slotStartTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_after_start_time);
-
-                if ($slotStartFrom->hour > (int) $hour) {
-                    $slotStartFrom = $slotStartFrom->subDay();
-                    $slotStartTo = $slotStartTo->subDay();
-                }
-
-                return $time->between($slotStartFrom, $slotStartTo);
-            });
-
-            return $timeSlots->count() && in_array($time->dayOfWeekIso, $workShift->applies_on_days);
-        });
-    }
 }
