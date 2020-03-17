@@ -6,6 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 
+/**
+ * Class AuthenticationServiceProvider.
+ * 
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ */
 class AuthenticationServiceProvider extends ServiceProvider
 {
     /**
@@ -19,12 +24,9 @@ class AuthenticationServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(Carbon::now()->addMinutes(config('authentication.api.token-expires-in')));
         Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(config('authentication.api.refresh-token-expires-in')));
 
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
 
-        // Publishing is only necessary when using the CLI.
+        // publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -39,7 +41,7 @@ class AuthenticationServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/authentication.php', 'authentication');
 
-        // Register the service the package provides.
+        // register the service the package provides
         $this->app->singleton('authentication', function ($app) {
             return new Authentication();
         });
@@ -62,27 +64,9 @@ class AuthenticationServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        // Publishing the configuration file.
+        // publishing the configuration file
         $this->publishes([
             __DIR__.'/../config/authentication.php' => config_path('authentication.php'),
         ], 'authentication.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
-        ], 'authentication.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
-        ], 'authentication.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
-        ], 'authentication.views');*/
-
-        // Registering package commands.
-        // $this->commands([]);
     }
 }

@@ -4,6 +4,11 @@ namespace Kirby\Core;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Class CoreServiceProvider.
+ *
+ * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ */
 class CoreServiceProvider extends ServiceProvider
 {
     /**
@@ -13,12 +18,7 @@ class CoreServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
-        // Publishing is only necessary when using the CLI.
+        // publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -33,7 +33,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/core.php', 'core');
 
-        // Register the service the package provides.
+        // register the service the package provides
         $this->app->singleton('core', function ($app) {
             return new Core();
         });
@@ -56,27 +56,9 @@ class CoreServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        // Publishing the configuration file.
+        // publishing the configuration file
         $this->publishes([
             __DIR__.'/../config/core.php' => config_path('core.php'),
         ], 'core.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
-        ], 'core.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
-        ], 'core.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
-        ], 'core.views');*/
-
-        // Registering package commands.
-        // $this->commands([]);
     }
 }

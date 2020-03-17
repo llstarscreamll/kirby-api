@@ -19,12 +19,9 @@ class AuthorizationServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'llstarscreamll');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'llstarscreamll');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
 
-        // Publishing is only necessary when using the CLI.
+        // publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
         }
@@ -39,7 +36,7 @@ class AuthorizationServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/authorization.php', 'authorization');
 
-        // Register the service the package provides.
+        // register the service the package provides
         $this->app->singleton('authorization', function ($app) {
             return new Authorization();
         });
@@ -62,25 +59,10 @@ class AuthorizationServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        // Publishing the configuration file.
+        // publishing the configuration file
         $this->publishes([
             __DIR__.'/../config/authorization.php' => config_path('authorization.php'),
         ], 'authorization.config');
-
-        // Publishing the views.
-        /*$this->publishes([
-        __DIR__.'/../resources/views' => base_path('resources/views/vendor/llstarscreamll'),
-        ], 'authorization.views');*/
-
-        // Publishing assets.
-        /*$this->publishes([
-        __DIR__.'/../resources/assets' => public_path('vendor/llstarscreamll'),
-        ], 'authorization.views');*/
-
-        // Publishing the translation files.
-        /*$this->publishes([
-        __DIR__.'/../resources/lang' => resource_path('lang/vendor/llstarscreamll'),
-        ], 'authorization.views');*/
 
         // Registering package commands.
         $this->commands([
