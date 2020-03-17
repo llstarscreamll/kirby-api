@@ -11,11 +11,12 @@ use Kirby\TimeClock\Exceptions\TooLateToCheckException;
 use Kirby\WorkShifts\Models\WorkShift;
 
 /**
- * Class ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction.
+ * Class ValidateNoveltyTypeBasedOnWorkShiftPunctuality.
  *
+ * @todo this class needs tests!!
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction
+class ValidateNoveltyTypeBasedOnWorkShiftPunctuality
 {
     /**
      * @param NoveltyTypeRepositoryInterface $noveltyTypeRepository

@@ -3,7 +3,7 @@
 namespace Kirby\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Kirby\TimeClock\Actions\LogCheckInAction;
+use Kirby\TimeClock\Actions\LogCheckIn;
 use Kirby\TimeClock\Events\CheckedInEvent;
 use Kirby\TimeClock\Exceptions\AlreadyCheckedInException;
 use Kirby\TimeClock\Exceptions\CanNotDeductWorkShiftException;
@@ -24,11 +24,11 @@ class CheckInController
 {
     /**
      * @param CheckInRequest   $request
-     * @param LogCheckInAction $logCheckInAction
+     * @param LogCheckIn $logCheckInAction
      */
     public function __invoke(
         CheckInRequest $request,
-        LogCheckInAction $logCheckInAction
+        LogCheckIn $logCheckInAction
     ) {
         $errors = [];
 

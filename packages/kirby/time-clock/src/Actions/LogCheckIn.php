@@ -24,11 +24,11 @@ use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
 
 /**
- * Class LogCheckInAction.
+ * Class LogCheckIn.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class LogCheckInAction
+class LogCheckIn
 {
     use CheckInOut;
 
@@ -68,7 +68,7 @@ class LogCheckInAction
     private $holidayRepository;
 
     /**
-     * @var ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction
+     * @var ValidateNoveltyTypeBasedOnWorkShiftPunctuality
      */
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
@@ -80,7 +80,7 @@ class LogCheckInAction
      * @param TimeClockLogRepositoryInterface                      $timeClockLogRepository
      * @param SubCostCenterRepositoryInterface                     $subCostCenterRepository
      * @param IdentificationRepositoryInterface                    $identificationRepository
-     * @param ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
+     * @param ValidateNoveltyTypeBasedOnWorkShiftPunctuality $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
         HolidayRepositoryInterface $holidayRepository,
@@ -90,7 +90,7 @@ class LogCheckInAction
         TimeClockLogRepositoryInterface $timeClockLogRepository,
         SubCostCenterRepositoryInterface $subCostCenterRepository,
         IdentificationRepositoryInterface $identificationRepository,
-        ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
+        ValidateNoveltyTypeBasedOnWorkShiftPunctuality $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
     ) {
         $this->holidayRepository = $holidayRepository;
         $this->settingRepository = $settingRepository;

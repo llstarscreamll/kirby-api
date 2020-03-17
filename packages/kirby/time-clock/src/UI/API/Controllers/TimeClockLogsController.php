@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Kirby\Core\Http\Controller;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
-use Kirby\TimeClock\Actions\LogCheckInAction;
-use Kirby\TimeClock\Actions\LogCheckOutAction;
+use Kirby\TimeClock\Actions\LogCheckIn;
+use Kirby\TimeClock\Actions\LogCheckOut;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\UI\API\Requests\CreateTimeClockLogRequest;
@@ -65,8 +65,8 @@ class TimeClockLogsController extends Controller
     public function store(
         CreateTimeClockLogRequest $request,
         EmployeeRepositoryInterface $employeeRepository,
-        LogCheckInAction $logCheckInAction,
-        LogCheckOutAction $logCheckOutAction
+        LogCheckIn $logCheckInAction,
+        LogCheckOut $logCheckOutAction
     ) {
         $timeClockLogData = $request->validated();
         $timeClockLogData['checked_in_at'] = Carbon::parse($timeClockLogData['checked_in_at']);

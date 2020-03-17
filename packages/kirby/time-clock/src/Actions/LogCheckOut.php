@@ -21,11 +21,11 @@ use Kirby\TimeClock\Traits\CheckInOut;
 use Kirby\Users\Models\User;
 
 /**
- * Class LogCheckOutAction.
+ * Class LogCheckOut.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class LogCheckOutAction
+class LogCheckOut
 {
     use CheckInOut;
 
@@ -65,7 +65,7 @@ class LogCheckOutAction
     private $holidayRepository;
 
     /**
-     * @var ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction
+     * @var ValidateNoveltyTypeBasedOnWorkShiftPunctuality
      */
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
@@ -77,7 +77,7 @@ class LogCheckOutAction
      * @param TimeClockLogRepositoryInterface                      $timeClockLogRepository
      * @param SubCostCenterRepositoryInterface                     $subCostCenterRepository
      * @param IdentificationRepositoryInterface                    $identificationRepository
-     * @param ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
+     * @param ValidateNoveltyTypeBasedOnWorkShiftPunctuality $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
         HolidayRepositoryInterface $holidayRepository,
@@ -87,7 +87,7 @@ class LogCheckOutAction
         TimeClockLogRepositoryInterface $timeClockLogRepository,
         SubCostCenterRepositoryInterface $subCostCenterRepository,
         IdentificationRepositoryInterface $identificationRepository,
-        ValidateNoveltyTypeBasedOnWorkShiftPunctualityAction $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
+        ValidateNoveltyTypeBasedOnWorkShiftPunctuality $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
     ) {
         $this->holidayRepository = $holidayRepository;
         $this->settingRepository = $settingRepository;

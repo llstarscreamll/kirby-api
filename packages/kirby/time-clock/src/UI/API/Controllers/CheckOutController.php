@@ -3,7 +3,7 @@
 namespace Kirby\TimeClock\UI\API\Controllers;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Kirby\TimeClock\Actions\LogCheckOutAction;
+use Kirby\TimeClock\Actions\LogCheckOut;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\Exceptions\InvalidNoveltyTypeException;
 use Kirby\TimeClock\Exceptions\MissingCheckInException;
@@ -23,11 +23,11 @@ class CheckOutController
 {
     /**
      * @param CheckOutRequest   $request
-     * @param LogCheckOutAction $logCheckOutAction
+     * @param LogCheckOut $logCheckOutAction
      */
     public function __invoke(
         CheckOutRequest $request,
-        LogCheckOutAction $logCheckOutAction
+        LogCheckOut $logCheckOutAction
     ) {
         $errors = [];
 
