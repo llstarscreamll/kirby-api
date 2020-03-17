@@ -108,21 +108,28 @@ class Employee extends Model
      */
     public function getWorkShiftsThatMatchesTime(Carbon $time): ?Collection
     {
-        $workShiftsMatchedBySlotTimesAndDays = $this->workShifts
+        $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->reverse()
             ->filter(function (WorkShift $workShift) use ($time) {
-                $matchedTimeSlots = collect($workShift->time_slots)->filter(function (array $timeSlot) use ($time, $workShift) {
-                    [$hour, $seconds] = explode(':', $timeSlot['start']);
-                    $slotStartFrom = now()->setTime($hour, $seconds)->subMinutes($workShift->grace_minutes_before_start_times);
+                $matchedTimeSlots = collect($workShift->time_slots)
+                    ->filter(function (array $timeSlot) use ($time, $workShift) {
+                        [$hour, $seconds] = explode(':', $timeSlot['start']);
+                        $slotStartFrom = now()
+                            ->setTimezone($workShift->time_zone)
+                            ->setTime($hour, $seconds)
+                            ->subMinutes($workShift->grace_minutes_before_start_times);
 
-                    [$hour, $seconds] = explode(':', $timeSlot['end']);
-                    $slotEndTo = now()->setTime($hour, $seconds)->addMinutes($workShift->grace_minutes_after_end_times);
+                        [$hour, $seconds] = explode(':', $timeSlot['end']);
+                        $slotEndTo = now()
+                            ->setTimezone($workShift->time_zone)
+                            ->setTime($hour, $seconds)
+                            ->addMinutes($workShift->grace_minutes_after_end_times);
 
-                    if ($slotStartFrom->hour > (int) $hour) {
-                        $slotEndTo = $slotEndTo->addDay();
-                    }
+                        if ($slotStartFrom->hour > (int) $hour) {
+                            $slotEndTo = $slotEndTo->addDay();
+                        }
 
-                    return $time->between($slotStartFrom, $slotEndTo) && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
-                });
+                        return $time->between($slotStartFrom, $slotEndTo) && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
+                    });
 
                 return $matchedTimeSlots->count();
             });
