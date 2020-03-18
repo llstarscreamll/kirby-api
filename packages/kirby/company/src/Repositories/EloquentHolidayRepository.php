@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Company\Data\Repositories;
+namespace Kirby\Company\Repositories;
 
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Company\Models\Holiday;

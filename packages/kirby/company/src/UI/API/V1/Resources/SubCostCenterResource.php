@@ -1,15 +1,15 @@
 <?php
 
-namespace Kirby\Company\UI\API\Resources;
+namespace Kirby\Company\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * Class CostCenterResource.
+ * Class SubCostCenterResource.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CostCenterResource extends JsonResource
+class SubCostCenterResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

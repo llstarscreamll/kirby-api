@@ -8,9 +8,9 @@ use Kirby\Company\Contracts\CostCenterRepositoryInterface;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Company\Contracts\HolidaysServiceInterface;
 use Kirby\Company\Contracts\SubCostCenterRepositoryInterface;
-use Kirby\Company\Data\Repositories\EloquentCostCenterRepository;
-use Kirby\Company\Data\Repositories\EloquentHolidayRepository;
-use Kirby\Company\Data\Repositories\EloquentSubCostCenterRepository;
+use Kirby\Company\Repositories\EloquentCostCenterRepository;
+use Kirby\Company\Repositories\EloquentHolidayRepository;
+use Kirby\Company\Repositories\EloquentSubCostCenterRepository;
 use Kirby\Company\Services\HolidaysService;
 use Kirby\Company\UI\CLI\SyncHolidaysCommand;
 
@@ -39,7 +39,7 @@ class CompanyServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/UI/API/Routes/v1.php');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {

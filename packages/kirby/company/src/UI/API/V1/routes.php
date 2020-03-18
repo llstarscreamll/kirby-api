@@ -1,6 +1,7 @@
 <?php
 
-use Kirby\Company\UI\API\Controllers\SubCostCentersController;
+use Illuminate\Support\Facades\Route;
+use Kirby\Company\UI\API\V1\Controllers\SubCostCentersController;
 
 Route::prefix('api/v1')
     ->middleware(['api', 'auth:api'])

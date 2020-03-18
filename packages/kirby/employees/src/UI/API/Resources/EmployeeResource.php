@@ -3,7 +3,7 @@
 namespace Kirby\Employees\UI\API\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Kirby\Company\UI\API\Resources\CostCenterResource;
+use Kirby\Company\UI\API\V1\Resources\CostCenterResource;
 use Kirby\WorkShifts\UI\API\Resources\WorkShiftResource;
 
 /**

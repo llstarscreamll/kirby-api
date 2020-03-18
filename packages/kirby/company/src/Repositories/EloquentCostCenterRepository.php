@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Company\Data\Repositories;
+namespace Kirby\Company\Repositories;
 
 use Kirby\Company\Contracts\CostCenterRepositoryInterface;
 use Kirby\Company\Models\CostCenter;

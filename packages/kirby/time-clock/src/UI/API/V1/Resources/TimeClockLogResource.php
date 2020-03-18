@@ -3,7 +3,7 @@
 namespace Kirby\TimeClock\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Kirby\Company\UI\API\Resources\SubCostCenterResource;
+use Kirby\Company\UI\API\V1\Resources\SubCostCenterResource;
 use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
 use Kirby\Users\UI\API\Resources\UserResource;
 use Kirby\WorkShifts\UI\API\Resources\WorkShiftResource;

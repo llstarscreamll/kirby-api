@@ -1,10 +1,10 @@
 <?php
 
-namespace Kirby\Company\UI\API\Controllers;
+namespace Kirby\Company\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
 use Kirby\Company\Contracts\SubCostCenterRepositoryInterface;
-use Kirby\Company\UI\API\Resources\SubCostCenterResource;
+use Kirby\Company\UI\API\V1\Resources\SubCostCenterResource;
 use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
