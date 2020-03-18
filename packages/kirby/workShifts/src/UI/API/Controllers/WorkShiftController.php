@@ -3,7 +3,6 @@
 namespace Kirby\WorkShifts\UI\API\Controllers;
 
 use Illuminate\Http\Request;
-use Kirby\Core\Http\Controller;
 use Kirby\WorkShifts\Contracts\WorkShiftRepositoryInterface;
 use Kirby\WorkShifts\UI\API\Requests\CreateWorkShiftRequest;
 use Kirby\WorkShifts\UI\API\Requests\DeleteWorkShiftRequest;
@@ -16,7 +15,7 @@ use Kirby\WorkShifts\UI\API\Resources\WorkShiftResource;
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class WorkShiftController extends Controller
+class WorkShiftController
 {
     /**
      * @var WorkShiftRepository

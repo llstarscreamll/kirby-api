@@ -5,7 +5,6 @@ namespace Kirby\TimeClock\UI\API\V1\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Kirby\Core\Http\Controller;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\TimeClock\Actions\LogCheckIn;
 use Kirby\TimeClock\Actions\LogCheckOut;
@@ -22,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class TimeClockLogsController extends Controller
+class TimeClockLogsController
 {
     /**
      * @var TimeClockLogRepositoryInterface
