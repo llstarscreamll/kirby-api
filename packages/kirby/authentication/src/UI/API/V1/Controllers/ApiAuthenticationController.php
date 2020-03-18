@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Kirby\Authentication\Actions\WebLoginProxyAction;
 use Kirby\Authentication\UI\API\V1\Requests\LoginRequest;
 use Kirby\Authentication\UI\API\V1\Requests\SignUpRequest;
-use Kirby\Users\UI\API\Resources\UserResource;
+use Kirby\Users\UI\API\V1\Resources\UserResource;
 use Lcobucci\JWT\Parser;
 
 /**

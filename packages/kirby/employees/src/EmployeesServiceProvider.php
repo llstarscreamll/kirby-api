@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
-use Kirby\Employees\Data\Repositories\EloquentEmployeeRepository;
-use Kirby\Employees\Data\Repositories\EloquentIdentificationRepository;
+use Kirby\Employees\Repositories\EloquentEmployeeRepository;
+use Kirby\Employees\Repositories\EloquentIdentificationRepository;
 
 /**
  * Class EmployeesServiceProvider.
@@ -32,7 +32,7 @@ class EmployeesServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/UI/API/Routes/v1.php');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {

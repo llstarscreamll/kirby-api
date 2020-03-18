@@ -5,7 +5,7 @@ namespace Kirby\Users;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Users\Contracts\UserRepositoryInterface;
-use Kirby\Users\Data\Repositories\EloquentUserRepository;
+use Kirby\Users\Repositories\EloquentUserRepository;
 
 /**
  * Class UsersServiceProvider.
