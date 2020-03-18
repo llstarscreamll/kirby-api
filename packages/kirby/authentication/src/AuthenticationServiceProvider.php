@@ -24,7 +24,7 @@ class AuthenticationServiceProvider extends ServiceProvider
         Passport::tokensExpireIn(Carbon::now()->addMinutes(config('authentication.api.token-expires-in')));
         Passport::refreshTokensExpireIn(Carbon::now()->addMinutes(config('authentication.api.refresh-token-expires-in')));
 
-        $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {

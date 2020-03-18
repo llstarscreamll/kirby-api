@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Authentication\Http\Controllers;
+namespace Kirby\Authentication\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Kirby\Authentication\Actions\WebLoginProxyAction;
-use Kirby\Authentication\Http\Requests\LoginRequest;
-use Kirby\Authentication\Http\Requests\SignUpRequest;
+use Kirby\Authentication\UI\API\V1\Requests\LoginRequest;
+use Kirby\Authentication\UI\API\V1\Requests\SignUpRequest;
 use Kirby\Users\UI\API\Resources\UserResource;
 use Lcobucci\JWT\Parser;
 
@@ -18,10 +18,10 @@ use Lcobucci\JWT\Parser;
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class ApiAuthenticationController extends Controller
+class ApiAuthenticationController
 {
     /**
-     * @param  \Kirby\Authentication\Http\Requests\LoginRequest  $request
+     * @param  \Kirby\Authentication\UI\API\V1\Requests\LoginRequest  $request
      * @param  \Kirby\Authentication\Actions\WebLoginProxyAction $action
      * @return \Illuminate\Http\Response
      */
@@ -80,7 +80,7 @@ class ApiAuthenticationController extends Controller
 
     /**
      * @todo El código de este controlador está repetido, se debe abstraer
-     * @param  \Kirby\Authentication\Http\Requests\SignUpRequest $request
+     * @param  \Kirby\Authentication\UI\API\V1\Requests\SignUpRequest $request
      * @param  \Kirby\Authentication\Actions\WebLoginProxyAction $action
      * @return \Illuminate\Http\Response
      */

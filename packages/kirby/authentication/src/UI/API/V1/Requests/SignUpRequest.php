@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Authentication\Http\Requests;
+namespace Kirby\Authentication\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 

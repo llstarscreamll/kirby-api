@@ -13,7 +13,7 @@
 
 Route::prefix('api/v1/auth')
     ->middleware('api')
-    ->namespace('Kirby\Authentication\Http\Controllers')
+    ->namespace('Kirby\Authentication\UI\API\V1\Controllers')
     ->group(function ($route) {
         $route->post('login', 'ApiAuthenticationController@login');
         $route->post('sign-up', 'ApiAuthenticationController@signUp');
