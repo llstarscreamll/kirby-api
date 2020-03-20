@@ -35,7 +35,7 @@ class DeleteNoveltyCest
     {
         Artisan::call('db:seed', ['--class' => NoveltiesPermissionsSeeder::class]);
         $this->novelty = factory(Novelty::class)->create();
-        
+
         $this->user = $I->amLoggedAsAdminUser();
         $I->haveHttpHeader('Accept', 'application/json');
     }
