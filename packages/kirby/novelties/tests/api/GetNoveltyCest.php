@@ -45,6 +45,7 @@ class GetNoveltyCest
         $I->seeResponseJsonMatchesJsonPath('$.data.novelty_type');
         $I->seeResponseJsonMatchesJsonPath('$.data.employee');
         $I->seeResponseJsonMatchesJsonPath('$.data.time_clock_log');
+        $I->seeResponseJsonMatchesJsonPath('$.data.approvals');
     }
 
     /**

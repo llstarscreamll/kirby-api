@@ -69,7 +69,7 @@ class NoveltiesController
     public function show(GetNoveltyRequest $request, $id)
     {
         $novelty = $this->noveltyRepository
-            ->with(['noveltyType', 'employee.user', 'timeClockLog'])
+            ->with(['noveltyType', 'employee.user', 'timeClockLog', 'approvals:users.id,users.first_name,users.last_name'])
             ->find($id);
 
         return NoveltyResource::make($novelty);

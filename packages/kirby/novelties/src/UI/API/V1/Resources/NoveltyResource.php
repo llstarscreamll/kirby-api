@@ -5,6 +5,8 @@ namespace Kirby\Novelties\UI\API\V1\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Kirby\Company\UI\API\V1\Resources\SubCostCenterResource;
 use Kirby\Employees\UI\API\V1\Resources\EmployeeResource;
+use Kirby\TimeClock\UI\API\V1\Resources\TimeClockLogResource;
+use Kirby\Users\UI\API\V1\Resources\UserResource;
 
 /**
  * Class NoveltyResource.
@@ -35,6 +37,7 @@ class NoveltyResource extends JsonResource
             'updated_at' => optional($this->updated_at)->toISOString(),
             'deleted_at' => optional($this->deleted_at)->toISOString(),
 
+            'approvals' => $this->whenLoaded('approvals'),
             'employee' => $this->whenLoaded('employee', EmployeeResource::make($this->employee)),
             'novelty_type' => $this->whenLoaded('noveltyType', NoveltyTypeResource::make($this->noveltyType)),
             'time_clock_log' => $this->whenLoaded('timeClockLog'),
