@@ -3,12 +3,13 @@
 namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
-use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
+use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
-use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
-use Prettus\Repository\Criteria\RequestCriteria;
+use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
 
 /**
  * Class NoveltiesController.
@@ -62,7 +63,7 @@ class NoveltiesController
      * Display the specified resource.
      *
      * @param  \Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest $request
-     * @param  int                                                            $id
+     * @param  int                                                   $id
      * @return \Illuminate\Http\Response
      */
     public function show(GetNoveltyRequest $request, $id)
@@ -78,7 +79,7 @@ class NoveltiesController
      * Update the specified resource in storage.
      *
      * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest $request
-     * @param  int                                                               $id
+     * @param  int                                                      $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateNoveltyRequest $request, $id)
@@ -94,8 +95,10 @@ class NoveltiesController
      * @param  int                         $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(DeleteNoveltyRequest $request, $id)
     {
-        //
+        $this->noveltyRepository->delete($id);
+
+        return response()->json(['data' => 'ok', 200]);
     }
 }
