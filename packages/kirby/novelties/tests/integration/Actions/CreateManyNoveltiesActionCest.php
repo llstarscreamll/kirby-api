@@ -78,11 +78,11 @@ class CreateManyNoveltiesActionCest
         $result = $action->run([
             'employee_ids' => $employees->pluck('id')->all(),
             'novelties' => $data['novelties'],
-            'approvers' => $approvers->pluck('id')->all()
+            'approvers' => $approvers->pluck('id')->all(),
         ]);
 
         $I->assertTrue($result);
-        
+
         // novelties should be created successfully
         $employees->each(function ($employee) use ($I, $data, $approvers) {
             foreach ($data['novelties'] as $novelty) {
@@ -97,7 +97,7 @@ class CreateManyNoveltiesActionCest
         });
 
         // novelty approvals
-        $approvers->each(fn($approver) => $I->seeNumRecords(
+        $approvers->each(fn ($approver) => $I->seeNumRecords(
             count($data['novelties']) * $data['employees'], 'novelty_approvals', ['user_id' => $approver->id]
         ));
     }

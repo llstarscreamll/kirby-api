@@ -22,7 +22,7 @@ class CreateManyNoveltiesController
     public function __invoke(CreateManyNoveltiesRequest $request, CreateManyNoveltiesAction $action)
     {
         try {
-            DB::transaction(fn() => $action->run($request->validated() + ['approvers' => [$request->user()->id]]));
+            DB::transaction(fn () => $action->run($request->validated() + ['approvers' => [$request->user()->id]]));
         } catch (\Throwable $th) {
             dd($th);
             throw new HttpResponseException(response()->json([

@@ -91,7 +91,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     {
         $currentDate = Carbon::now()->toDateTimeString();
 
-        $rows = array_map(fn($approverId) => array_map(fn($noveltyId) => [
+        $rows = array_map(fn ($approverId) => array_map(fn ($noveltyId) => [
             'novelty_id' => $noveltyId,
             'user_id' => $approverId,
             'created_at' => $currentDate,
