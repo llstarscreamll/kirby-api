@@ -5,11 +5,11 @@ namespace Kirby\Novelties\UI\API\V1\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class CreateNoveltiesToUsersRequest.
+ * Class CreateManyNoveltiesRequest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CreateNoveltiesToUsersRequest extends FormRequest
+class CreateManyNoveltiesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,7 +18,7 @@ class CreateNoveltiesToUsersRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('novelties.create-novelties-to-users');
+        return $this->user()->can('novelties.create-many');
     }
 
     /**

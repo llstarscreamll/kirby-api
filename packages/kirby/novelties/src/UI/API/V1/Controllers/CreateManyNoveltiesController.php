@@ -4,28 +4,27 @@ namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\DB;
-use Kirby\Novelties\Actions\CreateNoveltiesToUsersAction;
-use Kirby\Novelties\UI\API\V1\Requests\CreateNoveltiesToUsersRequest;
+use Kirby\Novelties\Actions\CreateManyNoveltiesAction;
+use Kirby\Novelties\UI\API\V1\Requests\CreateManyNoveltiesRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class CreateNoveltiesToUsersController.
+ * Class CreateManyNoveltiesController.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CreateNoveltiesToUsersController
+class CreateManyNoveltiesController
 {
     /**
-     * @param CreateNoveltiesToUsersRequest $request
-     * @param CreateNoveltiesToUsersAction  $action
+     * @param CreateManyNoveltiesRequest $request
+     * @param CreateManyNoveltiesAction  $action
      */
-    public function __invoke(CreateNoveltiesToUsersRequest $request, CreateNoveltiesToUsersAction $action)
+    public function __invoke(CreateManyNoveltiesRequest $request, CreateManyNoveltiesAction $action)
     {
         try {
-            DB::transaction(function () use ($request, $action) {
-                $action->run($request->validated());
-            });
+            DB::transaction(fn() => $action->run($request->validated() + ['approvers' => [$request->user()->id]]));
         } catch (\Throwable $th) {
+            dd($th);
             throw new HttpResponseException(response()->json([
                 'message' => 'Ocurrió un error inesperado al procesar la solicitud',
                 'errors' => [[

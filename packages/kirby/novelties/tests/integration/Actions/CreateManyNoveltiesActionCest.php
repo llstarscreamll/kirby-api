@@ -4,18 +4,19 @@ namespace Novelties\Actions;
 
 use Codeception\Example;
 use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Actions\CreateNoveltiesToUsersAction;
+use Kirby\Novelties\Actions\CreateManyNoveltiesAction;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\Models\NoveltyType;
+use Kirby\Users\Models\User;
 use Mockery;
 use Novelties\IntegrationTester;
 
 /**
- * Class CreateNoveltiesToUsersActionCest.
+ * Class CreateManyNoveltiesActionCest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CreateNoveltiesToUsersActionCest
+class CreateManyNoveltiesActionCest
 {
     /**
      * @param IntegrationTester $I
@@ -41,7 +42,8 @@ class CreateNoveltiesToUsersActionCest
     {
         return [
             [
-                'employees_to_create' => 5,
+                'employees' => 5,
+                'approvers' => 2,
                 'novelties' => [
                     [
                         'novelty_type_id' => 1,
@@ -69,16 +71,20 @@ class CreateNoveltiesToUsersActionCest
      */
     public function testToRunAction(IntegrationTester $I, Example $data)
     {
-        $employees = factory(Employee::class, $data['employees_to_create'])->create();
+        $employees = factory(Employee::class, $data['employees'])->create();
+        $approvers = factory(User::class, $data['approvers'])->create();
 
-        $action = app(CreateNoveltiesToUsersAction::class);
+        $action = app(CreateManyNoveltiesAction::class);
         $result = $action->run([
             'employee_ids' => $employees->pluck('id')->all(),
             'novelties' => $data['novelties'],
+            'approvers' => $approvers->pluck('id')->all()
         ]);
 
         $I->assertTrue($result);
-        $employees->each(function ($employee) use ($I, $data) {
+        
+        // novelties should be created successfully
+        $employees->each(function ($employee) use ($I, $data, $approvers) {
             foreach ($data['novelties'] as $novelty) {
                 $I->seeRecord('novelties', [
                     'employee_id' => $employee->id,
@@ -89,5 +95,10 @@ class CreateNoveltiesToUsersActionCest
                 ]);
             }
         });
+
+        // novelty approvals
+        $approvers->each(fn($approver) => $I->seeNumRecords(
+            count($data['novelties']) * $data['employees'], 'novelty_approvals', ['user_id' => $approver->id]
+        ));
     }
 }

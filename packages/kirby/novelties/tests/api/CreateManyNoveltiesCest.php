@@ -3,19 +3,26 @@
 namespace Novelties;
 
 use Kirby\Employees\Models\Employee;
+use Kirby\Novelties\Actions\CreateManyNoveltiesAction;
 use Kirby\Novelties\Models\NoveltyType;
+use Mockery;
 
 /**
- * Class CreateNoveltiesToUsersCest.
+ * Class CreateManyNoveltiesCest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CreateNoveltiesToUsersCest
+class CreateManyNoveltiesCest
 {
     /**
      * @var string
      */
-    private $endpoint = 'api/v1/novelties/create-novelties-to-users';
+    private $endpoint = 'api/v1/novelties/create-many';
+
+    /**
+     * @var \Kirby\Users\Models\User
+     */
+    private $user;
 
     /**
      * @param ApiTester $I
@@ -49,6 +56,14 @@ class CreateNoveltiesToUsersCest
                 ],
             ],
         ];
+
+        $actionMock = Mockery::mock(CreateManyNoveltiesAction::class)
+            ->shouldReceive('run')
+            ->with($payload + ['approvers' => [$this->user->id]])
+            ->andReturn(true)
+            ->getMock();
+
+        $I->haveInstance(CreateManyNoveltiesAction::class, $actionMock);
 
         $I->sendPOST($this->endpoint, $payload);
 

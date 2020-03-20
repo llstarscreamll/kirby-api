@@ -3,6 +3,8 @@
 namespace Kirby\Novelties\Repositories;
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Kirby\Core\Abstracts\EloquentRepositoryAbstract;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Models\Novelty;
@@ -78,5 +80,23 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     public function deleteApproval(string $noveltyId, string $userId)
     {
         return $this->find($noveltyId)->approvals()->detach($userId);
+    }
+
+    /**
+     * @param array $approversIds
+     * @param array $noveltiesIds
+     */
+    public function attachApproversToNovelties(array $approversIds, array $noveltiesIds): bool
+    {
+        $currentDate = Carbon::now()->toDateTimeString();
+
+        $rows = array_map(fn($approverId) => array_map(fn($noveltyId) => [
+            'novelty_id' => $noveltyId,
+            'user_id' => $approverId,
+            'created_at' => $currentDate,
+            'updated_at' => $currentDate,
+        ], array_unique($noveltiesIds)), array_unique($approversIds));
+
+        return DB::table('novelty_approvals')->insert(Arr::collapse($rows));
     }
 }
