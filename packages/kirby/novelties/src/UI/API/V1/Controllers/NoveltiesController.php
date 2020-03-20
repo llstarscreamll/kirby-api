@@ -3,13 +3,13 @@
 namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
-use Prettus\Repository\Criteria\RequestCriteria;
-use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
-use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
+use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
+use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
+use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class NoveltiesController.
