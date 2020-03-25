@@ -2,8 +2,11 @@
 
 namespace Kirby\Novelties\UI\API\V1\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
+use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
@@ -78,13 +81,30 @@ class NoveltiesController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest $request
-     * @param  int                                                      $id
+     * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest  $request
+     * @param  \Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface $noveltyTypeRepository
+     * @param  int                                                       $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateNoveltyRequest $request, $id)
+    public function update(UpdateNoveltyRequest $request, NoveltyTypeRepositoryInterface $noveltyTypeRepository, $id)
     {
-        $novelty = $this->noveltyRepository->update($request->validated(), $id);
+        $noveltyData = $request->validated();
+
+        if (! empty($noveltyData['scheduled_start_at'])) {
+            $startTime = Carbon::parse($noveltyData['scheduled_start_at']);
+            $endTime = Carbon::parse($noveltyData['scheduled_end_at']);
+
+            $noveltyData['scheduled_start_at'] = $startTime;
+            $noveltyData['scheduled_end_at'] = $endTime;
+            $noveltyData['total_time_in_minutes'] = $startTime->diffInMinutes($endTime);
+        }
+
+        $noveltyType = $noveltyTypeRepository->find($noveltyData['novelty_type_id']);
+        $noveltyData['total_time_in_minutes'] = $noveltyType->operator->is(NoveltyTypeOperator::Subtraction)
+            ? abs($noveltyData['total_time_in_minutes']) * -1
+            : abs($noveltyData['total_time_in_minutes']);
+
+        $novelty = $this->noveltyRepository->update($noveltyData, $id);
 
         return new NoveltyResource($novelty);
     }
