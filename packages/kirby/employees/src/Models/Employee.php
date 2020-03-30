@@ -45,6 +45,23 @@ class Employee extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'int',
+        'cost_center_id' => 'int',
+        'code' => 'string',
+        'identification_number' => 'string',
+        'position' => 'string',
+        'location' => 'string',
+        'address' => 'string',
+        'phone' => 'string',
+        'salary' => 'double',
+    ];
+
+    /**
      * The attributes that should be mutated to dates.
      *
      * @var array
@@ -53,6 +70,24 @@ class Employee extends Model
         'created_at',
         'updated_at',
     ];
+
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['user:id,first_name,last_name'];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['first_name', 'last_name'];
+
+    // ####################################################################### #
+    //                                 Relations                               #
+    // ####################################################################### #
 
     /**
      * Related user.
@@ -102,6 +137,24 @@ class Employee extends Model
         return $this->hasMany(TimeClockLog::class, 'employee_id');
     }
 
+    // ####################################################################### #
+    //                                 Accessors                               #
+    // ####################################################################### #
+
+    public function getFirstNameAttribute(): ?string
+    {
+        return $this->user->first_name;
+    }
+
+    public function getLastNameAttribute(): ?string
+    {
+        return $this->user->last_name;
+    }
+
+    // ####################################################################### #
+    //                                  Methods                                #
+    // ####################################################################### #
+
     /**
      * @param  Carbon      $time
      * @return WorkShift
@@ -136,7 +189,7 @@ class Employee extends Model
 
         if ($workShiftsMatchedBySlotTimesAndDays->count() === 0) {
             $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function ($workShift) use ($time) {
-                return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && ! $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
+                return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && !$time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
             });
         }
 
