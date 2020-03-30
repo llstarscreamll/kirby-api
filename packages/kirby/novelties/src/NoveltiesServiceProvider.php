@@ -51,6 +51,7 @@ class NoveltiesServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'novelties');
         $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
         $this->loadServiceProviders();
 

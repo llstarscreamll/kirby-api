@@ -4,6 +4,7 @@ namespace Kirby\Novelties\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
 use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Users\Models\User;
@@ -25,6 +26,7 @@ class Novelty extends Model
     protected $fillable = [
         'employee_id',
         'novelty_type_id',
+        'sub_cost_center_id',
         'time_clock_log_id',
         'scheduled_start_at',
         'scheduled_end_at',
@@ -40,8 +42,10 @@ class Novelty extends Model
     protected $casts = [
         'employee_id' => 'int',
         'novelty_type_id' => 'int',
+        'sub_cost_center_id' => 'int',
         'time_clock_log_id' => 'int',
         'total_time_in_minutes' => 'int',
+        'comment' => 'string',
     ];
 
     /**
@@ -69,6 +73,14 @@ class Novelty extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class)->withTrashed();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function subCostCenter()
+    {
+        return $this->belongsTo(SubCostCenter::class)->withTrashed();
     }
 
     /**

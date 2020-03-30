@@ -20,6 +20,7 @@ class NoveltiesPermissionsSeeder extends Seeder
         ['name' => 'novelties.update'],
         ['name' => 'novelties.delete'],
         ['name' => 'novelties.create-many'],
+        ['name' => 'novelties.report-by-employee'],
         // novelty approvals
         ['name' => 'novelties.approvals.create'],
         ['name' => 'novelties.approvals.delete'],

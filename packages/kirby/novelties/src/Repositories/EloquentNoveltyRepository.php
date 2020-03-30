@@ -100,4 +100,14 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
 
         return DB::table('novelty_approvals')->insert(Arr::collapse($rows));
     }
+
+    /**
+     * @param int $employeeId
+     */
+    public function findByEmployeeId(int $employeeId): EloquentNoveltyRepository
+    {
+        $this->model->where('employee_id', $employeeId);
+
+        return $this;
+    }
 }

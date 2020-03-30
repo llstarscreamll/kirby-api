@@ -15,4 +15,6 @@ interface NoveltyRepositoryInterface extends BaseRepositoryInterface
     public function whereScheduledForEmployee(int $employeeId, string $field, Carbon $start, Carbon $end);
 
     public function attachApproversToNovelties(array $approversIds, array $noveltiesIds): bool;
+
+    public function findByEmployeeId(int $employeeId): self;
 }

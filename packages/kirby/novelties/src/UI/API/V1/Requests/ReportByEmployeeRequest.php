@@ -1,9 +1,8 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\V1\Requests;
+namespace Kirby\Novelties\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Arr;
 
 /**
  * Class ReportByEmployeeRequest.
@@ -19,7 +18,7 @@ class ReportByEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('time-clock.report-by-employee');
+        return $this->user()->can('novelties.report-by-employee');
     }
 
     /**
@@ -35,23 +34,8 @@ class ReportByEmployeeRequest extends FormRequest
         ];
     }
 
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array
-     */
-    public function messages(): array
+    public function attributes()
     {
-        return Arr::dot(trans('time-clock::validation.custom'));
-    }
-
-    /**
-     * Get custom attributes for validator errors.
-     *
-     * @return array
-     */
-    public function attributes(): array
-    {
-        return trans('time-clock::validation.attributes');
+        return trans('novelties::validation.attributes');
     }
 }

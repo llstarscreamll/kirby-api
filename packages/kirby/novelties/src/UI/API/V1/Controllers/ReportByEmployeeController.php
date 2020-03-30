@@ -1,10 +1,10 @@
 <?php
 
-namespace Kirby\TimeClock\UI\API\V1\Controllers;
+namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Carbon\Carbon;
-use Kirby\TimeClock\Actions\GenerateReportByEmployee;
-use Kirby\TimeClock\UI\API\V1\Requests\ReportByEmployeeRequest;
+use Kirby\Novelties\Actions\GenerateReportByEmployee;
+use Kirby\Novelties\UI\API\V1\Requests\ReportByEmployeeRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
