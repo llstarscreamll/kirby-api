@@ -3,10 +3,7 @@
 namespace Kirby\Novelties\Actions;
 
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\Models\Novelty;
 
 /**
  * Class GenerateReportByEmployee.

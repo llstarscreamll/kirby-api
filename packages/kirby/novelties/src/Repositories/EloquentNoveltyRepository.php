@@ -104,7 +104,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     /**
      * @param int $employeeId
      */
-    public function findByEmployeeId(int $employeeId): EloquentNoveltyRepository
+    public function findByEmployeeId(int $employeeId): self
     {
         $this->model->where('employee_id', $employeeId);
 

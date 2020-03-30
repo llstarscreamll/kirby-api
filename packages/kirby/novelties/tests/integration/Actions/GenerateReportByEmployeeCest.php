@@ -2,12 +2,12 @@
 
 namespace Novelties\Actions;
 
-use Novelties\IntegrationTester;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Actions\GenerateReportByEmployee;
+use Kirby\Novelties\Models\Novelty;
 use Kirby\Users\Models\User;
+use Novelties\IntegrationTester;
 
 /**
  * Class GenerateReportByEmployeeCest.
@@ -69,7 +69,7 @@ class GenerateReportByEmployeeCest
             'sub_cost_center_id' => $secondScc->id,
             'scheduled_start_at' => $startDate->copy()->addDays(10),
             'scheduled_end_at' => $startDate->copy()->addDays(10)->addHours(2),
-            'comment' => 'foo'
+            'comment' => 'foo',
         ]);
 
         // attach same approvers to $latestNovelties
@@ -78,7 +78,7 @@ class GenerateReportByEmployeeCest
 
         $action = app(GenerateReportByEmployee::class);
         $result = $action->run($tonyStark->id, $startDate, $endDate);
-        
+
         // first row results
         $I->assertEquals($startDate->copy()->addDays(10)->toDateString(), $result[0]['date']);
         // employee
@@ -101,23 +101,24 @@ class GenerateReportByEmployeeCest
         $I->assertArrayNotHasKey('updated_at', $result[0]['employee']['user']);
         // novelties
         $I->assertEquals($latestNovelties->count(), count($result[0]['novelties']));
-        $latestNovelties->each(fn($novelty, $i) => $I->assertEquals($novelty->id, $result[0]['novelties'][$i]['id']));
-        array_walk($result[0]['novelties'], function($novelty) use ($I) {
+        $latestNovelties->each(fn ($novelty, $i) => $I->assertEquals($novelty->id, $result[0]['novelties'][$i]['id']));
+        array_walk($result[0]['novelties'], function ($novelty) use ($I) {
             $this->assertNoveltyHasKeys($I, $novelty);
         });
-        
+
         // second row results
         $I->assertEquals($startDate->toDateString(), $result[1]['date']);
         $I->assertEquals($tonyStark->id, $result[1]['employee']['id']);
         //  novelties
         $I->assertEquals($oldestNovelties->count(), count($result[1]['novelties']));
-        $oldestNovelties->each(fn($novelty, $i) => $I->assertEquals($novelty->id, $result[1]['novelties'][$i]['id']));
-        array_walk($result[1]['novelties'], function($novelty) use ($I) {
+        $oldestNovelties->each(fn ($novelty, $i) => $I->assertEquals($novelty->id, $result[1]['novelties'][$i]['id']));
+        array_walk($result[1]['novelties'], function ($novelty) use ($I) {
             $this->assertNoveltyHasKeys($I, $novelty);
         });
     }
 
-    private function assertNoveltyHasKeys(IntegrationTester $I, array $result) {
+    private function assertNoveltyHasKeys(IntegrationTester $I, array $result)
+    {
         $I->assertArrayHasKey('id', $result);
         $I->assertArrayHasKey('employee', $result);
         $I->assertArrayHasKey('sub_cost_center', $result);
