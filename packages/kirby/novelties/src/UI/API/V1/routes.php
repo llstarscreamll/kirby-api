@@ -1,15 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Kirby\Novelties\UI\API\V1\Controllers\CreateManyNoveltiesController;
 use Kirby\Novelties\UI\API\V1\Controllers\NoveltiesController;
-use Kirby\Novelties\UI\API\V1\Controllers\NoveltyApprovalsController;
 use Kirby\Novelties\UI\API\V1\Controllers\NoveltyTypesController;
+use Kirby\Novelties\UI\API\V1\Controllers\NoveltyApprovalsController;
 use Kirby\Novelties\UI\API\V1\Controllers\ReportByEmployeeController;
+use Kirby\Novelties\UI\API\V1\Controllers\CreateManyNoveltiesController;
+use Kirby\Novelties\UI\API\V1\Controllers\CreateNoveltiesApprovalsByEmployeeAndDateRangeController;
+use Kirby\Novelties\UI\API\V1\Controllers\DeleteNoveltiesApprovalsByEmployeeAndDateRangeController;
 
 Route::prefix('api/v1')
     ->middleware(['api', 'auth:api'])
     ->group(function ($route) {
+        $route->post('novelties/approvals-by-employee-and-date-range', CreateNoveltiesApprovalsByEmployeeAndDateRangeController::class);
+        $route->delete('novelties/approvals-by-employee-and-date-range', DeleteNoveltiesApprovalsByEmployeeAndDateRangeController::class);
         $route->apiResource('novelties', NoveltiesController::class);
         $route->post('novelties/create-many', CreateManyNoveltiesController::class);
         $route->get('novelties/report-by-employee/{employee_id}', ReportByEmployeeController::class);
