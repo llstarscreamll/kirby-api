@@ -46,7 +46,6 @@ class CheckOutCest
      */
     public function _before(ApiTester $I)
     {
-        $I->disableMiddleware();
 
         Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
         $this->user = $I->amLoggedAsAdminUser();
