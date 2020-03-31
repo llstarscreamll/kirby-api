@@ -30,12 +30,12 @@ class NoveltyApprovalsController
      * Display a listing of the resource.
      *
      * @param  CreateNoveltyApprovalRequest $request
-     * @param  string                       $timeClockLogId
+     * @param  string                       $noveltyId
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateNoveltyApprovalRequest $request, string $timeClockLogId)
+    public function store(CreateNoveltyApprovalRequest $request, string $noveltyId)
     {
-        $this->noveltyRepository->sync($timeClockLogId, 'approvals', $request->user()->id, false);
+        $this->noveltyRepository->sync($noveltyId, 'approvals', $request->user()->id, $detachOthers = false);
 
         return response()->json(['ok'], 201);
     }
@@ -44,12 +44,12 @@ class NoveltyApprovalsController
      * Display a listing of the resource.
      *
      * @param  DeleteNoveltyApprovalRequest $request
-     * @param  string                       $timeClockLogId
+     * @param  string                       $noveltyId
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DeleteNoveltyApprovalRequest $request, string $timeClockLogId)
+    public function destroy(DeleteNoveltyApprovalRequest $request, string $noveltyId)
     {
-        $this->noveltyRepository->deleteApproval($timeClockLogId, $request->user()->id);
+        $this->noveltyRepository->deleteApproval($noveltyId, $request->user()->id);
 
         return response()->json(['ok'], 200);
     }
