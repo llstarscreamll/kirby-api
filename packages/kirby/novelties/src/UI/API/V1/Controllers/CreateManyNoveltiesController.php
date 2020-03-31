@@ -24,7 +24,6 @@ class CreateManyNoveltiesController
         try {
             DB::transaction(fn () => $action->run($request->validated() + ['approvers' => [$request->user()->id]]));
         } catch (\Throwable $th) {
-            dd($th);
             throw new HttpResponseException(response()->json([
                 'message' => 'Ocurrió un error inesperado al procesar la solicitud',
                 'errors' => [[
