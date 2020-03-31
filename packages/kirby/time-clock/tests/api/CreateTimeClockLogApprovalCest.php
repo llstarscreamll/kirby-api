@@ -34,7 +34,6 @@ class CreateTimeClockLogApprovalCest
      */
     public function _before(ApiTester $I)
     {
-
         Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
         $this->user = $I->amLoggedAsAdminUser();
         $this->timeClockLogs = factory(TimeClockLog::class, 2)->create();

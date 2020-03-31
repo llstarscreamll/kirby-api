@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CreateNoveltiesApprovalsByEmployeeAndDateRangeController
 {
-
     /**
      * @param CreateNoveltiesApprovalsByEmployeeAndDateRangeRequest $request
      * @param NoveltyRepositoryInterface                            $noveltyRepository
@@ -29,10 +28,9 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeController
             $startDate = Carbon::parse(Arr::get($request->validated(), 'start_date'));
 
             $novelties = $noveltyRepository->whereScheduledForEmployee($employeeId, 'scheduled_start_at', $startDate, $endDate);
-            $novelties->each(fn($novelty) => $noveltyRepository
+            $novelties->each(fn ($novelty) => $noveltyRepository
                     ->sync($novelty->id, 'approvals', $request->user()->id, $detachOthers = false)
             );
-
         } catch (\Throwable $th) {
             throw new HttpResponseException(response()->json([
                 'message' => 'Ocurrió un error inesperado al procesar la solicitud',
