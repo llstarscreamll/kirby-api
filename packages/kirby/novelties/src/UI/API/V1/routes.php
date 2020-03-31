@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use Kirby\Novelties\UI\API\V1\Controllers\CreateManyNoveltiesController;
 use Kirby\Novelties\UI\API\V1\Controllers\NoveltiesController;
 use Kirby\Novelties\UI\API\V1\Controllers\NoveltyApprovalsController;
