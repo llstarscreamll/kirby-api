@@ -81,7 +81,7 @@ class CreateNoveltyApprovalCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnNotFoundIfTimeClockLogDoesntExists(ApiTester $I)
+    public function shouldReturnNotFoundIfNoveltyDoesntExists(ApiTester $I)
     {
         $endpoint = str_replace('{novelty-id}', 111, $this->endpoint);
         $I->sendPOST($endpoint);
