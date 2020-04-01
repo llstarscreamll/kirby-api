@@ -4,6 +4,7 @@ namespace Kirby\Company\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kirby\Company\Models\CostCenter;
 
 /**
  * Class SubCostCenter.
@@ -33,4 +34,12 @@ class SubCostCenter extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    /**
+     * @return mixed
+     */
+    public function costCenter()
+    {
+        return $this->belongsTo(CostCenter::class);
+    }
 }

@@ -60,7 +60,7 @@ class ReportByEmployeeCest
             [
                 'date' => $startDate->toDateString(),
                 'employee' => $novelty->employee->toArray(),
-                'novelties' => [$novelty->load(['employee', 'subCostCenter', 'approvals', 'noveltyType'])->toArray()],
+                'novelties' => [$novelty->load(['employee', 'subCostCenter.costCenter', 'approvals', 'noveltyType'])->toArray()],
             ],
         ];
 
@@ -97,6 +97,10 @@ class ReportByEmployeeCest
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.sub_cost_center.id');
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.sub_cost_center.code');
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.sub_cost_center.name');
+        // cost center data
+        $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.sub_cost_center.cost_center.id');
+        $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.sub_cost_center.cost_center.code');
+        $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.sub_cost_center.cost_center.name');
         // approvals data
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.approvals.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.approvals.0.first_name');

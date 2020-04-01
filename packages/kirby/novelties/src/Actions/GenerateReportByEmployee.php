@@ -33,7 +33,7 @@ class GenerateReportByEmployee
     public function run(int $employeeId, Carbon $startDate, Carbon $endDate)
     {
         $novelties = $this->noveltyRepository
-            ->with(['employee', 'subCostCenter', 'noveltyType', 'approvals'])
+            ->with(['employee', 'subCostCenter.costCenter', 'noveltyType', 'approvals'])
             ->findByEmployeeId($employeeId)
             ->findWhereBetween('scheduled_start_at', [
                 $startDate->startOfDay()->toDateTimeString(),

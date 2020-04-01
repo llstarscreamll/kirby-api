@@ -122,6 +122,7 @@ class GenerateReportByEmployeeCest
         $I->assertArrayHasKey('id', $result);
         $I->assertArrayHasKey('employee', $result);
         $I->assertArrayHasKey('sub_cost_center', $result);
+        $I->assertArrayHasKey('cost_center', $result['sub_cost_center']);
         $I->assertArrayHasKey('novelty_type', $result);
         $I->assertArrayHasKey('approvals', $result);
     }
