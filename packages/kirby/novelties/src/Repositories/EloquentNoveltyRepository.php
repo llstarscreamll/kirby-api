@@ -56,7 +56,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
      * @param  int    $approverId
      * @return void
      */
-    public function setApprovals(array $noveltiesIds, int $approverId)
+    public function setApprovals(array $noveltiesIds, int $approverId): void
     {
         $novelties = $this->model->whereIn('id', $noveltiesIds)->get(['id']);
         $novelties->each->approve($approverId);
@@ -67,7 +67,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
      * @param  int    $approverId
      * @return void
      */
-    public function deleteApprovals(array $noveltiesIds, int $approverId)
+    public function deleteApprovals(array $noveltiesIds, int $approverId): void
     {
         $novelties = $this->model->whereIn('id', $noveltiesIds)->get(['id']);
         $novelties->each->deleteApprove($approverId);
@@ -78,9 +78,9 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
      * @param  string  $userId
      * @return mixed
      */
-    public function deleteApproval(string $noveltyId, string $userId)
+    public function deleteApproval(string $noveltyId, string $userId): void
     {
-        return $this->find($noveltyId)->approvals()->detach($userId);
+        $this->find($noveltyId)->approvals()->detach($userId);
     }
 
     /**
