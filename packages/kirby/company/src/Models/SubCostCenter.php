@@ -4,7 +4,6 @@ namespace Kirby\Company\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Kirby\Company\Models\CostCenter;
 
 /**
  * Class SubCostCenter.
