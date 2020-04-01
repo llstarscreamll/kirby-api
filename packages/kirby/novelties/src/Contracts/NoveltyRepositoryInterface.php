@@ -12,7 +12,7 @@ use Kirby\Core\Contracts\BaseRepositoryInterface;
  */
 interface NoveltyRepositoryInterface extends BaseRepositoryInterface
 {
-    public function whereScheduledForEmployee(int $employeeId, string $field, Carbon $start, Carbon $end);
+    public function whereScheduledForEmployee(int $employeeId, string $field, Carbon $start, Carbon $end): self;
 
     public function attachApproversToNovelties(array $approversIds, array $noveltiesIds): bool;
 

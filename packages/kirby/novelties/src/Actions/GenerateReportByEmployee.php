@@ -34,11 +34,8 @@ class GenerateReportByEmployee
     {
         $novelties = $this->noveltyRepository
             ->with(['employee', 'subCostCenter.costCenter', 'noveltyType', 'approvals'])
-            ->findByEmployeeId($employeeId)
-            ->findWhereBetween('scheduled_start_at', [
-                $startDate->startOfDay()->toDateTimeString(),
-                $endDate->endOfDay()->toDateTimeString(),
-            ]);
+            ->whereScheduledForEmployee($employeeId, 'scheduled_start_at', $startDate, $endDate)
+            ->get();
 
         return $novelties
             ->groupBy(fn ($novelty) => $novelty->scheduled_start_at->toDateString())

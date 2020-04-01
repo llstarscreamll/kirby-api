@@ -42,7 +42,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
      * @param  Carbon        $end
      * @return mixed
      */
-    public function whereScheduledForEmployee($employeeId, string $field, Carbon $start, Carbon $end)
+    public function whereScheduledForEmployee($employeeId, string $field, Carbon $start, Carbon $end): self
     {
         $this->model = $this->model
             ->where('employee_id', $employeeId)
