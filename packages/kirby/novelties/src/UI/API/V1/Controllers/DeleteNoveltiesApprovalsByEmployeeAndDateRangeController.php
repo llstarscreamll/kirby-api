@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class DeleteNoveltiesApprovalsByEmployeeAndDateRangeController
 {
-
     /**
      * @param DeleteNoveltiesApprovalsByEmployeeAndDateRangeRequest $request
      * @param NoveltyRepositoryInterface                            $noveltyRepository
@@ -30,7 +29,6 @@ class DeleteNoveltiesApprovalsByEmployeeAndDateRangeController
 
             $novelties = $noveltyRepository->whereScheduledForEmployee($employeeId, 'scheduled_start_at', $startDate, $endDate);
             $noveltyRepository->deleteApprovals($novelties->pluck('id')->all(), $request->user()->id);
-
         } catch (\Throwable $th) {
             throw new HttpResponseException(response()->json([
                 'message' => 'Ocurrió un error inesperado al procesar la solicitud',

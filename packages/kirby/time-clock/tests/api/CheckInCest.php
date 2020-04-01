@@ -53,7 +53,6 @@ class CheckInCest
      */
     public function _before(ApiTester $I)
     {
-
         Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
         $this->user = $I->amLoggedAsAdminUser();
         $this->subCostCenter = factory(SubCostCenter::class)->create();

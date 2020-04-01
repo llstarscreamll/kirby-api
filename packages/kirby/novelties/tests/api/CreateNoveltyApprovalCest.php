@@ -33,7 +33,6 @@ class CreateNoveltyApprovalCest
      */
     public function _before(ApiTester $I)
     {
-
         Artisan::call('db:seed', ['--class' => NoveltiesPermissionsSeeder::class]);
         $this->user = $I->amLoggedAsAdminUser();
         $this->novelties = factory(Novelty::class, 2)->create();
