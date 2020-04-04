@@ -51,7 +51,7 @@ class NoveltiesExportReady extends Notification
     {
         return (new MailMessage())
             ->greeting("Hola {$notifiable->first_name},")
-            ->line('La exportación de datos de novedades está listo!!')
+            ->line('La exportación de datos de novedades está lista!!')
             ->action('Descargar', asset("storage/$this->exportFilePath"));
     }
 }
