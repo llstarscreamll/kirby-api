@@ -15,7 +15,6 @@ use Maatwebsite\Excel\Concerns\WithMapping;
  */
 class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
 {
-
     /**
      * @var array
      */

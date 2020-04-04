@@ -53,7 +53,7 @@ class ExportNoveltiesCest
 
         Queue::assertPushed(
             GenerateCsvReportByEmployeeJob::class,
-            fn($job) => $job->params === $requestData && $job->userId = $this->user->id
+            fn ($job) => $job->params === $requestData && $job->userId = $this->user->id
         );
     }
 

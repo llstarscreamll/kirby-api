@@ -72,7 +72,7 @@ class GenerateCsvReportByEmployeeJobCest
 
         // attach same approvers to $latestNovelties
         $approvers = factory(User::class, 2)->create();
-        $latestNovelties->each(fn($novelty) => $novelty->approvals()->sync($approvers));
+        $latestNovelties->each(fn ($novelty) => $novelty->approvals()->sync($approvers));
 
         $user = factory(User::class)->create();
         $params = [
@@ -89,16 +89,16 @@ class GenerateCsvReportByEmployeeJobCest
 
         Excel::fake();
         Notification::fake();
-        
+
         $job = new GenerateCsvReportByEmployeeJob($user->id, $params);
         $result = $job->handle($userRepositoryMock);
-        
+
         $I->assertTrue($result);
         $expectedFile = "novelties/exports/novelties_{$startDate->toDateTimeString()}_{$endDate->toDateTimeString()}.csv";
         $expectedFile = str_replace([' ', ':'], ['_', '-'], $expectedFile);
         Excel::assertStored($expectedFile, 'public', function (NoveltiesExport $export) use ($I, $oldestNovelties, $latestNovelties) {
             $I->assertCount($oldestNovelties->count() + $latestNovelties->count(), $export->query()->get());
-            
+
             return true;
         });
         Notification::assertSentTo($user, NoveltiesExportReady::class);

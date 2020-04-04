@@ -4,20 +4,18 @@ namespace Kirby\Novelties\Jobs;
 
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Maatwebsite\Excel\Excel as ExcelExcel;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use Kirby\Novelties\Exports\NoveltiesExport;
-use Kirby\Users\Contracts\UserRepositoryInterface;
 use Kirby\Novelties\Notifications\NoveltiesExportReady;
+use Kirby\Users\Contracts\UserRepositoryInterface;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * Class GenerateCsvReportByEmployeeJob.
- * 
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class GenerateCsvReportByEmployeeJob implements ShouldQueue

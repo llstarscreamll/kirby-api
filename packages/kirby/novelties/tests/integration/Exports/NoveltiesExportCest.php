@@ -1,4 +1,6 @@
-<?php namespace Novelties\Exports;
+<?php
+
+namespace Novelties\Exports;
 
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Novelties\Exports\NoveltiesExport;
@@ -16,8 +18,10 @@ class NoveltiesExportCest
     /**
      * @param IntegrationTester $I
      */
-    public function _before(IntegrationTester $I) {}
-    
+    public function _before(IntegrationTester $I)
+    {
+    }
+
     /**
      * @test
      * @param IntegrationTester $I
@@ -63,7 +67,7 @@ class NoveltiesExportCest
         $novelty = factory(Novelty::class)->create([
             'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
             'scheduled_start_at' => now()->startOfMonth(),
-            'scheduled_end_at' => now()->startOfMonth()->addHours(2)
+            'scheduled_end_at' => now()->startOfMonth()->addHours(2),
         ]);
         $approvers = factory(User::class, 1)->create(['first_name' => 'Tony', 'last_name' => 'Stark']);
         $approvers = $approvers->push(factory(User::class, 1)->create(['first_name' => 'Steve', 'last_name' => 'Rogers']));

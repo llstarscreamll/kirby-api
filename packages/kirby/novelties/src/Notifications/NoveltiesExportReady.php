@@ -2,11 +2,9 @@
 
 namespace Kirby\Novelties\Notifications;
 
-use Illuminate\Support\Str;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notification;
 
 /**
  * Class NoveltiesExportReady.
