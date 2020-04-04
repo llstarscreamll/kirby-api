@@ -29,7 +29,7 @@ class ExportNoveltiesRequest extends FormRequest
     public function rules()
     {
         return [
-            'employee_id' => ['numeric'],
+            'employee_id' => ['nullable', 'numeric'],
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after:start_date'],
         ];
