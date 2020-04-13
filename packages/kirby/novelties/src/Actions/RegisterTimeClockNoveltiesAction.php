@@ -89,7 +89,7 @@ class RegisterTimeClockNoveltiesAction
 
         $novelties = $this->getApplicableNovelties($timeClockLog)
         //->filter(fn($n) => in_array($n->code, ['PP']))
-            ->sort(fn(NoveltyType $novelty) => $novelty->isDefaultForSubtraction() ? 9999 : 0)
+            ->sort(fn (NoveltyType $novelty) => $novelty->isDefaultForSubtraction() ? 9999 : 0)
         // ->map->toArray()->dd()
             ->map(function ($noveltyType) use ($timeClockLog, $currentDate) {
                 // [$minutes, $subCostCenterId, $periods] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
@@ -97,7 +97,7 @@ class RegisterTimeClockNoveltiesAction
                 // dump($noveltyType->code);
                 $periods = $this->bar($timeClockLog, $noveltyType);
 
-                return array_map(fn(array $period) => [
+                return array_map(fn (array $period) => [
                     'code' => $noveltyType->code,
                     'time_clock_log_id' => $timeClockLog->id,
                     'employee_id' => $timeClockLog->employee_id,
@@ -114,9 +114,9 @@ class RegisterTimeClockNoveltiesAction
             })
             ->filter()
             ->collapse()
-            ->filter(fn($novelty) => ! empty($novelty['total_time_in_minutes']))
+            ->filter(fn ($novelty) => ! empty($novelty['total_time_in_minutes']))
         // ->dd($this->takenPeriods)
-            ->map(fn($i) => Arr::except($i, ['code']));
+            ->map(fn ($i) => Arr::except($i, ['code']));
 
         $this->noveltyRepository->insert($novelties->all());
 
@@ -169,7 +169,7 @@ class RegisterTimeClockNoveltiesAction
         // novedad seleccionada en llegada tarde
         if ($timeClockLog->checkInPunctuality() > 0 && $noveltyType->id === $timeClockLog->check_in_novelty_type_id) {
             $result = new PeriodCollection(...collect([...$noveltyTypePeriods])
-                    ->map(fn(Period $n) => [...$n->diff($timeClockPeriod)])
+                    ->map(fn (Period $n) => [...$n->diff($timeClockPeriod)])
                     ->collapse()
             );
         }
@@ -241,9 +241,9 @@ class RegisterTimeClockNoveltiesAction
         }
 
         $base = collect($workShiftPeriods)
-            ->filter(fn(Period $shiftPeriod) => $shiftPeriod->diff($timeClockPeriod)->count())
-            ->map(fn(Period $shiftPeriod) => $shiftPeriod->diff($timeClockPeriod))
-            ->map(fn(PeriodCollection $shiftPeriod) => [...$shiftPeriod])
+            ->filter(fn (Period $shiftPeriod) => $shiftPeriod->diff($timeClockPeriod)->count())
+            ->map(fn (Period $shiftPeriod) => $shiftPeriod->diff($timeClockPeriod))
+            ->map(fn (PeriodCollection $shiftPeriod) => [...$shiftPeriod])
             ->collapse();
 
         return new PeriodCollection(...$base);
@@ -261,11 +261,11 @@ class RegisterTimeClockNoveltiesAction
 
         $overlapsWithTakenTimes = collect($this->takenPeriods)
             ->filter()
-            ->filter(fn($periods) => array_filter($periods, fn($period) => $period[0]->getTimestamp() - $period[1]->getTimestamp() !== 0))
-            ->map(fn($periods) => array_map(fn($period) => [...$period, Precision::SECOND], $periods))
-            ->map(fn($periods) => array_map(fn($period) => new Period(...$period), $periods))
+            ->filter(fn ($periods) => array_filter($periods, fn ($period) => $period[0]->getTimestamp() - $period[1]->getTimestamp() !== 0))
+            ->map(fn ($periods) => array_map(fn ($period) => [...$period, Precision::SECOND], $periods))
+            ->map(fn ($periods) => array_map(fn ($period) => new Period(...$period), $periods))
             ->collapse()
-            ->filter(fn(Period $period) => $period->overlapsWith(...$noveltyTypePeriods));
+            ->filter(fn (Period $period) => $period->overlapsWith(...$noveltyTypePeriods));
 
         /*if ($novelty->code === 'RECNO') {
         dd(
@@ -284,8 +284,8 @@ class RegisterTimeClockNoveltiesAction
         if ($overlapsWithTakenTimes->count()) {
             return new PeriodCollection(
                 ...$overlapsWithTakenTimes
-                    ->map(fn(Period $period) => $period->diff(...$noveltyTypePeriods))
-                    ->map(fn(PeriodCollection $periods) => [...$periods])
+                    ->map(fn (Period $period) => $period->diff(...$noveltyTypePeriods))
+                    ->map(fn (PeriodCollection $periods) => [...$periods])
                     ->collapse()
             );
         }
@@ -303,7 +303,7 @@ class RegisterTimeClockNoveltiesAction
             return $item->format('Y-m-d H:i:s');
         }
 
-        return array_map(fn($i) => $this->mapper($i), $item);
+        return array_map(fn ($i) => $this->mapper($i), $item);
     }
 
     /**
@@ -320,8 +320,8 @@ class RegisterTimeClockNoveltiesAction
         }
 
         $workShiftPeriods = $workShiftPeriods
-            ->map(fn($slot) => [...$slot, Precision::SECOND])
-            ->map(fn($slot) => Period::make(...$slot));
+            ->map(fn ($slot) => [...$slot, Precision::SECOND])
+            ->map(fn ($slot) => Period::make(...$slot));
 
         return new PeriodCollection(...$workShiftPeriods);
     }
@@ -362,7 +362,7 @@ class RegisterTimeClockNoveltiesAction
 
                 if ($basePeriodForNoveltyX->count()) {
                     $basePeriodForNovelty = collect([...$basePeriodForNoveltyX])
-                        ->map(fn(Period $period) => [Carbon::make($period->getStart()), Carbon::make($period->getEnd())])
+                        ->map(fn (Period $period) => [Carbon::make($period->getStart()), Carbon::make($period->getEnd())])
                         ->first();
                 }
             }
@@ -373,7 +373,7 @@ class RegisterTimeClockNoveltiesAction
 
             $noveltyTypePeriods = $noveltyType->applicablePeriods(...$basePeriodForNovelty)
             // ->dd($basePeriodForNovelty, $noveltyType->code)
-                ->map(fn($i) => array_filter($i))
+                ->map(fn ($i) => array_filter($i))
                 ->filter();
 
             // caso en el que no hay turno ni novedades
@@ -388,8 +388,8 @@ class RegisterTimeClockNoveltiesAction
             }
 
             $noveltyTypePeriods = collect($noveltyTypePeriods)
-                ->map(fn($slot) => [...$slot, Precision::SECOND])
-                ->map(fn($slot) => Period::make(...$slot));
+                ->map(fn ($slot) => [...$slot, Precision::SECOND])
+                ->map(fn ($slot) => Period::make(...$slot));
         } catch (\Throwable $th) {
             dd('ERRORRR', $th, $basePeriodForNovelty, $noveltyType->id);
         }
@@ -431,7 +431,7 @@ class RegisterTimeClockNoveltiesAction
         $workShiftPeriods = $timeClockLog->workShift->mappedTimeSlots($clockTimeStart);
 
         $workShiftSlot = collect($workShiftPeriods)
-            ->sortByDesc(fn($slot) => $slot[0]->diffInMinutes($slot[1]))
+            ->sortByDesc(fn ($slot) => $slot[0]->diffInMinutes($slot[1]))
             ->first();
 
         [$start, $end] = $workShiftSlot;
@@ -554,7 +554,7 @@ class RegisterTimeClockNoveltiesAction
         $applicablePeriod = $timeClockPeriod->overlap($noveltyPeriod);
 
         return $noveltyType->context_type === 'normal_work_shift_time'
-            ? $applicablePeriod->reduce(fn($acc, Period $period) => $acc[] = [$period], [])
+            ? $applicablePeriod->reduce(fn ($acc, Period $period) => $acc[] = [$period], [])
             : [];
     }
 
@@ -794,7 +794,7 @@ class RegisterTimeClockNoveltiesAction
             $timeInMinutes += $deadTimeInMinutes;
         }
 
-        return [$timeInMinutes, $subCostCenterId, $noveltyPeriod->reduce(fn($acc, Period $period) => $acc[] = [$period], [])];
+        return [$timeInMinutes, $subCostCenterId, $noveltyPeriod->reduce(fn ($acc, Period $period) => $acc[] = [$period], [])];
     }
 
     /**

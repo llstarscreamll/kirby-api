@@ -1,4 +1,5 @@
 <?php
+
 namespace Novelties\Models;
 
 use Carbon\Carbon;
@@ -108,9 +109,9 @@ class NoveltyTypeCest
                 Carbon::make('2020-04-01 08:00:00'),
                 // assert
                 [
-                    ['end' => Carbon::make('2020-04-01 08:00:00')]
-                ]
-            ]
+                    ['end' => Carbon::make('2020-04-01 08:00:00')],
+                ],
+            ],
         ];
     }
 
@@ -168,7 +169,7 @@ class NoveltyTypeCest
                 // asserts
                 null,
                 null,
-            ],/**/
+            ], /**/
             [
                 [
                     'apply_on_days_of_type' => DayType::Holiday,

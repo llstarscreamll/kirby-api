@@ -8,7 +8,6 @@ use Kirby\Company\Contracts\HolidayRepositoryInterface;
 
 trait HolidayAware
 {
-
     /**
      * @var \Kirby\Company\Contracts\HolidayRepositoryInterface
      */

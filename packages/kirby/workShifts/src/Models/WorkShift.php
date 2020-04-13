@@ -217,9 +217,9 @@ class WorkShift extends Model
         $beGraceTimeAware = false;
 
         return collect($this->time_slots)
-            ->map(fn(array $timeSlot) => $this->mapTimeSlot($timeSlot, $date, $beGraceTimeAware))
-            ->map(fn($slot) => Arr::only($slot, ['start', 'end']))
-            ->map(fn($slot) => [$slot['start'], $slot['end']]);
+            ->map(fn (array $timeSlot) => $this->mapTimeSlot($timeSlot, $date, $beGraceTimeAware))
+            ->map(fn ($slot) => Arr::only($slot, ['start', 'end']))
+            ->map(fn ($slot) => [$slot['start'], $slot['end']]);
     }
 
     /**

@@ -158,15 +158,15 @@ class NoveltyType extends Model
                 $endIsHoliday = $this->isHoliday($end);
 
                 if ($fixTried && ! $relativeToTime->between($start, $end)) {
-                    return null;
+                    return;
                 }
 
                 if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && $endIsHoliday) {
-                    return null;
+                    return;
                 }
 
                 if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && ! $endIsHoliday) {
-                    return null;
+                    return;
                 }
 
                 // dd(array_map('strval', [$relativeToTime, $start, $end]));
@@ -217,14 +217,14 @@ class NoveltyType extends Model
                 }
 
                 if ($fixTried && ! $relativeToTime->between($start, $end)) {
-                    return null;
+                    return;
                 }
 
                 $startIsHoliday = $this->isHoliday($start);
                 $endIsHoliday = $this->isHoliday($end);
 
                 if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && $endIsHoliday) {
-                    return null;
+                    return;
                 }
 
                 // remove holiday time if this novelty cant be applied on holidays
@@ -243,7 +243,7 @@ class NoveltyType extends Model
                 // dd(array_map('strval', [$relativeToTime, $start, $end]), $startIsHoliday && ! $endIsHoliday);
 
                 if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && ! $endIsHoliday) {
-                    return null;
+                    return;
                 }
 
                 return $end;
@@ -322,7 +322,7 @@ class NoveltyType extends Model
         if ($this->isApplicableInAnyTime()) {
             return collect([[$start, $end]]);
         }
-        
+
         if (! $this->canApplyOnDayType(DayType::Holiday()) && $this->isHoliday($start) && $this->isHoliday($end)) {
             return collect([]);
         }
@@ -336,8 +336,8 @@ class NoveltyType extends Model
                 [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($start)],
                 [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
             ])
-                ->map(fn($range) => array_filter($range))
-                ->filter(fn($range) => count($range) === 2);
+                ->map(fn ($range) => array_filter($range))
+                ->filter(fn ($range) => count($range) === 2);
         }
 
         if ($start->isSameDay($end)) {
@@ -350,10 +350,10 @@ class NoveltyType extends Model
                 [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
             ];
 
-            $posibilites = array_values(array_filter($posibilites, fn($period) => count(array_filter($period)) === 2));
+            $posibilites = array_values(array_filter($posibilites, fn ($period) => count(array_filter($period)) === 2));
             // remove duplicates
             $posibilites = array_reduce($posibilites, function (array $acc, array $possibility) {
-                $valueExists = count(array_filter($acc, fn($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
+                $valueExists = count(array_filter($acc, fn ($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
 
                 if (! $valueExists) {
                     $acc[] = $possibility;
