@@ -5,6 +5,7 @@ namespace Kirby\TimeClock\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
@@ -235,6 +236,70 @@ class TimeClockLog extends Model
     }
 
     /**
+     * @return bool
+     */
+    public function checkInOnTime(): bool
+    {
+        return $this->checkInPunctuality() === 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function checkOutOnTime(): bool
+    {
+        return $this->checkOutPunctuality() === 0;
+    }
+
+    /**
+     * @return Carbon|null
+     */
+    public function expectedCheckIn(): ?Carbon
+    {
+        $offset = null;
+        $graceTimeAware = true;
+        $expectedStartSlot = $this->hasWorkShift()
+            ? $this->workShift->matchingTimeSlot('start', $this->checked_in_at, $offset, $graceTimeAware)
+            : [];
+
+        return Arr::get($expectedStartSlot, 'original_start');
+    }
+
+    /**
+     * @return Carbon|null
+     */
+    public function expectedCheckOut(): ?Carbon
+    {
+        $offset = null;
+        $graceTimeAware = true;
+        $expectedEndSlot = $this->hasWorkShift()
+            ? $this->workShift->matchingTimeSlot('end', $this->checked_out_at, $offset, $graceTimeAware)
+            : [];
+
+        return Arr::get($expectedEndSlot, 'original_end');
+    }
+
+    /**
+     * @return \Carbon\Carbon
+     */
+    public function softCheckInAt(): Carbon
+    {
+        return $this->checkInPunctuality() === 0
+            ? $this->expectedCheckIn() ?? $this->checked_in_at
+            : $this->checked_in_at;
+    }
+
+    /**
+     * @return \Carbon\Carbon
+     */
+    public function softCheckOutAt(): Carbon
+    {
+        return $this->checkOutPunctuality() === 0
+            ? $this->expectedCheckOut() ?? $this->checked_out_at
+            : $this->checked_out_at;
+    }
+
+    /**
      * @param DayType $dayType
      */
     public function getClockedTimeMinutesByDayType(DayType $dayType)
@@ -326,7 +391,9 @@ class TimeClockLog extends Model
      */
     public function checkInPunctuality(Carbon $offSet = null): ?int
     {
-        return optional($this->workShift)->startPunctuality($this->checked_in_at, $offSet);
+        return $this->hasWorkShift()
+            ? $this->workShift->startPunctuality($this->checked_in_at, $offSet)
+            : null;
     }
 
     /**
@@ -334,6 +401,8 @@ class TimeClockLog extends Model
      */
     public function checkOutPunctuality(Carbon $offSet = null): ?int
     {
-        return optional($this->workShift)->endPunctuality($this->checked_out_at, $offSet);
+        return $this->hasWorkShift()
+            ? $this->workShift->endPunctuality($this->checked_out_at, $offSet)
+            : null;
     }
 }

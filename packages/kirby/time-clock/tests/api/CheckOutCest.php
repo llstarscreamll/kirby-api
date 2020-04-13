@@ -388,6 +388,7 @@ class CheckOutCest
                 'check_in_novelty_type_id' => 3,
                 'check_in_sub_cost_center_id' => $this->firstSubCostCenter->id,
                 'checked_out_at' => null,
+                'check_out_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
@@ -443,7 +444,7 @@ class CheckOutCest
             'operator' => NoveltyTypeOperator::Addition,
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '06:00', 'end' => '21:00'],
+                ['start' => '06:00:00', 'end' => '21:00:00'],
             ],
             'context_type' => 'elegible_by_user',
         ]);
@@ -453,7 +454,7 @@ class CheckOutCest
             'operator' => NoveltyTypeOperator::Addition,
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '21:00', 'end' => '06:00'],
+                ['start' => '21:00:00', 'end' => '06:00:00'],
             ],
             'context_type' => 'elegible_by_user',
         ]);
@@ -463,7 +464,7 @@ class CheckOutCest
             'operator' => NoveltyTypeOperator::Addition,
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
-                ['start' => '06:00', 'end' => '21:00'],
+                ['start' => '06:00:00', 'end' => '21:00:00'],
             ],
             'context_type' => 'elegible_by_user',
         ]);

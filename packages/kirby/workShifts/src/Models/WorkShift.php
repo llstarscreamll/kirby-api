@@ -135,15 +135,8 @@ class WorkShift extends Model
      */
     public function canMealTimeApply(int $timeInMinutes): bool
     {
-        return $this->mealTimeInMinutes() && $timeInMinutes >= $this->mealTimeInMinutes();
-    }
-
-    /**
-     * @return int
-     */
-    public function mealTimeInMinutes(): int
-    {
-        return $this->min_minutes_required_to_discount_meal_time;
+        return ! empty($this->min_minutes_required_to_discount_meal_time) &&
+        $timeInMinutes >= $this->min_minutes_required_to_discount_meal_time;
     }
 
     /**
@@ -217,6 +210,19 @@ class WorkShift extends Model
     }
 
     /**
+     * @param Carbon $date
+     */
+    public function mappedTimeSlots(Carbon $date)
+    {
+        $beGraceTimeAware = false;
+
+        return collect($this->time_slots)
+            ->map(fn(array $timeSlot) => $this->mapTimeSlot($timeSlot, $date, $beGraceTimeAware))
+            ->map(fn($slot) => Arr::only($slot, ['start', 'end']))
+            ->map(fn($slot) => [$slot['start'], $slot['end']]);
+    }
+
+    /**
      * @param  array   $timeSlot
      * @param  Carbon  $date
      * @param  bool    $beGraceTimeAware
@@ -249,7 +255,8 @@ class WorkShift extends Model
             $relativeToEnd ? $end = $offSet : $start = $offSet;
         }
 
-        return ['end' => $end, 'start' => $start, 'original_start' => $originalStart, 'original_end' => $originalEnd];
+        // return ['end' => $end, 'start' => $start, 'original_start' => $originalStart, 'original_end' => $originalEnd];
+        return ['end' => $end->setTimezone('UTC'), 'start' => $start->setTimezone('UTC'), 'original_start' => $originalStart->setTimezone('UTC'), 'original_end' => $originalEnd->setTimezone('UTC')];
     }
 
     /**

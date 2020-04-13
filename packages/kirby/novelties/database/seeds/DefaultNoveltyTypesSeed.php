@@ -42,7 +42,7 @@ class DefaultNoveltyTypesSeed extends Seeder
             'time_zone' => 'America/Bogota',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '06:00', 'end' => '21:00'],
+                ['start' => '06:00:00', 'end' => '21:00:00'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
@@ -53,7 +53,7 @@ class DefaultNoveltyTypesSeed extends Seeder
             'time_zone' => 'America/Bogota',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '21:00', 'end' => '06:00'],
+                ['start' => '21:00:01', 'end' => '05:59:59'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
@@ -64,7 +64,7 @@ class DefaultNoveltyTypesSeed extends Seeder
             'time_zone' => 'America/Bogota',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
-                ['start' => '06:00', 'end' => '21:00'],
+                ['start' => '06:00:00', 'end' => '21:00:00'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
@@ -75,47 +75,51 @@ class DefaultNoveltyTypesSeed extends Seeder
             'time_zone' => 'America/Bogota',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
-                ['start' => '21:00', 'end' => '06:00'],
+                ['start' => '21:00:01', 'end' => '05:59:59'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
             'code' => 'HDEF',
             'name' => 'Hora Diurna Extra Festiva',
+            'context_type' => null,
             'time_zone' => 'America/Bogota',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
-                ['start' => '06:00', 'end' => '21:00'],
+                ['start' => '06:00:00', 'end' => '21:00:00'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
             'code' => 'HENF',
             'name' => 'Hora Nocturna Extra Festiva',
+            'context_type' => null,
             'time_zone' => 'America/Bogota',
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
-                ['start' => '21:00', 'end' => '06:00'],
+                ['start' => '21:00:01', 'end' => '05:59:59'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
             'code' => 'HEDI',
             'name' => 'Hora Extra Diurna',
+            'context_type' => null,
             'time_zone' => 'America/Bogota',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '06:00', 'end' => '21:00'],
+                ['start' => '06:00:00', 'end' => '21:00:00'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],
         [
             'code' => 'HENO',
             'name' => 'Hora Nocturna Extra',
+            'context_type' => null,
             'time_zone' => 'America/Bogota',
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '21:00', 'end' => '06:00'],
+                ['start' => '21:00:01', 'end' => '05:59:59'],
             ],
             'operator' => NoveltyTypeOperator::Addition,
         ],

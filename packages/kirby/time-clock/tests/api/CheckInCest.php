@@ -101,7 +101,7 @@ class CheckInCest
             'operator' => NoveltyTypeOperator::Addition,
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '06:00', 'end' => '21:00'],
+                ['start' => '06:00:00', 'end' => '21:00:00'],
             ],
             'context_type' => 'elegible_by_user',
         ]);
@@ -111,7 +111,7 @@ class CheckInCest
             'operator' => NoveltyTypeOperator::Addition,
             'apply_on_days_of_type' => DayType::Workday,
             'apply_on_time_slots' => [
-                ['start' => '21:00', 'end' => '06:00'],
+                ['start' => '21:00:00', 'end' => '06:00:00'],
             ],
             'context_type' => 'elegible_by_user',
         ]);
@@ -121,7 +121,7 @@ class CheckInCest
             'operator' => NoveltyTypeOperator::Addition,
             'apply_on_days_of_type' => DayType::Holiday,
             'apply_on_time_slots' => [
-                ['start' => '06:00', 'end' => '21:00'],
+                ['start' => '06:00:00', 'end' => '21:00:00'],
             ],
             'context_type' => 'elegible_by_user',
         ]);

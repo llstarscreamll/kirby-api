@@ -4,6 +4,9 @@
 
 actor: UnitTester
 modules:
-    enabled:
-        - Asserts
-        - \Novelties\Helper\Unit
+  enabled:
+    - Asserts
+    - \Novelties\Helper\Unit
+    - Laravel5:
+        root: ../../../
+        environment_file: .env.testing

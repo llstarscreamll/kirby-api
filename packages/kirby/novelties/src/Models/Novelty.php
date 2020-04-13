@@ -2,12 +2,12 @@
 
 namespace Kirby\Novelties\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Kirby\Company\Models\SubCostCenter;
-use Kirby\Employees\Models\Employee;
-use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Users\Models\User;
+use Kirby\Employees\Models\Employee;
+use Illuminate\Database\Eloquent\Model;
+use Kirby\Company\Models\SubCostCenter;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Novelty.

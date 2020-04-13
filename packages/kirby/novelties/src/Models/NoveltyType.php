@@ -6,6 +6,8 @@ use BenSampo\Enum\Traits\CastsEnums;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
+use Kirby\Company\Traits\HolidayAware;
 use Kirby\Novelties\Enums\DayType;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
@@ -16,7 +18,7 @@ use Kirby\Novelties\Enums\NoveltyTypeOperator;
  */
 class NoveltyType extends Model
 {
-    use SoftDeletes, CastsEnums;
+    use SoftDeletes, CastsEnums, HolidayAware;
 
     /**
      * @todo this constant flags should be configurable not hard coded.
@@ -89,12 +91,20 @@ class NoveltyType extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function isDefaultForAdditionOrSubtraction(): bool
+    {
+        return $this->isDefaultForAddition() || $this->isDefaultForSubtraction();
+    }
+
+    /**
      * @param  DayType $dayType
      * @return mixed
      */
     public function canApplyOnDayType(DayType $dayType): bool
     {
-        return $this->apply_on_days_of_type->is($dayType);
+        return $this->apply_on_days_of_type && $this->apply_on_days_of_type->is($dayType);
     }
 
     /**
@@ -118,52 +128,146 @@ class NoveltyType extends Model
     }
 
     /**
-     * @param Carbon $relativeToTime
+     * @param  Carbon|null   $relativeToTime
+     * @return Carbon|null
      */
-    public function minStartTimeSlot(Carbon $relativeToTime = null)
+    public function minStartTimeSlot(Carbon $relativeToTime = null): ?Carbon
     {
         $relativeToTime = $relativeToTime ?? now();
 
         return collect($this->apply_on_time_slots)
             ->map(function (array $timeSlot) use ($relativeToTime) {
                 $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime);
+                /*
+             * @var Carbon
+             */
+                $start = $timeSlot['start'];
+                /*
+             * @var Carbon
+             */
+                $end = $timeSlot['end'];
+                $fixTried = false;
 
-                return $timeSlot['start'];
-            })->sort()->first();
+                if (! $relativeToTime->between($start, $end) && ! $start->isSameDay($end)) {
+                    $start->addDay();
+                    $end->addDay();
+                    $fixTried = true;
+                }
+
+                $startIsHoliday = $this->isHoliday($start);
+                $endIsHoliday = $this->isHoliday($end);
+
+                if ($fixTried && ! $relativeToTime->between($start, $end)) {
+                    return null;
+                }
+
+                if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && $endIsHoliday) {
+                    return null;
+                }
+
+                if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && ! $endIsHoliday) {
+                    return null;
+                }
+
+                // dd(array_map('strval', [$relativeToTime, $start, $end]));
+                // dd(array_map('strval', [$relativeToTime, $start, $end]), $startIsHoliday, 'foo');
+                if (! $this->canApplyOnDayType(DayType::Holiday()) && $startIsHoliday && ! $endIsHoliday) {
+                    return $end->startOfDay();
+                }
+
+                // take care when new day reached and this novelty cant be applied on holidays
+                if (! $this->canApplyOnDayType(DayType::Holiday()) && $startIsHoliday) {
+                    $start->startOfDay()->subSecond();
+
+                    return ! $this->isHoliday($start) ? $this->minStartTimeSlot($start) : null;
+                }
+
+                if ($this->canApplyOnDayType(DayType::Holiday()) && ! $this->isHoliday($start) && $endIsHoliday) {
+                    return $start->addDay()->startOfDay();
+                }
+
+                return $start;
+            })->filter()->sort()->first();
     }
 
     /**
      * @param Carbon $relativeToTime
      */
-    public function maxEndTimeSlot(Carbon $relativeToTime = null)
+    public function maxEndTimeSlot(Carbon $relativeToTime = null): ?Carbon
     {
         $relativeToTime = $relativeToTime ?? now();
 
         return collect($this->apply_on_time_slots)
             ->map(function (array $timeSlot) use ($relativeToTime) {
                 $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime);
+                /*
+             * @var Carbon
+             */
+                $start = $timeSlot['start'];
+                /*
+             * @var Carbon
+             */
+                $end = $timeSlot['end'];
+                $fixTried = false;
 
-                return $timeSlot['end'];
-            })->sort()->last();
+                if (! $relativeToTime->between($start, $end)) {
+                    $start->addDay();
+                    $end->addDay();
+                    $fixTried = true;
+                }
+
+                if ($fixTried && ! $relativeToTime->between($start, $end)) {
+                    return null;
+                }
+
+                $startIsHoliday = $this->isHoliday($start);
+                $endIsHoliday = $this->isHoliday($end);
+
+                if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && $endIsHoliday) {
+                    return null;
+                }
+
+                // remove holiday time if this novelty cant be applied on holidays
+                if (! $this->canApplyOnDayType(DayType::Holiday()) && $endIsHoliday) {
+                    $newEnd = $end->copy()->startOfDay()->subSecond();
+
+                    return $this->isHoliday($newEnd)
+                        ? null
+                        : ($newEnd->between($start, $end) ? $newEnd : $this->maxEndTimeSlot($newEnd));
+                }
+
+                if ($this->canApplyOnDayType(DayType::Holiday()) && $startIsHoliday && ! $endIsHoliday) {
+                    return $start->endOfDay()->setMilliseconds(0);
+                }
+
+                // dd(array_map('strval', [$relativeToTime, $start, $end]), $startIsHoliday && ! $endIsHoliday);
+
+                if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && ! $endIsHoliday) {
+                    return null;
+                }
+
+                return $end;
+            })->filter()->sort()->last();
     }
 
     /**
      * @param array  $timeSlot
      * @param Carbon $date
      */
-    private function mapTimeSlot(array $timeSlot, Carbon $date = null): array
+    private function mapTimeSlot(array $timeSlot, Carbon $relativeDate = null): array
     {
-        $date = $date ?? now();
-        $date->setTimezone($this->time_zone);
+        $relativeDate = $relativeDate ?? now();
+        $relativeDate->setTimezone($this->time_zone);
 
-        [$hour, $seconds] = explode(':', $timeSlot['start']);
-        $start = $date->copy()->setTime($hour, $seconds);
+        [$hour, $minutes, $seconds] = explode(':', $timeSlot['start']);
+        $start = $relativeDate->copy()->setTime($hour, $minutes, $seconds);
 
-        [$hour, $seconds] = explode(':', $timeSlot['end']);
-        $end = $date->copy()->setTime($hour, $seconds);
+        [$hour, $minutes, $seconds] = explode(':', $timeSlot['end']);
+        $end = $relativeDate->copy()->setTime($hour, $minutes, $seconds);
 
         if ($start->greaterThan($end)) {
-            $end = $end->addDay();
+            // $end = $end->addDay();
+            $start = $start->subDay();
         }
 
         return [
@@ -204,5 +308,100 @@ class NoveltyType extends Model
         }
 
         return $applicableMinutes;
+    }
+
+    /**
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @return mixed
+     */
+    public function applicablePeriods(Carbon $start, Carbon $end): Collection
+    {
+        $result = [];
+
+        if ($this->isApplicableInAnyTime()) {
+            return collect([[$start, $end]]);
+        }
+        
+        if (! $this->canApplyOnDayType(DayType::Holiday()) && $this->isHoliday($start) && $this->isHoliday($end)) {
+            return collect([]);
+        }
+
+        if ($this->canApplyOnDayType(DayType::Holiday()) && ! $this->hasAnyHoliday([$start, $end])) {
+            return collect([]);
+        }
+
+        if (! $start->isSameDay($end)) {
+            return collect([
+                [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($start)],
+                [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
+            ])
+                ->map(fn($range) => array_filter($range))
+                ->filter(fn($range) => count($range) === 2);
+        }
+
+        if ($start->isSameDay($end)) {
+            $noveltyStart = $this->minStartTimeSlot($start);
+            $noveltyEnd = $this->maxEndTimeSlot($end);
+
+            $posibilites = [
+                [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($end)],
+                [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($start)],
+                [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
+            ];
+
+            $posibilites = array_values(array_filter($posibilites, fn($period) => count(array_filter($period)) === 2));
+            // remove duplicates
+            $posibilites = array_reduce($posibilites, function (array $acc, array $possibility) {
+                $valueExists = count(array_filter($acc, fn($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
+
+                if (! $valueExists) {
+                    $acc[] = $possibility;
+                }
+
+                return $acc;
+            }, []);
+
+            return collect($posibilites);
+        }
+
+        return collect([$result]);
+    }
+
+    /**
+     * @param Carbon $a
+     * @param Carbon $b
+     */
+    public function foo(Carbon $a, Carbon $b): array
+    {
+        if ($this->hasAnyHoliday([$a, $b]) && ! $this->canApplyOnDayType(DayType::Holiday())) {
+            return [];
+        }
+
+        if ($this->canApplyOnDayType(DayType::Holiday()) && ! $this->hasAnyHoliday([$a, $b])) {
+            return [];
+        }
+
+        if (! $a->between($this->minStartTimeSlot($a), $this->maxEndTimeSlot($a), false) &&
+            ! $b->between($this->minStartTimeSlot($b), $this->maxEndTimeSlot($b), false)) {
+            return [];
+        }
+
+        $start = $a->between($this->minStartTimeSlot($a), $this->maxEndTimeSlot($a))
+            ? $a : $this->minStartTimeSlot($a);
+
+        $end = $b->between($this->minStartTimeSlot($b), $this->maxEndTimeSlot($a))
+            ? $b : $this->maxEndTimeSlot($a);
+
+        // fix for novelty types where their time slots are 21-06 like (from one day to another)
+        if ($b->lessThan($this->minStartTimeSlot($a))) {
+            $end = $start;
+        }
+
+        if ($this->isApplicableInAnyTime()) {
+            return [$a, $b];
+        }
+
+        return [$start, $end];
     }
 }

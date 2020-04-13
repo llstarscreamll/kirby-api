@@ -132,13 +132,25 @@ trait CheckInOut
 
         $isHoliday = $this->holidayRepository->countWhereIn('date', [$currentDateTime]);
 
-        $noveltyTypes = $noveltyTypes->filter(function (NoveltyType $noveltyType) use ($currentDateTime, $isHoliday) {
-            return ($noveltyType->isApplicableInAnyTime()
-                || $currentDateTime->between(
-                    $noveltyType->minStartTimeSlot($currentDateTime),
-                    $noveltyType->maxEndTimeSlot($currentDateTime)
-                )) && ($noveltyType->isApplicableInAnyDay() || $noveltyType->apply_on_days_of_type->is($isHoliday || $currentDateTime->isSunday() ? DayType::Holiday : DayType::Workday));
-        });
+        $noveltyTypes = $noveltyTypes
+            ->filter(function (NoveltyType $noveltyType) use ($currentDateTime, $isHoliday) {
+                $start = $noveltyType->minStartTimeSlot($currentDateTime);
+                $end = $noveltyType->maxEndTimeSlot($currentDateTime);
+                $currentDayType = $isHoliday || $currentDateTime->isSunday() ? DayType::Holiday : DayType::Workday;
+
+                return ($noveltyType->isApplicableInAnyTime() || $currentDateTime->between($start, $end)) &&
+                    ($noveltyType->isApplicableInAnyDay() || $noveltyType->apply_on_days_of_type->is($currentDayType));
+            })
+            ->filter(fn($n) => ($n->isApplicableInAnyTime() || $n->isApplicableInAnyDay()) || ! ! $n->minStartTimeSlot($currentDateTime) && ! ! $n->maxEndTimeSlot($currentDateTime))
+            ->filter(function ($noveltyType) use ($currentDateTime, $flag) {
+                $start = $noveltyType->minStartTimeSlot($currentDateTime);
+                $end = $noveltyType->maxEndTimeSlot($currentDateTime);
+                $closest = $currentDateTime->closest($start, $end);
+
+                return $noveltyType->isApplicableInAnyTime() ||
+                $noveltyType->isApplicableInAnyDay() ||
+                $closest->equalTo($flag === 'start' ? $start : $end);
+            });
 
         // last selected sub cost centers based on time clock logs
         $subCostCenters = $this->timeClockLogRepository
