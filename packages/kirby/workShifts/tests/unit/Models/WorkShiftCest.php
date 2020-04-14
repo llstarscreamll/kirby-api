@@ -168,7 +168,7 @@ class WorkShiftCest
     /**
      * @return array
      */
-    public function deadTimeDataProvider(): array
+    protected function deadTimeDataProvider(): array
     {
         return [
             [
@@ -238,7 +238,7 @@ class WorkShiftCest
      * @param UnitTester $I
      * @param Example    $data
      */
-    public function testdeadTimeRanges(UnitTester $I, Example $data)
+    public function deadTimeRanges(UnitTester $I, Example $data)
     {
         $workShift = WorkShift::create($data['workShiftData']);
         $workShift->refresh();
@@ -251,5 +251,43 @@ class WorkShiftCest
             $I->assertTrue($slotResult['start']->equalTo($data['expected'][$key]['start']));
             $I->assertTrue($slotResult['end']->equalTo($data['expected'][$key]['end']));
         });
+    }
+
+    protected function workShiftExamples(): array
+    {
+        return [
+            [
+                [
+                    'name' => 'test',
+                    'time_zone' => 'America/Bogota',
+                    'time_slots' => [
+                        ['start' => '07:00', 'end' => '12:00'],
+                        ['start' => '13:00', 'end' => '18:00'],
+                    ],
+                ],
+                Carbon::now()->setTimezone('UTC')->setDate(2020, 06, 21)->setTime(06, 00, 00),
+                // assert
+                [
+                    [Carbon::make('2020-06-21 12:00:00'), Carbon::make('2020-06-21 17:00:00')],
+                    [Carbon::make('2020-06-21 18:00:00'), Carbon::make('2020-06-21 23:00:00')],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider workShiftExamples
+     * @param UnitTester $I
+     * @param Example    $data
+     */
+    public function mappedTimeSlots(UnitTester $I, Example $data)
+    {
+        [$attrs, $relativeToTime, $expected] = $data;
+
+        $workShift = factory(WorkShift::class)->make($attrs);
+        $result = $workShift->mappedTimeSlots($relativeToTime);
+
+        $I->assertEquals($expected, $result->all());
     }
 }
