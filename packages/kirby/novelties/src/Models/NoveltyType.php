@@ -271,8 +271,8 @@ class NoveltyType extends Model
         }
 
         return [
-            'end' => $end,
-            'start' => $start,
+            'end' => $end->setTimezone('UTC'),
+            'start' => $start->setTimezone('UTC'),
         ];
     }
 
@@ -318,6 +318,8 @@ class NoveltyType extends Model
     public function applicablePeriods(Carbon $start, Carbon $end): Collection
     {
         $result = [];
+        $start = $start->copy();
+        $end = $end->copy();
 
         if ($this->isApplicableInAnyTime()) {
             return collect([[$start, $end]]);

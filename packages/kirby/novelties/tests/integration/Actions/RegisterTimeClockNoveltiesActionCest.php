@@ -4,6 +4,8 @@ namespace Novelties\Actions;
 
 use Carbon\Carbon;
 use Codeception\Example;
+use DefaultNoveltyTypesSeed;
+use DefaultWorkShiftsSeeder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -1460,5 +1462,57 @@ class RegisterTimeClockNoveltiesActionCest
         ]);
 
         $I->seeNumRecords(2, 'novelties', ['time_clock_log_id' => $afternoonLog->id]);
+    }
+
+    /**
+     * @test
+     * @param IntegrationTester $I
+     */
+    public function shouldBeAwareOfDistinctWorkShiftTimeZones(IntegrationTester $I)
+    {
+        // default values on America/Bogota timezone
+        $I->callArtisan('db:seed', ['--class' => DefaultWorkShiftsSeeder::class]);
+        $I->callArtisan('db:seed', ['--class' => DefaultNoveltyTypesSeed::class]);
+
+        $noveltyTypes = NoveltyType::all();
+
+        // data is stored in UTC
+        $log = factory(TimeClockLog::class)->create([
+            "sub_cost_center_id" => factory(SubCostCenter::class)->create()->id,
+            "work_shift_id" => WorkShift::where('name', '07-18')->first()->id,
+            "checked_in_at" => "2021-04-12 11:00:00",
+            "checked_out_at" => "2021-04-12 19:00:00",
+        ]);
+
+        $action = app(RegisterTimeClockNoveltiesAction::class);
+        $action->run($log->id);
+
+        $I->seeRecord('novelties', [
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HADI')->id,
+            'scheduled_start_at' => '2021-04-12 11:00:00',
+            'scheduled_end_at' => '2021-04-12 11:59:59',
+        ]);
+
+        $I->seeRecord('novelties', [
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN')->id,
+            'scheduled_start_at' => '2021-04-12 12:00:00',
+            'scheduled_end_at' => '2021-04-12 17:00:00',
+        ]);
+
+        $I->seeRecord('novelties', [
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HADI')->id,
+            'scheduled_start_at' => '2021-04-12 17:00:01',
+            'scheduled_end_at' => '2021-04-12 17:59:59',
+        ]);
+
+        $I->seeRecord('novelties', [
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN')->id,
+            'scheduled_start_at' => '2021-04-12 18:00:00',
+            'scheduled_end_at' => '2021-04-12 19:00:00',
+        ]);
     }
 }
