@@ -1478,10 +1478,10 @@ class RegisterTimeClockNoveltiesActionCest
 
         // data is stored in UTC
         $log = factory(TimeClockLog::class)->create([
-            "sub_cost_center_id" => factory(SubCostCenter::class)->create()->id,
-            "work_shift_id" => WorkShift::where('name', '07-18')->first()->id,
-            "checked_in_at" => "2021-04-12 11:00:00",
-            "checked_out_at" => "2021-04-12 19:00:00",
+            'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
+            'work_shift_id' => WorkShift::where('name', '07-18')->first()->id,
+            'checked_in_at' => '2021-04-12 11:00:00',
+            'checked_out_at' => '2021-04-12 19:00:00',
         ]);
 
         $action = app(RegisterTimeClockNoveltiesAction::class);

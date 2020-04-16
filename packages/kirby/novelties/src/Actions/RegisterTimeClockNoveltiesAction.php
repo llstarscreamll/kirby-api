@@ -90,7 +90,7 @@ class RegisterTimeClockNoveltiesAction
         $novelties = $this->getApplicableNovelties($timeClockLog)
             // ->filter(fn($n) => in_array($n->code, ['HADI']))
             ->sort(fn(NoveltyType $novelty) => $novelty->isDefaultForSubtraction() ? 9999 : 0)
-        // ->map->toArray()->dd()
+            // ->map->toArray()->dd()
             ->map(function ($noveltyType) use ($timeClockLog, $currentDate) {
                 // [$minutes, $subCostCenterId, $periods] = $this->solveTimeForNoveltyType($timeClockLog, $noveltyType);
                 $subCostCenterId = null;
@@ -347,7 +347,7 @@ class RegisterTimeClockNoveltiesAction
         $scheduledNoveltyPeriod = $this->getTimeFlagOffSetX('end', $timeClockLog);
         $scheduledNoveltyPeriodStart = $this->getTimeFlagOffSetX('start', $timeClockLog);
         $scheduledNoveltyPeriod = array_filter([$scheduledNoveltyPeriod, $scheduledNoveltyPeriodStart]);
-        
+
         // dd($basePeriodForNovelty, $noveltyType->applicablePeriods(...$basePeriodForNovelty), 'foo');
 
         if ($this->novelType->code === 'HN') {
