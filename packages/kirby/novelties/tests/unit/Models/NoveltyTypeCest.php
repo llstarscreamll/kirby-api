@@ -121,12 +121,54 @@ class NoveltyTypeCest
             [
                 [
                     'apply_on_days_of_type' => DayType::Holiday,
+                    'time_zone' => 'America/Bogota',
                     'apply_on_time_slots' => [
                         ['start' => '21:00:00', 'end' => '06:00:00'],
                     ],
                 ],
                 0,
-                Carbon::make('2020-04-06 06:00:00'), // work day monday
+                Carbon::now()->setTimezone('America/Bogota')->setDateTime(2021, 04, 04, 22, 00, 00), // sunday holiday
+                // asserts
+                Carbon::make('2021-04-05 02:00:00'), // 21:00 in America/Bogota
+                Carbon::make('2021-04-05 04:59:59'), // 23:59 in America/Bogota
+            ],
+            [
+                [
+                    'apply_on_days_of_type' => DayType::Holiday,
+                    'time_zone' => 'America/Bogota',
+                    'apply_on_time_slots' => [
+                        ['start' => '21:00:00', 'end' => '06:00:00'],
+                    ],
+                ],
+                0,
+                Carbon::make('2020-04-06 06:00:00'), // 01am in America/Bogota workday monday
+                // asserts
+                Carbon::make('2020-04-06 02:00:00'), // 21:00 in America/Bogota
+                Carbon::make('2020-04-06 04:59:59'), // 23:59 in America/Bogota
+            ],
+            [
+                [
+                    'apply_on_days_of_type' => DayType::Holiday,
+                    'time_zone' => 'America/Bogota',
+                    'apply_on_time_slots' => [
+                        ['start' => '21:00:00', 'end' => '06:00:00'],
+                    ],
+                ],
+                0,
+                Carbon::now()->setTimezone('America/Bogota')->setDateTime(2020, 04, 05, 22, 00, 00), // workday monday
+                // asserts
+                Carbon::make('2020-04-06 02:00:00'), // 21:00 in America/Bogota
+                Carbon::make('2020-04-06 04:59:59'), // 23:59 in America/Bogota
+            ],
+            [
+                [
+                    'apply_on_days_of_type' => DayType::Holiday,
+                    'apply_on_time_slots' => [
+                        ['start' => '21:00:00', 'end' => '06:00:00'],
+                    ],
+                ],
+                0,
+                Carbon::make('2020-04-06 06:00:00'), // workday monday
                 // asserts
                 Carbon::make('2020-04-05 21:00:00'),
                 Carbon::make('2020-04-05 23:59:59'),
@@ -169,7 +211,7 @@ class NoveltyTypeCest
                 // asserts
                 null,
                 null,
-            ], /**/
+            ],
             [
                 [
                     'apply_on_days_of_type' => DayType::Holiday,
@@ -189,6 +231,20 @@ class NoveltyTypeCest
     protected function workdayNoveltyTypes(): array
     {
         return [
+            [
+                [
+                    'apply_on_days_of_type' => DayType::Workday,
+                    'time_zone' => 'America/Bogota',
+                    'apply_on_time_slots' => [
+                        ['start' => '21:00:00', 'end' => '06:00:00'],
+                    ],
+                ],
+                0,
+                Carbon::now()->setTimezone('America/Bogota')->setDateTime(2021, 04, 04, 22, 00, 00), // sunday holiday
+                // asserts
+                Carbon::make('2021-04-05 05:00:00'), // 00:00 in America/Bogota
+                Carbon::make('2021-04-05 11:00:00'), // 06:00 in America/Bogota
+            ],
             [
                 [
                     'apply_on_days_of_type' => DayType::Workday,
@@ -223,7 +279,7 @@ class NoveltyTypeCest
                     ],
                 ],
                 0,
-                Carbon::make('2020-04-06 06:00:00'), // work day monday
+                Carbon::make('2020-04-06 06:00:00'), // workday monday
                 // asserts
                 Carbon::make('2020-04-06 00:00:00'), // not 2020-04-05 21:00:00 because is sunday holiday
                 Carbon::make('2020-04-06 06:00:00'),

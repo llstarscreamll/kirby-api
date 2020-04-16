@@ -88,7 +88,7 @@ class RegisterTimeClockNoveltiesAction
         $this->attachScheduledNovelties($timeClockLog);
 
         $novelties = $this->getApplicableNovelties($timeClockLog)
-        //->filter(fn($n) => in_array($n->code, ['PP']))
+            // ->filter(fn($n) => in_array($n->code, ['HADI']))
             ->sort(fn(NoveltyType $novelty) => $novelty->isDefaultForSubtraction() ? 9999 : 0)
         // ->map->toArray()->dd()
             ->map(function ($noveltyType) use ($timeClockLog, $currentDate) {
@@ -115,7 +115,7 @@ class RegisterTimeClockNoveltiesAction
             ->filter()
             ->collapse()
             ->filter(fn($novelty) => ! empty($novelty['total_time_in_minutes']))
-        // ->dd($this->takenPeriods)
+            // ->dd($this->takenPeriods)
             ->map(fn($i) => Arr::except($i, ['code']));
 
         $this->noveltyRepository->insert($novelties->all());
@@ -347,6 +347,8 @@ class RegisterTimeClockNoveltiesAction
         $scheduledNoveltyPeriod = $this->getTimeFlagOffSetX('end', $timeClockLog);
         $scheduledNoveltyPeriodStart = $this->getTimeFlagOffSetX('start', $timeClockLog);
         $scheduledNoveltyPeriod = array_filter([$scheduledNoveltyPeriod, $scheduledNoveltyPeriodStart]);
+        
+        // dd($basePeriodForNovelty, $noveltyType->applicablePeriods(...$basePeriodForNovelty), 'foo');
 
         if ($this->novelType->code === 'HN') {
             //dd($scheduledNoveltyPeriod, $basePeriodForNovelty, $noveltyType->applicablePeriods(...$basePeriodForNovelty));
