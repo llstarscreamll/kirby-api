@@ -148,51 +148,51 @@ class NoveltyType extends Model
                 */
                 $end = $timeSlot['end'];
                 $fixTried = false;
-                
+
                 if (! $relativeToTime->between($start, $end) /*&& ! $start->isSameDay($end)*/) {
                     $start->addDay();
                     $end->addDay();
                     $fixTried = true;
                 }
-                
+
                 $result = $start;
                 $startIsHoliday = $this->isHoliday($start);
                 $endIsHoliday = $this->isHoliday($end);
-                
+
                 if ($fixTried && ! $relativeToTime->between($start, $end)) {
                     return;
                 }
-                
+
                 if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && $endIsHoliday) {
                     return;
                 }
-                
+
                 if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && ! $endIsHoliday) {
                     return;
                 }
-                
+
                 if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && ! $endIsHoliday) {
                     $result = $end->startOfDay();
                 }
-                
+
                 // take care when new day reached and this novelty cant be applied on holidays
                 /// if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday) {
                 ///     $newStart = $start->copy()->startOfDay()->subSecond();
-                ///     
+                ///
                 ///     $result = ! $this->isHoliday($newStart) ? $this->minStartTimeSlot($newStart) : null;
                 /// }
                 // dd($relativeToTime, $result);
-                
-                if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && !$this->isHoliday($relativeToTime->copy()->setTimezone($this->time_zone))) {
+
+                if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && ! $this->isHoliday($relativeToTime->copy()->setTimezone($this->time_zone))) {
                     $result = $relativeToTime->copy()->startOfDay();
                 }
 
                 // dd($relativeToTime, $start, 'foo');
-                
+
                 if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && $endIsHoliday) {
                     $result = $start->addDay()->startOfDay();
                 }
-                
+
                 return $result ? $result->setTimeZone('UTC') : null;
             })->filter()->sort()->first();
     }
@@ -218,30 +218,27 @@ class NoveltyType extends Model
                 $result = $end;
                 $fixTried = false;
 
-                
-                
                 if (! $relativeToTime->between($start, $end)) {
                     $start->addDay();
                     $end->addDay();
                     $fixTried = true;
                 }
-                
+
                 if ($fixTried && ! $relativeToTime->between($start, $end)) {
                     return;
                 }
 
-                
                 $startIsHoliday = $this->isHoliday($start);
                 $endIsHoliday = $this->isHoliday($end);
-                
+
                 if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && $endIsHoliday) {
                     return;
                 }
-                
+
                 // remove holiday time if this novelty cant be applied on holidays
                 if (! $this->canApplyOnDayType(DayType::Holiday()) && $endIsHoliday) {
                     $newEnd = $end->copy()->startOfDay()->subSecond();
-                    
+
                     $result = $this->isHoliday($newEnd)
                     ? null
                     : ($newEnd->between($start, $end) ? $newEnd : $this->maxEndTimeSlot($newEnd));
@@ -250,7 +247,6 @@ class NoveltyType extends Model
                 if ($this->canApplyOnDayType(DayType::Holiday()) && $startIsHoliday && ! $endIsHoliday) {
                     $result = $start->endOfDay()->setMilliseconds(0);
                 }
-                
 
                 if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && ! $endIsHoliday) {
                     return;
@@ -332,27 +328,25 @@ class NoveltyType extends Model
         $start = $start->copy()->setTimezone($this->time_zone);
         $end = $end->copy()->setTimezone($this->time_zone);
 
-        
         if ($this->isApplicableInAnyTime()) {
             return collect([[$start->setTimezone('UTC'), $end->setTimezone('UTC')]]);
         }
-        
+
         if (! $this->canApplyOnDayType(DayType::Holiday()) && $this->isHoliday($start) && $this->isHoliday($end)) {
             return collect([]);
         }
-        
+
         if ($this->canApplyOnDayType(DayType::Holiday()) && ! $this->hasAnyHoliday([$start, $end])) {
             return collect([]);
         }
-        
-        
+
         if (! $start->isSameDay($end)) {
             return collect([
                 [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($start)],
                 [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
-                ])
-                ->map(fn($range) => array_filter($range))
-                ->filter(fn($range) => count($range) === 2);
+            ])
+                ->map(fn ($range) => array_filter($range))
+                ->filter(fn ($range) => count($range) === 2);
         }
 
         if ($start->isSameDay($end)) {
@@ -366,10 +360,10 @@ class NoveltyType extends Model
 
             // dd($start, $end, $posibilites, '-----');
 
-            $posibilites = array_values(array_filter($posibilites, fn($period) => count(array_filter($period)) === 2));
+            $posibilites = array_values(array_filter($posibilites, fn ($period) => count(array_filter($period)) === 2));
             // remove duplicates
             $posibilites = array_reduce($posibilites, function (array $acc, array $possibility) {
-                $valueExists = count(array_filter($acc, fn($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
+                $valueExists = count(array_filter($acc, fn ($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
 
                 if (! $valueExists) {
                     $acc[] = $possibility;
