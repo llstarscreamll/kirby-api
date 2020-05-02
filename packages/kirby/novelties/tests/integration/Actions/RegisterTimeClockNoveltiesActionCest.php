@@ -179,7 +179,7 @@ class RegisterTimeClockNoveltiesActionCest
     protected function successCases()
     {
         return [
-            [
+            /**/[
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 07:00:00', // on time
@@ -542,31 +542,35 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
+                        'sub_cost_center_id' => 1,
                         'total_time_in_minutes' => (60 * 5) - 1,
                         'scheduled_start_at' => '2019-04-03 07:00:00',
                         'scheduled_end_at' => '2019-04-03 11:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HN',
+                        'sub_cost_center_id' => 1,
                         'total_time_in_minutes' => (60 * 5) - 1,
                         'scheduled_start_at' => '2019-04-03 13:00:01',
                         'scheduled_end_at' => '2019-04-03 18:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HEDI', // because of check_in_novelty_type_code
+                        'sub_cost_center_id' => 1,
                         'total_time_in_minutes' => (60 * 1) - 1,
                         'scheduled_start_at' => '2019-04-03 06:00:00',
                         'scheduled_end_at' => '2019-04-03 06:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HADI', // because of check_out_novelty_type_code
+                        'sub_cost_center_id' => 2,
                         'total_time_in_minutes' => (60 * 1) - 1,
                         'scheduled_start_at' => '2019-04-03 18:00:01',
                         'scheduled_end_at' => '2019-04-03 19:00:00',
                     ],
                 ],
             ],
-            [
+            /**/[
                 'timeClockLog' => [
                     'work_shift_name' => '7-17',
                     'checked_in_at' => '2019-04-01 07:00:00', // on time
@@ -1226,7 +1230,6 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                 ],
             ],
-            /**//**/
         ];
     }
 
@@ -1278,7 +1281,7 @@ class RegisterTimeClockNoveltiesActionCest
                 'employee_id' => $timeClockLog->employee->id,
                 'novelty_type_id' => $noveltyType->id,
                 'total_time_in_minutes' => $novelty['total_time_in_minutes'],
-                // 'sub_cost_center_id' => $novelty['sub_cost_center_id'] ?? null,
+                'sub_cost_center_id' => $novelty['sub_cost_center_id'] ?? null,
             ]);
         }
     }
