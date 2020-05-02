@@ -78,7 +78,7 @@ class RegisterTimeClockNoveltiesAction
         $this->attachScheduledNovelties($timeClockLog);
 
         $novelties = $this->getApplicableNovelties()
-            ->sort(fn(NoveltyType $novelty) => $novelty->isDefaultForSubtraction() ? 9999 : 0)
+            ->sort(fn (NoveltyType $novelty) => $novelty->isDefaultForSubtraction() ? 9999 : 0)
             ->map(function ($noveltyType) use ($timeClockLog, $currentDate) {
                 $periods = $this->solveNoveltyTypeTime($timeClockLog, $noveltyType);
                 $subCostCenterId = $timeClockLog->sub_cost_center_id;
@@ -108,8 +108,8 @@ class RegisterTimeClockNoveltiesAction
             })
             ->filter()
             ->collapse()
-            ->filter(fn($novelty) => ! empty($novelty['total_time_in_minutes']))
-            ->map(fn($i) => Arr::except($i, ['code', 'total_time_in_minutes']));
+            ->filter(fn ($novelty) => ! empty($novelty['total_time_in_minutes']))
+            ->map(fn ($i) => Arr::except($i, ['code', 'total_time_in_minutes']));
 
         $this->noveltyRepository->insert($novelties->all());
 
@@ -312,13 +312,13 @@ class RegisterTimeClockNoveltiesAction
 
             if ($basePeriodForNoveltyX->count()) {
                 $basePeriodForNovelty = collect([...$basePeriodForNoveltyX])
-                    ->map(fn(Period $period) => [Carbon::make($period->getStart()), Carbon::make($period->getEnd())])
+                    ->map(fn (Period $period) => [Carbon::make($period->getStart()), Carbon::make($period->getEnd())])
                     ->first();
             }
         }
 
         $noveltyTypePeriods = $noveltyType->applicablePeriods(...$basePeriodForNovelty)
-            ->map(fn($i) => array_filter($i))
+            ->map(fn ($i) => array_filter($i))
             ->filter();
 
         // caso en el que no hay turno ni novedades
@@ -333,8 +333,8 @@ class RegisterTimeClockNoveltiesAction
         }
 
         $noveltyTypePeriods = collect($noveltyTypePeriods)
-            ->map(fn($slot) => [...$slot, Precision::SECOND])
-            ->map(fn($slot) => Period::make(...$slot));
+            ->map(fn ($slot) => [...$slot, Precision::SECOND])
+            ->map(fn ($slot) => Period::make(...$slot));
 
         return (new PeriodCollection(...$noveltyTypePeriods))
             ->overlap(new PeriodCollection(Period::make(...[...$basePeriodForNovelty, Precision::SECOND])));

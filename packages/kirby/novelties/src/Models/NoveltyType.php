@@ -326,8 +326,8 @@ class NoveltyType extends Model
                 [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($start)],
                 [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
             ])
-                ->map(fn($range) => array_filter($range))
-                ->filter(fn($range) => count($range) === 2);
+                ->map(fn ($range) => array_filter($range))
+                ->filter(fn ($range) => count($range) === 2);
         }
 
         if ($start->isSameDay($end)) {
@@ -337,10 +337,10 @@ class NoveltyType extends Model
                 [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
             ];
 
-            $posibilites = array_values(array_filter($posibilites, fn($period) => count(array_filter($period)) === 2));
+            $posibilites = array_values(array_filter($posibilites, fn ($period) => count(array_filter($period)) === 2));
             // remove duplicates
             $posibilites = array_reduce($posibilites, function (array $acc, array $possibility) {
-                $valueExists = count(array_filter($acc, fn($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
+                $valueExists = count(array_filter($acc, fn ($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
 
                 if (! $valueExists) {
                     $acc[] = $possibility;
