@@ -59,47 +59,12 @@ class WorkShift extends Model
         'meal_time_in_minutes' => 'int',
         'min_minutes_required_to_discount_meal_time' => 'int',
         'time_slots' => 'array',
+        'applies_on_days' => 'array',
     ];
-
-    /**
-     * Character to be used as days separator on `applies_on_days` column.
-     *
-     * @var string
-     */
-    private $daysSeparator = '|';
-
-    # ######################################################################## #
-    //                                  Mutators                               #
-    # ######################################################################## #
-
-    /**
-     * `applies_on_days` attribute is used as array but stored as string.
-     *
-     * @param  array  $appliesOnDays
-     * @return void
-     */
-    public function setAppliesOnDaysAttribute(array $appliesOnDays): void
-    {
-        $this->attributes['applies_on_days'] = implode($this->daysSeparator, $appliesOnDays);
-    }
 
     # ######################################################################## #
     # Accessors
     # ######################################################################## #
-
-    /**
-     * `applies_on_days` attribute is used as array but stored as string.
-     *
-     * @return array
-     */
-    public function getAppliesOnDaysAttribute(): array
-    {
-        $daysNumbers = $this->attributes['applies_on_days']
-            ? explode($this->daysSeparator, $this->attributes['applies_on_days'])
-            : [];
-
-        return array_map('intval', $daysNumbers);
-    }
 
     /**
      * @todo return time in minutes, not hours
@@ -126,7 +91,7 @@ class WorkShift extends Model
     }
 
     # ######################################################################## #
-    //                                Methods                                  #
+    # Methods
     # ######################################################################## #
 
     /**
