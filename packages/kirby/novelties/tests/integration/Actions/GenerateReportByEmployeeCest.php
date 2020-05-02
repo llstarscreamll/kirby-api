@@ -93,10 +93,10 @@ class GenerateReportByEmployeeCest
         $I->assertArrayHasKey('phone', $result[0]['employee']);
         $I->assertArrayHasKey('salary', $result[0]['employee']);
         $I->assertArrayHasKey('id', $result[0]['employee']['user']);
+        $I->assertArrayHasKey('email', $result[0]['employee']['user']);
         $I->assertArrayHasKey('first_name', $result[0]['employee']['user']);
         $I->assertArrayHasKey('last_name', $result[0]['employee']['user']);
         $I->assertArrayNotHasKey('password', $result[0]['employee']['user']);
-        $I->assertArrayNotHasKey('email', $result[0]['employee']['user']);
         $I->assertArrayNotHasKey('created_at', $result[0]['employee']['user']);
         $I->assertArrayNotHasKey('updated_at', $result[0]['employee']['user']);
         // novelties

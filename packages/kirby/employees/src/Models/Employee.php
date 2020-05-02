@@ -76,14 +76,14 @@ class Employee extends Model
      *
      * @var array
      */
-    protected $with = ['user:id,first_name,last_name'];
+    protected $with = ['user:id,first_name,last_name,email'];
 
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['first_name', 'last_name'];
+    protected $appends = ['first_name', 'last_name', 'email'];
 
     # ######################################################################## #
     # Relations
@@ -155,6 +155,14 @@ class Employee extends Model
     public function getLastNameAttribute(): ?string
     {
         return $this->user->last_name;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getEmailAttribute(): ?string
+    {
+        return $this->user->email;
     }
 
     # ######################################################################## #
