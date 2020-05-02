@@ -139,13 +139,9 @@ class NoveltyType extends Model
         return collect($this->apply_on_time_slots)
             ->map(function (array $timeSlot) use ($relativeToTime) {
                 $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime);
-                /*
-                * @var Carbon
-                */
+                /* @var Carbon */
                 $start = $timeSlot['start'];
-                /*
-                * @var Carbon
-                */
+                /* @var Carbon */
                 $end = $timeSlot['end'];
                 $fixTried = false;
 
@@ -175,19 +171,9 @@ class NoveltyType extends Model
                     $result = $end->startOfDay();
                 }
 
-                // take care when new day reached and this novelty cant be applied on holidays
-                /// if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday) {
-                ///     $newStart = $start->copy()->startOfDay()->subSecond();
-                ///
-                ///     $result = ! $this->isHoliday($newStart) ? $this->minStartTimeSlot($newStart) : null;
-                /// }
-                // dd($relativeToTime, $result);
-
                 if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && ! $this->isHoliday($relativeToTime->copy()->setTimezone($this->time_zone))) {
                     $result = $relativeToTime->copy()->startOfDay();
                 }
-
-                // dd($relativeToTime, $start, 'foo');
 
                 if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && $endIsHoliday) {
                     $result = $start->addDay()->startOfDay();
@@ -207,13 +193,9 @@ class NoveltyType extends Model
         return collect($this->apply_on_time_slots)
             ->map(function (array $timeSlot) use ($relativeToTime) {
                 $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime);
-                /*
-             * @var Carbon
-             */
+                /* @var Carbon */
                 $start = $timeSlot['start'];
-                /*
-             * @var Carbon
-             */
+                /* @var Carbon */
                 $end = $timeSlot['end'];
                 $result = $end;
                 $fixTried = false;
@@ -240,8 +222,8 @@ class NoveltyType extends Model
                     $newEnd = $end->copy()->startOfDay()->subSecond();
 
                     $result = $this->isHoliday($newEnd)
-                    ? null
-                    : ($newEnd->between($start, $end) ? $newEnd : $this->maxEndTimeSlot($newEnd));
+                        ? null
+                        : ($newEnd->between($start, $end) ? $newEnd : $this->maxEndTimeSlot($newEnd));
                 }
 
                 if ($this->canApplyOnDayType(DayType::Holiday()) && $startIsHoliday && ! $endIsHoliday) {
@@ -273,7 +255,6 @@ class NoveltyType extends Model
         $end = $relativeDate->copy()->setTime($hour, $minutes, $seconds);
 
         if ($start->greaterThan($end)) {
-            // $end = $end->addDay();
             $start = $start->subDay();
         }
 
@@ -345,25 +326,21 @@ class NoveltyType extends Model
                 [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($start)],
                 [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
             ])
-                ->map(fn ($range) => array_filter($range))
-                ->filter(fn ($range) => count($range) === 2);
+                ->map(fn($range) => array_filter($range))
+                ->filter(fn($range) => count($range) === 2);
         }
 
         if ($start->isSameDay($end)) {
-            // dd($start, $this->maxEndTimeSlot($start));
             $posibilites = [
                 [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($end)],
                 [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($start)],
                 [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
             ];
-            // dd($start->toISOString(), $posibilites);
 
-            // dd($start, $end, $posibilites, '-----');
-
-            $posibilites = array_values(array_filter($posibilites, fn ($period) => count(array_filter($period)) === 2));
+            $posibilites = array_values(array_filter($posibilites, fn($period) => count(array_filter($period)) === 2));
             // remove duplicates
             $posibilites = array_reduce($posibilites, function (array $acc, array $possibility) {
-                $valueExists = count(array_filter($acc, fn ($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
+                $valueExists = count(array_filter($acc, fn($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
 
                 if (! $valueExists) {
                     $acc[] = $possibility;
@@ -376,42 +353,5 @@ class NoveltyType extends Model
         }
 
         return collect([$result]);
-    }
-
-    /**
-     * @param Carbon $a
-     * @param Carbon $b
-     */
-    public function foo(Carbon $a, Carbon $b): array
-    {
-        if ($this->hasAnyHoliday([$a, $b]) && ! $this->canApplyOnDayType(DayType::Holiday())) {
-            return [];
-        }
-
-        if ($this->canApplyOnDayType(DayType::Holiday()) && ! $this->hasAnyHoliday([$a, $b])) {
-            return [];
-        }
-
-        if (! $a->between($this->minStartTimeSlot($a), $this->maxEndTimeSlot($a), false) &&
-            ! $b->between($this->minStartTimeSlot($b), $this->maxEndTimeSlot($b), false)) {
-            return [];
-        }
-
-        $start = $a->between($this->minStartTimeSlot($a), $this->maxEndTimeSlot($a))
-            ? $a : $this->minStartTimeSlot($a);
-
-        $end = $b->between($this->minStartTimeSlot($b), $this->maxEndTimeSlot($a))
-            ? $b : $this->maxEndTimeSlot($a);
-
-        // fix for novelty types where their time slots are 21-06 like (from one day to another)
-        if ($b->lessThan($this->minStartTimeSlot($a))) {
-            $end = $start;
-        }
-
-        if ($this->isApplicableInAnyTime()) {
-            return [$a, $b];
-        }
-
-        return [$start, $end];
     }
 }
