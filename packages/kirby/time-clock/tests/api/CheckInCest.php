@@ -263,7 +263,6 @@ class CheckInCest
             'employee_id' => $employee->id,
             'scheduled_start_at' => now()->setTime(07, 07),
             'scheduled_end_at' => now()->setTime(12, 02),
-            'total_time_in_minutes' => 60 * 5,
         ]);
 
         $requestData = [
@@ -318,7 +317,6 @@ class CheckInCest
             'employee_id' => $employee->id,
             'scheduled_start_at' => now()->setTime(07, 07),
             'scheduled_end_at' => now()->setTime(12, 02),
-            'total_time_in_minutes' => 60 * 5,
         ]);
 
         $requestData = [
@@ -1104,7 +1102,6 @@ class CheckInCest
             'employee_id' => $employee->id,
             'scheduled_start_at' => now()->setTime(7, 0), // 7am
             'scheduled_end_at' => now()->setTime(8, 0), // 8am
-            'total_time_in_minutes' => 60,
         ];
 
         $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
@@ -1128,7 +1125,6 @@ class CheckInCest
             'id' => $scheduledNovelty->id,
             'scheduled_start_at' => now()->setTime(7, 0),
             'scheduled_end_at' => now()->setTime(9, 0),
-            'total_time_in_minutes' => 120,
         ]);
     }
 
@@ -1163,7 +1159,6 @@ class CheckInCest
             'employee_id' => $employee->id,
             'scheduled_start_at' => now()->setTime(10, 0), // 10am
             'scheduled_end_at' => now()->setTime(11, 0), // 11am
-            'total_time_in_minutes' => 60,
         ];
 
         $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
@@ -1188,7 +1183,6 @@ class CheckInCest
             'id' => $scheduledNovelty->id,
             'scheduled_start_at' => now()->setTime(10, 0)->toDateTimeString(), // 10am
             'scheduled_end_at' => now()->setTime(11, 0)->toDateTimeString(), // 11am
-            'total_time_in_minutes' => 60,
         ]);
     }
 

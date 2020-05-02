@@ -26,7 +26,6 @@ class CreateNoveltyTables extends Migration
             $table->unsignedInteger('sub_cost_center_id')->nullable();
             $table->dateTime('scheduled_start_at')->nullable();
             $table->dateTime('scheduled_end_at')->nullable();
-            $table->integer('total_time_in_minutes');
             $table->string('comment')->nullable();
             $table->timestamps();
             $table->softDeletes();

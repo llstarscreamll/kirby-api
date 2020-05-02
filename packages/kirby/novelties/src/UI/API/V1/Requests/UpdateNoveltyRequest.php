@@ -33,7 +33,6 @@ class UpdateNoveltyRequest extends FormRequest
             'novelty_type_id' => ['required', 'numeric', 'min:1'],
             'scheduled_start_at' => ['nullable', 'date'],
             'scheduled_end_at' => ['nullable', 'date', 'after:scheduled_start_at', 'required_with:scheduled_start_at'],
-            'total_time_in_minutes' => ['nullable', 'numeric'],
             'comment' => ['nullable', 'string'],
         ];
     }

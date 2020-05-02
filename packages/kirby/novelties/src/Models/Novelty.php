@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Users\Models\User;
 
@@ -30,7 +31,6 @@ class Novelty extends Model
         'time_clock_log_id',
         'scheduled_start_at',
         'scheduled_end_at',
-        'total_time_in_minutes',
         'comment',
     ];
 
@@ -44,7 +44,6 @@ class Novelty extends Model
         'novelty_type_id' => 'int',
         'sub_cost_center_id' => 'int',
         'time_clock_log_id' => 'int',
-        'total_time_in_minutes' => 'int',
         'comment' => 'string',
     ];
 
@@ -108,7 +107,9 @@ class Novelty extends Model
      */
     public function getTotalTimeInHoursAttribute(): float
     {
-        return round($this->attributes['total_time_in_minutes'] / 60, 2);
+        $operator = $this->noveltyType->operator->is(NoveltyTypeOperator::Subtraction) ? -1 : 1;
+
+        return round($this->scheduled_start_at->diffInSeconds($this->scheduled_end_at) / 60, 2) * $operator;
     }
 
     // ####################################################################### #

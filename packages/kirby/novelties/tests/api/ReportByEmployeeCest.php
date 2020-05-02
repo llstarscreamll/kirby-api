@@ -80,7 +80,6 @@ class ReportByEmployeeCest
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.scheduled_start_at');
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.scheduled_end_at');
-        $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.total_time_in_minutes');
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.comment');
         // novelty type data
         $I->seeResponseJsonMatchesJsonPath('$.data.0.novelties.0.novelty_type.id');

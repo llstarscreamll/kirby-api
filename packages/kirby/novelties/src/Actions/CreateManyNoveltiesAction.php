@@ -67,7 +67,6 @@ class CreateManyNoveltiesAction
 
             $novelty['scheduled_start_at'] = $start;
             $novelty['scheduled_end_at'] = $end;
-            $novelty['total_time_in_minutes'] = $diff;
             $novelty['created_at'] = $currentDate;
             $novelty['updated_at'] = $currentDate;
 

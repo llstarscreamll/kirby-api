@@ -130,7 +130,6 @@ class LogCheckOut
             $scheduledNovelty = $this->noveltyRepository->update(
                 [
                     'scheduled_start_at' => now(),
-                    'total_time_in_minutes' => $scheduledNovelty->scheduled_end_at->diffInMinutes(now()),
                 ],
                 $scheduledNovelty->id
             );

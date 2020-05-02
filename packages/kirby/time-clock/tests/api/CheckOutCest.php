@@ -832,7 +832,6 @@ class CheckOutCest
             'employee_id' => $employee->id,
             'scheduled_start_at' => now()->setTime(17, 00),
             'scheduled_end_at' => now()->setTime(18, 00),
-            'total_time_in_minutes' => 60,
         ];
 
         $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
@@ -857,7 +856,6 @@ class CheckOutCest
         $I->seeRecord('novelties', [
             'id' => $scheduledNovelty->id,
             'scheduled_start_at' => now(),
-            'total_time_in_minutes' => 120,
         ]);
     }
 

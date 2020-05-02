@@ -96,13 +96,7 @@ class NoveltiesController
 
             $noveltyData['scheduled_start_at'] = $startTime;
             $noveltyData['scheduled_end_at'] = $endTime;
-            $noveltyData['total_time_in_minutes'] = $startTime->diffInMinutes($endTime);
         }
-
-        $noveltyType = $noveltyTypeRepository->find($noveltyData['novelty_type_id']);
-        $noveltyData['total_time_in_minutes'] = $noveltyType->operator->is(NoveltyTypeOperator::Subtraction)
-            ? abs($noveltyData['total_time_in_minutes']) * -1
-            : abs($noveltyData['total_time_in_minutes']);
 
         $novelty = $this->noveltyRepository->update($noveltyData, $id);
 

@@ -49,14 +49,12 @@ class CreateManyNoveltiesActionCest
                         'novelty_type_id' => 1,
                         'scheduled_start_at' => '2018-01-01T10:00:00.000Z',
                         'scheduled_end_at' => '2018-01-01T12:00:00.000Z',
-                        'total_time_in_minutes' => -120,
                         'comment' => '',
                     ],
                     [
                         'novelty_type_id' => 2,
                         'scheduled_start_at' => '2018-02-20T14:00:00.000Z',
                         'scheduled_end_at' => '2018-02-20T16:00:00.000Z',
-                        'total_time_in_minutes' => 120,
                         'comment' => 'test comment',
                     ],
                 ],
@@ -91,7 +89,6 @@ class CreateManyNoveltiesActionCest
                     'novelty_type_id' => $novelty['novelty_type_id'],
                     'scheduled_start_at' => str_replace(['T', '.000Z'], [' ', ''], $novelty['scheduled_start_at']),
                     'scheduled_end_at' => str_replace(['T', '.000Z'], [' ', ''], $novelty['scheduled_end_at']),
-                    'total_time_in_minutes' => $novelty['total_time_in_minutes'],
                 ]);
             }
         });

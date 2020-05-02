@@ -41,7 +41,6 @@ class GetNoveltyCest
         $I->seeResponseJsonMatchesJsonPath('$.data.time_clock_log_id');
         $I->seeResponseJsonMatchesJsonPath('$.data.employee_id');
         $I->seeResponseJsonMatchesJsonPath('$.data.novelty_type_id');
-        $I->seeResponseJsonMatchesJsonPath('$.data.total_time_in_minutes');
         $I->seeResponseJsonMatchesJsonPath('$.data.novelty_type');
         $I->seeResponseJsonMatchesJsonPath('$.data.employee');
         $I->seeResponseJsonMatchesJsonPath('$.data.time_clock_log');

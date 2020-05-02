@@ -44,7 +44,6 @@ class UpdateNoveltyCest
             'novelty_type_id' => factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Subtraction])->id,
             'scheduled_start_at' => $startDate->toISOString(),
             'scheduled_end_at' => $endDate->toISOString(),
-            'total_time_in_minutes' => (60 * 2) * -1,
             'comment' => 'updated comment here!!',
         ];
 
@@ -72,7 +71,6 @@ class UpdateNoveltyCest
         $updatedNovelty = [
             'employee_id' => factory(Employee::class)->create()->id,
             'novelty_type_id' => factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Subtraction])->id,
-            'total_time_in_minutes' => 60 * 2, // this value should be setted as negative
         ];
 
         $endpoint = str_replace('{id}', $novelty->id, $this->endpoint);
@@ -81,10 +79,7 @@ class UpdateNoveltyCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
 
-        $I->seeRecord('novelties', [
-            'id' => $novelty->id,
-            'total_time_in_minutes' => (60 * 2) * -1,
-        ] + $updatedNovelty);
+        $I->seeRecord('novelties', ['id' => $novelty->id] + $updatedNovelty);
     }
 
     /**
@@ -98,7 +93,6 @@ class UpdateNoveltyCest
         $updatedNovelty = [
             'employee_id' => factory(Employee::class)->create()->id,
             'novelty_type_id' => factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Addition])->id,
-            'total_time_in_minutes' => (60 * 2) * -1, // this value should be setted as positive
         ];
 
         $endpoint = str_replace('{id}', $novelty->id, $this->endpoint);
@@ -107,10 +101,7 @@ class UpdateNoveltyCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
 
-        $I->seeRecord('novelties', [
-            'id' => $novelty->id,
-            'total_time_in_minutes' => (60 * 2),
-        ] + $updatedNovelty);
+        $I->seeRecord('novelties', ['id' => $novelty->id] + $updatedNovelty);
     }
 
     /**

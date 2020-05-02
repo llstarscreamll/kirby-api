@@ -161,7 +161,6 @@ class LogCheckIn
                 $scheduledNovelty = $this->noveltyRepository->update(
                     [
                         'scheduled_end_at' => now(),
-                        'total_time_in_minutes' => $scheduledNovelty->scheduled_start_at->diffInMinutes(now()),
                     ],
                     $scheduledNovelty->id
                 );

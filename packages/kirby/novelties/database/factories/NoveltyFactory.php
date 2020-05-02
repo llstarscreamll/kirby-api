@@ -24,7 +24,6 @@ $factory->define(Novelty::class, function (Faker $faker) {
         'sub_cost_center_id' => null,
         'scheduled_start_at' => null,
         'scheduled_end_at' => null,
-        'total_time_in_minutes' => $faker->numberBetween(100, 1000),
         'comment' => null,
     ];
 });

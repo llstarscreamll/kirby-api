@@ -103,6 +103,8 @@ class RegisterTimeClockNoveltiesAction
                     $subCostCenterId = $timeClockLog->check_out_sub_cost_center_id;
                 }
 
+                $operator = $noveltyType->operator->is(NoveltyTypeOperator::Subtraction()) ? -1 : 1;
+
                 return array_map(fn(array $period) => [
                     'code' => $noveltyType->code,
                     'time_clock_log_id' => $timeClockLog->id,
@@ -111,9 +113,7 @@ class RegisterTimeClockNoveltiesAction
                     'sub_cost_center_id' => $subCostCenterId,
                     'scheduled_start_at' => $period[0]->format('Y-m-d H:i:s'),
                     'scheduled_end_at' => $period[1]->format('Y-m-d H:i:s'),
-                    'total_time_in_minutes' => (int) (
-                        ($period[1]->getTimestamp() - $period[0]->getTimestamp()) / 60
-                    ) * ($noveltyType->operator->is(NoveltyTypeOperator::Subtraction()) ? -1 : 1),
+                    'total_time_in_minutes' => (int) (($period[1]->getTimestamp() - $period[0]->getTimestamp()) / 60) * $operator,
                     'created_at' => $currentDate->toDateTimeString(),
                     'updated_at' => $currentDate->toDateTimeString(),
                 ], $periods);
@@ -122,7 +122,7 @@ class RegisterTimeClockNoveltiesAction
             ->collapse()
             ->filter(fn($novelty) => ! empty($novelty['total_time_in_minutes']))
         // ->dd($this->takenPeriods)
-            ->map(fn($i) => Arr::except($i, ['code']));
+            ->map(fn($i) => Arr::except($i, ['code', 'total_time_in_minutes']));
 
         $this->noveltyRepository->insert($novelties->all());
 
