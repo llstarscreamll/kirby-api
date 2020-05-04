@@ -54,9 +54,9 @@ class DeleteNoveltyCest
         $I->sendDELETE($endpoint);
 
         $I->seeResponseCodeIs(200);
-        $I->seeRecord('novelties', [
+        $I->dontSeeRecord('novelties', [
             'id' => $this->novelty->id,
-            'deleted_at' => now()->toDateTimeString(), // (trashed)
+            'deleted_at' => null, // this attr should be filled
         ]);
     }
 
