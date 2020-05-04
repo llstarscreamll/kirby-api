@@ -73,13 +73,13 @@ class LogCheckIn
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
     /**
-     * @param HolidayRepositoryInterface                           $holidayRepository
-     * @param SettingRepositoryInterface                           $settingRepository
-     * @param NoveltyRepositoryInterface                           $noveltyRepository
-     * @param NoveltyTypeRepositoryInterface                       $noveltyTypeRepository
-     * @param TimeClockLogRepositoryInterface                      $timeClockLogRepository
-     * @param SubCostCenterRepositoryInterface                     $subCostCenterRepository
-     * @param IdentificationRepositoryInterface                    $identificationRepository
+     * @param HolidayRepositoryInterface                     $holidayRepository
+     * @param SettingRepositoryInterface                     $settingRepository
+     * @param NoveltyRepositoryInterface                     $noveltyRepository
+     * @param NoveltyTypeRepositoryInterface                 $noveltyTypeRepository
+     * @param TimeClockLogRepositoryInterface                $timeClockLogRepository
+     * @param SubCostCenterRepositoryInterface               $subCostCenterRepository
+     * @param IdentificationRepositoryInterface              $identificationRepository
      * @param ValidateNoveltyTypeBasedOnWorkShiftPunctuality $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
@@ -234,6 +234,10 @@ class LogCheckIn
     private function validateDeductibleWorkShift(Identification $identification, ?int $workShiftId): ?WorkShift
     {
         $deductedWorkShifts = $this->getApplicableWorkShifts($identification, $workShiftId);
+
+        if ($foundWorkShift = $deductedWorkShifts->firstWhere('id', $workShiftId)) {
+            return $foundWorkShift;
+        }
 
         $deductedWorkShifts = $deductedWorkShifts
             ->filter(function ($shift) {

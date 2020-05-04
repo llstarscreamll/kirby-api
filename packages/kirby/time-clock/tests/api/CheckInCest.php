@@ -676,6 +676,43 @@ class CheckInCest
      * @test
      * @param ApiTester $I
      */
+    public function whenHasSingleWorkShiftAndArrivesTooLateClosedToWorkShiftEndandspecifyworkShiftIdAndStartNoveltyIsNotRequired(ApiTester $I)
+    {
+        // set setting to NOT require novelty type when check in is too late,
+        // this make to set a default novelty type id for the late check in
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])
+            ->create();
+
+        // fake current date time, one hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 16, 00));
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+            'work_shift_id' => $employee->workShifts->first()->id,
+        ];
+
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeResponseCodeIs(201);
+        $I->seeResponseJsonMatchesJsonPath('$.data.id');
+        $I->seeRecord('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+        ]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
     public function whenHasSingleWorkShiftAndArrivesTooLateWithRightNoveltyType(ApiTester $I)
     {
         $employee = factory(Employee::class)
@@ -1397,7 +1434,7 @@ class CheckInCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 
