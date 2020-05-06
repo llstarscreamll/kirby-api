@@ -19,6 +19,13 @@ $factory->define(WorkShift::class, function (Faker $faker) {
 
     return [
         'name' => "Work shift $randomCode",
+        'grace_minutes_before_start_times' => 10,
+        'grace_minutes_after_start_times' => 10,
+        'grace_minutes_before_end_times' => 10,
+        'grace_minutes_after_end_times' => 10,
+        'meal_time_in_minutes' => 0,
+        'min_minutes_required_to_discount_meal_time' => 0,
+        'time_zone' => 'UTC',
         'applies_on_days' => [],
         'time_slots' => [],
     ];

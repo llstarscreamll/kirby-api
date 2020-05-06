@@ -157,8 +157,7 @@ class WorkShiftCest
      */
     public function testSlotPunctuality(UnitTester $I, Example $data)
     {
-        $workShift = WorkShift::create($data['workShiftData']);
-        $workShift->refresh();
+        $workShift = factory(WorkShift::class)->make($data['workShiftData']);
 
         $result = $workShift->slotPunctuality($data['slot'], $data['time']);
 
@@ -240,8 +239,7 @@ class WorkShiftCest
      */
     public function deadTimeRanges(UnitTester $I, Example $data)
     {
-        $workShift = WorkShift::create($data['workShiftData']);
-        $workShift->refresh();
+        $workShift = factory(WorkShift::class)->make($data['workShiftData']);
 
         $result = $workShift->deadTimeRanges(Arr::get($data, 'relativeToTime'));
 
