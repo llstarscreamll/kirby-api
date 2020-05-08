@@ -78,15 +78,15 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
             $novelty->employee->identification_number,
             $novelty->employee->user->first_name,
             $novelty->employee->user->last_name,
-            optional($novelty->scheduled_start_at)->toDateTimeString(),
-            optional($novelty->scheduled_end_at)->toDateTimeString(),
+            optional($novelty->scheduled_start_at)->toISOString(),
+            optional($novelty->scheduled_end_at)->toISOString(),
             $novelty->subCostCenter ? $novelty->subCostCenter->costCenter->code : '',
             optional($novelty->subCostCenter)->code,
             $novelty->noveltyType->code,
             $novelty->total_time_in_hours,
             $novelty->comment,
             $novelty->approvals->map->name->join("\n"),
-            $novelty->created_at,
+            $novelty->created_at->toISOString(),
         ];
     }
 }
