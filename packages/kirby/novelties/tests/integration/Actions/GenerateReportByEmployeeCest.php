@@ -80,7 +80,7 @@ class GenerateReportByEmployeeCest
         $result = $action->run($tonyStark->id, $startDate, $endDate);
 
         // first row results
-        $I->assertEquals($startDate->copy()->addDays(10)->toDateString(), $result[0]['date']);
+        $I->assertEquals($startDate->copy()->addDays(10)->startOfDay()->toISOString(), $result[0]['date']);
         // employee
         $I->assertEquals($tonyStark->id, $result[0]['employee']['id']);
         $I->assertArrayHasKey('id', $result[0]['employee']);
@@ -107,7 +107,7 @@ class GenerateReportByEmployeeCest
         });
 
         // second row results
-        $I->assertEquals($startDate->toDateString(), $result[1]['date']);
+        $I->assertEquals($startDate->startOfDay()->toISOString(), $result[1]['date']);
         $I->assertEquals($tonyStark->id, $result[1]['employee']['id']);
         //  novelties
         $I->assertEquals($oldestNovelties->count(), count($result[1]['novelties']));

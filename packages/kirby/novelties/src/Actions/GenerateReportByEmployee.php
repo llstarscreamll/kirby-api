@@ -38,7 +38,7 @@ class GenerateReportByEmployee
             ->get();
 
         return $novelties
-            ->groupBy(fn ($novelty) => $novelty->scheduled_start_at->toDateString())
+            ->groupBy(fn ($novelty) => $novelty->scheduled_start_at->startOfDay()->toISOString())
             ->map(function ($novelties, $date) {
                 return [
                     'date' => $date,
