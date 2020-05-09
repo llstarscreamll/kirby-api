@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use Kirby\Novelties\Repositories\Criteria\DateRangeCriteria;
+use Kirby\Novelties\Repositories\Criteria\EmployeeCriteria;
 use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
@@ -43,11 +45,22 @@ class NoveltiesController
     {
         $novelties = $this->noveltyRepository
             ->pushCriteria(app(RequestCriteria::class))
-            ->with(['employee.user', 'noveltyType', 'approvals:users.id,users.first_name,users.last_name'])
-            ->orderBy('id', 'DESC')
-            ->simplePaginate();
+            ->with([
+                'employee.user', 'noveltyType', 'approvals:users.id,users.first_name,users.last_name',
+                'subCostCenter.costCenter',
+            ]);
 
-        return NoveltyResource::collection($novelties);
+        if ($request->startDate && $request->endDate) {
+            $novelties->pushCriteria(new DateRangeCriteria(
+                Carbon::parse($request->startDate), Carbon::parse($request->endDate), 'scheduled_start_at')
+            );
+        }
+
+        if ($request->employeeId) {
+            $novelties->pushCriteria(new EmployeeCriteria($request->employeeId));
+        }
+
+        return NoveltyResource::collection($novelties->simplePaginate());
     }
 
     /**

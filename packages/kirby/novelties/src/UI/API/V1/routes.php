@@ -18,7 +18,6 @@ Route::prefix('api/v1')
         $route->delete('novelties/approvals-by-employee-and-date-range', DeleteNoveltiesApprovalsByEmployeeAndDateRangeController::class);
         $route->apiResource('novelties', NoveltiesController::class);
         $route->post('novelties/create-many', CreateManyNoveltiesController::class);
-        $route->get('novelties/report-by-employee/{employee_id}', ReportByEmployeeController::class);
         $route->resource('novelties.approvals', NoveltyApprovalsController::class)->only(['store', 'destroy']);
     });
 

@@ -30,6 +30,9 @@ class SearchNoveltiesRequest extends FormRequest
     {
         return [
             'search' => ['nullable', 'string'],
+            'employeeId' => ['nullable', 'numeric'],
+            'start_date' => ['nullable', 'date', 'required_with:end_date'],
+            'end_date' => ['nullable', 'date', 'after:start_date', 'required_with:start_date'],
         ];
     }
 }
