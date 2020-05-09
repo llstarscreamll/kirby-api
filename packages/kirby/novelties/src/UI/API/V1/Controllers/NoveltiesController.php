@@ -50,14 +50,14 @@ class NoveltiesController
                 'subCostCenter.costCenter',
             ]);
 
-        if ($request->startDate && $request->endDate) {
+        if ($request->start_date && $request->end_date) {
             $novelties->pushCriteria(new DateRangeCriteria(
-                Carbon::parse($request->startDate), Carbon::parse($request->endDate), 'scheduled_start_at')
+                Carbon::parse($request->start_date), Carbon::parse($request->end_date), 'scheduled_start_at')
             );
         }
 
-        if ($request->employeeId) {
-            $novelties->pushCriteria(new EmployeeCriteria($request->employeeId));
+        if ($request->employee_id) {
+            $novelties->pushCriteria(new EmployeeCriteria($request->employee_id));
         }
 
         return NoveltyResource::collection($novelties->simplePaginate());
