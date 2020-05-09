@@ -8,8 +8,6 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
  * Class DateRangeCriteria.
- *
- * @package namespace App\Criteria;
  */
 class DateRangeCriteria implements CriteriaInterface
 {
@@ -41,7 +39,7 @@ class DateRangeCriteria implements CriteriaInterface
     }
 
     /**
-     * Apply criteria in query repository
+     * Apply criteria in query repository.
      *
      * @param  string              $model
      * @param  RepositoryInterface $repository
