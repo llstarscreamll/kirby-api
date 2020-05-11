@@ -6,8 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Repositories\Criteria\HasTimeClockLogCheckOutBetweenCriteria;
 use Kirby\Novelties\Repositories\Criteria\EmployeeCriteria;
+use Kirby\Novelties\Repositories\Criteria\HasTimeClockLogCheckOutBetweenCriteria;
 use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
@@ -47,7 +47,7 @@ class NoveltiesController
             ->pushCriteria(app(RequestCriteria::class))
             ->with([
                 'employee.user', 'noveltyType', 'approvals:users.id,users.first_name,users.last_name',
-                'subCostCenter.costCenter', 'timeClockLog:id,checked_in_at,checked_out_at'
+                'subCostCenter.costCenter', 'timeClockLog:id,checked_in_at,checked_out_at',
             ]);
 
         if ($request->time_clock_log_check_out_start_date) {
