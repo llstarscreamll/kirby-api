@@ -3,6 +3,7 @@
 namespace Kirby\TimeClock\Models;
 
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Arr;
@@ -172,6 +173,18 @@ class TimeClockLog extends Model
     // ######################################################################## #
     // Methods
     // ######################################################################## #
+
+    /**
+     * @todo this is here because NoveltyResource cant call TimeClockLogResource
+     * because a circular relation issue that kill the request. Check ohw to
+     * resolve that problem.
+     * @param  \DateTimeInterface $date
+     * @return mixed
+     */
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format(DateTime::ISO8601);
+    }
 
     /**
      * @return HolidayRepositoryInterface
