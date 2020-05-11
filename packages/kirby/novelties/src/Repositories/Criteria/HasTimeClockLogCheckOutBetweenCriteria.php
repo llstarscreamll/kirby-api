@@ -7,9 +7,9 @@ use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class DateRangeCriteria.
+ * Class HasTimeClockLogCheckOutBetweenCriteria.
  */
-class DateRangeCriteria implements CriteriaInterface
+class HasTimeClockLogCheckOutBetweenCriteria implements CriteriaInterface
 {
     /**
      * @var Carbon
@@ -22,20 +22,13 @@ class DateRangeCriteria implements CriteriaInterface
     private $end;
 
     /**
-     * @var string
-     */
-    private $field;
-
-    /**
      * @param Carbon $start
      * @param Carbon $end
-     * @param string $field
      */
-    public function __construct(Carbon $start, Carbon $end, string $field = 'created_at')
+    public function __construct(Carbon $start, Carbon $end)
     {
         $this->start = $start;
         $this->end = $end;
-        $this->field = $field;
     }
 
     /**
@@ -47,6 +40,8 @@ class DateRangeCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->whereBetween($this->field, [$this->start->toDateTimeString(), $this->end->toDateTimeString()]);
+        return $model
+            ->join('time_clock_logs', 'time_clock_logs.id', 'novelties.time_clock_log_id')
+            ->whereBetween('time_clock_logs.checked_out_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()]);
     }
 }

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Repositories\Criteria\DateRangeCriteria;
+use Kirby\Novelties\Repositories\Criteria\HasTimeClockLogCheckOutBetweenCriteria;
 use Kirby\Novelties\Repositories\Criteria\EmployeeCriteria;
 use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
@@ -47,12 +47,12 @@ class NoveltiesController
             ->pushCriteria(app(RequestCriteria::class))
             ->with([
                 'employee.user', 'noveltyType', 'approvals:users.id,users.first_name,users.last_name',
-                'subCostCenter.costCenter',
+                'subCostCenter.costCenter', 'timeClockLog:id,checked_in_at,checked_out_at'
             ]);
 
-        if ($request->start_date && $request->end_date) {
-            $novelties->pushCriteria(new DateRangeCriteria(
-                Carbon::parse($request->start_date), Carbon::parse($request->end_date), 'scheduled_start_at')
+        if ($request->time_clock_log_check_out_start_date) {
+            $novelties->pushCriteria(new HasTimeClockLogCheckOutBetweenCriteria(
+                Carbon::parse($request->time_clock_log_check_out_start_date), Carbon::parse($request->time_clock_log_check_out_end_date))
             );
         }
 
