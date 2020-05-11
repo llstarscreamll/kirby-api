@@ -60,7 +60,7 @@ class NoveltiesController
             $novelties->pushCriteria(new EmployeeCriteria($request->employee_id));
         }
 
-        return NoveltyResource::collection($novelties->simplePaginate());
+        return NoveltyResource::collection($novelties->simplePaginate(null, ['novelties.*']));
     }
 
     /**
