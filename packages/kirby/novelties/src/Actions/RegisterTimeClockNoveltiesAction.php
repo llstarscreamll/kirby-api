@@ -99,8 +99,8 @@ class RegisterTimeClockNoveltiesAction
                     'employee_id' => $timeClockLog->employee_id,
                     'novelty_type_id' => $noveltyType->id,
                     'sub_cost_center_id' => $subCostCenterId,
-                    'scheduled_start_at' => $period[0]->format('Y-m-d H:i:s'),
-                    'scheduled_end_at' => $period[1]->format('Y-m-d H:i:s'),
+                    'start_at' => $period[0]->format('Y-m-d H:i:s'),
+                    'end_at' => $period[1]->format('Y-m-d H:i:s'),
                     'total_time_in_minutes' => (int) (($period[1]->getTimestamp() - $period[0]->getTimestamp()) / 60) * $operator,
                     'created_at' => $currentDate->toDateTimeString(),
                     'updated_at' => $currentDate->toDateTimeString(),
@@ -479,7 +479,7 @@ class RegisterTimeClockNoveltiesAction
             $end = $timeClockLog->workShift->maxEndTimeSlot($timeClockLog->checked_out_at, $beGraceTimeAware);
 
             $this->scheduledNovelties = $this->noveltyRepository
-                ->whereScheduledForEmployee($timeClockLog->employee_id, 'scheduled_start_at', $start, $end)
+                ->whereScheduledForEmployee($timeClockLog->employee_id, 'start_at', $start, $end)
                 ->get();
         }
 
@@ -504,7 +504,7 @@ class RegisterTimeClockNoveltiesAction
     {
         $logAction = $flag === 'start' ? 'checked_in_at' : 'checked_out_at';
         $comparison = $flag === 'start' ? 'lessThanOrEqualTo' : 'greaterThanOrEqualTo';
-        $comparisonFlag = $flag === 'start' ? 'scheduled_end_at' : 'scheduled_start_at';
+        $comparisonFlag = $flag === 'start' ? 'end_at' : 'start_at';
 
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
             ->filter(function (Novelty $novelty) use ($timeClockLog) {
@@ -526,7 +526,7 @@ class RegisterTimeClockNoveltiesAction
             })->first();
 
         return $closestScheduledNovelty
-            ? Period::make($closestScheduledNovelty->scheduled_start_at, $closestScheduledNovelty->scheduled_end_at, Precision::SECOND)
+            ? Period::make($closestScheduledNovelty->start_at, $closestScheduledNovelty->end_at, Precision::SECOND)
             : null;
     }
 }

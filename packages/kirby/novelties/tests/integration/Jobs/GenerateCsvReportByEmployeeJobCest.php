@@ -42,31 +42,31 @@ class GenerateCsvReportByEmployeeJobCest
         factory(Novelty::class, 2)->create([
             'employee_id' => $tonyStark->id,
             'sub_cost_center_id' => $zeroScc->id,
-            'scheduled_start_at' => $startDate->copy()->subDays(2),
-            'scheduled_end_at' => $startDate->copy()->subDays(2)->addHours(2),
+            'start_at' => $startDate->copy()->subDays(2),
+            'end_at' => $startDate->copy()->subDays(2)->addHours(2),
         ]);
 
         factory(Novelty::class, 2)->create([
             'employee_id' => $tonyStark->id,
             'sub_cost_center_id' => $zeroScc->id,
-            'scheduled_start_at' => $endDate->copy()->addDays(2),
-            'scheduled_end_at' => $endDate->copy()->addDays(2)->addHours(2),
+            'start_at' => $endDate->copy()->addDays(2),
+            'end_at' => $endDate->copy()->addDays(2)->addHours(2),
         ]);
 
         // in range novelties
         $oldestNovelties = factory(Novelty::class, 4)->create([
             'employee_id' => $tonyStark->id,
             'sub_cost_center_id' => $firstScc->id,
-            'scheduled_start_at' => $startDate,
-            'scheduled_end_at' => $startDate->copy()->addHours(2),
+            'start_at' => $startDate,
+            'end_at' => $startDate->copy()->addHours(2),
         ]);
 
         // in range novelties
         $latestNovelties = factory(Novelty::class, 6)->create([
             'employee_id' => $tonyStark->id,
             'sub_cost_center_id' => $secondScc->id,
-            'scheduled_start_at' => $startDate->copy()->addDays(10),
-            'scheduled_end_at' => $startDate->copy()->addDays(10)->addHours(2),
+            'start_at' => $startDate->copy()->addDays(10),
+            'end_at' => $startDate->copy()->addDays(10)->addHours(2),
             'comment' => 'foo',
         ]);
 

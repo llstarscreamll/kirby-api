@@ -29,8 +29,8 @@ class Novelty extends Model
         'novelty_type_id',
         'sub_cost_center_id',
         'time_clock_log_id',
-        'scheduled_start_at',
-        'scheduled_end_at',
+        'start_at',
+        'end_at',
         'comment',
     ];
 
@@ -52,7 +52,7 @@ class Novelty extends Model
      *
      * @var array
      */
-    protected $dates = ['scheduled_start_at', 'scheduled_end_at', 'created_at', 'updated_at', 'deleted_at'];
+    protected $dates = ['start_at', 'end_at', 'created_at', 'updated_at', 'deleted_at'];
 
     // ######################################################################## #
     // Relations
@@ -109,7 +109,7 @@ class Novelty extends Model
     {
         $operator = $this->noveltyType->operator->is(NoveltyTypeOperator::Subtraction) ? -1 : 1;
 
-        return round($this->scheduled_start_at->diffInSeconds($this->scheduled_end_at) / 60, 2) * $operator;
+        return round($this->start_at->diffInSeconds($this->end_at) / 60, 2) * $operator;
     }
 
     // ######################################################################## #

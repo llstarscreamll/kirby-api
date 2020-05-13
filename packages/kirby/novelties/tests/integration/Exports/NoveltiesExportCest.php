@@ -66,8 +66,8 @@ class NoveltiesExportCest
     {
         $novelty = factory(Novelty::class)->create([
             'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
-            'scheduled_start_at' => now()->startOfMonth(),
-            'scheduled_end_at' => now()->startOfMonth()->addHours(2),
+            'start_at' => now()->startOfMonth(),
+            'end_at' => now()->startOfMonth()->addHours(2),
         ]);
         $approvers = factory(User::class, 1)->create(['first_name' => 'Tony', 'last_name' => 'Stark']);
         $approvers = $approvers->push(factory(User::class, 1)->create(['first_name' => 'Steve', 'last_name' => 'Rogers']));
@@ -87,8 +87,8 @@ class NoveltiesExportCest
             $novelty->employee->identification_number,
             $novelty->employee->user->first_name,
             $novelty->employee->user->last_name,
-            $novelty->scheduled_start_at->toISOString(),
-            $novelty->scheduled_end_at->toISOString(),
+            $novelty->start_at->toISOString(),
+            $novelty->end_at->toISOString(),
             $novelty->subCostCenter->costCenter->code,
             $novelty->subCostCenter->code,
             $novelty->noveltyType->code,

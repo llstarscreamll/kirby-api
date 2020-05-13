@@ -44,14 +44,14 @@ class CreateManyNoveltiesCest
             'novelties' => [
                 [
                     'novelty_type_id' => factory(NoveltyType::class)->create()->id,
-                    'scheduled_start_at' => '2019-01-01T10:00:00.000Z',
-                    'scheduled_end_at' => '2019-01-01T12:00:00.000Z',
+                    'start_at' => '2019-01-01T10:00:00.000Z',
+                    'end_at' => '2019-01-01T12:00:00.000Z',
                     'comment' => '',
                 ],
                 [
                     'novelty_type_id' => factory(NoveltyType::class)->create()->id,
-                    'scheduled_start_at' => '2019-02-20T14:00:00.000Z',
-                    'scheduled_end_at' => '2019-02-20T16:00:00.000Z',
+                    'start_at' => '2019-02-20T14:00:00.000Z',
+                    'end_at' => '2019-02-20T16:00:00.000Z',
                     'comment' => 'test comment',
                 ],
             ],

@@ -102,12 +102,12 @@ class NoveltiesController
     {
         $noveltyData = $request->validated();
 
-        if (! empty($noveltyData['scheduled_start_at'])) {
-            $startTime = Carbon::parse($noveltyData['scheduled_start_at']);
-            $endTime = Carbon::parse($noveltyData['scheduled_end_at']);
+        if (! empty($noveltyData['start_at'])) {
+            $startTime = Carbon::parse($noveltyData['start_at']);
+            $endTime = Carbon::parse($noveltyData['end_at']);
 
-            $noveltyData['scheduled_start_at'] = $startTime;
-            $noveltyData['scheduled_end_at'] = $endTime;
+            $noveltyData['start_at'] = $startTime;
+            $noveltyData['end_at'] = $endTime;
         }
 
         $novelty = $this->noveltyRepository->update($noveltyData, $id);

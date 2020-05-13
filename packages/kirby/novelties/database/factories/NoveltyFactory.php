@@ -22,8 +22,8 @@ $factory->define(Novelty::class, function (Faker $faker) {
         'employee_id' => factory(Employee::class)->create()->id,
         'novelty_type_id' => factory(NoveltyType::class)->create()->id,
         'sub_cost_center_id' => null,
-        'scheduled_start_at' => null,
-        'scheduled_end_at' => null,
+        'start_at' => null,
+        'end_at' => null,
         'comment' => null,
     ];
 });

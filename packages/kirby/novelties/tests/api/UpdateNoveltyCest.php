@@ -42,8 +42,8 @@ class UpdateNoveltyCest
         $updatedNovelty = [
             'employee_id' => factory(Employee::class)->create()->id,
             'novelty_type_id' => factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Subtraction])->id,
-            'scheduled_start_at' => $startDate->toISOString(),
-            'scheduled_end_at' => $endDate->toISOString(),
+            'start_at' => $startDate->toISOString(),
+            'end_at' => $endDate->toISOString(),
             'comment' => 'updated comment here!!',
         ];
 
@@ -55,8 +55,8 @@ class UpdateNoveltyCest
 
         $I->seeRecord('novelties', [
             'id' => $novelty->id,
-            'scheduled_start_at' => $startDate->toDateTimeString(),
-            'scheduled_end_at' => $endDate->toDateTimeString(),
+            'start_at' => $startDate->toDateTimeString(),
+            'end_at' => $endDate->toDateTimeString(),
         ] + $updatedNovelty);
     }
 

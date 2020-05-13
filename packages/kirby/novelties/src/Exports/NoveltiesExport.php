@@ -38,7 +38,7 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
         $endDate = Arr::get($this->params, 'end_date');
 
         $novelties = Novelty::whereBetween(
-            'scheduled_start_at', [$startDate, $endDate]
+            'start_at', [$startDate, $endDate]
         );
 
         $employeeId && $novelties->where('employee_id', $employeeId);
@@ -78,8 +78,8 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
             $novelty->employee->identification_number,
             $novelty->employee->user->first_name,
             $novelty->employee->user->last_name,
-            optional($novelty->scheduled_start_at)->toISOString(),
-            optional($novelty->scheduled_end_at)->toISOString(),
+            optional($novelty->start_at)->toISOString(),
+            optional($novelty->end_at)->toISOString(),
             $novelty->subCostCenter ? $novelty->subCostCenter->costCenter->code : '',
             optional($novelty->subCostCenter)->code,
             $novelty->noveltyType->code,

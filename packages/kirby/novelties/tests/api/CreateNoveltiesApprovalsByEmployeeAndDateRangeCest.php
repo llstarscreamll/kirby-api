@@ -51,20 +51,20 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest
 
         $this->steveRogersNoveltiesFromYesterday = factory(Novelty::class, 2)->create([
             'employee_id' => $this->steveRogers->id,
-            'scheduled_start_at' => now()->subDay()->setTime(07, 00),
-            'scheduled_end_at' => now()->subDay()->setTime(10, 00),
+            'start_at' => now()->subDay()->setTime(07, 00),
+            'end_at' => now()->subDay()->setTime(10, 00),
         ]);
 
         $this->steveRogersNoveltiesFromLastMonth = factory(Novelty::class, 2)->create([
             'employee_id' => $this->steveRogers->id,
-            'scheduled_start_at' => now()->subMonth()->setTime(07, 00),
-            'scheduled_end_at' => now()->subMonth()->setTime(10, 00),
+            'start_at' => now()->subMonth()->setTime(07, 00),
+            'end_at' => now()->subMonth()->setTime(10, 00),
         ]);
 
         $this->tonyStarkNovelties = factory(Novelty::class, 2)->create([
             'employee_id' => $this->tonyStark->id,
-            'scheduled_start_at' => now()->subDay()->setTime(07, 00),
-            'scheduled_end_at' => now()->subDay()->setTime(10, 00),
+            'start_at' => now()->subDay()->setTime(07, 00),
+            'end_at' => now()->subDay()->setTime(10, 00),
         ]);
 
         $I->haveHttpHeader('Accept', 'application/json');

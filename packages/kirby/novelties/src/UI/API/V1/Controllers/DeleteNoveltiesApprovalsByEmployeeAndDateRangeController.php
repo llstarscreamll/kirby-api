@@ -27,7 +27,7 @@ class DeleteNoveltiesApprovalsByEmployeeAndDateRangeController
             $endDate = Carbon::parse(Arr::get($request->validated(), 'end_date'));
             $startDate = Carbon::parse(Arr::get($request->validated(), 'start_date'));
 
-            $novelties = $noveltyRepository->whereScheduledForEmployee($employeeId, 'scheduled_start_at', $startDate, $endDate);
+            $novelties = $noveltyRepository->whereScheduledForEmployee($employeeId, 'start_at', $startDate, $endDate);
             $noveltyRepository->deleteApprovals($novelties->pluck('id')->all(), $request->user()->id);
         } catch (\Throwable $th) {
             throw new HttpResponseException(response()->json([

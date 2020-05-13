@@ -47,14 +47,14 @@ class CreateManyNoveltiesActionCest
                 'novelties' => [
                     [
                         'novelty_type_id' => 1,
-                        'scheduled_start_at' => '2018-01-01T10:00:00.000Z',
-                        'scheduled_end_at' => '2018-01-01T12:00:00.000Z',
+                        'start_at' => '2018-01-01T10:00:00.000Z',
+                        'end_at' => '2018-01-01T12:00:00.000Z',
                         'comment' => '',
                     ],
                     [
                         'novelty_type_id' => 2,
-                        'scheduled_start_at' => '2018-02-20T14:00:00.000Z',
-                        'scheduled_end_at' => '2018-02-20T16:00:00.000Z',
+                        'start_at' => '2018-02-20T14:00:00.000Z',
+                        'end_at' => '2018-02-20T16:00:00.000Z',
                         'comment' => 'test comment',
                     ],
                 ],
@@ -87,8 +87,8 @@ class CreateManyNoveltiesActionCest
                 $I->seeRecord('novelties', [
                     'employee_id' => $employee->id,
                     'novelty_type_id' => $novelty['novelty_type_id'],
-                    'scheduled_start_at' => str_replace(['T', '.000Z'], [' ', ''], $novelty['scheduled_start_at']),
-                    'scheduled_end_at' => str_replace(['T', '.000Z'], [' ', ''], $novelty['scheduled_end_at']),
+                    'start_at' => str_replace(['T', '.000Z'], [' ', ''], $novelty['start_at']),
+                    'end_at' => str_replace(['T', '.000Z'], [' ', ''], $novelty['end_at']),
                 ]);
             }
         });

@@ -190,8 +190,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check out
-                        'scheduled_start_at' => '2019-04-01 17:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 17:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                 ],
                 'createdNovelties' => [
@@ -199,20 +199,20 @@ class RegisterTimeClockNoveltiesActionCest
                         'novelty_type_code' => 'HN',
                         // 9 hours (from 7am to 4pm), minimum minutes to subtract launch time not reached
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 16:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 16:00:00',
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
-                        'scheduled_start_at' => '2019-04-01 17:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 17:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                     [
                         'novelty_type_code' => 'PP', // novelty for too early check out
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
-                        'scheduled_start_at' => '2019-04-01 16:00:01',
-                        'scheduled_end_at' => '2019-04-01 16:59:59',
+                        'start_at' => '2019-04-01 16:00:01',
+                        'end_at' => '2019-04-01 16:59:59',
                     ],
                 ],
             ],
@@ -227,8 +227,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-03-31 08:00:00',
-                        'scheduled_end_at' => '2019-03-31 14:00:00',
+                        'start_at' => '2019-03-31 08:00:00',
+                        'end_at' => '2019-03-31 14:00:00',
                     ],
                 ],
             ],
@@ -242,8 +242,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-03-31 08:00:00',
-                        'scheduled_end_at' => '2019-03-31 14:00:00',
+                        'start_at' => '2019-03-31 08:00:00',
+                        'end_at' => '2019-03-31 14:00:00',
                     ],
                 ],
             ],
@@ -257,8 +257,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-01-10 08:00:00',
-                        'scheduled_end_at' => '2019-01-10 14:00:00',
+                        'start_at' => '2019-01-10 08:00:00',
+                        'end_at' => '2019-01-10 14:00:00',
                     ],
                 ],
             ],
@@ -272,20 +272,20 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check out
-                        'scheduled_start_at' => '2019-04-01 08:00:00',
-                        'scheduled_end_at' => '2019-04-01 12:00:00',
+                        'start_at' => '2019-04-01 08:00:00',
+                        'end_at' => '2019-04-01 12:00:00',
                     ],
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 07:59:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 07:59:59',
                     ],
                     [
                         'novelty_type_code' => 'CM',
-                        'scheduled_start_at' => '2019-04-01 08:00:00',
-                        'scheduled_end_at' => '2019-04-01 12:00:00',
+                        'start_at' => '2019-04-01 08:00:00',
+                        'end_at' => '2019-04-01 12:00:00',
                     ],
                 ],
             ],
@@ -299,23 +299,23 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 12:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 12:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 13:00:00',
-                        'scheduled_end_at' => '2019-04-01 16:00:00',
+                        'start_at' => '2019-04-01 13:00:00',
+                        'end_at' => '2019-04-01 16:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-04-01 06:00:00',
-                        'scheduled_end_at' => '2019-04-01 06:59:59',
+                        'start_at' => '2019-04-01 06:00:00',
+                        'end_at' => '2019-04-01 06:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-04-01 12:00:01',
-                        'scheduled_end_at' => '2019-04-01 12:59:59',
+                        'start_at' => '2019-04-01 12:00:01',
+                        'end_at' => '2019-04-01 12:59:59',
                     ],
                 ],
             ],
@@ -331,28 +331,28 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 12:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 12:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 13:00:00',
-                        'scheduled_end_at' => '2019-04-01 16:00:00',
+                        'start_at' => '2019-04-01 13:00:00',
+                        'end_at' => '2019-04-01 16:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-04-01 05:00:00',
-                        'scheduled_end_at' => '2019-04-01 06:59:59',
+                        'start_at' => '2019-04-01 05:00:00',
+                        'end_at' => '2019-04-01 06:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-04-01 12:00:01',
-                        'scheduled_end_at' => '2019-04-01 12:59:59',
+                        'start_at' => '2019-04-01 12:00:01',
+                        'end_at' => '2019-04-01 12:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HADI', // without check out novelty, then should be HADI time by default
-                        'scheduled_start_at' => '2019-04-01 16:00:01',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 16:00:01',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                 ],
             ],
@@ -366,18 +366,18 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 12:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 12:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 13:00:00',
-                        'scheduled_end_at' => '2019-04-01 16:00:00',
+                        'start_at' => '2019-04-01 13:00:00',
+                        'end_at' => '2019-04-01 16:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-04-01 12:00:01',
-                        'scheduled_end_at' => '2019-04-01 12:59:59',
+                        'start_at' => '2019-04-01 12:00:01',
+                        'end_at' => '2019-04-01 12:59:59',
                     ],
                 ],
             ],
@@ -391,13 +391,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 11:49:00',
-                        'scheduled_end_at' => '2019-04-01 12:00:00', // rounded to work shift first slot end
+                        'start_at' => '2019-04-01 11:49:00',
+                        'end_at' => '2019-04-01 12:00:00', // rounded to work shift first slot end
                     ],
                     [
                         'novelty_type_code' => 'PP',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 11:48:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 11:48:59',
                     ],
                 ],
             ],
@@ -411,13 +411,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 11:59:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 11:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 13:00:01',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 13:00:01',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                 ],
             ],
@@ -431,13 +431,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 11:59:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 11:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 13:00:01',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 13:00:01',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                 ],
             ],
@@ -452,18 +452,18 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-02 07:00:00',
-                        'scheduled_end_at' => '2019-04-02 11:59:59',
+                        'start_at' => '2019-04-02 07:00:00',
+                        'end_at' => '2019-04-02 11:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-02 13:00:01',
-                        'scheduled_end_at' => '2019-04-02 18:00:00',
+                        'start_at' => '2019-04-02 13:00:01',
+                        'end_at' => '2019-04-02 18:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HEDI', // because of check_in_novelty_type_code
-                        'scheduled_start_at' => '2019-04-02 06:00:00',
-                        'scheduled_end_at' => '2019-04-02 06:59:59',
+                        'start_at' => '2019-04-02 06:00:00',
+                        'end_at' => '2019-04-02 06:59:59',
                     ],
                 ],
             ],
@@ -479,23 +479,23 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-03 07:00:00',
-                        'scheduled_end_at' => '2019-04-03 11:59:59',
+                        'start_at' => '2019-04-03 07:00:00',
+                        'end_at' => '2019-04-03 11:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-03 13:00:01',
-                        'scheduled_end_at' => '2019-04-03 18:00:00',
+                        'start_at' => '2019-04-03 13:00:01',
+                        'end_at' => '2019-04-03 18:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HEDI', // because of check_in_novelty_type_code
-                        'scheduled_start_at' => '2019-04-03 06:00:00',
-                        'scheduled_end_at' => '2019-04-03 06:59:59',
+                        'start_at' => '2019-04-03 06:00:00',
+                        'end_at' => '2019-04-03 06:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HEDI', // because of check_out_novelty_type_code
-                        'scheduled_start_at' => '2019-04-03 18:00:01',
-                        'scheduled_end_at' => '2019-04-03 19:00:00',
+                        'start_at' => '2019-04-03 18:00:01',
+                        'end_at' => '2019-04-03 19:00:00',
                     ],
                 ],
             ],
@@ -514,26 +514,26 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'HN',
                         'sub_cost_center_id' => 1,
-                        'scheduled_start_at' => '2019-04-03 07:00:00',
-                        'scheduled_end_at' => '2019-04-03 11:59:59',
+                        'start_at' => '2019-04-03 07:00:00',
+                        'end_at' => '2019-04-03 11:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HN',
                         'sub_cost_center_id' => 1,
-                        'scheduled_start_at' => '2019-04-03 13:00:01',
-                        'scheduled_end_at' => '2019-04-03 18:00:00',
+                        'start_at' => '2019-04-03 13:00:01',
+                        'end_at' => '2019-04-03 18:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HEDI', // because of check_in_novelty_type_code
                         'sub_cost_center_id' => 1,
-                        'scheduled_start_at' => '2019-04-03 06:00:00',
-                        'scheduled_end_at' => '2019-04-03 06:59:59',
+                        'start_at' => '2019-04-03 06:00:00',
+                        'end_at' => '2019-04-03 06:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HADI', // because of check_out_novelty_type_code
                         'sub_cost_center_id' => 2,
-                        'scheduled_start_at' => '2019-04-03 18:00:01',
-                        'scheduled_end_at' => '2019-04-03 19:00:00',
+                        'start_at' => '2019-04-03 18:00:01',
+                        'end_at' => '2019-04-03 19:00:00',
                     ],
                 ],
             ],
@@ -546,8 +546,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 12:30:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 12:30:00',
                     ],
                 ],
             ],
@@ -560,8 +560,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 13:30:00',
-                        'scheduled_end_at' => '2019-04-01 17:00:00',
+                        'start_at' => '2019-04-01 13:30:00',
+                        'end_at' => '2019-04-01 17:00:00',
                     ],
                 ],
             ],
@@ -575,13 +575,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 13:30:00',
-                        'scheduled_end_at' => '2019-04-01 17:00:00',
+                        'start_at' => '2019-04-01 13:30:00',
+                        'end_at' => '2019-04-01 17:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HEDI',
-                        'scheduled_start_at' => '2019-04-01 17:00:01',
-                        'scheduled_end_at' => '2019-04-01 19:00:00',
+                        'start_at' => '2019-04-01 17:00:01',
+                        'end_at' => '2019-04-01 19:00:00',
                     ],
                 ],
             ],
@@ -596,13 +596,13 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'HN',
                         // 10 hours (from 8am to 6pm), minimum minutes to subtract launch time not reached
-                        'scheduled_start_at' => '2019-04-01 08:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 08:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                     [
                         'novelty_type_code' => 'PP',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 07:59:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 07:59:59',
                     ],
                 ],
             ],
@@ -617,13 +617,13 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'HN',
                         // 4.5 hours (from 8am to 12:30pm)
-                        'scheduled_start_at' => '2019-04-01 08:00:00',
-                        'scheduled_end_at' => '2019-04-01 12:30:00',
+                        'start_at' => '2019-04-01 08:00:00',
+                        'end_at' => '2019-04-01 12:30:00',
                     ],
                     [
                         'novelty_type_code' => 'PP',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 07:59:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 07:59:59',
                     ],
                 ],
             ],
@@ -638,13 +638,13 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'HN',
                         // 4.5 hours (from 8am to 12:30pm)
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 11:30:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 11:30:00',
                     ],
                     [
                         'novelty_type_code' => 'PP',
-                        'scheduled_start_at' => '2019-04-01 11:30:01',
-                        'scheduled_end_at' => '2019-04-01 12:30:00',
+                        'start_at' => '2019-04-01 11:30:01',
+                        'end_at' => '2019-04-01 12:30:00',
                     ],
                 ],
             ],
@@ -657,8 +657,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 14:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 14:00:00',
                     ],
                 ],
             ],
@@ -671,8 +671,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'RECNO',
-                        'scheduled_start_at' => '2019-04-01 22:00:00',
-                        'scheduled_end_at' => '2019-04-02 05:59:59',
+                        'start_at' => '2019-04-01 22:00:00',
+                        'end_at' => '2019-04-02 05:59:59',
                     ],
                 ],
             ],
@@ -685,8 +685,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HNF',
-                        'scheduled_start_at' => '2019-06-30 22:00:00',
-                        'scheduled_end_at' => '2019-07-01 05:59:59',
+                        'start_at' => '2019-06-30 22:00:00',
+                        'end_at' => '2019-07-01 05:59:59',
                     ],
                 ],
             ],
@@ -699,13 +699,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'RECNO',
-                        'scheduled_start_at' => '2019-03-30 22:00:00',
-                        'scheduled_end_at' => '2019-03-30 23:59:59',
+                        'start_at' => '2019-03-30 22:00:00',
+                        'end_at' => '2019-03-30 23:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HNF',
-                        'scheduled_start_at' => '2019-03-31 00:00:00',
-                        'scheduled_end_at' => '2019-03-31 05:59:59',
+                        'start_at' => '2019-03-31 00:00:00',
+                        'end_at' => '2019-03-31 05:59:59',
                     ],
                 ],
             ],
@@ -718,13 +718,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'RECNO',
-                        'scheduled_start_at' => '2019-07-02 00:00:00',
-                        'scheduled_end_at' => '2019-07-02 05:59:59',
+                        'start_at' => '2019-07-02 00:00:00',
+                        'end_at' => '2019-07-02 05:59:59',
                     ],
                     [
                         'novelty_type_code' => 'HNF',
-                        'scheduled_start_at' => '2019-07-01 22:00:00',
-                        'scheduled_end_at' => '2019-07-01 23:59:59',
+                        'start_at' => '2019-07-01 22:00:00',
+                        'end_at' => '2019-07-01 23:59:59',
                     ],
                 ],
             ],
@@ -737,13 +737,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'RECNO',
-                        'scheduled_start_at' => '2019-04-01 21:00:01',
-                        'scheduled_end_at' => '2019-04-01 22:00:00',
+                        'start_at' => '2019-04-01 21:00:01',
+                        'end_at' => '2019-04-01 22:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 14:00:00',
-                        'scheduled_end_at' => '2019-04-01 21:00:00',
+                        'start_at' => '2019-04-01 14:00:00',
+                        'end_at' => '2019-04-01 21:00:00',
                     ],
                 ],
             ],
@@ -756,13 +756,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HNF',
-                        'scheduled_start_at' => '2019-07-01 21:00:01',
-                        'scheduled_end_at' => '2019-07-01 22:00:00',
+                        'start_at' => '2019-07-01 21:00:01',
+                        'end_at' => '2019-07-01 22:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HDF',
-                        'scheduled_start_at' => '2019-07-01 14:00:00',
-                        'scheduled_end_at' => '2019-07-01 21:00:00',
+                        'start_at' => '2019-07-01 14:00:00',
+                        'end_at' => '2019-07-01 21:00:00',
                     ],
                 ],
             ],
@@ -776,13 +776,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 06:00:00',
-                        'scheduled_end_at' => '2019-04-01 14:00:00',
+                        'start_at' => '2019-04-01 06:00:00',
+                        'end_at' => '2019-04-01 14:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HADI',
-                        'scheduled_start_at' => '2019-04-01 05:00:00',
-                        'scheduled_end_at' => '2019-04-01 05:59:59',
+                        'start_at' => '2019-04-01 05:00:00',
+                        'end_at' => '2019-04-01 05:59:59',
                     ],
                 ],
             ],
@@ -800,13 +800,13 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'HN',
                         // 10 hours (from 8am to 6pm), minimum minutes to subtract launch time not reached
-                        'scheduled_start_at' => '2019-04-01 08:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 08:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                     [
                         'novelty_type_code' => 'PP', // default novelty type when check_in_novelty_type_id is null
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 07:59:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 07:59:59',
                     ],
                 ],
             ],
@@ -824,8 +824,8 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 08:00:00', // this would be the expected time to check in
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00', // this would be the expected time to check in
                     ],
                 ],
                 'createdNovelties' => [
@@ -835,15 +835,15 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 09:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 09:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                     [
                         'novelty_type_code' => 'PP', // novelty for too late check in
                         'sub_cost_center_id' => 1,
-                        'scheduled_start_at' => '2019-04-01 08:00:01',
-                        'scheduled_end_at' => '2019-04-01 08:59:59',
+                        'start_at' => '2019-04-01 08:00:01',
+                        'end_at' => '2019-04-01 08:59:59',
                     ],
                 ],
             ],
@@ -858,22 +858,22 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check out
-                        'scheduled_start_at' => '2019-04-01 16:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 16:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
                         // 9 hours (from 7am to 4pm), minimum minutes to subtract launch time not reached
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 15:59:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 15:59:59',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
-                        'scheduled_start_at' => '2019-04-01 16:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 16:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                 ],
@@ -890,44 +890,44 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check in
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 08:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00',
                     ],
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check out
-                        'scheduled_start_at' => '2019-04-01 17:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 17:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 08:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00',
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
-                        'scheduled_start_at' => '2019-04-01 17:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 17:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                     [
                         'novelty_type_code' => 'HN',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
-                        'scheduled_start_at' => '2019-04-01 09:00:00',
-                        'scheduled_end_at' => '2019-04-01 16:00:00',
+                        'start_at' => '2019-04-01 09:00:00',
+                        'end_at' => '2019-04-01 16:00:00',
                     ],
                     [
                         'novelty_type_code' => 'PP', // novelty for early check out
-                        'scheduled_start_at' => '2019-04-01 08:00:01',
-                        'scheduled_end_at' => '2019-04-01 08:59:59',
+                        'start_at' => '2019-04-01 08:00:01',
+                        'end_at' => '2019-04-01 08:59:59',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                     [
                         'novelty_type_code' => 'PP', // novelty for late check out
-                        'scheduled_start_at' => '2019-04-01 08:00:01',
-                        'scheduled_end_at' => '2019-04-01 08:59:59',
+                        'start_at' => '2019-04-01 08:00:01',
+                        'end_at' => '2019-04-01 08:59:59',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                 ],
@@ -943,27 +943,27 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check in
-                        'scheduled_start_at' => '2019-04-01 10:00:00',
-                        'scheduled_end_at' => '2019-04-01 11:00:00',
+                        'start_at' => '2019-04-01 10:00:00',
+                        'end_at' => '2019-04-01 11:00:00',
                     ],
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 08:00:00',
-                        'scheduled_end_at' => '2019-04-01 09:59:59',
+                        'start_at' => '2019-04-01 08:00:00',
+                        'end_at' => '2019-04-01 09:59:59',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                     [
                         'novelty_type_code' => 'CM',
                         'sub_cost_center_id' => 1,
-                        'scheduled_start_at' => '2019-04-01 10:00:00',
-                        'scheduled_end_at' => '2019-04-01 11:00:00',
+                        'start_at' => '2019-04-01 10:00:00',
+                        'end_at' => '2019-04-01 11:00:00',
                     ],
                     [
                         'novelty_type_code' => 'PP', // novelty for late check in and early check out
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 07:59:59',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 07:59:59',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                 ],
@@ -980,20 +980,20 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'PP',
-                        'scheduled_start_at' => '2019-07-21 14:00:00',
-                        'scheduled_end_at' => '2019-07-21 15:59:59',
+                        'start_at' => '2019-07-21 14:00:00',
+                        'end_at' => '2019-07-21 15:59:59',
                         'sub_cost_center_id' => 1,
                     ],
                     [
                         'novelty_type_code' => 'PP',
-                        'scheduled_start_at' => '2019-07-21 17:00:01',
-                        'scheduled_end_at' => '2019-07-21 22:00:00',
+                        'start_at' => '2019-07-21 17:00:01',
+                        'end_at' => '2019-07-21 22:00:00',
                         'sub_cost_center_id' => 1,
                     ],
                     [
                         'novelty_type_code' => 'HDF',
-                        'scheduled_start_at' => '2019-07-21 16:00:00',
-                        'scheduled_end_at' => '2019-07-21 17:00:00',
+                        'start_at' => '2019-07-21 16:00:00',
+                        'end_at' => '2019-07-21 17:00:00',
                         'sub_cost_center_id' => 1,
                     ],
                 ],
@@ -1008,13 +1008,13 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 17:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 17:00:00',
                     ],
                     [
                         'novelty_type_code' => 'PP', // default novelty type when check_in_novelty_type_id is null
-                        'scheduled_start_at' => '2019-04-01 17:00:01',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 17:00:01',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                 ],
             ],
@@ -1029,21 +1029,21 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check in
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 08:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00',
                     ],
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 08:00:01',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 08:00:01',
+                        'end_at' => '2019-04-01 18:00:00',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 08:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 08:00:00',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                 ],
@@ -1059,32 +1059,32 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check in
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 09:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 09:00:00',
                     ],
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check out
-                        'scheduled_start_at' => '2019-04-01 16:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 16:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                     ],
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 09:00:01',
-                        'scheduled_end_at' => '2019-04-01 15:59:59',
+                        'start_at' => '2019-04-01 09:00:01',
+                        'end_at' => '2019-04-01 15:59:59',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
-                        'scheduled_start_at' => '2019-04-01 07:00:00',
-                        'scheduled_end_at' => '2019-04-01 09:00:00',
+                        'start_at' => '2019-04-01 07:00:00',
+                        'end_at' => '2019-04-01 09:00:00',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
-                        'scheduled_start_at' => '2019-04-01 16:00:00',
-                        'scheduled_end_at' => '2019-04-01 18:00:00',
+                        'start_at' => '2019-04-01 16:00:00',
+                        'end_at' => '2019-04-01 18:00:00',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                 ],
@@ -1100,21 +1100,21 @@ class RegisterTimeClockNoveltiesActionCest
                 'scheduledNovelties' => [
                     [
                         'novelty_type_code' => 'CM', // scheduled novelty for check out
-                        'scheduled_start_at' => '2019-04-01 15:00:00',
-                        'scheduled_end_at' => '2019-04-01 16:00:00',
+                        'start_at' => '2019-04-01 15:00:00',
+                        'end_at' => '2019-04-01 16:00:00',
                     ],
                 ],
                 'createdNovelties' => [
                     [
                         'novelty_type_code' => 'HN',
-                        'scheduled_start_at' => '2019-04-01 11:00:00',
-                        'scheduled_end_at' => '2019-04-01 14:59:59',
+                        'start_at' => '2019-04-01 11:00:00',
+                        'end_at' => '2019-04-01 14:59:59',
                         'sub_cost_center_id' => 1, // from time clock log sub cost center id
                     ],
                     [
                         'novelty_type_code' => 'CM', // this novelty should be now attached to time clock log record
-                        'scheduled_start_at' => '2019-04-01 15:00:00',
-                        'scheduled_end_at' => '2019-04-01 16:00:00',
+                        'start_at' => '2019-04-01 15:00:00',
+                        'end_at' => '2019-04-01 16:00:00',
                         'sub_cost_center_id' => 1, // from time clock log sub cost center id
                     ],
                 ],
@@ -1133,14 +1133,14 @@ class RegisterTimeClockNoveltiesActionCest
                     [
                         'novelty_type_code' => 'HADI',
                         'sub_cost_center_id' => 2,
-                        'scheduled_start_at' => '2019-04-01 12:00:00',
-                        'scheduled_end_at' => '2019-04-01 13:30:00',
+                        'start_at' => '2019-04-01 12:00:00',
+                        'end_at' => '2019-04-01 13:30:00',
                     ],
                     [
                         'novelty_type_code' => 'PP',
                         'sub_cost_center_id' => 1,
-                        'scheduled_start_at' => '2019-04-01 14:00:00',
-                        'scheduled_end_at' => '2019-04-01 22:00:00',
+                        'start_at' => '2019-04-01 14:00:00',
+                        'end_at' => '2019-04-01 22:00:00',
                     ],
                 ],
             ],
@@ -1165,8 +1165,8 @@ class RegisterTimeClockNoveltiesActionCest
             factory(Novelty::class)->create([
                 'employee_id' => $timeClockLog->employee->id,
                 'novelty_type_id' => $noveltyType->id,
-                'scheduled_start_at' => $scheduledNovelty['scheduled_start_at'],
-                'scheduled_end_at' => $scheduledNovelty['scheduled_end_at'],
+                'start_at' => $scheduledNovelty['start_at'],
+                'end_at' => $scheduledNovelty['end_at'],
                 'time_clock_log_id' => null,
             ]);
         }
@@ -1185,8 +1185,8 @@ class RegisterTimeClockNoveltiesActionCest
         foreach ($data['createdNovelties'] as $novelty) {
             $noveltyType = $this->noveltyTypes->firstWhere('code', $novelty['novelty_type_code']);
             $times = array_filter([
-                'scheduled_start_at' => $novelty['scheduled_start_at'] ?? null,
-                'scheduled_end_at' => $novelty['scheduled_end_at'] ?? null,
+                'start_at' => $novelty['start_at'] ?? null,
+                'end_at' => $novelty['end_at'] ?? null,
             ]);
 
             $I->seeRecord('novelties', $times + [
@@ -1251,16 +1251,16 @@ class RegisterTimeClockNoveltiesActionCest
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
-            'scheduled_start_at' => now()->setTime(07, 00),
-            'scheduled_end_at' => now()->setTime(12, 00),
+            'start_at' => now()->setTime(07, 00),
+            'end_at' => now()->setTime(12, 00),
         ]);
 
         factory(Novelty::class)->create([
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
-            'scheduled_start_at' => now()->setTime(12, 00),
-            'scheduled_end_at' => now()->setTime(12, 30),
+            'start_at' => now()->setTime(12, 00),
+            'end_at' => now()->setTime(12, 30),
         ]);
 
         // afternoon log with late check in
@@ -1282,22 +1282,22 @@ class RegisterTimeClockNoveltiesActionCest
         $I->seeRecord('novelties', [ // ordinary time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
-            'scheduled_start_at' => '2019-04-01 14:30:00',
-            'scheduled_end_at' => '2019-04-01 17:00:00',
+            'start_at' => '2019-04-01 14:30:00',
+            'end_at' => '2019-04-01 17:00:00',
         ]);
 
         $I->seeRecord('novelties', [ // additional time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
-            'scheduled_start_at' => '2019-04-01 17:00:01',
-            'scheduled_end_at' => '2019-04-01 17:30:00',
+            'start_at' => '2019-04-01 17:00:01',
+            'end_at' => '2019-04-01 17:30:00',
         ]);
 
         $I->seeRecord('novelties', [ // missing time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'PP')->first()->id,
-            'scheduled_start_at' => '2019-04-01 13:30:00',
-            'scheduled_end_at' => '2019-04-01 14:29:59',
+            'start_at' => '2019-04-01 13:30:00',
+            'end_at' => '2019-04-01 14:29:59',
         ]);
 
         $I->seeNumRecords(3, 'novelties', ['time_clock_log_id' => $afternoonLog->id]);
@@ -1324,8 +1324,8 @@ class RegisterTimeClockNoveltiesActionCest
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
-            'scheduled_start_at' => now()->setTime(07, 00),
-            'scheduled_end_at' => now()->setTime(12, 00),
+            'start_at' => now()->setTime(07, 00),
+            'end_at' => now()->setTime(12, 00),
         ]);
 
         // scheduled novelty for morning log
@@ -1333,8 +1333,8 @@ class RegisterTimeClockNoveltiesActionCest
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'PP')->first()->id,
-            'scheduled_start_at' => now()->setTime(12, 00),
-            'scheduled_end_at' => now()->setTime(14, 00), // next check in should be at 2pm
+            'start_at' => now()->setTime(12, 00),
+            'end_at' => now()->setTime(14, 00), // next check in should be at 2pm
         ]);
 
         // afternoon log, after scheduled novelty
@@ -1356,15 +1356,15 @@ class RegisterTimeClockNoveltiesActionCest
         $I->seeRecord('novelties', [ // ordinary time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
-            'scheduled_start_at' => '2019-04-01 14:00:00',
-            'scheduled_end_at' => '2019-04-01 18:00:00',
+            'start_at' => '2019-04-01 14:00:00',
+            'end_at' => '2019-04-01 18:00:00',
         ]);
 
         $I->seeRecord('novelties', [ // additional time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
-            'scheduled_start_at' => '2019-04-01 18:00:01',
-            'scheduled_end_at' => '2019-04-01 18:30:00',
+            'start_at' => '2019-04-01 18:00:01',
+            'end_at' => '2019-04-01 18:30:00',
         ]);
 
         $I->seeNumRecords(2, 'novelties', ['time_clock_log_id' => $afternoonLog->id]);
@@ -1396,29 +1396,29 @@ class RegisterTimeClockNoveltiesActionCest
         $I->seeRecord('novelties', [
             'time_clock_log_id' => $log->id,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HADI')->id,
-            'scheduled_start_at' => '2021-04-12 11:00:00',
-            'scheduled_end_at' => '2021-04-12 11:59:59',
+            'start_at' => '2021-04-12 11:00:00',
+            'end_at' => '2021-04-12 11:59:59',
         ]);
 
         $I->seeRecord('novelties', [
             'time_clock_log_id' => $log->id,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN')->id,
-            'scheduled_start_at' => '2021-04-12 12:00:00',
-            'scheduled_end_at' => '2021-04-12 17:00:00',
+            'start_at' => '2021-04-12 12:00:00',
+            'end_at' => '2021-04-12 17:00:00',
         ]);
 
         $I->seeRecord('novelties', [
             'time_clock_log_id' => $log->id,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HADI')->id,
-            'scheduled_start_at' => '2021-04-12 17:00:01',
-            'scheduled_end_at' => '2021-04-12 17:59:59',
+            'start_at' => '2021-04-12 17:00:01',
+            'end_at' => '2021-04-12 17:59:59',
         ]);
 
         $I->seeRecord('novelties', [
             'time_clock_log_id' => $log->id,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN')->id,
-            'scheduled_start_at' => '2021-04-12 18:00:00',
-            'scheduled_end_at' => '2021-04-12 19:00:00',
+            'start_at' => '2021-04-12 18:00:00',
+            'end_at' => '2021-04-12 19:00:00',
         ]);
     }
 
@@ -1450,22 +1450,22 @@ class RegisterTimeClockNoveltiesActionCest
         $I->seeRecord('novelties', [
             'time_clock_log_id' => $log->id,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HNF')->id,
-            'scheduled_start_at' => '2021-04-05 03:00:00',
-            'scheduled_end_at' => '2021-04-05 04:59:59',
+            'start_at' => '2021-04-05 03:00:00',
+            'end_at' => '2021-04-05 04:59:59',
         ]);
 
         $I->seeRecord('novelties', [
             'time_clock_log_id' => $log->id,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'RECNO')->id,
-            'scheduled_start_at' => '2021-04-05 05:00:00',
-            'scheduled_end_at' => '2021-04-05 10:59:59',
+            'start_at' => '2021-04-05 05:00:00',
+            'end_at' => '2021-04-05 10:59:59',
         ]);
 
         $I->seeRecord('novelties', [
             'time_clock_log_id' => $log->id,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HADI')->id,
-            'scheduled_start_at' => '2021-04-05 11:00:01',
-            'scheduled_end_at' => '2021-04-05 13:00:00',
+            'start_at' => '2021-04-05 11:00:01',
+            'end_at' => '2021-04-05 13:00:00',
         ]);
     }
 }

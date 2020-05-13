@@ -20,7 +20,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
      * @var array
      */
     protected $fieldSearchable = [
-        'scheduled_start_at' => 'like',
+        'start_at' => 'like',
         'noveltyType.code' => '=',
         'noveltyType.name' => 'like',
         'employee.user.first_name' => 'like',

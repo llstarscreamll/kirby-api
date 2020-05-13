@@ -712,8 +712,8 @@ class CheckOutCest
         // out should not be setted
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->setTime(17, 00),
-            'scheduled_end_at' => now()->setTime(18, 00),
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
         ];
 
         factory(Novelty::class)->create($noveltyData);
@@ -771,8 +771,8 @@ class CheckOutCest
         // early check out should be setted
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->setTime(17, 00),
-            'scheduled_end_at' => now()->setTime(18, 00),
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
         ];
 
         factory(Novelty::class)->create($noveltyData);
@@ -830,8 +830,8 @@ class CheckOutCest
         // 4pm, he's too early to check out
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->setTime(17, 00),
-            'scheduled_end_at' => now()->setTime(18, 00),
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
         ];
 
         $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
@@ -855,7 +855,7 @@ class CheckOutCest
         ]);
         $I->seeRecord('novelties', [
             'id' => $scheduledNovelty->id,
-            'scheduled_start_at' => now(),
+            'start_at' => now(),
         ]);
     }
 
@@ -897,8 +897,8 @@ class CheckOutCest
             // The novelty should be attached to a time clock log because it's a
             // past tense record
             'time_clock_log_id' => $employee->timeClockLogs->first()->id,
-            'scheduled_start_at' => now()->setTime(7, 00),
-            'scheduled_end_at' => now()->setTime(8, 00),
+            'start_at' => now()->setTime(7, 00),
+            'end_at' => now()->setTime(8, 00),
         ];
 
         factory(Novelty::class)->create($noveltyData);

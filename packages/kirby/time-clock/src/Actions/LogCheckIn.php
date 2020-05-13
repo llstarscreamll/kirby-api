@@ -153,20 +153,20 @@ class LogCheckIn
             // arrival, early arrivals than 30 minutes for said novelties
             // can't be discovered
             $scheduledNovelty = $this->noveltyRepository
-                ->whereScheduledForEmployee($identification->employee->id, 'scheduled_end_at', $expectedStart, now()->addMinutes(30))
+                ->whereScheduledForEmployee($identification->employee->id, 'end_at', $expectedStart, now()->addMinutes(30))
                 ->orderBy('id', 'DESC')
                 ->first();
 
             if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
                 $scheduledNovelty = $this->noveltyRepository->update(
                     [
-                        'scheduled_end_at' => now(),
+                        'end_at' => now(),
                     ],
                     $scheduledNovelty->id
                 );
             }
 
-            $checkInOffset = optional($scheduledNovelty)->scheduled_end_at;
+            $checkInOffset = optional($scheduledNovelty)->end_at;
             $shiftPunctuality = optional($workShift)->slotPunctuality('start', now(), $checkInOffset);
             $timeSlot = optional($workShift)->matchingTimeSlot('start', now(), $checkInOffset);
             $expectedStart = Arr::get($timeSlot, 'start');

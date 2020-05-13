@@ -27,7 +27,7 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeController
             $endDate = Carbon::parse(Arr::get($request->validated(), 'end_date'));
             $startDate = Carbon::parse(Arr::get($request->validated(), 'start_date'));
 
-            $novelties = $noveltyRepository->whereScheduledForEmployee($employeeId, 'scheduled_start_at', $startDate, $endDate);
+            $novelties = $noveltyRepository->whereScheduledForEmployee($employeeId, 'start_at', $startDate, $endDate);
             $novelties->each(fn ($novelty) => $noveltyRepository
                     ->sync($novelty->id, 'approvals', $request->user()->id, $detachOthers = false)
             );

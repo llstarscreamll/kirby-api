@@ -261,8 +261,8 @@ class CheckInCest
             'time_clock_log_id' => $previousTimeClockLog->id,
             'novelty_type_id' => $this->additionalTimeNovelty->first()->id,
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->setTime(07, 07),
-            'scheduled_end_at' => now()->setTime(12, 02),
+            'start_at' => now()->setTime(07, 07),
+            'end_at' => now()->setTime(12, 02),
         ]);
 
         $requestData = [
@@ -315,8 +315,8 @@ class CheckInCest
             'time_clock_log_id' => $previousTimeClockLog->id,
             'novelty_type_id' => $this->additionalTimeNovelty->first()->id,
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->setTime(07, 07),
-            'scheduled_end_at' => now()->setTime(12, 02),
+            'start_at' => now()->setTime(07, 07),
+            'end_at' => now()->setTime(12, 02),
         ]);
 
         $requestData = [
@@ -1037,8 +1037,8 @@ class CheckInCest
         // novelty for the late check in
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->subHour(),
-            'scheduled_end_at' => now(),
+            'start_at' => now()->subHour(),
+            'end_at' => now(),
         ];
 
         factory(Novelty::class)->create($noveltyData);
@@ -1086,8 +1086,8 @@ class CheckInCest
         // check in should be setted
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->subHours(2),
-            'scheduled_end_at' => now()->subHour(),
+            'start_at' => now()->subHours(2),
+            'end_at' => now()->subHour(),
         ];
 
         factory(Novelty::class)->create($noveltyData);
@@ -1133,12 +1133,12 @@ class CheckInCest
 
         // create scheduled novelty from 7am to 8am, since employee arrives at
         // 9am, he's 1 hour late to check in, so the default novelty type for
-        // check in should NOT be setted and novelty scheduled_end_at attribute
+        // check in should NOT be setted and novelty end_at attribute
         // should be adjusted to the employee entry time (9am)
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->setTime(7, 0), // 7am
-            'scheduled_end_at' => now()->setTime(8, 0), // 8am
+            'start_at' => now()->setTime(7, 0), // 7am
+            'end_at' => now()->setTime(8, 0), // 8am
         ];
 
         $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
@@ -1160,8 +1160,8 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
         $I->seeRecord('novelties', [
             'id' => $scheduledNovelty->id,
-            'scheduled_start_at' => now()->setTime(7, 0),
-            'scheduled_end_at' => now()->setTime(9, 0),
+            'start_at' => now()->setTime(7, 0),
+            'end_at' => now()->setTime(9, 0),
         ]);
     }
 
@@ -1190,12 +1190,12 @@ class CheckInCest
         // create scheduled novelty from 10am to 11am, since employee arrives at
         // 8am (too late), he's 1 hour late to check in, so the default novelty
         // type for check in should be setted and the scheduled novelty attr
-        // 'scheduled_end_at' should NOT be adjusted since this es not the
+        // 'end_at' should NOT be adjusted since this es not the
         // time to burn that scheduled novelty
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->setTime(10, 0), // 10am
-            'scheduled_end_at' => now()->setTime(11, 0), // 11am
+            'start_at' => now()->setTime(10, 0), // 10am
+            'end_at' => now()->setTime(11, 0), // 11am
         ];
 
         $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
@@ -1218,8 +1218,8 @@ class CheckInCest
         // scheduled novelty should not be updated
         $I->seeRecord('novelties', [
             'id' => $scheduledNovelty->id,
-            'scheduled_start_at' => now()->setTime(10, 0)->toDateTimeString(), // 10am
-            'scheduled_end_at' => now()->setTime(11, 0)->toDateTimeString(), // 11am
+            'start_at' => now()->setTime(10, 0)->toDateTimeString(), // 10am
+            'end_at' => now()->setTime(11, 0)->toDateTimeString(), // 11am
         ]);
     }
 
@@ -1250,8 +1250,8 @@ class CheckInCest
         // range
         $noveltyData = [
             'employee_id' => $employee->id,
-            'scheduled_start_at' => now()->setTime(17, 00), // 5pm
-            'scheduled_end_at' => now()->setTime(18, 00), // 6pm
+            'start_at' => now()->setTime(17, 00), // 5pm
+            'end_at' => now()->setTime(18, 00), // 6pm
         ];
 
         factory(Novelty::class)->create($noveltyData);
@@ -1307,8 +1307,8 @@ class CheckInCest
         $noveltyData = [
             'employee_id' => $employee->id,
             'time_clock_log_id' => 1,
-            'scheduled_start_at' => now()->setTime(10, 00), // 10pm
-            'scheduled_end_at' => now()->setTime(12, 00), // 12m
+            'start_at' => now()->setTime(10, 00), // 10pm
+            'end_at' => now()->setTime(12, 00), // 12m
         ];
 
         factory(Novelty::class)->create($noveltyData);
