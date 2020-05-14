@@ -155,7 +155,7 @@ ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 {{ logMessage("💻  Deploying code changes...") }}
 cd {{ $currentDir }}
 git pull origin {{ $branch }}
-composer install
+php7.4 /usr/local/bin/composer install
 php7.4 artisan optimize
 php7.4 artisan queue:restart
 php7.4 artisan horizon:purge
