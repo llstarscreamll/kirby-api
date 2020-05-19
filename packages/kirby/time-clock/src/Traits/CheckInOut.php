@@ -99,7 +99,7 @@ trait CheckInOut
     {
         $currentDateTime = now();
         $targetFlag = $flag === 'start' ? 'end' : 'start';
-        $noveltyAttr = "scheduled_{$targetFlag}_at";
+        $noveltyAttr = "{$targetFlag}_at";
 
         $scheduledNovelty = $this->noveltyRepository
             ->whereScheduledForEmployee($identification->employee_id, $noveltyAttr, now()->subHour(), now()->endOfDay())
