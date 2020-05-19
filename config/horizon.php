@@ -144,7 +144,17 @@ return [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'auto',
-                'processes' => 10,
+                'processes' => 5,
+                'tries' => 3,
+            ],
+        ],
+
+        'staging' => [
+            'supervisor-1' => [
+                'connection' => 'redis',
+                'queue' => ['default'],
+                'balance' => 'auto',
+                'processes' => 1,
                 'tries' => 3,
             ],
         ],
@@ -154,7 +164,7 @@ return [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'auto',
-                'processes' => 3,
+                'processes' => 1,
                 'tries' => 3,
             ],
         ],
