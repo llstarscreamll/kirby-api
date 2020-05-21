@@ -1468,4 +1468,62 @@ class RegisterTimeClockNoveltiesActionCest
             'end_at' => '2021-04-05 13:00:00',
         ]);
     }
+
+    /**
+     * @test
+     * @param IntegrationTester $I
+     */
+    public function shouldAddDefaultNoveltyForsubtractionWhenEmployeeCheckOutTooEarlyFromWorkShift(IntegrationTester $I)
+    {
+        // default values on America/Bogota timezone
+        $I->callArtisan('db:seed', ['--class' => DefaultNoveltyTypesSeed::class]);
+        $noveltyTypes = NoveltyType::all();
+
+        $workShift = factory(WorkShift::class)->create([
+            'name' => "7-15:30",
+            'grace_minutes_before_start_times' => 30,
+            'grace_minutes_after_start_times' => 30,
+            'grace_minutes_before_end_times' => 20,
+            'grace_minutes_after_end_times' => 30,
+            'meal_time_in_minutes' => 0,
+            'min_minutes_required_to_discount_meal_time' => 0,
+            'applies_on_days' => [1, 2, 3, 4, 5],
+            'time_zone' => "America/Bogota",
+            'time_slots' => [["end" => "15:30", "start" => "07:00"]],
+        ]);
+
+        // data is stored in UTC
+        $log = factory(TimeClockLog::class)->create([
+            'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
+            'work_shift_id' => $workShift->id,
+            'checked_in_at' => now()->setDate(2020, 05, 20)->setTime(10, 56, 31),
+            'checked_out_at' => now()->setDate(2020, 05, 20)->setTime(19, 38, 05),
+            'check_out_novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP')->id,
+            'check_out_sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
+        ]);
+
+        $action = app(RegisterTimeClockNoveltiesAction::class);
+        $action->run($log->id);
+
+        $I->seeRecord('novelties', [
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN')->id,
+            'start_at' => '2020-05-20 12:00:00',
+            'end_at' => '2020-05-20 19:38:05',
+        ]);
+
+        $I->seeRecord('novelties', [
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HADI')->id,
+            'start_at' => '2020-05-20 10:56:31',
+            'end_at' => '2020-05-20 11:59:59',
+        ]);
+
+        $I->seeRecord('novelties', [
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP')->id,
+            'start_at' => '2020-05-20 19:38:06',
+            'end_at' => '2020-05-20 20:30:00',
+        ]);
+    }
 }

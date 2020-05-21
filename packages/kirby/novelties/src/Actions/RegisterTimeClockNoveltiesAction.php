@@ -162,6 +162,14 @@ class RegisterTimeClockNoveltiesAction
             );
         }
 
+        // novedad seleccionada en salida temprano
+        if ($timeClockLog->checkOutPunctuality() < 0 && $noveltyType->id === $timeClockLog->check_out_novelty_type_id) {
+            $result = new PeriodCollection(...collect([...$noveltyTypePeriods])
+                    ->map(fn (Period $n) => [...$n->diff($timeClockPeriod)])
+                    ->collapse()
+            );
+        }
+
         // novedad predeterminada para adición de tiempo y el empleado NO la eligió al momento de la entrada
         if (! $noveltyWasSelectedByEmployee && $noveltyType->isDefaultForAddition()) {
             $result = $comparisonBaseWithoutWorkedTime
