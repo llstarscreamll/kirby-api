@@ -19,10 +19,3 @@ Route::prefix('api/v1')
     ->group(function ($route) {
         $route->apiResource('employees', EmployeeApiController::class);
     });
-
-Route::prefix('api/v1/')
-    ->middleware(['api', 'auth:api'])
-    ->post('employees/sync-by-csv-file', [
-        'as' => 'sync_employees_by_csv_file',
-        'uses' => EmployeeApiController::class.'@syncEmployeesByCsvFile',
-    ]);
