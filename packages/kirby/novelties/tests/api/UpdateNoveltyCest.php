@@ -64,50 +64,6 @@ class UpdateNoveltyCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldSetNegativeTimeIfNoveltyTypeHasSubtractorOperator(ApiTester $I)
-    {
-        $novelty = factory(Novelty::class)->create();
-
-        $updatedNovelty = [
-            'employee_id' => factory(Employee::class)->create()->id,
-            'novelty_type_id' => factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Subtraction])->id,
-        ];
-
-        $endpoint = str_replace('{id}', $novelty->id, $this->endpoint);
-        $I->sendPUT($endpoint, $updatedNovelty);
-
-        $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath('$.data.id');
-
-        $I->seeRecord('novelties', ['id' => $novelty->id] + $updatedNovelty);
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
-    public function shouldSetPositiveTimeIfNoveltyTypeHasAditionOperator(ApiTester $I)
-    {
-        $novelty = factory(Novelty::class)->create();
-
-        $updatedNovelty = [
-            'employee_id' => factory(Employee::class)->create()->id,
-            'novelty_type_id' => factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Addition])->id,
-        ];
-
-        $endpoint = str_replace('{id}', $novelty->id, $this->endpoint);
-        $I->sendPUT($endpoint, $updatedNovelty);
-
-        $I->seeResponseCodeIs(200);
-        $I->seeResponseJsonMatchesJsonPath('$.data.id');
-
-        $I->seeRecord('novelties', ['id' => $novelty->id] + $updatedNovelty);
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
     public function shouldReturnUnprocesableEntityIfUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();

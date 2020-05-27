@@ -3,12 +3,8 @@
 namespace Kirby\Novelties\Actions;
 
 use Carbon\Carbon;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Users\Contracts\UserRepositoryInterface;
 
 /**
  * Class CreateManyNoveltiesAction.
@@ -18,33 +14,16 @@ use Kirby\Users\Contracts\UserRepositoryInterface;
 class CreateManyNoveltiesAction
 {
     /**
-     * @var UserRepositoryInterface
-     */
-    private $userRepository;
-
-    /**
      * @var NoveltyRepositoryInterface
      */
     private $noveltyRepository;
 
     /**
-     * @var NoveltyTypeRepositoryInterface
-     */
-    private $noveltyTypeRepository;
-
-    /**
-     * @param UserRepositoryInterface $userRepository
      * @param NoveltyRepositoryInterface $noveltyRepository
-     * @param NoveltyTypeRepositoryInterface $noveltyTypeRepository
      */
-    public function __construct(
-        UserRepositoryInterface $userRepository,
-        NoveltyRepositoryInterface $noveltyRepository,
-        NoveltyTypeRepositoryInterface $noveltyTypeRepository
-    ) {
-        $this->userRepository = $userRepository;
+    public function __construct(NoveltyRepositoryInterface $noveltyRepository)
+    {
         $this->noveltyRepository = $noveltyRepository;
-        $this->noveltyTypeRepository = $noveltyTypeRepository;
     }
 
     /**
@@ -54,16 +33,11 @@ class CreateManyNoveltiesAction
     {
         $currentDate = Carbon::now();
         $employeeIds = new Collection($data['employee_ids']);
-        $noveltyTypes = $this->noveltyTypeRepository->findWhereIn('id', Arr::pluck($data['novelties'], 'novelty_type_id'));
         $approversIds = $data['approvers'];
 
-        $noveltiesIds = (new Collection($data['novelties']))->map(function ($novelty) use ($employeeIds, $currentDate, $noveltyTypes) {
-            $noveltyType = $noveltyTypes->where('id', $novelty['novelty_type_id'])->first();
+        $noveltiesIds = (new Collection($data['novelties']))->map(function ($novelty) use ($employeeIds, $currentDate) {
             $start = Carbon::parse($novelty['start_at']);
             $end = Carbon::parse($novelty['end_at']);
-            $diff = $noveltyType->operator->is(NoveltyTypeOperator::Addition)
-                ? $start->diffInMinutes($end)
-                : $start->diffInMinutes($end) * -1;
 
             $novelty['start_at'] = $start;
             $novelty['end_at'] = $end;
@@ -73,7 +47,7 @@ class CreateManyNoveltiesAction
             return $employeeIds->map(function ($employeeId) use ($novelty) {
                 return $novelty + ['employee_id' => $employeeId];
             });
-        })->collapse()->map(fn ($chunk) => $this->noveltyRepository->create($chunk)->id);
+        })->collapse()->map(fn($novelty) => $this->noveltyRepository->create($novelty)->id);
 
         $this->noveltyRepository->attachApproversToNovelties($approversIds, $noveltiesIds->all());
 

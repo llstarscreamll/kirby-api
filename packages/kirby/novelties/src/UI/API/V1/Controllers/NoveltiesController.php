@@ -5,7 +5,6 @@ namespace Kirby\Novelties\UI\API\V1\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\Novelties\Repositories\Criteria\EmployeeCriteria;
 use Kirby\Novelties\Repositories\Criteria\HasTimeClockLogCheckOutBetweenCriteria;
 use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
@@ -93,22 +92,16 @@ class NoveltiesController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest  $request
-     * @param  \Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface $noveltyTypeRepository
-     * @param  int                                                       $id
+     * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest $request
+     * @param  int                                                      $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateNoveltyRequest $request, NoveltyTypeRepositoryInterface $noveltyTypeRepository, $id)
+    public function update(UpdateNoveltyRequest $request, $id)
     {
         $noveltyData = $request->validated();
 
-        if (! empty($noveltyData['start_at'])) {
-            $startTime = Carbon::parse($noveltyData['start_at']);
-            $endTime = Carbon::parse($noveltyData['end_at']);
-
-            $noveltyData['start_at'] = $startTime;
-            $noveltyData['end_at'] = $endTime;
-        }
+        $noveltyData['start_at'] = Carbon::parse($noveltyData['start_at']);
+        $noveltyData['end_at'] = Carbon::parse($noveltyData['end_at']);
 
         $novelty = $this->noveltyRepository->update($noveltyData, $id);
 

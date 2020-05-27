@@ -31,8 +31,8 @@ class UpdateNoveltyRequest extends FormRequest
         return [
             'employee_id' => ['required', 'numeric', 'min:1'],
             'novelty_type_id' => ['required', 'numeric', 'min:1'],
-            'start_at' => ['nullable', 'date'],
-            'end_at' => ['nullable', 'date', 'after:start_at', 'required_with:start_at'],
+            'start_at' => ['required', 'date'],
+            'end_at' => ['required', 'date', 'after:start_at', 'required_with:start_at'],
             'comment' => ['nullable', 'string'],
         ];
     }
