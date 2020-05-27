@@ -3,12 +3,12 @@
 namespace Kirby\Employees\UI\API\V1\Controllers;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Hash;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
-use Kirby\Employees\Jobs\SyncEmployeesByCsvFileJob;
+use Kirby\Employees\UI\API\V1\Requests\CreateEmployeeRequest;
 use Kirby\Employees\UI\API\V1\Requests\GetEmployeeRequest;
 use Kirby\Employees\UI\API\V1\Requests\SearchEmployeesRequest;
-use Kirby\Employees\UI\API\V1\Requests\SyncEmployeesByCsvFileRequest;
 use Kirby\Employees\UI\API\V1\Requests\UpdateEmployeeRequest;
 use Kirby\Employees\UI\API\V1\Resources\EmployeeResource;
 use Kirby\Users\Contracts\UserRepositoryInterface;
@@ -83,6 +83,49 @@ class EmployeeApiController
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \Kirby\Employees\UI\API\V1\Requests\CreateEmployeeRequest
+     * @return \Illuminate\Http\Response
+     */
+    public function store(CreateEmployeeRequest $request)
+    {
+        $requestData = $request->validated();
+
+        try {
+            $user = $this->userRepository->create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => "{$request->code}@domain.com",
+                'password' => Hash::make("{$request->code}@domain.com_".now()->toDateString()),
+            ]);
+
+            $employee = $this->employeeRepository->create(
+                $requestData + [
+                    'id' => $user->id,
+                    'cost_center_id' => $requestData['cost_center']['id'],
+                ]
+            );
+
+            $this->employeeRepository->sync($employee->id, 'workShifts', data_get($requestData, 'work_shifts.*.id', []));
+
+            data_set($requestData['identifications'], '*.employee_id', $employee->id, true);
+            data_set($requestData['identifications'], '*.created_at', now(), true);
+            data_set($requestData['identifications'], '*.updated_at', now(), true);
+            $this->identificationRepository->insert($requestData['identifications']);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'errors' => [
+                    'title' => 'Error inesperado',
+                    'detail' => 'Un error inesperado ha ocurrido',
+                ],
+            ], 417);
+        }
+
+        return new EmployeeResource($employee);
+    }
+
+    /**
      * Store the specified resource on storage.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\UpdateEmployeeRequest
@@ -114,8 +157,6 @@ class EmployeeApiController
 
             $this->identificationRepository->deleteWhereEmployeeIdCodesNotIn($id, $identificationCodes);
         } catch (\Throwable $th) {
-            throw $th;
-
             return response()->json([
                 'errors' => [
                     'title' => 'Error inesperado',

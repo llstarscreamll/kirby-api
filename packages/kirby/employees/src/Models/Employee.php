@@ -126,7 +126,9 @@ class Employee extends Model
      */
     public function workShifts()
     {
-        return $this->belongsToMany(WorkShift::class)->withTrashed();
+        return $this->belongsToMany(WorkShift::class)
+            ->withTimestamps()
+            ->withTrashed();
     }
 
     /**
