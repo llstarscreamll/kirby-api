@@ -16,11 +16,11 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class EmployeeApiController.
+ * Class EmployeesController.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class EmployeeApiController
+class EmployeesController
 {
     /**
      * @var \Kirby\Users\Contracts\UserRepositoryInterface

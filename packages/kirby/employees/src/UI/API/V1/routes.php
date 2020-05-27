@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Kirby\Employees\UI\API\V1\Controllers\EmployeeApiController;
+use Kirby\Employees\UI\API\V1\Controllers\EmployeesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +17,5 @@ use Kirby\Employees\UI\API\V1\Controllers\EmployeeApiController;
 Route::prefix('api/v1')
     ->middleware(['api', 'auth:api'])
     ->group(function ($route) {
-        $route->apiResource('employees', EmployeeApiController::class);
+        $route->apiResource('employees', EmployeesController::class);
     });
