@@ -3,7 +3,6 @@
 namespace Kirby\Employees\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 /**
  * Class CreateEmployeeRequest.
