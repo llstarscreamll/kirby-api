@@ -2,7 +2,6 @@
 
 namespace Employees;
 
-use Illuminate\Support\Facades\DB;
 use Kirby\Company\Models\CostCenter;
 use Kirby\Employees\Models\Employee;
 use Kirby\WorkShifts\Models\WorkShift;
@@ -74,7 +73,7 @@ class CreateEmployeeCest
         $I->seeRecord('users', [
             'first_name' => 'Bruce',
             'last_name' => 'Banner',
-            'email' => '987@domain.com'
+            'email' => '987@domain.com',
         ]);
         $I->seeRecord('employee_work_shift', [
             'employee_id' => $employee->id,

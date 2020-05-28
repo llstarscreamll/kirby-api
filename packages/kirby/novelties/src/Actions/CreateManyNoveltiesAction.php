@@ -47,7 +47,7 @@ class CreateManyNoveltiesAction
             return $employeeIds->map(function ($employeeId) use ($novelty) {
                 return $novelty + ['employee_id' => $employeeId];
             });
-        })->collapse()->map(fn($novelty) => $this->noveltyRepository->create($novelty)->id);
+        })->collapse()->map(fn ($novelty) => $this->noveltyRepository->create($novelty)->id);
 
         $this->noveltyRepository->attachApproversToNovelties($approversIds, $noveltiesIds->all());
 
