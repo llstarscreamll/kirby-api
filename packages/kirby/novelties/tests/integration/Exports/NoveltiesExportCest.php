@@ -32,8 +32,8 @@ class NoveltiesExportCest
 
         $params = $params = [
             'employee_id' => $novelty->employee_id,
-            'start_date' => now()->startOfMonth()->toDateTimeString(),
-            'end_date' => now()->endOfMonth()->toDateTimeString(),
+            'time_clock_log_check_out_start_date' => now()->startOfMonth()->toDateTimeString(),
+            'time_clock_log_check_out_end_date' => now()->endOfMonth()->toDateTimeString(),
         ];
 
         $export = new NoveltiesExport($params);
@@ -75,8 +75,8 @@ class NoveltiesExportCest
 
         $params = $params = [
             'employee_id' => $novelty->employee_id,
-            'start_date' => now()->startOfMonth()->toDateTimeString(),
-            'end_date' => now()->endOfMonth()->toDateTimeString(),
+            'time_clock_log_check_out_start_date' => now()->startOfMonth()->toDateTimeString(),
+            'time_clock_log_check_out_end_date' => now()->endOfMonth()->toDateTimeString(),
         ];
 
         $export = new NoveltiesExport($params);

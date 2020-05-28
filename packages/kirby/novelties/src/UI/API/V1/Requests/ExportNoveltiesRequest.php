@@ -30,8 +30,8 @@ class ExportNoveltiesRequest extends FormRequest
     {
         return [
             'employee_id' => ['nullable', 'numeric'],
-            'start_date' => ['required', 'date'],
-            'end_date' => ['required', 'date', 'after:start_date'],
+            'time_clock_log_check_out_start_date' => ['required', 'date'],
+            'time_clock_log_check_out_end_date' => ['required', 'date', 'after:time_clock_log_check_out_start_date'],
         ];
     }
 }

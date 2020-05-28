@@ -77,8 +77,8 @@ class GenerateCsvReportByEmployeeJobCest
         $user = factory(User::class)->create();
         $params = [
             'employee_id' => $tonyStark->id,
-            'start_date' => $startDate->toDateTimeString(),
-            'end_date' => $endDate->toDateTimeString(),
+            'time_clock_log_check_out_start_date' => $startDate->toDateTimeString(),
+            'time_clock_log_check_out_end_date' => $endDate->toDateTimeString(),
         ];
 
         $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class)

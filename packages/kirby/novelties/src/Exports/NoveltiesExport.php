@@ -34,8 +34,8 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
     public function query()
     {
         $employeeId = Arr::get($this->params, 'employee_id');
-        $startDate = Arr::get($this->params, 'start_date');
-        $endDate = Arr::get($this->params, 'end_date');
+        $startDate = Arr::get($this->params, 'time_clock_log_check_out_start_date');
+        $endDate = Arr::get($this->params, 'time_clock_log_check_out_end_date');
 
         $novelties = Novelty::whereBetween(
             'start_at', [$startDate, $endDate]

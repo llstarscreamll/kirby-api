@@ -42,8 +42,8 @@ class ExportNoveltiesCest
         $employee = factory(Employee::class)->create();
         $requestData = [
             'employee_id' => $employee->id,
-            'start_date' => now()->startOfMonth()->toDateTimeString(),
-            'end_date' => now()->endOfMonth()->toDateTimeString(),
+            'time_clock_log_check_out_start_date' => now()->startOfMonth()->toDateTimeString(),
+            'time_clock_log_check_out_end_date' => now()->endOfMonth()->toDateTimeString(),
         ];
 
         $I->sendPOST($this->endpoint, $requestData);
