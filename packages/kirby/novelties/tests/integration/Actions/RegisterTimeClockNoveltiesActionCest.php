@@ -1480,7 +1480,7 @@ class RegisterTimeClockNoveltiesActionCest
         $noveltyTypes = NoveltyType::all();
 
         $workShift = factory(WorkShift::class)->create([
-            'name' => "7-15:30",
+            'name' => '7-15:30',
             'grace_minutes_before_start_times' => 30,
             'grace_minutes_after_start_times' => 30,
             'grace_minutes_before_end_times' => 20,
@@ -1488,8 +1488,8 @@ class RegisterTimeClockNoveltiesActionCest
             'meal_time_in_minutes' => 0,
             'min_minutes_required_to_discount_meal_time' => 0,
             'applies_on_days' => [1, 2, 3, 4, 5],
-            'time_zone' => "America/Bogota",
-            'time_slots' => [["end" => "15:30", "start" => "07:00"]],
+            'time_zone' => 'America/Bogota',
+            'time_slots' => [['end' => '15:30', 'start' => '07:00']],
         ]);
 
         // data is stored in UTC
