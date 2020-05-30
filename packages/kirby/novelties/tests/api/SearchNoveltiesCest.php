@@ -4,6 +4,7 @@ namespace Novelties;
 
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Models\Novelty;
+use Kirby\TimeClock\Models\TimeClockLog;
 
 /**
  * Class SearchNoveltiesCest.
@@ -87,6 +88,34 @@ class SearchNoveltiesCest
         factory(Novelty::class, 3)->create();
 
         $I->sendGET($this->endpoint, ['employee_id' => $employee->id]);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.0.id');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.2.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.3.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.4.id');
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[0]->id]);
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[1]->id]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function searchByTimeClockLogCheckOutDateRange(ApiTester $I)
+    {
+        $timeClockLog = factory(TimeClockLog::class)->create([
+            'checked_in_at' => now()->subWeek(),
+            'checked_out_at' => now()->subWeek()->addHours(9),
+        ]);
+        $expectedNovelties = factory(Novelty::class, 2)->create(['time_clock_log_id' => $timeClockLog->id]);
+        factory(Novelty::class, 3)->create();
+
+        $I->sendGET($this->endpoint, [
+            'time_clock_log_check_out_start_date' => now()->subWeek()->startOfDay()->toISOString(),
+            'time_clock_log_check_out_end_date' => now()->endOfDay()->toISOString(),
+        ]);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.0.id');
