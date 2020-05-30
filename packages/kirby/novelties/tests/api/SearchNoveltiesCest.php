@@ -4,6 +4,7 @@ namespace Novelties;
 
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Models\Novelty;
+use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Models\TimeClockLog;
 
 /**
@@ -115,6 +116,30 @@ class SearchNoveltiesCest
         $I->sendGET($this->endpoint, [
             'time_clock_log_check_out_start_date' => now()->subWeek()->startOfDay()->toISOString(),
             'time_clock_log_check_out_end_date' => now()->endOfDay()->toISOString(),
+        ]);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.0.id');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.2.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.3.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.4.id');
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[0]->id]);
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[1]->id]);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function searchByNoveltyType(ApiTester $I)
+    {
+        factory(Novelty::class, 3)->create();
+        $noveltyType = factory(NoveltyType::class)->create();
+        $expectedNovelties = factory(Novelty::class, 2)->create(['novelty_type_id' => $noveltyType->id]);
+
+        $I->sendGET($this->endpoint, [
+            'novelty_type_id' => $noveltyType->id,
         ]);
 
         $I->seeResponseCodeIs(200);
