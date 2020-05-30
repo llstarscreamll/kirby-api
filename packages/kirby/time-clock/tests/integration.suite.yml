@@ -1,0 +1,9 @@
+actor: IntegrationTester
+modules:
+  enabled:
+    - Asserts
+    - \ClockTime\Helper\Integration
+    - Laravel5:
+        root: ../../../
+        environment_file: .env.testing
+        run_database_migrations: true

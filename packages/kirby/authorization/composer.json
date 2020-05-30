@@ -1,0 +1,48 @@
+{
+    "name": "kirby/authorization",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "https://github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/authorization",
+    "keywords": [
+        "Laravel",
+        "Authorization"
+    ],
+    "require": {
+        "illuminate/support": "~6",
+        "spatie/laravel-permission": "3.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds"
+        ],
+        "psr-4": {
+            "Kirby\\Authorization\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kirby\\Authorization\\AuthorizationServiceProvider"
+            ],
+            "aliases": {
+                "Authorization": "Kirby\\Authorization\\Facades\\Authorization"
+            }
+        }
+    }
+}

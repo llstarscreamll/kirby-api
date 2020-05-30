@@ -1,0 +1,50 @@
+{
+    "name": "kirby/time-clock",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "https://github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/time-clock",
+    "keywords": [
+        "Laravel",
+        "TimeClock"
+    ],
+    "require": {
+        "illuminate/support": "~6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "makeabledk/laravel-factory-enhanced": "^1.2",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds"
+        ],
+        "psr-4": {
+            "Kirby\\TimeClock\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kirby\\TimeClock\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kirby\\TimeClock\\TimeClockServiceProvider"
+            ],
+            "aliases": {
+                "TimeClock": "Kirby\\TimeClock\\Facades\\TimeClock"
+            }
+        }
+    }
+}

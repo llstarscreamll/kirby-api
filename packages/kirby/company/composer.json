@@ -1,0 +1,47 @@
+{
+    "name": "kirby/company",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "https://github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/company",
+    "keywords": [
+        "Laravel",
+        "Company"
+    ],
+    "require": {
+        "illuminate/support": "~6"
+    },
+    "require-dev": {
+        "blastcloud/guzzler": "^1.5",
+        "phpunit/phpunit": "8.1.6",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kirby\\Company\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kirby\\Company\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kirby\\Company\\CompanyServiceProvider"
+            ],
+            "aliases": {
+                "Company": "Kirby\\Company\\Facades\\Company"
+            }
+        }
+    }
+}

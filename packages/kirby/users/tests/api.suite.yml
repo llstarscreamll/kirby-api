@@ -1,0 +1,11 @@
+actor: ApiTester
+modules:
+    enabled:
+        - \Users\Helper\Api
+        - Authentication\Helper\Api
+        - REST:
+            depends: Laravel5
+        - Laravel5:
+            root: ../../../
+            environment_file: .env.testing
+            run_database_migrations: true

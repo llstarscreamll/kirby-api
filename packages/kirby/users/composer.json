@@ -1,0 +1,45 @@
+{
+    "name": "kirby/users",
+    "description": ":description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "https://github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/llstarscreamll/users",
+    "keywords": [
+        "Laravel",
+        "Users"
+    ],
+    "require": {
+        "illuminate/support": "~6",
+        "prettus/l5-repository": "^2.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3.0",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Kirby\\Users\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kirby\\Users\\UsersServiceProvider"
+            ],
+            "aliases": {
+                "Users": "Kirby\\Users\\Facades\\Users"
+            }
+        }
+    }
+}

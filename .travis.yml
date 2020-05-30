@@ -1,0 +1,23 @@
+language: php
+
+matrix:
+  fast_finish: true
+
+php:
+  - 7.4
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+install:
+  - composer global require hirak/prestissimo
+  - composer install
+  - php artisan passport:keys
+
+script:
+  - php vendor/bin/codecept run --coverage-xml --fail-fast
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)

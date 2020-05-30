@@ -1,0 +1,12 @@
+ignore:
+  - "app"
+  - "database"
+  - "config"
+  - "tests"
+  - "packages/kirby/**/tests"
+  - "packages/kirby/**/config"
+  - "packages/kirby/**/database"
+  - "packages/kirby/**/src/Facades"
+  - "packages/kirby/**/src/*ServiceProvider.php"
+  - "packages/kirby/**/src/UI/API/Routes/*"
+  - "packages/kirby/**/src/UI/WEB/Routes/*"
