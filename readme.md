@@ -1,8 +1,8 @@
 # Kirby API
 
-[![Build Status](https://travis-ci.com/llstarscreamll/kirby-api.svg?branch=develop)](https://travis-ci.com/llstarscreamll/kirby-api)
-[![StyleCI](https://github.styleci.io/repos/171598863/shield?branch=develop)](https://github.styleci.io/repos/171598863)
-[![codecov](https://codecov.io/gh/llstarscreamll/laravel/branch/develop/graph/badge.svg)](https://codecov.io/gh/llstarscreamll/laravel)
+[![Build Status](https://travis-ci.com/llstarscreamll/kirby-api.svg?branch=master)](https://travis-ci.com/llstarscreamll/kirby-api)
+[![StyleCI](https://github.styleci.io/repos/171598863/shield?branch=master)](https://github.styleci.io/repos/171598863)
+[![codecov](https://codecov.io/gh/llstarscreamll/laravel/branch/master/graph/badge.svg)](https://codecov.io/gh/llstarscreamll/laravel)
 ![GitHub](https://img.shields.io/github/license/llstarscreamll/kirby-api?logo=github)
 
 This project aims to be as a base for reutilizable Laravel packages used for multipurpose stuff. The laravel libraries are located on the `packages` folder under de **Kirby** vendor name. Here are some things this package currently does:
