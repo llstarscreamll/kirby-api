@@ -12,6 +12,7 @@ use Kirby\Novelties\Repositories\Criteria\EmployeeCriteria;
 use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
+use Kirby\Novelties\Repositories\Criteria\ByNoveltyTypeCriteria;
 use Kirby\Novelties\Repositories\Criteria\ByStartDateRangeCriteria;
 use Kirby\Novelties\Repositories\Criteria\HasTimeClockLogCheckOutBetweenCriteria;
 
@@ -52,18 +53,22 @@ class NoveltiesController
 
         if ($request->time_clock_log_check_out_start_date) {
             $novelties->pushCriteria(new HasTimeClockLogCheckOutBetweenCriteria(
-                Carbon::parse($request->time_clock_log_check_out_start_date), Carbon::parse($request->time_clock_log_check_out_end_date))
-            );
-        }
-
-        if ($request->employee_id) {
-            $novelties->pushCriteria(new EmployeeCriteria($request->employee_id));
+                Carbon::parse($request->time_clock_log_check_out_start_date), Carbon::parse($request->time_clock_log_check_out_end_date)
+            ));
         }
 
         if ($request->start_at) {
             $novelties->pushCriteria(new ByStartDateRangeCriteria(
                 Carbon::parse($request->start_at['from']), Carbon::parse($request->start_at['to'])
             ));
+        }
+        
+        if ($request->employee_id) {
+            $novelties->pushCriteria(new EmployeeCriteria($request->employee_id));
+        }
+
+        if ($request->novelty_type_id) {
+            $novelties->pushCriteria(new ByNoveltyTypeCriteria($request->novelty_type_id));
         }
 
         return NoveltyResource::collection($novelties->simplePaginate(null, ['novelties.*']));
