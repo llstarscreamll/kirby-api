@@ -29,7 +29,7 @@ class SearchNoveltiesCest
      * @test
      * @param ApiTester $I
      */
-    public function searchSuccessfully(ApiTester $I)
+    public function searchSuccessfullyWithoutAnyParams(ApiTester $I)
     {
         $novelties = factory(Novelty::class, 5)->create();
 
@@ -41,6 +41,38 @@ class SearchNoveltiesCest
         $I->seeResponseJsonMatchesJsonPath('$.data.2.id');
         $I->seeResponseJsonMatchesJsonPath('$.data.3.id');
         $I->seeResponseJsonMatchesJsonPath('$.data.4.id');
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function searchByDateRange(ApiTester $I)
+    {
+        $expectedNovelties = factory(Novelty::class, 2)->create([
+            'start_at' => now()->subDays(2),
+            'end_at' => now()->subDays(2)->addHours(2),
+        ]);
+        factory(Novelty::class, 3)->create([
+            'start_at' => now()->subMonths(2),
+            'end_at' => now()->subMonths(2)->addHours(2),
+        ]);
+
+        $I->sendGET($this->endpoint, [
+            'start_at' => [
+                'from' => now()->subWeek()->startOfDay()->toISOString(),
+                'to' => now()->endOfDay()->toISOString(),
+            ],
+        ]);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.0.id');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.2.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.3.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.4.id');
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[0]->id]);
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[1]->id]);
     }
 
     /**
