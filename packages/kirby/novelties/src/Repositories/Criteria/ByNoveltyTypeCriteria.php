@@ -11,16 +11,16 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 class ByNoveltyTypeCriteria implements CriteriaInterface
 {
     /**
-     * @var int
+     * @var int[]
      */
-    private $noveltyTypeId;
+    private $noveltyTypeIds;
 
     /**
-     * @param int $noveltyTypeId
+     * @param int[] $noveltyTypeIds
      */
-    public function __construct(int $noveltyTypeId)
+    public function __construct(array $noveltyTypeIds)
     {
-        $this->noveltyTypeId = $noveltyTypeId;
+        $this->noveltyTypeIds = $noveltyTypeIds;
     }
 
     /**
@@ -32,6 +32,6 @@ class ByNoveltyTypeCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('novelty_type_id', $this->noveltyTypeId);
+        return $model->whereIn('novelty_type_id', $this->noveltyTypeIds);
     }
 }

@@ -11,27 +11,27 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 class EmployeeCriteria implements CriteriaInterface
 {
     /**
-     * @var int
+     * @var int[]
      */
-    private $employeeId;
+    private $employeeIds;
 
     /**
-     * @param int $employeeId
+     * @param int[] $employeeIds
      */
-    public function __construct(int $employeeId)
+    public function __construct(array $employeeIds)
     {
-        $this->employeeId = $employeeId;
+        $this->employeeIds = $employeeIds;
     }
 
     /**
      * Apply criteria in query repository.
      *
-     * @param  string              $model
-     * @param  RepositoryInterface $repository
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  RepositoryInterface                 $repository
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('novelties.employee_id', $this->employeeId);
+        return $model->whereIn('novelties.employee_id', $this->employeeIds);
     }
 }

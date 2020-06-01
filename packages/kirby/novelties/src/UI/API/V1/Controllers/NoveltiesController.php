@@ -63,12 +63,12 @@ class NoveltiesController
             ));
         }
         
-        if ($request->employee_id) {
-            $novelties->pushCriteria(new EmployeeCriteria($request->employee_id));
+        if ($request->employees) {
+            $novelties->pushCriteria(new EmployeeCriteria(data_get($request->employees, '*.id')));
         }
 
-        if ($request->novelty_type_id) {
-            $novelties->pushCriteria(new ByNoveltyTypeCriteria($request->novelty_type_id));
+        if ($request->novelty_types) {
+            $novelties->pushCriteria(new ByNoveltyTypeCriteria(data_get($request->novelty_types, '*.id')));
         }
 
         return NoveltyResource::collection($novelties->simplePaginate(null, ['novelties.*']));
