@@ -82,13 +82,13 @@ class SearchNoveltiesCest
      * @test
      * @param ApiTester $I
      */
-    public function searchByEmployeeId(ApiTester $I)
+    public function searchByEmployees(ApiTester $I)
     {
         $employee = factory(Employee::class)->create();
         $expectedNovelties = factory(Novelty::class, 2)->create(['employee_id' => $employee->id]);
         factory(Novelty::class, 3)->create();
 
-        $I->sendGET($this->endpoint, ['employee_id' => $employee->id]);
+        $I->sendGET($this->endpoint, ['employees' => [['id' => $employee->id]]]);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.0.id');
@@ -132,14 +132,14 @@ class SearchNoveltiesCest
      * @test
      * @param ApiTester $I
      */
-    public function searchByNoveltyType(ApiTester $I)
+    public function searchByNoveltyTypes(ApiTester $I)
     {
         factory(Novelty::class, 3)->create();
         $noveltyType = factory(NoveltyType::class)->create();
         $expectedNovelties = factory(Novelty::class, 2)->create(['novelty_type_id' => $noveltyType->id]);
 
         $I->sendGET($this->endpoint, [
-            'novelty_type_id' => $noveltyType->id,
+            'novelty_types' => [['id' => $noveltyType->id]],
         ]);
 
         $I->seeResponseCodeIs(200);
