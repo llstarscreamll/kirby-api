@@ -70,13 +70,13 @@ class LogCheckOut
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
     /**
-     * @param HolidayRepositoryInterface                           $holidayRepository
-     * @param SettingRepositoryInterface                           $settingRepository
-     * @param NoveltyRepositoryInterface                           $noveltyRepository
-     * @param NoveltyTypeRepositoryInterface                       $noveltyTypeRepository
-     * @param TimeClockLogRepositoryInterface                      $timeClockLogRepository
-     * @param SubCostCenterRepositoryInterface                     $subCostCenterRepository
-     * @param IdentificationRepositoryInterface                    $identificationRepository
+     * @param HolidayRepositoryInterface                     $holidayRepository
+     * @param SettingRepositoryInterface                     $settingRepository
+     * @param NoveltyRepositoryInterface                     $noveltyRepository
+     * @param NoveltyTypeRepositoryInterface                 $noveltyTypeRepository
+     * @param TimeClockLogRepositoryInterface                $timeClockLogRepository
+     * @param SubCostCenterRepositoryInterface               $subCostCenterRepository
+     * @param IdentificationRepositoryInterface              $identificationRepository
      * @param ValidateNoveltyTypeBasedOnWorkShiftPunctuality $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
@@ -124,15 +124,14 @@ class LogCheckOut
         $scheduledNovelty = $this->noveltyRepository
             ->whereScheduledForEmployee($identification->employee_id, 'start_at', now()->subHour(), now()->endOfDay())
             ->orderBy('id', 'DESC')
-            ->first();
-
-        if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
-            $scheduledNovelty = $this->noveltyRepository->update(
-                [
-                    'start_at' => now(),
-                ],
-                $scheduledNovelty->id
-            );
+            ->first(['novelties.*']);
+            if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
+                $scheduledNovelty = $this->noveltyRepository->update(
+                    [
+                        'start_at' => now(),
+                    ],
+                    $scheduledNovelty->id
+                );
         }
 
         $checkOutOffset = optional($scheduledNovelty)->start_at;

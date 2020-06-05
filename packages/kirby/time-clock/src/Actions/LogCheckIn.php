@@ -10,6 +10,7 @@ use Kirby\Employees\Models\Identification;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Novelties\Models\Novelty;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\Exceptions\AlreadyCheckedInException;
@@ -153,9 +154,11 @@ class LogCheckIn
             // arrival, early arrivals than 30 minutes for said novelties
             // can't be discovered
             $scheduledNovelty = $this->noveltyRepository
-                ->whereScheduledForEmployee($identification->employee->id, 'end_at', $expectedStart, now()->addMinutes(30))
+                ->whereScheduledForEmployee(
+                    $identification->employee_id, 'end_at', $expectedStart, now()->addMinutes(30)
+                )
                 ->orderBy('id', 'DESC')
-                ->first();
+                ->first(['novelties.*']);
 
             if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
                 $scheduledNovelty = $this->noveltyRepository->update(

@@ -67,6 +67,9 @@ class DeleteNoveltiesApprovalsByEmployeeAndDateRangeCest
             'end_at' => now()->subDay()->setTime(10, 00),
         ]);
 
+        $this->steveRogersNoveltiesFromYesterday->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
+        $this->tonyStarkNovelties->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
+
         // set approvals
         $this->steveRogersNoveltiesFromYesterday->first()->approvals()->attach($this->user);
         $this->steveRogersNoveltiesFromYesterday->last()->approvals()->attach($this->user);
