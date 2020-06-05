@@ -11,7 +11,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Kirby\Company\Models\Holiday;
 use Kirby\Company\Models\SubCostCenter;
-use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
