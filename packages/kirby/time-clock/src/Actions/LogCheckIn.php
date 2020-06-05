@@ -10,7 +10,6 @@ use Kirby\Employees\Models\Identification;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\Novelties\Models\Novelty;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\Exceptions\AlreadyCheckedInException;
