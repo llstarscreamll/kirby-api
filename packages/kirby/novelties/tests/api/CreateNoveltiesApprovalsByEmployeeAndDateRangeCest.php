@@ -67,6 +67,10 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest
             'end_at' => now()->subDay()->setTime(10, 00),
         ]);
 
+        $this->tonyStarkNovelties->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
+        $this->steveRogersNoveltiesFromYesterday->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
+        $this->steveRogersNoveltiesFromLastMonth->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
+
         $I->haveHttpHeader('Accept', 'application/json');
     }
 

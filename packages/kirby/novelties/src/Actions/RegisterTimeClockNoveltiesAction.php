@@ -488,7 +488,7 @@ class RegisterTimeClockNoveltiesAction
 
             $this->scheduledNovelties = $this->noveltyRepository
                 ->whereScheduledForEmployee($timeClockLog->employee_id, 'start_at', $start, $end)
-                ->get();
+                ->get(['novelties.*']);
         }
 
         return $this->scheduledNovelties;
