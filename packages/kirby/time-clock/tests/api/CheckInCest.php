@@ -2,6 +2,7 @@
 
 namespace ClockTime;
 
+use DefaultNoveltyTypesSeed;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Company\Models\SubCostCenter;
@@ -1008,9 +1009,87 @@ class CheckInCest
         $I->seeResponseContainsJson(['novelty_types' => ['id' => 3]]);
     }
 
-    // ######################################################################### #
-    //                         Scheduled novelties tests                        #
-    // ######################################################################### #
+    # ######################################################################## #
+    #                         Scheduled novelties tests                        #
+    # ######################################################################## #
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldNotOverwriteLastNormalWorkShiftNoveltyWhenAdjustScheduledNolvetyTimeFlagIsOn(ApiTester $I)
+    {
+        $I->callArtisan('db:seed', ['--class' => DefaultNoveltyTypesSeed::class]);
+        $noveltyTypes = NoveltyType::all();
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '06-14',
+                'grace_minutes_before_start_times' => 30,
+                'grace_minutes_after_start_times' => 30,
+                'grace_minutes_before_end_times' => 20,
+                'grace_minutes_after_end_times' => 30,
+                'meal_time_in_minutes' => 0,
+                'min_minutes_required_to_discount_meal_time' => 0,
+                'applies_on_days' => [1, 2, 3, 4, 5],
+                'time_zone' => 'America/Bogota',
+                'time_slots' => [['start' => '06:00', 'end' => '14:00']],
+            ])
+            ->create();
+
+        $workShift = $employee->workShifts->first();
+
+        $log = factory(TimeClockLog::class)->create([
+            'employee_id' => $employee->id,
+            'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
+            'work_shift_id' => $workShift->id,
+            'checked_in_at' => now()->setDate(2020, 05, 20)->setTime(11, 27, 00),
+            'checked_out_at' => now()->setDate(2020, 05, 20)->setTime(14, 49, 00),
+            'check_out_novelty_type_id' => null,
+            'check_out_sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
+        ]);
+
+        $firstNovelty = factory(Novelty::class)->create([ // scheduled novelty from other time clock log
+            'employee_id' => $employee->id,
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HADI')->id,
+            'start_at' => '2020-05-20 14:49:00',
+            'end_at' => '2020-05-20 16:00:00',
+        ]);
+
+        $secondNovelty = factory(Novelty::class)->create([
+            'employee_id' => $employee->id,
+            'time_clock_log_id' => $log->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN')->id, // normal work shift novelty time
+            'start_at' => '2020-05-20 11:27:00',
+            'end_at' => '2020-05-20 14:49:00',
+        ]);
+
+        // set setting to adjust scheduled novelties time
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks'])->update(['value' => true]);
+
+        Carbon::setTestNow(Carbon::create(2020, 05, 20, 16, 06, 00));
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+            'work_shift_id' => $workShift->id,
+        ];
+        $I->sendPOST($this->endpoint, $requestData);
+
+        $I->seeRecord('novelties', [ // normal work shift novelty time should NOT be changed
+            'id' => $secondNovelty->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN')->id,
+            'start_at' => '2020-05-20 11:27:00',
+            'end_at' => '2020-05-20 14:49:00',
+        ]);
+
+        $I->seeRecord('novelties', [ // scheduled novelty should be be changed
+            'id' => $firstNovelty->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HADI')->id,
+            'start_at' => '2020-05-20 14:49:00',
+            'end_at' => '2020-05-20 16:06:00',
+        ]);
+    }
 
     /**
      * @test
@@ -1018,6 +1097,10 @@ class CheckInCest
      */
     public function shouldNotSetDefaultNoveltyWhenArrivesOnTimeForScheduledNovelty(ApiTester $I)
     {
+        // set setting to NOT require novelty type when check in is too late,
+        // this make to set a default novelty type id for the late check in
+        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('workShifts', [
@@ -1026,12 +1109,9 @@ class CheckInCest
                 'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
             ])->create();
 
-        // fake current date time, one hour late
+        // fake current date time, one hour late for work shift, on time for
+        // scheduled novelty
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
-
-        // set setting to NOT require novelty type when check in is too late,
-        // this make to set a default novelty type id for the late check in
-        $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
 
         // create scheduled novelty, this will make not to set the default
         // novelty for the late check in
@@ -1043,10 +1123,7 @@ class CheckInCest
 
         factory(Novelty::class)->create($noveltyData);
 
-        $requestData = [
-            'identification_code' => $employee->identifications->first()->code,
-        ];
-
+        $requestData = ['identification_code' => $employee->identifications->first()->code];
         $I->sendPOST($this->endpoint, $requestData);
 
         $expectedTimeClockLog = [
@@ -1331,9 +1408,9 @@ class CheckInCest
         $I->seeRecord('time_clock_logs', $expectedTimeClockLog);
     }
 
-    // ######################################################################## #
-    //            Automatic novelty deduction on eager/late check in           #
-    // ######################################################################## #
+    # ######################################################################## #
+    #             Automatic novelty deduction on eager/late check in           #
+    # ######################################################################## #
 
     /**
      * @test
@@ -1434,7 +1511,7 @@ class CheckInCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 
@@ -1455,9 +1532,9 @@ class CheckInCest
         $I->dontSeeResponseJsonMatchesJsonPath('errors.0.meta.novelty_types.1');
     }
 
-    // ######################################################################## #
-    //                            Permissions tests                            #
-    // ######################################################################## #
+    # ######################################################################## #
+    #                            Permissions tests                             #
+    # ######################################################################## #
 
     /**
      * @test

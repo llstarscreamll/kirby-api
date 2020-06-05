@@ -36,16 +36,36 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     }
 
     /**
-     * @param  $employeeId
-     * @param  string        $field
-     * @param  Carbon        $start
-     * @param  Carbon        $end
+     * @param  int     $employeeId
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      * @return mixed
      */
-    public function whereScheduledForEmployee($employeeId, string $field, Carbon $start, Carbon $end): self
+    public function forEmployeeAndStartDateRange(int $employeeId, Carbon $start, Carbon $end): self
     {
         $this->model = $this->model
             ->where('employee_id', $employeeId)
+            ->whereBetween('start_at', [$start->timezone('UTC'), $end->timezone('UTC')]);
+
+        return $this;
+    }
+
+    /**
+     * @param  int     $employeeId
+     * @param  string  $field
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @return mixed
+     */
+    public function whereScheduledForEmployee(int $employeeId, string $field, Carbon $start, Carbon $end): self
+    {
+        $this->model = $this->model
+            ->join('novelty_types', 'novelty_types.id', 'novelties.novelty_type_id')
+            ->where('employee_id', $employeeId)
+            ->where(fn($q) => $q
+                    ->where('novelty_types.context_type', '!=', 'normal_work_shift_time')
+                    ->orWhereNull('novelty_types.context_type')
+            )
             ->whereBetween($field, [$start->timezone('UTC'), $end->timezone('UTC')]);
 
         return $this;
@@ -91,7 +111,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     {
         $currentDate = Carbon::now()->toDateTimeString();
 
-        $rows = array_map(fn ($approverId) => array_map(fn ($noveltyId) => [
+        $rows = array_map(fn($approverId) => array_map(fn($noveltyId) => [
             'novelty_id' => $noveltyId,
             'user_id' => $approverId,
             'created_at' => $currentDate,

@@ -104,7 +104,7 @@ trait CheckInOut
         $scheduledNovelty = $this->noveltyRepository
             ->whereScheduledForEmployee($identification->employee_id, $noveltyAttr, now()->subHour(), now()->endOfDay())
             ->orderBy('id', 'DESC')
-            ->first();
+            ->first(['novelties.*']);
 
         $checkOffset = optional($scheduledNovelty)->$noveltyAttr;
 
