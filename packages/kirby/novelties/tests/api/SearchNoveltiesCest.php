@@ -2,6 +2,7 @@
 
 namespace Novelties;
 
+use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
@@ -89,6 +90,34 @@ class SearchNoveltiesCest
         factory(Novelty::class, 3)->create();
 
         $I->sendGET($this->endpoint, ['employees' => [['id' => $employee->id]]]);
+
+        $I->seeResponseCodeIs(200);
+        $I->seeResponseJsonMatchesJsonPath('$.data.0.id');
+        $I->seeResponseJsonMatchesJsonPath('$.data.1.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.2.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.3.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.4.id');
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[0]->id]);
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[1]->id]);
+    }
+
+/**
+ * @test
+ * @param ApiTester $I
+ */
+    public function searchByCostCenter(ApiTester $I)
+    {
+        $employee = factory(Employee::class)->create();
+        $subCostCenter = factory(SubCostCenter::class)->create();
+        $expectedNovelties = factory(Novelty::class, 2)->create([
+            'employee_id' => $employee->id,
+            'sub_cost_center_id' => $subCostCenter->id,
+        ]);
+        factory(Novelty::class, 3)->create();
+
+        $I->sendGET($this->endpoint, ['cost_centers' => [
+            ['id' => $subCostCenter->cost_center_id],
+        ]]);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.0.id');

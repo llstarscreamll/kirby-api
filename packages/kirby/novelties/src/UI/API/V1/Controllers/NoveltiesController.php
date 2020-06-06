@@ -11,6 +11,7 @@ use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
 use Kirby\Novelties\Repositories\Criteria\EmployeeCriteria;
 use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
 use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
+use Kirby\Novelties\Repositories\Criteria\CostCentersCriteria;
 use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
 use Kirby\Novelties\Repositories\Criteria\ByNoveltyTypeCriteria;
 use Kirby\Novelties\Repositories\Criteria\ByStartDateRangeCriteria;
@@ -65,6 +66,10 @@ class NoveltiesController
         
         if ($request->employees) {
             $novelties->pushCriteria(new EmployeeCriteria(data_get($request->employees, '*.id')));
+        }
+
+        if ($request->cost_centers) {
+            $novelties->pushCriteria(new CostCentersCriteria(data_get($request->cost_centers, '*.id')));
         }
 
         if ($request->novelty_types) {
