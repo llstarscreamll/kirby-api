@@ -1,5 +1,15 @@
 # Release notes
 
+## Unreleased
+
+### Added
+
+- Novelties: novelties can be searched by novelty types, employees, cost centers and start date range
+
+### Changed
+
+- Time clock: check in endpoint doesn't show unlocalized dates in error messages
+
 ## [v0.1.1 (2020-06-05)](https://github.com/llstarscreamll/kirby-api/compare/v0.1..v0.1.1)
 
 Fix(novelties): error overwriting non scheduled novelty end time on time clock check in
