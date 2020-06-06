@@ -4,18 +4,18 @@ namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Prettus\Repository\Criteria\RequestCriteria;
-use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
-use Kirby\Novelties\Repositories\Criteria\EmployeeCriteria;
-use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
-use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
-use Kirby\Novelties\Repositories\Criteria\CostCentersCriteria;
-use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
 use Kirby\Novelties\Repositories\Criteria\ByNoveltyTypeCriteria;
 use Kirby\Novelties\Repositories\Criteria\ByStartDateRangeCriteria;
+use Kirby\Novelties\Repositories\Criteria\CostCentersCriteria;
+use Kirby\Novelties\Repositories\Criteria\EmployeeCriteria;
 use Kirby\Novelties\Repositories\Criteria\HasTimeClockLogCheckOutBetweenCriteria;
+use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyRequest;
+use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest;
+use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest;
+use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest;
+use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class NoveltiesController.
@@ -63,7 +63,7 @@ class NoveltiesController
                 Carbon::parse($request->start_at['from']), Carbon::parse($request->start_at['to'])
             ));
         }
-        
+
         if ($request->employees) {
             $novelties->pushCriteria(new EmployeeCriteria(data_get($request->employees, '*.id')));
         }
