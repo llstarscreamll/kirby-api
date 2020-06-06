@@ -101,10 +101,10 @@ class SearchNoveltiesCest
         $I->seeResponseContainsJson(['id' => $expectedNovelties[1]->id]);
     }
 
-/**
- * @test
- * @param ApiTester $I
- */
+    /**
+     * @test
+     * @param ApiTester $I
+     */
     public function searchByCostCenter(ApiTester $I)
     {
         $employee = factory(Employee::class)->create();
