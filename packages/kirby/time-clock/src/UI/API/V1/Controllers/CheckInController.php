@@ -23,8 +23,8 @@ use Symfony\Component\HttpFoundation\Response;
 class CheckInController
 {
     /**
-     * @param CheckInRequest   $request
-     * @param LogCheckIn $logCheckInAction
+     * @param CheckInRequest $request
+     * @param LogCheckIn     $logCheckInAction
      */
     public function __invoke(
         CheckInRequest $request,
