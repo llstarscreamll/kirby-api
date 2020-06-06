@@ -14,6 +14,16 @@ use Kirby\Core\Abstracts\EloquentRepositoryAbstract;
 class EloquentCostCenterRepository extends EloquentRepositoryAbstract implements CostCenterRepositoryInterface
 {
     /**
+     * Fields that are searchable by \Prettus\Repository\Criteria\RequestCriteria.
+     *
+     * @var array
+     */
+    protected $fieldSearchable = [
+        'code' => 'like',
+        'name' => 'like',
+    ];
+
+    /**
      * @var array
      */
     protected $allowedFilters = [];
