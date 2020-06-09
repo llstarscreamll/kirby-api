@@ -34,14 +34,17 @@ class HasTimeClockLogCheckOutBetweenCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository.
      *
-     * @param  string              $model
-     * @param  RepositoryInterface $repository
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @param  RepositoryInterface                 $repository
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)
     {
         return $model
-            ->join('time_clock_logs', 'time_clock_logs.id', 'novelties.time_clock_log_id')
-            ->whereBetween('time_clock_logs.checked_out_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()]);
+            ->leftJoin('time_clock_logs', 'time_clock_logs.id', 'novelties.time_clock_log_id')
+            ->where(fn($q) => $q
+                    ->whereBetween('time_clock_logs.checked_out_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()])
+                    ->orWhereBetween('novelties.end_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()])
+            );
     }
 }
