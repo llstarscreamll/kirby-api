@@ -140,6 +140,10 @@ class SearchNoveltiesCest
             'checked_out_at' => now()->subWeek()->addHours(9),
         ]);
         $expectedNovelties = factory(Novelty::class, 2)->create(['time_clock_log_id' => $timeClockLog->id]);
+        $expectedNovelties = $expectedNovelties->push(factory(Novelty::class)->create([ // novelty without related time lock log
+            'start_at' => now()->subWeek(),
+            'end_at' => now()->subWeek()->addHours(9),
+        ]));
         factory(Novelty::class, 3)->create();
 
         $I->sendGET($this->endpoint, [
@@ -150,11 +154,13 @@ class SearchNoveltiesCest
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.0.id');
         $I->seeResponseJsonMatchesJsonPath('$.data.1.id');
-        $I->dontSeeResponseJsonMatchesJsonPath('$.data.2.id');
+        $I->seeResponseJsonMatchesJsonPath('$.data.2.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.data.3.id');
         $I->dontSeeResponseJsonMatchesJsonPath('$.data.4.id');
+        $I->dontSeeResponseJsonMatchesJsonPath('$.data.5.id');
         $I->seeResponseContainsJson(['id' => $expectedNovelties[0]->id]);
         $I->seeResponseContainsJson(['id' => $expectedNovelties[1]->id]);
+        $I->seeResponseContainsJson(['id' => $expectedNovelties[2]->id]);
     }
 
     /**
