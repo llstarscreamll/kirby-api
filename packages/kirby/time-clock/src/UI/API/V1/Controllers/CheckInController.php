@@ -44,7 +44,7 @@ class CheckInController
             array_push($errors, [
                 'code' => $exception->getCode(),
                 'title' => 'Ya se tiene una entrada registrada.',
-                'detail' => "Ya se tiene una entrada registrada.",
+                'detail' => 'Ya se tiene una entrada registrada.',
             ]);
         } catch (TooEarlyToCheckException $exception) {
             array_push($errors, [
