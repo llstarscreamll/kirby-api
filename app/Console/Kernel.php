@@ -25,9 +25,12 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('horizon:snapshot')->everyFiveMinutes();
         $schedule->command('telescope:prune')->monthly();
-        $schedule->command('backup:clean')->daily()->at('01:00');
-        $schedule->command('backup:run')->daily()->at('02:00');
         $schedule->command(SyncHolidaysCommand::class, ['--next-year' => true])->cron('0 0 1 */12 *');
+
+        if ($this->app->environment('production')) {
+            $schedule->command('backup:clean')->daily()->at('01:00');
+            $schedule->command('backup:run')->daily()->at('02:00');
+        }
     }
 
     /**
