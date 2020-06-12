@@ -28,6 +28,7 @@ class NoveltiesPermissionsSeeder extends Seeder
         ['name' => 'novelties.approvals.create'],
         ['name' => 'novelties.approvals.delete'],
         // novelty types
+        ['name' => 'novelty-types.get'],
         ['name' => 'novelty-types.search'],
     ];
 

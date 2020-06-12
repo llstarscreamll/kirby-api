@@ -3,10 +3,11 @@
 namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
-use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest;
-use Kirby\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
 use Prettus\Repository\Criteria\RequestCriteria;
+use Kirby\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
+use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyTypeRequest;
+use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest;
 
 /**
  * Class NoveltyTypesController.
@@ -31,7 +32,7 @@ class NoveltyTypesController
     /**
      * Display a listing of the resource.
      *
-     * @param \Kirby\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest
+     * @param  \Kirby\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest
      * @return \Illuminate\Http\Response
      */
     public function index(SearchNoveltyTypesRequest $request)
@@ -60,9 +61,9 @@ class NoveltyTypesController
      * @param  int                         $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(GetNoveltyTypeRequest $request, $id)
     {
-        //
+        return NoveltyTypeResource::make($this->noveltyTypeRepository->find($id));
     }
 
     /**
