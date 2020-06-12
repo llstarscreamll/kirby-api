@@ -32,7 +32,7 @@ class SearchNoveltyTypesCest
      */
     public function searchSuccessfully(ApiTester $I)
     {
-        $noveltyTypes = factory(NoveltyType::class, 5)->create();
+        factory(NoveltyType::class, 5)->create();
 
         $I->sendGET($this->endpoint);
 
