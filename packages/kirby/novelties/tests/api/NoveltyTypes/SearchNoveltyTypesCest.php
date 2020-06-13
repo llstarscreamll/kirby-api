@@ -2,7 +2,6 @@
 
 namespace Novelties;
 
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 
 /**
