@@ -3,11 +3,12 @@
 namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
-use Prettus\Repository\Criteria\RequestCriteria;
-use Kirby\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyTypeRequest;
 use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest;
+use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyTypeRequest;
+use Kirby\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
+use Prettus\Repository\Criteria\RequestCriteria;
 
 /**
  * Class NoveltyTypesController.
@@ -69,13 +70,15 @@ class NoveltyTypesController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request    $request
+     * @param  UpdateNoveltyTypeRequest    $request
      * @param  int                         $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateNoveltyTypeRequest $request, $id)
     {
-        //
+        $noveltyType = $this->noveltyTypeRepository->update($request->validated(), $id);
+
+        return NoveltyTypeResource::make($noveltyType);
     }
 
     /**
