@@ -50,8 +50,8 @@ class CreateTimeClockLogCest
         $timeClockLog->employee->identifications()->createMany(factory(Identification::class, 2)->make()->toArray());
 
         $timeClockLogData = $timeClockLog->toArray();
-        $timeClockLogData['checked_in_at'] = $timeClockLog->checked_in_at->toISOString();
-        $timeClockLogData['checked_out_at'] = $timeClockLog->checked_out_at->toISOString();
+        $timeClockLogData['checked_in_at'] = $timeClockLog->checked_in_at->toIso8601String();
+        $timeClockLogData['checked_out_at'] = $timeClockLog->checked_out_at->toIso8601String();
         unset(
             $timeClockLogData['checked_in_by_id'],
             $timeClockLogData['checked_out_by_id'],
