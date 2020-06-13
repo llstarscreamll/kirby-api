@@ -3,14 +3,15 @@
 namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
-use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
-use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyTypeRequest;
-use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyTypeRequest;
-use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest;
-use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyTypeRequest;
-use Kirby\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
-use Prettus\Repository\Criteria\RequestCriteria;
 use Symfony\Component\HttpFoundation\Response;
+use Prettus\Repository\Criteria\RequestCriteria;
+use Kirby\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
+use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use Kirby\Novelties\UI\API\V1\Requests\GetNoveltyTypeRequest;
+use Kirby\Novelties\UI\API\V1\Requests\CreateNoveltyTypeRequest;
+use Kirby\Novelties\UI\API\V1\Requests\DeleteNoveltyTypeRequest;
+use Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyTypeRequest;
+use Kirby\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest;
 
 /**
  * Class NoveltyTypesController.
@@ -50,12 +51,14 @@ class NoveltyTypesController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request    $request
+     * @param  CreateNoveltyTypeRequest    $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateNoveltyTypeRequest $request)
     {
-        //
+        $noveltyType = $this->noveltyTypeRepository->create($request->validated());
+
+        return NoveltyTypeResource::make($noveltyType);
     }
 
     /**
