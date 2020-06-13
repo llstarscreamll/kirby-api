@@ -69,9 +69,12 @@ class UpdateNoveltyTypeCest
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
-        factory(Novelty::class, 5)->create();
 
-        $I->sendGET($this->endpoint);
+        $noveltyTypeId = factory(NoveltyType::class)->create()->id;
+        $expectedData = factory(NoveltyType::class)->make();
+
+        $endpoint = str_replace('{id}', $noveltyTypeId, $this->endpoint);
+        $I->sendPUT($endpoint, $expectedData->toArray());
 
         $I->seeResponseCodeIs(403);
     }
