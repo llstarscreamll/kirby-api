@@ -134,7 +134,6 @@ cd {{ $newReleaseDir }}
 php7.4 artisan optimize
 php7.4 artisan storage:link
 php7.4 artisan queue:restart
-php7.4 artisan horizon:purge
 sudo php7.4 artisan horizon:terminate
 
 sudo service php7.4-fpm restart
@@ -161,8 +160,6 @@ php7.4 $COMPOSER install -q
 php7.4 artisan optimize
 php7.4 artisan storage:link
 php7.4 artisan queue:restart
-php7.4 artisan horizon:purge
-sudo php7.4 artisan horizon:purge
 sudo php7.4 artisan horizon:terminate
 sudo service php7.4-fpm restart
 @endtask
