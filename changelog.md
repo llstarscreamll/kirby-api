@@ -10,6 +10,12 @@
 
 - Time clock: check in endpoint doesn't show unlocalized dates in error messages
 
+## [v0.1.2 (2020-06-05)](https://github.com/llstarscreamll/kirby-api/compare/v0.1.1..v0.1.2)
+
+### Fixes
+
+- Error with novelties export job running too long. Model relationships are eager loaded to improve job speed
+
 ## [v0.1.1 (2020-06-05)](https://github.com/llstarscreamll/kirby-api/compare/v0.1..v0.1.1)
 
 Fix(novelties): error overwriting non scheduled novelty end time on time clock check in
