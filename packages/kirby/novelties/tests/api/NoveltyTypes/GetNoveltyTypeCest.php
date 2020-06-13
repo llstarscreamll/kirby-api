@@ -50,7 +50,6 @@ class GetNoveltyTypeCest
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
-        factory(Novelty::class, 5)->create();
 
         $I->sendGET($this->endpoint);
 
