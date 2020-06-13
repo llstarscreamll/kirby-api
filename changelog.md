@@ -4,17 +4,23 @@
 
 ### Added
 
-- Novelties: novelties can be searched by novelty types, employees, cost centers and start date range
+-   Novelties: novelties can be searched by novelty types, employees, cost centers and start date range
 
 ### Changed
 
-- Time clock: check in endpoint doesn't show unlocalized dates in error messages
+-   Time clock: check in endpoint doesn't show unlocalized dates in error messages
+
+## [v0.1.3 (2020-06-05)](https://github.com/llstarscreamll/kirby-api/compare/v0.1.1..v0.1.3)
+
+### Fixes
+
+-   Time lock logs with less than 5 minutes and without checkout are now ignored to calculate novelties
 
 ## [v0.1.2 (2020-06-05)](https://github.com/llstarscreamll/kirby-api/compare/v0.1.1..v0.1.2)
 
 ### Fixes
 
-- Error with novelties export job running too long. Model relationships are eager loaded to improve job speed
+-   Error with novelties export job running too long. Model relationships are eager loaded to improve job speed
 
 ## [v0.1.1 (2020-06-05)](https://github.com/llstarscreamll/kirby-api/compare/v0.1..v0.1.1)
 

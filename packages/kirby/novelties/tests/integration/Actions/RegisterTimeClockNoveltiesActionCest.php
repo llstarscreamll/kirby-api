@@ -182,6 +182,28 @@ class RegisterTimeClockNoveltiesActionCest
             [
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
+                    'checked_in_at' => '2019-04-01 07:00:01', // on time
+                    'checked_out_at' => null, // without checkout
+                    'check_out_novelty_type_code' => null,
+                    'sub_cost_center_id' => null,
+                ],
+                'expectedOutPut' => false,
+                'createdNovelties' => [], // noting should be created
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
+                    'checked_in_at' => '2019-04-01 07:00:01', // on time
+                    'checked_out_at' => '2019-04-01 07:04:10', // four minutes after check in
+                    'check_out_novelty_type_code' => 'PP',
+                    'sub_cost_center_id' => 1,
+                ],
+                'expectedOutPut' => false,
+                'createdNovelties' => [], // noting should be created
+            ],
+            [
+                'timeClockLog' => [
+                    'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 07:00:00', // on time
                     'checked_out_at' => '2019-04-01 16:00:00', // too early, because of scheduled novelty
                     'check_out_novelty_type_code' => 'PP', // novelty for early check out
@@ -1172,7 +1194,7 @@ class RegisterTimeClockNoveltiesActionCest
         }
 
         $action = app(RegisterTimeClockNoveltiesAction::class);
-        $I->assertTrue($action->run($timeClockLog->id));
+        $I->assertEquals(Arr::get($data, 'expectedOutPut', true), $action->run($timeClockLog->id));
 
         // only one novelty should be created
         $createdRecordsCount = $I->grabNumRecords('novelties', [
