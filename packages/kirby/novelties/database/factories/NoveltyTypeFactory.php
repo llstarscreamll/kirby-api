@@ -1,6 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
+use Kirby\Novelties\Enums\DayType;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\Models\NoveltyType;
 
@@ -21,7 +22,12 @@ $factory->define(NoveltyType::class, function (Faker $faker) {
     return [
         'code' => "NT-$randomCode",
         'name' => "Novelty $randomCode",
+        'context_type' => null,
+        'time_zone' => 'UTC',
+        'apply_on_days_of_type' => $faker->randomElement(DayType::getValues()),
+        'apply_on_time_slots' => null,
         'operator' => $faker->randomElement(NoveltyTypeOperator::getValues()),
         'requires_comment' => $faker->boolean(),
+        'keep_in_report' => $faker->boolean(),
     ];
 });
