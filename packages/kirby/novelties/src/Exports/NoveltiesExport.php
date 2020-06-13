@@ -43,7 +43,9 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
 
         $employeeId && $novelties->where('employee_id', $employeeId);
 
-        return $novelties;
+        return $novelties->with([
+            'employee', 'noveltyType', 'subCostCenter.costCenter', 'approvals',
+        ]);
     }
 
     /**
