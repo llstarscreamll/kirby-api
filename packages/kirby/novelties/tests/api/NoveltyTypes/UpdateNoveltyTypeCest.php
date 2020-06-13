@@ -37,7 +37,7 @@ class UpdateNoveltyTypeCest
             'apply_on_time_slots' => [
                 ['start' => '08:00', 'end' => '12:00'],
             ],
-            'time_zone' => 'America/Bogota'
+            'time_zone' => 'America/Bogota',
         ]);
 
         $endpoint = str_replace('{id}', $noveltyTypeId, $this->endpoint);
