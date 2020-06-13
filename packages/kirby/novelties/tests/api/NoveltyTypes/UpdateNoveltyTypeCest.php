@@ -65,7 +65,33 @@ class UpdateNoveltyTypeCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnprocesableEntityIfUserDoesntHaveRequiredPermissions(ApiTester $I)
+    public function shouldReturnUnprocesableEntityWhenCodeIsAlreadyTaken(ApiTester $I)
+    {
+        factory(NoveltyType::class)->create(['code' => 'foo']);
+        factory(NoveltyType::class)->create();
+        factory(NoveltyType::class)->create();
+        factory(NoveltyType::class)->create();
+
+        $noveltyTypeId = factory(NoveltyType::class)->create()->id;
+        $expectedData = factory(NoveltyType::class)->make([
+            'code' => 'foo', // code taken from first novelty type
+            'apply_on_time_slots' => [
+                ['start' => '08:00', 'end' => '12:00'],
+            ],
+            'time_zone' => 'America/Bogota',
+        ]);
+
+        $endpoint = str_replace('{id}', $noveltyTypeId, $this->endpoint);
+        $I->sendPUT($endpoint, $expectedData->toArray());
+
+        $I->seeResponseCodeIs(422);
+    }
+
+    /**
+     * @test
+     * @param ApiTester $I
+     */
+    public function shouldReturnForbidenIfUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
