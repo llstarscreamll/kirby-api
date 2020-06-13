@@ -31,15 +31,15 @@ class UpdateNoveltyTypeRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => ['string'],
-            'name' => ['string'],
+            'code' => ['required', 'string', 'unique:novelty_types,code,'.$this->route('novelty_type')],
+            'name' => ['required', 'string'],
             'context_type' => ['nullable', 'string'],
-            'time_zone' => ['string'],
-            'apply_on_days_of_type' => ['in:'.implode(',', DayType::getValues())],
-            'apply_on_time_slots' => ['array'],
-            'operator' => ['string', 'in:'.implode(',', NoveltyTypeOperator::getValues())],
-            'requires_comment' => ['boolean'],
-            'keep_in_report' => ['boolean'],
+            'time_zone' => ['required', 'string'],
+            'apply_on_days_of_type' => ['nullable', 'in:'.implode(',', DayType::getValues())],
+            'apply_on_time_slots' => ['nullable', 'array'],
+            'operator' => ['required', 'string', 'in:'.implode(',', NoveltyTypeOperator::getValues())],
+            'requires_comment' => ['required', 'boolean'],
+            'keep_in_report' => ['required', 'boolean'],
         ];
     }
 }
