@@ -121,7 +121,7 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnathorizedIfUserDoesntHaveRequiredPermission(ApiTester $I)
+    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
