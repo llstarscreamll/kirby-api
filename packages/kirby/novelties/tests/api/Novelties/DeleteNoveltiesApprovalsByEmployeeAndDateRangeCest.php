@@ -8,11 +8,11 @@ use Kirby\Novelties\Models\Novelty;
 use NoveltiesPermissionsSeeder;
 
 /**
- * Class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest.
+ * Class DeleteNoveltiesApprovalsByEmployeeAndDateRangeCest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest
+class DeleteNoveltiesApprovalsByEmployeeAndDateRangeCest
 {
     /**
      * @var string
@@ -67,9 +67,16 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest
             'end_at' => now()->subDay()->setTime(10, 00),
         ]);
 
-        $this->tonyStarkNovelties->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
         $this->steveRogersNoveltiesFromYesterday->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
-        $this->steveRogersNoveltiesFromLastMonth->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
+        $this->tonyStarkNovelties->first()->noveltyType->update(['context_type' => 'normal_work_shift_time']);
+
+        // set approvals
+        $this->steveRogersNoveltiesFromYesterday->first()->approvals()->attach($this->user);
+        $this->steveRogersNoveltiesFromYesterday->last()->approvals()->attach($this->user);
+        $this->steveRogersNoveltiesFromLastMonth->first()->approvals()->attach($this->user);
+        $this->steveRogersNoveltiesFromLastMonth->last()->approvals()->attach($this->user);
+        $this->tonyStarkNovelties->first()->approvals()->attach($this->user);
+        $this->tonyStarkNovelties->last()->approvals()->attach($this->user);
 
         $I->haveHttpHeader('Accept', 'application/json');
     }
@@ -78,40 +85,40 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldCreateApprovalsSuccessfully(ApiTester $I)
+    public function shouldDeleteApprovalsSuccessfully(ApiTester $I)
     {
-        $I->sendPOST($this->endpoint, [
+        $I->sendDELETE($this->endpoint, [
             'employee_id' => $this->steveRogers->id,
-            'start_date' => now()->subDays(2),
-            'end_date' => now()->addDays(2),
+            'start_date' => now()->subDays(2)->toDateString(),
+            'end_date' => now()->addDays(2)->toDateString(),
         ]);
 
-        $I->seeResponseCodeIs(201);
-        $I->seeRecord('novelty_approvals', [
+        $I->seeResponseCodeIs(200);
+        $I->dontSeeRecord('novelty_approvals', [
             'user_id' => $this->user->id,
             'novelty_id' => $this->steveRogersNoveltiesFromYesterday->first()->id,
         ]);
-        $I->seeRecord('novelty_approvals', [
+        $I->dontSeeRecord('novelty_approvals', [
             'user_id' => $this->user->id,
             'novelty_id' => $this->steveRogersNoveltiesFromYesterday->last()->id,
         ]);
 
-        // las month novelties should not be approved
-        $I->dontSeeRecord('novelty_approvals', [
+        // las month novelties should remain the same
+        $I->seeRecord('novelty_approvals', [
             'user_id' => $this->user->id,
             'novelty_id' => $this->steveRogersNoveltiesFromLastMonth->first()->id,
         ]);
-        $I->dontSeeRecord('novelty_approvals', [
+        $I->seeRecord('novelty_approvals', [
             'user_id' => $this->user->id,
             'novelty_id' => $this->steveRogersNoveltiesFromLastMonth->last()->id,
         ]);
 
-        // Tony novelties should not be approved
-        $I->dontSeeRecord('novelty_approvals', [
+        // Tony novelties should remain the same
+        $I->seeRecord('novelty_approvals', [
             'user_id' => $this->user->id,
             'novelty_id' => $this->tonyStarkNovelties->first()->id,
         ]);
-        $I->dontSeeRecord('novelty_approvals', [
+        $I->seeRecord('novelty_approvals', [
             'user_id' => $this->user->id,
             'novelty_id' => $this->tonyStarkNovelties->last()->id,
         ]);
@@ -121,12 +128,12 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnathorizedIfUserDoesntHaveRequiredPermission(ApiTester $I)
+    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
 
-        $I->sendPOST($this->endpoint, []);
+        $I->sendDELETE($this->endpoint, []);
 
         $I->seeResponseCodeIs(403);
     }
@@ -137,10 +144,10 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeCest
      */
     public function shouldReturnUnprocesableEntityIfEmployeeDoesntExists(ApiTester $I)
     {
-        $I->sendPOST($this->endpoint, [
+        $I->sendDELETE($this->endpoint, [
             'employee_id' => 111111,
-            'start_date' => now()->subDays(2),
-            'end_date' => now()->addDays(2),
+            'start_date' => now()->subDays(2)->toDateString(),
+            'end_date' => now()->addDays(2)->toDateString(),
         ]);
 
         $I->seeResponseCodeIs(422);

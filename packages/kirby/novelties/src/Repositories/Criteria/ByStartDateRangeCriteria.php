@@ -7,9 +7,9 @@ use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class HasTimeClockLogCheckOutBetweenCriteria.
+ * Class ByStartDateRangeCriteria.
  */
-class HasTimeClockLogCheckOutBetweenCriteria implements CriteriaInterface
+class ByStartDateRangeCriteria implements CriteriaInterface
 {
     /**
      * @var Carbon
@@ -40,11 +40,6 @@ class HasTimeClockLogCheckOutBetweenCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model
-            ->leftJoin('time_clock_logs', 'time_clock_logs.id', 'novelties.time_clock_log_id')
-            ->where(fn ($q) => $q
-                    ->whereBetween('time_clock_logs.checked_out_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()])
-                    ->orWhereBetween('novelties.end_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()])
-            );
+        return $model->whereBetween('start_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()]);
     }
 }

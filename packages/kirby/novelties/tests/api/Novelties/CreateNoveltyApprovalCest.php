@@ -7,16 +7,16 @@ use Kirby\Novelties\Models\Novelty;
 use NoveltiesPermissionsSeeder;
 
 /**
- * Class DeleteNoveltyApprovalCest.
+ * Class CreateNoveltyApprovalCest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class DeleteNoveltyApprovalCest
+class CreateNoveltyApprovalCest
 {
     /**
      * @var string
      */
-    private $endpoint = 'api/v1/novelties/{novelty-id}/approvals/{approval-id}';
+    private $endpoint = 'api/v1/novelties/{novelty-id}/approvals';
 
     /**
      * @var \Kirby\Users\Models\User
@@ -29,11 +29,6 @@ class DeleteNoveltyApprovalCest
     private $novelties;
 
     /**
-     * @var string
-     */
-    private $approvalId;
-
-    /**
      * @param ApiTester $I
      */
     public function _before(ApiTester $I)
@@ -41,10 +36,6 @@ class DeleteNoveltyApprovalCest
         Artisan::call('db:seed', ['--class' => NoveltiesPermissionsSeeder::class]);
         $this->user = $I->amLoggedAsAdminUser();
         $this->novelties = factory(Novelty::class, 2)->create();
-        $this->approvalId = $I->haveRecord('novelty_approvals', [
-            'user_id' => $this->user->id,
-            'novelty_id' => $this->novelties->first()->id,
-        ]);
 
         $I->haveHttpHeader('Accept', 'application/json');
     }
@@ -53,19 +44,16 @@ class DeleteNoveltyApprovalCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldDeleteApprovalSuccessfully(ApiTester $I)
+    public function shouldCreateApprovalSuccessfully(ApiTester $I)
     {
-        $endpoint = str_replace(
-            ['{novelty-id}', '{approval-id}'],
-            [$this->novelties->first()->id, $this->approvalId],
-            $this->endpoint
-        );
-        $I->sendDELETE($endpoint);
+        $novelty = $this->novelties->first();
+        $endpoint = str_replace('{novelty-id}', $novelty->id, $this->endpoint);
+        $I->sendPOST($endpoint);
 
-        $I->seeResponseCodeIs(200);
-        $I->dontSeeRecord('novelty_approvals', [
+        $I->seeResponseCodeIs(201);
+        $I->seeRecord('novelty_approvals', [
             'user_id' => $this->user->id,
-            'novelty_id' => $this->novelties->first()->id,
+            'novelty_id' => $novelty->id,
         ]);
     }
 
@@ -73,20 +61,16 @@ class DeleteNoveltyApprovalCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnathorizedIfUserDoesntHaveRequiredPermission(ApiTester $I)
+    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
 
-        $endpoint = str_replace(
-            ['{novelty-id}', '{approval-id}'],
-            [$this->novelties->first()->id, $this->approvalId],
-            $this->endpoint
-        );
-        $I->sendDELETE($endpoint);
+        $endpoint = str_replace('{novelty-id}', $this->novelties->first()->id, $this->endpoint);
+        $I->sendPOST($endpoint);
 
         $I->seeResponseCodeIs(403);
-        $I->seeRecord('novelty_approvals', [
+        $I->dontSeeRecord('novelty_approvals', [
             'user_id' => $this->user->id,
             'novelty_id' => $this->novelties->first()->id,
         ]);
@@ -99,7 +83,7 @@ class DeleteNoveltyApprovalCest
     public function shouldReturnNotFoundIfNoveltyDoesntExists(ApiTester $I)
     {
         $endpoint = str_replace('{novelty-id}', 111, $this->endpoint);
-        $I->sendDELETE($endpoint);
+        $I->sendPOST($endpoint);
 
         $I->seeResponseCodeIs(404);
     }

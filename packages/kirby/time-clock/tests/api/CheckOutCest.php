@@ -54,17 +54,20 @@ class CheckOutCest
         // novelty types
         factory(NoveltyType::class, 2)->create([
             'operator' => NoveltyTypeOperator::Subtraction,
+            'apply_on_days_of_type' => null,
             'context_type' => 'elegible_by_user',
         ]);
 
         factory(NoveltyType::class)->create([
             'code' => 'HADI',
             'operator' => NoveltyTypeOperator::Addition,
+            'apply_on_days_of_type' => null,
             'context_type' => 'elegible_by_user',
         ]);
 
         factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP',
+            'apply_on_days_of_type' => null,
         ]);
 
         $I->haveHttpHeader('Accept', 'application/json');
@@ -975,7 +978,7 @@ class CheckOutCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnathorizedIfUserDoesntHaveRequiredPermission(ApiTester $I)
+    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

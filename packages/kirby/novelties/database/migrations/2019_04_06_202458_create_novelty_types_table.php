@@ -28,6 +28,7 @@ class CreateNoveltyTypesTable extends Migration
             $table->json('apply_on_time_slots')->nullable();
             $table->string('operator')->nullable();
             $table->boolean('requires_comment')->default(false);
+            $table->boolean('keep_in_report')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

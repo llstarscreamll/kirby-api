@@ -132,8 +132,8 @@ sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 ln -nfs {{ $newReleaseDir }} {{ $currentDir }};
 cd {{ $newReleaseDir }}
 php7.4 artisan optimize
+php7.4 artisan storage:link
 php7.4 artisan queue:restart
-php7.4 artisan horizon:purge
 sudo php7.4 artisan horizon:terminate
 
 sudo service php7.4-fpm restart
@@ -152,13 +152,14 @@ ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 @endtask
 
 @task('deployOnlyCode',['on' => 'remote'])
-{{ logMessage("💻  Deploying code changes...") }}
+{{ logMessage("💻  Deploying code changes form $branch to $currentDir") }}
 cd {{ $currentDir }}
 git pull origin {{ $branch }}
-php7.4 /usr/local/bin/composer install
+COMPOSER=$(which composer)
+php7.4 $COMPOSER install -q
 php7.4 artisan optimize
+php7.4 artisan storage:link
 php7.4 artisan queue:restart
-php7.4 artisan horizon:purge
 sudo php7.4 artisan horizon:terminate
 sudo service php7.4-fpm restart
 @endtask

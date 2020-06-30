@@ -6,21 +6,21 @@ use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Class EmployeeCriteria.
+ * Class CostCentersCriteria.
  */
-class EmployeeCriteria implements CriteriaInterface
+class CostCentersCriteria implements CriteriaInterface
 {
     /**
      * @var int[]
      */
-    private $employeeIds;
+    private $costCenterIds;
 
     /**
-     * @param int[] $employeeIds
+     * @param int[] $costCenterIds
      */
-    public function __construct(array $employeeIds)
+    public function __construct(array $costCenterIds)
     {
-        $this->employeeIds = $employeeIds;
+        $this->costCenterIds = $costCenterIds;
     }
 
     /**
@@ -32,6 +32,8 @@ class EmployeeCriteria implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->whereIn('novelties.employee_id', $this->employeeIds);
+        return $model
+            ->join('sub_cost_centers', 'sub_cost_centers.id', 'novelties.sub_cost_center_id')
+            ->whereIn('sub_cost_centers.cost_center_id', $this->costCenterIds);
     }
 }
