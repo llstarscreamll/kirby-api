@@ -40,6 +40,7 @@ class NoveltyType extends Model
         'apply_on_time_slots',
         'operator',
         'requires_comment',
+        'keep_in_report',
     ];
     /**
      * The attributes that should be cast to enum types.
@@ -58,6 +59,7 @@ class NoveltyType extends Model
     protected $casts = [
         'apply_on_time_slots' => 'array',
         'requires_comment' => 'bool',
+        'keep_in_report' => 'bool',
     ];
     /**
      * The attributes that should be mutated to dates.

@@ -87,15 +87,15 @@ class NoveltiesExportCest
             $novelty->employee->identification_number,
             $novelty->employee->user->first_name,
             $novelty->employee->user->last_name,
-            $novelty->start_at->toISOString(),
-            $novelty->end_at->toISOString(),
+            $novelty->start_at->toIso8601String(),
+            $novelty->end_at->toIso8601String(),
             $novelty->subCostCenter->costCenter->code,
             $novelty->subCostCenter->code,
             $novelty->noveltyType->code,
             $novelty->total_time_in_hours,
             $novelty->comment,
             $novelty->approvals->map->name->join("\n"),
-            $novelty->created_at->toISOString(),
+            $novelty->created_at->toIso8601String(),
         ];
         $I->assertEquals($expected, $result);
     }

@@ -64,8 +64,8 @@ class SearchNoveltiesCest
 
         $I->sendGET($this->endpoint, [
             'start_at' => [
-                'from' => now()->subWeek()->startOfDay()->toISOString(),
-                'to' => now()->endOfDay()->toISOString(),
+                'from' => now()->subWeek()->startOfDay()->toIso8601String(),
+                'to' => now()->endOfDay()->toIso8601String(),
             ],
         ]);
 
@@ -147,8 +147,8 @@ class SearchNoveltiesCest
         factory(Novelty::class, 3)->create();
 
         $I->sendGET($this->endpoint, [
-            'time_clock_log_check_out_start_date' => now()->subWeek()->startOfDay()->toISOString(),
-            'time_clock_log_check_out_end_date' => now()->endOfDay()->toISOString(),
+            'time_clock_log_check_out_start_date' => now()->subWeek()->startOfDay()->toIso8601String(),
+            'time_clock_log_check_out_end_date' => now()->endOfDay()->toIso8601String(),
         ]);
 
         $I->seeResponseCodeIs(200);
@@ -191,7 +191,7 @@ class SearchNoveltiesCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnprocesableEntityIfUserDoesntHaveRequiredPermissions(ApiTester $I)
+    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

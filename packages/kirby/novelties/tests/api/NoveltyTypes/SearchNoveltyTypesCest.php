@@ -2,7 +2,6 @@
 
 namespace Novelties;
 
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 
 /**
@@ -32,7 +31,7 @@ class SearchNoveltyTypesCest
      */
     public function searchSuccessfully(ApiTester $I)
     {
-        $noveltyTypes = factory(NoveltyType::class, 5)->create();
+        factory(NoveltyType::class, 5)->create();
 
         $I->sendGET($this->endpoint);
 
@@ -48,11 +47,10 @@ class SearchNoveltyTypesCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnprocesableEntityIfUserDoesntHaveRequiredPermissions(ApiTester $I)
+    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
-        factory(Novelty::class, 5)->create();
 
         $I->sendGET($this->endpoint);
 

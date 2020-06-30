@@ -1,20 +1,20 @@
 <?php
 
-namespace Employees;
+namespace Novelties;
 
-use Kirby\Employees\Models\Employee;
+use Kirby\Novelties\Models\NoveltyType;
 
 /**
- * Class GetEmployeeCest.
+ * Class GetNoveltyTypeCest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class GetEmployeeCest
+class GetNoveltyTypeCest
 {
     /**
      * @var string
      */
-    private $endpoint = 'api/v1/employees/{id}';
+    private $endpoint = 'api/v1/novelty-types/{id}';
 
     /**
      * @param ApiTester $I
@@ -31,23 +31,14 @@ class GetEmployeeCest
      */
     public function getSuccessfully(ApiTester $I)
     {
-        $employee = factory(Employee::class)->create();
+        $expectedNoveltyType = factory(NoveltyType::class)->create();
 
-        $I->sendGET(str_replace('{id}', $employee->id, $this->endpoint));
+        $endpoint = str_replace('{id}', $expectedNoveltyType->id, $this->endpoint);
+        $I->sendGET($endpoint);
 
         $I->seeResponseCodeIs(200);
         $I->seeResponseJsonMatchesJsonPath('$.data.id');
-    }
-
-    /**
-     * @test
-     * @param ApiTester $I
-     */
-    public function shouldReturnNotFoundIfEmployeeDoesNotExists(ApiTester $I)
-    {
-        $I->sendGET(str_replace('{id}', 999, $this->endpoint));
-
-        $I->seeResponseCodeIs(404);
+        $I->canSeeResponseContainsJson(['data' => ['id' => $expectedNoveltyType->id]]);
     }
 
     /**
@@ -58,9 +49,8 @@ class GetEmployeeCest
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
-        $employee = factory(Employee::class)->create();
 
-        $I->sendGET(str_replace('{id}', $employee->id, $this->endpoint));
+        $I->sendGET($this->endpoint);
 
         $I->seeResponseCodeIs(403);
     }

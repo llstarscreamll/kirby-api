@@ -42,8 +42,8 @@ class UpdateNoveltyCest
         $updatedNovelty = [
             'employee_id' => factory(Employee::class)->create()->id,
             'novelty_type_id' => factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Subtraction])->id,
-            'start_at' => $startDate->toISOString(),
-            'end_at' => $endDate->toISOString(),
+            'start_at' => $startDate->toIso8601String(),
+            'end_at' => $endDate->toIso8601String(),
             'comment' => 'updated comment here!!',
         ];
 
@@ -64,7 +64,7 @@ class UpdateNoveltyCest
      * @test
      * @param ApiTester $I
      */
-    public function shouldReturnUnprocesableEntityIfUserDoesntHaveRequiredPermissions(ApiTester $I)
+    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions(ApiTester $I)
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
