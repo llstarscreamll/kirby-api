@@ -1,10 +1,12 @@
 # Release notes
 
-## Unreleased
+## [v0.2 (2020-06-05)](https://github.com/llstarscreamll/kirby-api/compare/v0.1.3..v0.2)
 
 ### Added
 
 -   Novelties: novelties can be searched by novelty types, employees, cost centers and start date range
+-   Novelties: new novelty types CRUD endpoints
+-   Novelties: searching by range date is applied to novelty end and time clock log checkout
 
 ### Changed
 
