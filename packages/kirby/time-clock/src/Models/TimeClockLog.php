@@ -427,7 +427,7 @@ class TimeClockLog extends Model
         return $this->checkInPunctuality() === 0;
     }
 
-/**
+    /**
      * @return bool
      */
     public function earlyCheckIn(): bool

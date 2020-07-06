@@ -1441,7 +1441,7 @@ class RegisterTimeClockNoveltiesActionCest
     public function foo(IntegrationTester $I)
     {
         $workShift = factory(WorkShift::class)->create([
-            'name' => "7-15:30",
+            'name' => '7-15:30',
             'grace_minutes_after_end_times' => 30,
             'grace_minutes_after_start_times' => 30,
             'grace_minutes_before_end_times' => 20,
@@ -1449,15 +1449,15 @@ class RegisterTimeClockNoveltiesActionCest
             'meal_time_in_minutes' => 0,
             'min_minutes_required_to_discount_meal_time' => 0,
             'applies_on_days' => [1, 2, 3, 4, 5],
-            'time_slots' => [['end' => "15:30", 'start' => "07:00"]],
-            'time_zone' => "America/Bogota",
+            'time_slots' => [['end' => '15:30', 'start' => '07:00']],
+            'time_zone' => 'America/Bogota',
         ]);
 
         // morning log with attached addition novelty due to late check out
         $morningLog = factory(TimeClockLog::class)->create([
             'work_shift_id' => $workShift->id,
-            'checked_in_at' => "2020-07-01 11:06:00", // wednesday workday
-            'checked_out_at' => "2020-07-01 16:36:00",
+            'checked_in_at' => '2020-07-01 11:06:00', // wednesday workday
+            'checked_out_at' => '2020-07-01 16:36:00',
             'check_out_novelty_type_id' => null,
             'check_in_novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HADI')->id,
             'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
@@ -1468,32 +1468,32 @@ class RegisterTimeClockNoveltiesActionCest
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
             'novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'PP')->id,
-            'start_at' => "2020-07-01 16:36:00",
-            'end_at' => "2020-07-01 18:15:00", // next check in on this datetime
+            'start_at' => '2020-07-01 16:36:00',
+            'end_at' => '2020-07-01 18:15:00', // next check in on this datetime
         ]);
 
         factory(Novelty::class)->create([
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
             'novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HADI')->id,
-            'start_at' => "2020-07-01 11:06:00",
-            'end_at' => "2020-07-01 11:59:59",
+            'start_at' => '2020-07-01 11:06:00',
+            'end_at' => '2020-07-01 11:59:59',
         ]);
 
         factory(Novelty::class)->create([
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
             'novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HN')->id,
-            'start_at' => "2020-07-01 12:00:00",
-            'end_at' => "2020-07-01 16:36:00",
+            'start_at' => '2020-07-01 12:00:00',
+            'end_at' => '2020-07-01 16:36:00',
         ]);
 
         // afternoon log, after scheduled novelty
         $afternoonLog = factory(TimeClockLog::class)->create([
             'work_shift_id' => $workShift->id,
             'employee_id' => $morningLog->employee_id,
-            'checked_in_at' => "2020-07-01 18:15:00", // on time because scheduled novelty
-            'checked_out_at' => "2020-07-01 20:41:00", // on time because work shift grace time
+            'checked_in_at' => '2020-07-01 18:15:00', // on time because scheduled novelty
+            'checked_out_at' => '2020-07-01 20:41:00', // on time because work shift grace time
             'check_in_novelty_type_id' => null,
             'check_out_novelty_type_id' => null,
             'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
