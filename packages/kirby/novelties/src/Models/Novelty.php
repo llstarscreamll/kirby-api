@@ -2,13 +2,14 @@
 
 namespace Kirby\Novelties\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Kirby\Company\Models\SubCostCenter;
-use Kirby\Employees\Models\Employee;
-use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Kirby\TimeClock\Models\TimeClockLog;
+use Carbon\Carbon;
 use Kirby\Users\Models\User;
+use Kirby\Employees\Models\Employee;
+use Illuminate\Database\Eloquent\Model;
+use Kirby\Company\Models\SubCostCenter;
+use Kirby\TimeClock\Models\TimeClockLog;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Kirby\Novelties\Enums\NoveltyTypeOperator;
 
 /**
  * Class Novelty.
@@ -132,5 +133,23 @@ class Novelty extends Model
     public function deleteApprove(int $approverId)
     {
         $this->approvals()->detach($approverId);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasTimeClockLog(): bool
+    {
+        return ! empty($this->time_clock_log_id);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasTimeClockLogCheckInBetween(Carbon $start, Carbon $end): bool
+    {
+        return $this->hasTimeClockLog() && $this->timeClockLog
+            ->checked_in_at
+            ->between($start, $end);
     }
 }
