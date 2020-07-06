@@ -54,7 +54,7 @@ cd {{ $releasesDir }};
 mkdir {{ $newReleaseDir }};
 
 # Clone the repo
-git clone --depth 1 git@github.com:{{ $repository }} {{ $newReleaseName }}
+git clone --depth 1 --branch {{ $branch }} git@github.com:{{ $repository }} {{ $newReleaseName }}
 
 # Configure sparse checkout
 cd {{ $newReleaseDir }}
@@ -131,6 +131,8 @@ sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 {{ logMessage("🙏  Blessing new release...") }}
 ln -nfs {{ $newReleaseDir }} {{ $currentDir }};
 cd {{ $newReleaseDir }}
+php7.4 artisan db:seed --class=NoveltiesPermissionsSeeder --force
+php7.4 artisan authorization:refresh-admin-permissions
 php7.4 artisan optimize
 php7.4 artisan storage:link
 php7.4 artisan queue:restart

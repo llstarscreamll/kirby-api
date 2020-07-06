@@ -293,6 +293,11 @@ class TimeClockLog extends Model
     }
 
     /**
+     * Returns the checkin datetime, being aware from work shift grace times, if
+     * any. If work shift time slots are from 7am to 4pm with 30min grace times,
+     * and checkin was at 7:15am, then the returned value is 7am because checkin
+     * was on time with grace times.
+     *
      * @return \Carbon\Carbon
      */
     public function softCheckInAt(): Carbon
@@ -303,6 +308,11 @@ class TimeClockLog extends Model
     }
 
     /**
+     * Returns the checkout datetime, being aware from work shift grace times,
+     * if any. If work shift time slots are from 7am to 4pm with 30min grace
+     * times, and checkout was at 4:15pm, then the returned value is 4pm
+     * because checkout was on time with grace times.
+     *
      * @return \Carbon\Carbon
      */
     public function softCheckOutAt(): Carbon
@@ -407,6 +417,54 @@ class TimeClockLog extends Model
         return $this->hasWorkShift()
             ? $this->workShift->startPunctuality($this->checked_in_at, $offSet)
             : null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function onTimeCheckIn(): bool
+    {
+        return $this->checkInPunctuality() === 0;
+    }
+
+/**
+     * @return bool
+     */
+    public function earlyCheckIn(): bool
+    {
+        return $this->checkInPunctuality() < 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function lateCheckIn(): bool
+    {
+        return $this->checkInPunctuality() > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function onTimeCheckOut(): bool
+    {
+        return $this->checkOutPunctuality() === 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function earlyCheckOut(): bool
+    {
+        return $this->checkOutPunctuality() < 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function lateCheckOut(): bool
+    {
+        return $this->checkOutPunctuality() > 0;
     }
 
     /**

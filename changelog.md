@@ -1,5 +1,11 @@
 # Release notes
 
+## [v0.2.1 (2020-07-06)](https://github.com/llstarscreamll/kirby-api/compare/v0.2..v0.2.1)
+
+### Fixed
+
+-   Novelties: error solving novelties from time clock log and past novelties
+
 ## [v0.2 (2020-06-05)](https://github.com/llstarscreamll/kirby-api/compare/v0.1.3..v0.2)
 
 ### Added

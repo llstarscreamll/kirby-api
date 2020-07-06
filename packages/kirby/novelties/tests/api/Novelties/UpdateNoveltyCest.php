@@ -42,8 +42,8 @@ class UpdateNoveltyCest
         $updatedNovelty = [
             'employee_id' => factory(Employee::class)->create()->id,
             'novelty_type_id' => factory(NoveltyType::class)->create(['operator' => NoveltyTypeOperator::Subtraction])->id,
-            'start_at' => $startDate->toIso8601String(),
-            'end_at' => $endDate->toIso8601String(),
+            'start_at' => $startDate->toIsoString(),
+            'end_at' => $endDate->toIsoString(),
             'comment' => 'updated comment here!!',
         ];
 
