@@ -64,8 +64,8 @@ class SearchNoveltiesCest
 
         $I->sendGET($this->endpoint, [
             'start_at' => [
-                'from' => now()->subWeek()->startOfDay()->toIso8601String(),
-                'to' => now()->endOfDay()->toIso8601String(),
+                'from' => now()->subWeek()->startOfDay()->toIsoString(),
+                'to' => now()->endOfDay()->toIsoString(),
             ],
         ]);
 
@@ -147,8 +147,8 @@ class SearchNoveltiesCest
         factory(Novelty::class, 3)->create();
 
         $I->sendGET($this->endpoint, [
-            'time_clock_log_check_out_start_date' => now()->subWeek()->startOfDay()->toIso8601String(),
-            'time_clock_log_check_out_end_date' => now()->endOfDay()->toIso8601String(),
+            'time_clock_log_check_out_start_date' => now()->subWeek()->startOfDay()->toIsoString(),
+            'time_clock_log_check_out_end_date' => now()->endOfDay()->toIsoString(),
         ]);
 
         $I->seeResponseCodeIs(200);

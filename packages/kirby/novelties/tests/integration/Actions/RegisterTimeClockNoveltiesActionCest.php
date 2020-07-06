@@ -180,6 +180,7 @@ class RegisterTimeClockNoveltiesActionCest
     {
         return [
             [
+                'wantTo' => 'test-1',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 07:00:01', // on time
@@ -191,6 +192,7 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [], // noting should be created
             ],
             [
+                'wantTo' => 'test-2',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 07:00:01', // on time
@@ -202,6 +204,7 @@ class RegisterTimeClockNoveltiesActionCest
                 'createdNovelties' => [], // noting should be created
             ],
             [
+                'wantTo' => 'test-3',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 07:00:00', // on time
@@ -239,6 +242,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-4',
                 'timeClockLog' => [
                     // without work shift
                     'work_shift_name' => null,
@@ -255,6 +259,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-5',
                 'timeClockLog' => [ // check in/out without work shift on holiday
                     'work_shift_name' => null, // without work shift
                     'check_in_novelty_type_code' => null, // without checkin novelty type
@@ -270,6 +275,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-6',
                 'timeClockLog' => [ // check in/out without work shift on workday
                     'work_shift_name' => null, // without work shift
                     'check_in_novelty_type_code' => null, // without checkin novelty type
@@ -285,6 +291,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-7',
                 'timeClockLog' => [
                     'work_shift_name' => '7-12 13:30-17:00',
                     'check_in_novelty_type_code' => null,
@@ -312,6 +319,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-8',
                 'timeClockLog' => [
                     'work_shift_name' => '7-16',
                     'check_in_novelty_type_code' => 'HADI',
@@ -343,6 +351,7 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'test' => 'too early check in with novelty, too late check out without novelty, work shift with gap and only one check out',
+                'wantTo' => 'test-9',
                 'timeClockLog' => [
                     'work_shift_name' => '7-16',
                     'check_in_novelty_type_code' => 'HADI',
@@ -380,6 +389,7 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'test' => 'on time to work shift with one gap but only one check out at the end of second time slot',
+                'wantTo' => 'test-10',
                 'timeClockLog' => [
                     'work_shift_name' => '7-16',
                     'checked_in_at' => '2019-04-01 07:00:00', // on time
@@ -405,6 +415,7 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'test' => 'too late check, closest to the end of first part of work shift',
+                'wantTo' => 'test-11',
                 'timeClockLog' => [
                     'work_shift_name' => '7-12 13:30-17:00',
                     'checked_in_at' => '2019-04-01 11:49:00', // too late to first shift time slot
@@ -425,6 +436,7 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'test' => 'soft limits touched on shift without gaps and meal time',
+                'wantTo' => 'test-12',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 06:55:00', // on time, with grace time
@@ -445,6 +457,7 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'test' => 'on time to work shift without gaps and launch time',
+                'wantTo' => 'test-13',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 07:00:00', // on time
@@ -465,6 +478,7 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'test' => 'too early to work shift without gaps and launch time',
+                'wantTo' => 'test-14',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_in_novelty_type_code' => 'HEDI',
@@ -491,6 +505,7 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'test' => 'early check in and late check out with same novelty to work shift without gaps and launch time',
+                'wantTo' => 'test-15',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_in_novelty_type_code' => 'HEDI', // extra daytime
@@ -523,6 +538,7 @@ class RegisterTimeClockNoveltiesActionCest
             ],
             [
                 'test' => 'early check in and late check out with distinct novelty to work shift without gaps and launch time',
+                'wantTo' => 'test-16',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_in_novelty_type_code' => 'HEDI',
@@ -560,6 +576,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-17',
                 'timeClockLog' => [
                     'work_shift_name' => '7-17',
                     'checked_in_at' => '2019-04-01 07:00:00', // on time
@@ -574,6 +591,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-18',
                 'timeClockLog' => [
                     'work_shift_name' => '7-17',
                     'checked_in_at' => '2019-04-01 13:30:00', // on time
@@ -588,6 +606,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-19',
                 'timeClockLog' => [
                     'work_shift_name' => '7-17',
                     'check_out_novelty_type_code' => 'HEDI', // additional time
@@ -608,6 +627,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-20',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_in_novelty_type_code' => 'PP', // personal permission
@@ -629,6 +649,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-21',
                 'timeClockLog' => [
                     'work_shift_name' => '7-17',
                     'check_in_novelty_type_code' => 'PP', // personal permission
@@ -650,6 +671,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-22',
                 'timeClockLog' => [
                     'work_shift_name' => '7-17',
                     'check_out_novelty_type_code' => 'PP', // personal permission
@@ -671,6 +693,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-23',
                 'timeClockLog' => [ // time clock log without work shift
                     'check_in_novelty_type_code' => 'HADI', // additional time
                     'checked_in_at' => '2019-04-01 07:00:00', // time doesn't matters because work shift is null
@@ -685,6 +708,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-24',
                 'timeClockLog' => [ // time clock log with night work shift
                     'work_shift_name' => '22-6',
                     'checked_in_at' => '2019-04-01 22:00:00', // on time
@@ -699,6 +723,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-25',
                 'timeClockLog' => [ // time clock log with night work shift
                     'work_shift_name' => '22-6',
                     'checked_in_at' => '2019-06-30 22:00:00', // sunday holiday, on time
@@ -713,6 +738,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-26',
                 'timeClockLog' => [ // time clock log with night work shift and one holiday
                     'work_shift_name' => '22-6',
                     'checked_in_at' => '2019-03-30 22:00:00', // saturday, on time
@@ -732,6 +758,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-27',
                 'timeClockLog' => [ // time clock log with one holiday and night work shift
                     'work_shift_name' => '22-6',
                     'checked_in_at' => '2019-07-01 22:00:00', // monday holiday, on time
@@ -751,6 +778,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-28',
                 'timeClockLog' => [ // time clock log on work day
                     'work_shift_name' => '14-22',
                     'checked_in_at' => '2019-04-01 14:00:00', // monday work day, on time
@@ -770,6 +798,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-29',
                 'timeClockLog' => [ // time clock log on holiday
                     'work_shift_name' => '14-22',
                     'checked_in_at' => '2019-07-01 14:00:00', // monday holiday, on time
@@ -789,6 +818,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-30',
                 'timeClockLog' => [ // time clock log on workday
                     'work_shift_name' => '6-14',
                     'check_in_novelty_type_code' => 'HADI',
@@ -812,6 +842,7 @@ class RegisterTimeClockNoveltiesActionCest
             //     Time lock logs with too late check in or early check out    #
             // ################################################################ #
             [
+                'wantTo' => 'test-31',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_in_novelty_type_code' => null, // empty novelty type
@@ -836,6 +867,7 @@ class RegisterTimeClockNoveltiesActionCest
             //               Time lock logs with scheduled novelties           #
             // ################################################################ #
             [
+                'wantTo' => 'test-32',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 09:00:00', // too late, because of scheduled novelty
@@ -870,6 +902,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-33',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'sub_cost_center_id' => 1,
@@ -900,8 +933,8 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                 ],
             ],
-            // HERE!!!
             [
+                'wantTo' => 'test-34',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_out_novelty_type_code' => null, // empty novelty type
@@ -948,13 +981,14 @@ class RegisterTimeClockNoveltiesActionCest
                     ],
                     [
                         'novelty_type_code' => 'PP', // novelty for late check out
-                        'start_at' => '2019-04-01 08:00:01',
-                        'end_at' => '2019-04-01 08:59:59',
+                        'start_at' => '2019-04-01 16:00:01',
+                        'end_at' => '2019-04-01 16:59:59',
                         'sub_cost_center_id' => 1, // should be attached to time clock log sub cost center
                     ],
                 ],
             ],
             [
+                'wantTo' => 'test-35',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_in_novelty_type_code' => 'PP', // because check in is 1 hour late
@@ -991,6 +1025,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-36',
                 'timeClockLog' => [ // time clock log on sunday
                     'work_shift_name' => '14-22 Sundays',
                     'checked_in_at' => '2019-07-21 16:00:00', // sunday, two hours late
@@ -1021,6 +1056,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-37',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_out_novelty_type_code' => null, // empty novelty type
@@ -1041,6 +1077,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-38',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'sub_cost_center_id' => 1,
@@ -1071,6 +1108,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-39',
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'check_out_novelty_type_code' => null, // empty novelty type
@@ -1112,6 +1150,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [ // time zone on this scenario is UTC but work shift is America/Bogota!!
+                'wantTo' => 'test-40',
                 'timeClockLog' => [
                     'work_shift_name' => '6-14 America/Bogota', // work shift with non UTC time zone
                     'sub_cost_center_id' => 1,
@@ -1142,6 +1181,7 @@ class RegisterTimeClockNoveltiesActionCest
                 ],
             ],
             [
+                'wantTo' => 'test-41',
                 'timeClockLog' => [ // time clock log on workday
                     'work_shift_name' => '14-22',
                     'checked_in_at' => '2019-04-01 12:00:00', // workday, two hours early
@@ -1176,6 +1216,8 @@ class RegisterTimeClockNoveltiesActionCest
      */
     public function testToRunAction(IntegrationTester $I, Example $data)
     {
+        $I->wantTo($data['wantTo']);
+
         $scheduledNovelties = $data['scheduledNovelties'] ?? [];
         $timeClockData = $this->mapTimeClockData($data['timeClockLog']);
         $timeClockLog = factory(TimeClockLog::class)->create($timeClockData);
@@ -1262,17 +1304,17 @@ class RegisterTimeClockNoveltiesActionCest
 
         // morning log with check out addition novelty due to late check out
         $morningLog = factory(TimeClockLog::class)->create([
-            'work_shift_id' => $this->workShifts->where('name', '7-12 13:30-17:00')->first()->id,
+            'work_shift_id' => $this->workShifts->firstWhere('name', '7-12 13:30-17:00')->id,
             'checked_in_at' => now()->setTime(06, 58),
             'checked_out_at' => now()->setTime(12, 30),
-            'check_out_novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
+            'check_out_novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HADI')->id,
             'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
         ]);
 
         factory(Novelty::class)->create([
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
-            'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
+            'novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HN')->id,
             'start_at' => now()->setTime(07, 00),
             'end_at' => now()->setTime(12, 00),
         ]);
@@ -1280,19 +1322,19 @@ class RegisterTimeClockNoveltiesActionCest
         factory(Novelty::class)->create([
             'employee_id' => $morningLog->employee_id,
             'time_clock_log_id' => $morningLog->id,
-            'novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
+            'novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HADI')->id,
             'start_at' => now()->setTime(12, 00),
             'end_at' => now()->setTime(12, 30),
         ]);
 
         // afternoon log with late check in
         $afternoonLog = factory(TimeClockLog::class)->create([
-            'work_shift_id' => $this->workShifts->where('name', '7-12 13:30-17:00')->first()->id,
+            'work_shift_id' => $this->workShifts->firstWhere('name', '7-12 13:30-17:00')->id,
             'employee_id' => $morningLog->employee_id,
             'checked_in_at' => now()->setTime(14, 30), // late check in, 1 hour late
             'checked_out_at' => now()->setTime(17, 30), // late check out, 0.5 hours late
-            'check_in_novelty_type_id' => $this->noveltyTypes->where('code', 'PP')->first()->id,
-            'check_out_novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
+            'check_in_novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'PP')->id,
+            'check_out_novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HADI')->id,
             'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
         ]);
 
@@ -1308,18 +1350,18 @@ class RegisterTimeClockNoveltiesActionCest
             'end_at' => '2019-04-01 17:00:00',
         ]);
 
-        $I->seeRecord('novelties', [ // additional time
-            'time_clock_log_id' => $afternoonLog->id,
-            'novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
-            'start_at' => '2019-04-01 17:00:01',
-            'end_at' => '2019-04-01 17:30:00',
-        ]);
-
         $I->seeRecord('novelties', [ // missing time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'PP')->first()->id,
             'start_at' => '2019-04-01 13:30:00',
             'end_at' => '2019-04-01 14:29:59',
+        ]);
+
+        $I->seeRecord('novelties', [ // additional time
+            'time_clock_log_id' => $afternoonLog->id,
+            'novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
+            'start_at' => '2019-04-01 17:00:01',
+            'end_at' => '2019-04-01 17:30:00',
         ]);
 
         $I->seeNumRecords(3, 'novelties', ['time_clock_log_id' => $afternoonLog->id]);
@@ -1342,14 +1384,6 @@ class RegisterTimeClockNoveltiesActionCest
             'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
         ]);
 
-        factory(Novelty::class)->create([
-            'employee_id' => $morningLog->employee_id,
-            'time_clock_log_id' => $morningLog->id,
-            'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
-            'start_at' => now()->setTime(07, 00),
-            'end_at' => now()->setTime(12, 00),
-        ]);
-
         // scheduled novelty for morning log
         factory(Novelty::class)->create([
             'employee_id' => $morningLog->employee_id,
@@ -1359,11 +1393,19 @@ class RegisterTimeClockNoveltiesActionCest
             'end_at' => now()->setTime(14, 00), // next check in should be at 2pm
         ]);
 
+        factory(Novelty::class)->create([
+            'employee_id' => $morningLog->employee_id,
+            'time_clock_log_id' => $morningLog->id,
+            'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
+            'start_at' => now()->setTime(07, 00),
+            'end_at' => now()->setTime(12, 00),
+        ]);
+
         // afternoon log, after scheduled novelty
         $afternoonLog = factory(TimeClockLog::class)->create([
             'work_shift_id' => $this->workShifts->where('name', '7-18')->first()->id,
             'employee_id' => $morningLog->employee_id,
-            'checked_in_at' => now()->setTime(14, 00), // on time
+            'checked_in_at' => now()->setTime(14, 00), // on time, because past scheduled novelty
             'checked_out_at' => now()->setTime(18, 30), // late check out, 0.5 hours late
             'check_in_novelty_type_id' => null,
             'check_out_novelty_type_id' => $this->noveltyTypes->where('code', 'HADI')->first()->id,
@@ -1378,7 +1420,7 @@ class RegisterTimeClockNoveltiesActionCest
         $I->seeRecord('novelties', [ // ordinary time
             'time_clock_log_id' => $afternoonLog->id,
             'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
-            'start_at' => '2019-04-01 14:00:00',
+            'start_at' => '2019-04-01 14:00:01',
             'end_at' => '2019-04-01 18:00:00',
         ]);
 
@@ -1390,6 +1432,86 @@ class RegisterTimeClockNoveltiesActionCest
         ]);
 
         $I->seeNumRecords(2, 'novelties', ['time_clock_log_id' => $afternoonLog->id]);
+    }
+
+    /**
+     * @test
+     * @param IntegrationTester $I
+     */
+    public function foo(IntegrationTester $I)
+    {
+        $workShift = factory(WorkShift::class)->create([
+            'name' => "7-15:30",
+            'grace_minutes_after_end_times' => 30,
+            'grace_minutes_after_start_times' => 30,
+            'grace_minutes_before_end_times' => 20,
+            'grace_minutes_before_start_times' => 30,
+            'meal_time_in_minutes' => 0,
+            'min_minutes_required_to_discount_meal_time' => 0,
+            'applies_on_days' => [1, 2, 3, 4, 5],
+            'time_slots' => [['end' => "15:30", 'start' => "07:00"]],
+            'time_zone' => "America/Bogota",
+        ]);
+
+        // morning log with attached addition novelty due to late check out
+        $morningLog = factory(TimeClockLog::class)->create([
+            'work_shift_id' => $workShift->id,
+            'checked_in_at' => "2020-07-01 11:06:00", // wednesday workday
+            'checked_out_at' => "2020-07-01 16:36:00",
+            'check_out_novelty_type_id' => null,
+            'check_in_novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HADI')->id,
+            'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
+        ]);
+
+        // scheduled novelty for morning log
+        factory(Novelty::class)->create([
+            'employee_id' => $morningLog->employee_id,
+            'time_clock_log_id' => $morningLog->id,
+            'novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'PP')->id,
+            'start_at' => "2020-07-01 16:36:00",
+            'end_at' => "2020-07-01 18:15:00", // next check in on this datetime
+        ]);
+
+        factory(Novelty::class)->create([
+            'employee_id' => $morningLog->employee_id,
+            'time_clock_log_id' => $morningLog->id,
+            'novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HADI')->id,
+            'start_at' => "2020-07-01 11:06:00",
+            'end_at' => "2020-07-01 11:59:59",
+        ]);
+
+        factory(Novelty::class)->create([
+            'employee_id' => $morningLog->employee_id,
+            'time_clock_log_id' => $morningLog->id,
+            'novelty_type_id' => $this->noveltyTypes->firstWhere('code', 'HN')->id,
+            'start_at' => "2020-07-01 12:00:00",
+            'end_at' => "2020-07-01 16:36:00",
+        ]);
+
+        // afternoon log, after scheduled novelty
+        $afternoonLog = factory(TimeClockLog::class)->create([
+            'work_shift_id' => $workShift->id,
+            'employee_id' => $morningLog->employee_id,
+            'checked_in_at' => "2020-07-01 18:15:00", // on time because scheduled novelty
+            'checked_out_at' => "2020-07-01 20:41:00", // on time because work shift grace time
+            'check_in_novelty_type_id' => null,
+            'check_out_novelty_type_id' => null,
+            'check_out_sub_cost_center_id' => $this->subCostCenters->first()->id,
+        ]);
+
+        $action = app(RegisterTimeClockNoveltiesAction::class);
+        $result = $action->run($afternoonLog->id);
+
+        $I->assertTrue($result);
+
+        $I->seeRecord('novelties', [ // ordinary time
+            'time_clock_log_id' => $afternoonLog->id,
+            'novelty_type_id' => $this->noveltyTypes->where('code', 'HN')->first()->id,
+            'start_at' => '2020-07-01 18:15:01', // afternoon check in time
+            'end_at' => '2020-07-01 20:30:00', // work shift end
+        ]);
+
+        $I->seeNumRecords(1, 'novelties', ['time_clock_log_id' => $afternoonLog->id]);
     }
 
     /**

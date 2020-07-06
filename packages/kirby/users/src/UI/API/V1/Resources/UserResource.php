@@ -29,8 +29,8 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'roles' => RoleResource::collection($this->whenLoaded('roles')),
             'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
-            'created_at' => optional($this->created_at)->toIso8601String(),
-            'updated_at' => optional($this->updated_at)->toIso8601String(),
+            'created_at' => optional($this->created_at)->toIsoString(),
+            'updated_at' => optional($this->updated_at)->toIsoString(),
         ];
     }
 }
