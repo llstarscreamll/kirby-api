@@ -146,6 +146,7 @@ return [
                 'balance' => 'auto',
                 'processes' => 5,
                 'tries' => 3,
+                'nice' => 10
             ],
         ],
 
@@ -156,6 +157,7 @@ return [
                 'balance' => 'auto',
                 'processes' => 1,
                 'tries' => 3,
+                'nice' => 10
             ],
         ],
 
