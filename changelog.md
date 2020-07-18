@@ -1,5 +1,12 @@
 # Release notes
 
+## [v0.2.2 (2020-07-06)](https://github.com/llstarscreamll/kirby-api/compare/v0.2.1..v0.2.2)
+
+### Fixed
+
+-   Setup Laravel Horizon configuration options to best performance
+-   Remove unended git checkout from deploy command
+
 ## [v0.2.1 (2020-07-06)](https://github.com/llstarscreamll/kirby-api/compare/v0.2..v0.2.1)
 
 ### Fixed

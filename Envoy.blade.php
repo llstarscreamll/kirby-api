@@ -156,7 +156,6 @@ ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 @task('deployOnlyCode',['on' => 'remote'])
 {{ logMessage("💻  Deploying code changes form $branch to $currentDir") }}
 cd {{ $currentDir }}
-git pull origin {{ $branch }}
 COMPOSER=$(which composer)
 php7.4 $COMPOSER install -q
 php7.4 artisan optimize
