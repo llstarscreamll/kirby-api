@@ -4,8 +4,8 @@ namespace Kirby\Employees\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Kirby\Company\UI\API\V1\Resources\CostCenterResource;
-use Kirby\WorkShifts\UI\API\V1\Resources\WorkShiftResource;
 use Kirby\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
+use Kirby\WorkShifts\UI\API\V1\Resources\WorkShiftResource;
 
 /**
  * Class EmployeeResource.

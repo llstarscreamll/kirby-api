@@ -52,7 +52,7 @@ class EmployeeNoveltyTypesRecordsController
             ->paginate(min($request->limit, 100), ['id']);
 
         $noveltiesGroupedByType = $this->noveltyTypeRepository
-            ->with(['novelties' => fn($query) => $query
+            ->with(['novelties' => fn ($query) => $query
                     ->whereIn('employee_id', $paginatedEmployees->pluck('id'))
                     ->whereBetween('start_at', [$startDate->toDateTimeString(), $endDate->toDateTimeString()])
                     ->select(['id', 'novelty_type_id', 'employee_id', 'start_at', 'end_at']),
@@ -60,7 +60,7 @@ class EmployeeNoveltyTypesRecordsController
 
         $paginatedEmployees
             ->getCollection()
-            ->transform(fn($employee) => $employee->setRelation('noveltyTypes', $this->mapNovelties($noveltiesGroupedByType, $employee)));
+            ->transform(fn ($employee) => $employee->setRelation('noveltyTypes', $this->mapNovelties($noveltiesGroupedByType, $employee)));
 
         return EmployeeResource::collection($paginatedEmployees);
     }
@@ -75,7 +75,7 @@ class EmployeeNoveltyTypesRecordsController
         return $noveltyTypes->map(function ($noveltyType) use ($employee) {
             $mappedNoveltyType = clone $noveltyType;
             $mappedNoveltyType->setRelation('novelties', $mappedNoveltyType
-                    ->novelties->filter(fn($novelty) => $novelty->employee_id === $employee->id));
+                    ->novelties->filter(fn ($novelty) => $novelty->employee_id === $employee->id));
 
             return $mappedNoveltyType;
         });
