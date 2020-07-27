@@ -19,9 +19,10 @@ class NoveltiesPermissionsSeeder extends Seeder
         ['name' => 'novelties.search'],
         ['name' => 'novelties.update'],
         ['name' => 'novelties.delete'],
+        ['name' => 'novelties.export'],
         ['name' => 'novelties.create-many'],
         ['name' => 'novelties.report-by-employee'],
-        ['name' => 'novelties.export'],
+        ['name' => 'novelties.resume-by-novelty-type-and-employee'],
         ['name' => 'novelties.create-approvals-by-employee-and-date-range'],
         ['name' => 'novelties.delete-approvals-by-employee-and-date-range'],
         // novelty approvals

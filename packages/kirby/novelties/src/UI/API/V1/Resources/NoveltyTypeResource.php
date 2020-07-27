@@ -3,6 +3,7 @@
 namespace Kirby\Novelties\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
 
 /**
  * Class NoveltyTypeResource.
@@ -19,6 +20,8 @@ class NoveltyTypeResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($this);
+        return [
+            'novelties' => NoveltyResource::collection($this->whenLoaded('novelties')),
+        ] + parent::toArray($this);
     }
 }
