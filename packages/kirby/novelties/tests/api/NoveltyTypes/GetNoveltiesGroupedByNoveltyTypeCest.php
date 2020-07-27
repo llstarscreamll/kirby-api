@@ -13,7 +13,7 @@ use Kirby\Novelties\Models\NoveltyType;
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class GetNoveltyTypesRecordsByEmployeeCest
+class GetNoveltiesGroupedByNoveltyTypeCest
 {
     /**
      * @var string
@@ -182,7 +182,7 @@ class GetNoveltyTypesRecordsByEmployeeCest
 
         $I->seeResponseCodeIs(422);
     }
-    
+
     /**
      * @test
      * @param ApiTester $I

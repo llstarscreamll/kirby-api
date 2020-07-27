@@ -3,7 +3,6 @@
 namespace Kirby\Novelties\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
 
 /**
  * Class NoveltyTypeResource.
