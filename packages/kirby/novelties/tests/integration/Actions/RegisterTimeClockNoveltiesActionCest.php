@@ -1,6 +1,6 @@
 <?php
 
-namespace Novelties\Actions;
+namespace Kirby\Novelties\Tests\Actions;
 
 use Carbon\Carbon;
 use Codeception\Example;
@@ -18,7 +18,7 @@ use Kirby\Novelties\Novelties;
 use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\WorkShifts\Models\WorkShift;
 use Mockery;
-use Novelties\IntegrationTester;
+use Kirby\Novelties\Tests\IntegrationTester;
 
 /**
  * Class RegisterTimeClockNoveltiesActionCest.

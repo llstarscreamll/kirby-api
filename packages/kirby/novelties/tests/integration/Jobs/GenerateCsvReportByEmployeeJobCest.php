@@ -1,6 +1,6 @@
 <?php
 
-namespace Novelties\Jobs;
+namespace Kirby\Novelties\Tests\Jobs;
 
 use Illuminate\Support\Facades\Notification;
 use Kirby\Company\Models\SubCostCenter;
@@ -13,7 +13,7 @@ use Kirby\Users\Contracts\UserRepositoryInterface;
 use Kirby\Users\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 use Mockery;
-use Novelties\IntegrationTester;
+use Kirby\Novelties\Tests\IntegrationTester;
 
 /**
  * Class GenerateCsvReportByEmployeeJobCest.

@@ -1,12 +1,12 @@
 <?php
 
-namespace Novelties\Exports;
+namespace Kirby\Novelties\Tests\Exports;
 
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Novelties\Exports\NoveltiesExport;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Users\Models\User;
-use Novelties\IntegrationTester;
+use Kirby\Novelties\Tests\IntegrationTester;
 
 /**
  * Class NoveltiesExportCest.
