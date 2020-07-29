@@ -28,6 +28,8 @@ class NoveltiesPermissionsSeeder extends Seeder
         // novelty approvals
         ['name' => 'novelties.approvals.create'],
         ['name' => 'novelties.approvals.delete'],
+        // novelties settings
+        ['name' => 'novelties.settings.show'],
         // novelty types
         ['name' => 'novelty-types.get'],
         ['name' => 'novelty-types.create'],
