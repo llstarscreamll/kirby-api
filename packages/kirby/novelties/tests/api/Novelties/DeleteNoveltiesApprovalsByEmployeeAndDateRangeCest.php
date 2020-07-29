@@ -1,6 +1,6 @@
 <?php
 
-namespace Novelties;
+namespace Kirby\Novelties\Tests;
 
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Employees\Models\Employee;

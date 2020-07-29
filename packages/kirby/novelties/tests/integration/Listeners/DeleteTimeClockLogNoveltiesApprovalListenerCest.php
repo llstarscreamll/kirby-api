@@ -1,12 +1,12 @@
 <?php
 
-namespace Novelties\Listeners;
+namespace Kirby\Novelties\Tests\Listeners;
 
 use Illuminate\Support\Collection;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
 use Mockery;
-use Novelties\IntegrationTester;
+use Kirby\Novelties\Tests\IntegrationTester;
 
 /**
  * Class DeleteTimeClockLogNoveltiesApprovalListenerCest.

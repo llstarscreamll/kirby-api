@@ -2,7 +2,7 @@ actor: IntegrationTester
 modules:
   enabled:
     - Asserts
-    - \Novelties\Helper\Integration
+    - \Kirby\Novelties\Tests\Helper\Integration
     - Laravel5:
         root: ../../../
         environment_file: .env.testing

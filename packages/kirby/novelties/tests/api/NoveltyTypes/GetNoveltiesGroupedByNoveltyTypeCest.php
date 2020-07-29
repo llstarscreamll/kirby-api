@@ -1,6 +1,6 @@
 <?php
 
-namespace Novelties;
+namespace Kirby\Novelties\Tests;
 
 use DefaultNoveltyTypesSeed;
 use Illuminate\Support\Facades\DB;

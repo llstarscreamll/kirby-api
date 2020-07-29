@@ -6,7 +6,7 @@ actor: UnitTester
 modules:
   enabled:
     - Asserts
-    - \Novelties\Helper\Unit
+    - \Kirby\Novelties\Tests\Helper\Unit
     - Laravel5:
         root: ../../../
         environment_file: .env.testing

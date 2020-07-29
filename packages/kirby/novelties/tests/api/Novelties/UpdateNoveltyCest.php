@@ -1,6 +1,6 @@
 <?php
 
-namespace Novelties;
+namespace Kirby\Novelties\Tests;
 
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;

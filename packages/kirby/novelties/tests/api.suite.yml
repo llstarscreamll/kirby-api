@@ -1,7 +1,7 @@
 actor: ApiTester
 modules:
   enabled:
-    - \Novelties\Helper\Api
+    - \Kirby\Novelties\Tests\Helper\Api
     - Authentication\Helper\Api
     - REST:
         depends: Laravel5

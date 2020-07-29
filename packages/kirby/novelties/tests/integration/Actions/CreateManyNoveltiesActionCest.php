@@ -1,6 +1,6 @@
 <?php
 
-namespace Novelties\Actions;
+namespace Kirby\Novelties\Tests\Actions;
 
 use Codeception\Example;
 use Kirby\Employees\Models\Employee;
@@ -9,7 +9,7 @@ use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Users\Models\User;
 use Mockery;
-use Novelties\IntegrationTester;
+use Kirby\Novelties\Tests\IntegrationTester;
 
 /**
  * Class CreateManyNoveltiesActionCest.
