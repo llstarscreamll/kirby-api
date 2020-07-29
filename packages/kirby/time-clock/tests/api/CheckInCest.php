@@ -61,24 +61,24 @@ class CheckInCest
         // novelty types
         factory(NoveltyType::class, 2)->create([
             'operator' => NoveltyTypeOperator::Subtraction,
-            'apply_on_days_of_type'=> null,
+            'apply_on_days_of_type' => null,
             'context_type' => 'elegible_by_user',
         ]);
 
         factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Addition,
-            'apply_on_days_of_type'=> null,
+            'apply_on_days_of_type' => null,
             'context_type' => 'elegible_by_user',
         ]);
 
         $this->subtractTimeNovelty = factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP',
-            'apply_on_days_of_type'=> null,
+            'apply_on_days_of_type' => null,
         ]);
 
         $this->additionalTimeNovelty = factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Addition, 'code' => 'HADI',
-            'apply_on_days_of_type'=> null,
+            'apply_on_days_of_type' => null,
         ]);
 
         $I->haveHttpHeader('Accept', 'application/json');
@@ -1071,7 +1071,6 @@ class CheckInCest
 
         // set setting to adjust scheduled novelties time
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
-        Setting::where(['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks'])->update(['value' => true]);
 
         Carbon::setTestNow(Carbon::create(2020, 05, 20, 16, 06, 00));
         $requestData = [
@@ -1161,6 +1160,7 @@ class CheckInCest
         // set setting to NOT require novelty type when check in is too late,
         // this make to set a default novelty type id for the late check in
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         // create scheduled novelty from 7am to 8am, since employee arrives at
         // 9am, he's 1 hour late to check in, so the default novelty type for
@@ -1210,7 +1210,6 @@ class CheckInCest
         // set setting to NOT require novelty type when check in is too late,
         // this make to set a default novelty type id for the late check in
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
-        Setting::where(['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks'])->update(['value' => true]);
 
         // create scheduled novelty from 7am to 8am, since employee arrives at
         // 9am, he's 1 hour late to check in, so the default novelty type for
@@ -1266,7 +1265,6 @@ class CheckInCest
         // set setting to NOT require novelty type when check in is too late,
         // this make to set a default novelty type id for the late check in
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
-        Setting::where(['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks'])->update(['value' => true]);
 
         // create scheduled novelty from 10am to 11am, since employee arrives at
         // 8am (too late), he's 1 hour late to check in, so the default novelty
@@ -1324,6 +1322,7 @@ class CheckInCest
         // set setting to NOT require novelty type when check in is too late,
         // this make to set a default novelty type id for the late check in
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         // create scheduled novelty from 5pm to 6pm, since employee arrives at
         // 7am, he's on time to check in, said novelty takes no effect for this
@@ -1515,7 +1514,7 @@ class CheckInCest
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 

@@ -19,10 +19,10 @@ trait CheckInOut
     /**
      * @return bool
      */
-    private function subtractNoveltyTypeIsRequired(): bool
+    private function noveltyTypeIsRequiredForNonPunctualChecks(): bool
     {
         $requiredNoveltySetting = $this->settingRepository
-            ->findByField('key', 'time-clock.require-subtract-novelty-type-on-checks')
+            ->findByField('key', 'time-clock.require-novelty-type-for-non-punctual-checks')
             ->first();
 
         $noveltyTypeIsRequired = optional($requiredNoveltySetting)->value;
@@ -36,7 +36,7 @@ trait CheckInOut
     private function adjustScheduledNoveltyTimesBasedOnChecks(): bool
     {
         $adjustNoveltySetting = $this->settingRepository
-            ->findByField('key', 'time-clock.adjust-scheduled-novelties-times-based-on-checks')
+            ->findByField('key', 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks')
             ->first();
 
         $noveltyTypeIsRequired = optional($adjustNoveltySetting)->value;
@@ -114,7 +114,7 @@ trait CheckInOut
 
         $isOnTime = $punctuality === 0;
         $noveltyTypes = new Collection([]);
-        $noveltyIsRequired = $this->subtractNoveltyTypeIsRequired();
+        $noveltyIsRequired = $this->noveltyTypeIsRequiredForNonPunctualChecks();
 
         if (! $isOnTime && $noveltyIsRequired) {
             if ($applicableWorkShifts->count() === 1) {

@@ -17,7 +17,7 @@ class Setting extends Model
      *
      * @var array
      */
-    protected $fillable = ['key', 'value'];
+    protected $fillable = ['data_type', 'key', 'name', 'description', 'value'];
 
     /**
      * The attributes that should be mutated to dates.

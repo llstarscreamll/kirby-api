@@ -115,7 +115,7 @@ class LogCheckOut
     public function run(User $registrar, string $identificationCode, ?int $subCostCenterId, ?int $noveltyTypeId, ?int $noveltySubCostCenterId): TimeClockLog
     {
         $noveltyType = null;
-        $noveltyTypeIsRequired = $this->subtractNoveltyTypeIsRequired();
+        $noveltyTypeIsRequired = $this->noveltyTypeIsRequiredForNonPunctualChecks();
 
         $identification = $this->identificationRepository
             ->findByField('code', $identificationCode, ['id', 'employee_id'])

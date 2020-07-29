@@ -303,6 +303,7 @@ class CheckOutCest
 
         // set setting to NOT require novelty type when check out is too early
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         $requestData = [
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
@@ -349,6 +350,7 @@ class CheckOutCest
 
         // set setting to NOT require novelty type when check out is too early
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         $requestData = [
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
@@ -768,6 +770,7 @@ class CheckOutCest
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
         // 4pm, he's too early to check out, so the default novelty type for
@@ -827,7 +830,6 @@ class CheckOutCest
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
-        Setting::where(['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks'])->update(['value' => true]);
 
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
         // 4pm, he's too early to check out
@@ -891,6 +893,7 @@ class CheckOutCest
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         // create scheduled novelty from 7am to 8am, since employee leaves at
         // 6pm, he's on time to check out, scheduled novelty has no effect in
@@ -957,6 +960,7 @@ class CheckOutCest
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
         $I->callArtisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         $requestData = [
             'sub_cost_center_id' => null, // without sub cost center!!
