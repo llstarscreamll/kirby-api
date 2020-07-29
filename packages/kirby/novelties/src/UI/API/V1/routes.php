@@ -7,6 +7,7 @@ use Kirby\Novelties\UI\API\V1\Controllers\DeleteNoveltiesApprovalsByEmployeeAndD
 use Kirby\Novelties\UI\API\V1\Controllers\EmployeeNoveltyTypesRecordsController;
 use Kirby\Novelties\UI\API\V1\Controllers\ExportNoveltiesController;
 use Kirby\Novelties\UI\API\V1\Controllers\NoveltiesController;
+use Kirby\Novelties\UI\API\V1\Controllers\NoveltiesSettingsController;
 use Kirby\Novelties\UI\API\V1\Controllers\NoveltyApprovalsController;
 use Kirby\Novelties\UI\API\V1\Controllers\NoveltyTypesController;
 
@@ -17,6 +18,7 @@ Route::prefix('api/v1')
         $route->post('novelties/approvals-by-employee-and-date-range', CreateNoveltiesApprovalsByEmployeeAndDateRangeController::class);
         $route->delete('novelties/approvals-by-employee-and-date-range', DeleteNoveltiesApprovalsByEmployeeAndDateRangeController::class);
         $route->get('novelties/resume-by-employee-and-novelty-types', EmployeeNoveltyTypesRecordsController::class);
+        $route->get('novelties/settings', NoveltiesSettingsController::class);
         $route->apiResource('novelties', NoveltiesController::class);
         $route->post('novelties/create-many', CreateManyNoveltiesController::class);
         $route->resource('novelties.approvals', NoveltyApprovalsController::class)->only(['store', 'destroy']);
