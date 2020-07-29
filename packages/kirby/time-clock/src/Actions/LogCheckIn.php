@@ -120,7 +120,7 @@ class LogCheckIn
         $subCostCenter = null;
         $checkInOffset = null;
         $scheduledNovelty = null;
-        $noveltyTypeIsRequired = $this->subtractNoveltyTypeIsRequired();
+        $noveltyTypeIsRequired = $this->noveltyTypeIsRequiredForNonPunctualChecks();
 
         $identification = $this->identificationRepository
             ->with(['employee.workShifts'])
