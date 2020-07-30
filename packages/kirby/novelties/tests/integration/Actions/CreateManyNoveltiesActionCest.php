@@ -82,7 +82,7 @@ class CreateManyNoveltiesActionCest
         $I->assertTrue($result);
 
         // novelties should be created successfully
-        $employees->each(function ($employee) use ($I, $data, $approvers) {
+        $employees->each(function ($employee) use ($I, $data) {
             foreach ($data['novelties'] as $novelty) {
                 $I->seeRecord('novelties', [
                     'employee_id' => $employee->id,
