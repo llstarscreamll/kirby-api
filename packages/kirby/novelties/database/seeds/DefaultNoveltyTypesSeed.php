@@ -132,6 +132,24 @@ class DefaultNoveltyTypesSeed extends Seeder
             'apply_on_time_slots' => null, // any time
             'operator' => NoveltyTypeOperator::Addition,
         ],
+        [
+            'code' => 'B+',
+            'name' => 'Balance Positivo',
+            'context_type' => null,
+            'time_zone' => 'America/Bogota',
+            'apply_on_days_of_type' => null, // any day
+            'apply_on_time_slots' => null, // any time
+            'operator' => NoveltyTypeOperator::Addition,
+        ],
+        [
+            'code' => 'B-',
+            'name' => 'Balance Negativo',
+            'context_type' => null,
+            'time_zone' => 'America/Bogota',
+            'apply_on_days_of_type' => null, // any day
+            'apply_on_time_slots' => null, // any time
+            'operator' => NoveltyTypeOperator::Subtraction,
+        ],
     ];
 
     /**
