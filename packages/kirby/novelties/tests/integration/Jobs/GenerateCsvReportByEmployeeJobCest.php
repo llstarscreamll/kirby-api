@@ -9,11 +9,11 @@ use Kirby\Novelties\Exports\NoveltiesExport;
 use Kirby\Novelties\Jobs\GenerateCsvReportByEmployeeJob;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Notifications\NoveltiesExportReady;
+use Kirby\Novelties\Tests\IntegrationTester;
 use Kirby\Users\Contracts\UserRepositoryInterface;
 use Kirby\Users\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 use Mockery;
-use Kirby\Novelties\Tests\IntegrationTester;
 
 /**
  * Class GenerateCsvReportByEmployeeJobCest.

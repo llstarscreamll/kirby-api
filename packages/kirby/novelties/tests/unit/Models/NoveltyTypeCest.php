@@ -7,8 +7,8 @@ use Codeception\Example;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Novelties\Enums\DayType;
 use Kirby\Novelties\Models\NoveltyType;
-use Mockery;
 use Kirby\Novelties\Tests\UnitTester;
+use Mockery;
 
 /**
  * Class NoveltyTypeCest.

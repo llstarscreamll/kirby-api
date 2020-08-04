@@ -4,8 +4,8 @@ namespace Kirby\Novelties\Tests\Listeners;
 
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Repositories\EloquentNoveltyRepository;
-use Mockery;
 use Kirby\Novelties\Tests\IntegrationTester;
+use Mockery;
 
 /**
  * Class EloquentNoveltyRepositoryCest.
