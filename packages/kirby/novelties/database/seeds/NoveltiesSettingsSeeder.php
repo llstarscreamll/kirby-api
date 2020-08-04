@@ -19,8 +19,8 @@ class NoveltiesSettingsSeeder extends Seeder
     public function run()
     {
         $settings = $this->settings();
-        array_walk($settings, fn($setting) => Setting::where('key', $setting['key'])
-                ->existsOr(fn() => Setting::create($setting))
+        array_walk($settings, fn ($setting) => Setting::where('key', $setting['key'])
+                ->existsOr(fn () => Setting::create($setting))
         );
     }
 
@@ -58,5 +58,6 @@ class NoveltiesSettingsSeeder extends Seeder
                 'data_type' => 'int',
                 'value' => NoveltyType::where('code', 'B-')->first()->id,
             ],
-        ];}
+        ];
+    }
 }

@@ -7,7 +7,7 @@ use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 
 /**
- * Class Novelties
+ * Class Novelties.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */

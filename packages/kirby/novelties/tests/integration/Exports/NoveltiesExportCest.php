@@ -5,8 +5,8 @@ namespace Kirby\Novelties\Tests\Exports;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Novelties\Exports\NoveltiesExport;
 use Kirby\Novelties\Models\Novelty;
-use Kirby\Users\Models\User;
 use Kirby\Novelties\Tests\IntegrationTester;
+use Kirby\Users\Models\User;
 
 /**
  * Class NoveltiesExportCest.

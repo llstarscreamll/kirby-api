@@ -3,9 +3,9 @@
 namespace Kirby\Novelties\Tests\Listeners;
 
 use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use Kirby\Novelties\Tests\IntegrationTester;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Mockery;
-use Kirby\Novelties\Tests\IntegrationTester;
 
 /**
  * Class RegisterTimeClockNoveltiesListenerCest.
