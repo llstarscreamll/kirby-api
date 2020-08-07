@@ -3,7 +3,6 @@
 namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Facades\Novelties;
 use Kirby\Novelties\UI\API\V1\Requests\CreateBalanceNoveltyRequest;
