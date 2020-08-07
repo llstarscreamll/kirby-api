@@ -49,7 +49,7 @@ class EmployeeNoveltyTypesRecordsController
 
         $paginatedEmployees = $this->employeeRepository
             ->pushCriteria(app(RequestCriteria::class))
-            ->paginate(min($request->limit, 100), ['id']);
+            ->paginate(min($request->limit, 100));
 
         $noveltiesGroupedByType = $this->noveltyTypeRepository
             ->with(['novelties' => fn ($query) => $query

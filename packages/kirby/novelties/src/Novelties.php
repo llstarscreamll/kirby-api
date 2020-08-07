@@ -37,4 +37,20 @@ class Novelties
             return $setting;
         });
     }
+
+    /**
+     * @return int
+     */
+    public function defaultSubTractNoveltyTypeId(): int
+    {
+        return $this->rawSettings()->firstWhere('key', 'novelties.default-subtraction-balance-novelty-type')->value;
+    }
+
+    /**
+     * @return int
+     */
+    public function defaultAdditionNoveltyTypeId(): int
+    {
+        return $this->rawSettings()->firstWhere('key', 'novelties.default-addition-balance-novelty-type')->value;
+    }
 }

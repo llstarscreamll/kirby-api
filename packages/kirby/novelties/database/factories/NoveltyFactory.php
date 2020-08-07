@@ -20,7 +20,7 @@ $factory->define(Novelty::class, function (Faker $faker) {
     return [
         'time_clock_log_id' => null,
         'employee_id' => fn () => factory(Employee::class)->create()->id,
-        'novelty_type_id' => fn () => factory(NoveltyType::class)->create()->id,
+        'novelty_type_id' => $faker->randomElement(NoveltyType::pluck('id')->all()),
         'sub_cost_center_id' => null,
         'start_at' => null,
         'end_at' => null,
