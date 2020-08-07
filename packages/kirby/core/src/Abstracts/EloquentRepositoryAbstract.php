@@ -146,7 +146,7 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
         $limit = $limit ?: Request::get('limit');
         $maxPaginationLimit = Config::get('repository.pagination.maxLimit');
 
-        // check, if skipping pagination is allowed and the requested by the user
+        // check, if skipping pagination is allowed and requested by the user
         if (Config::get('repository.pagination.skip') && $limit == '0') {
             return parent::all($columns);
         }
