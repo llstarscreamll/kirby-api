@@ -44,8 +44,8 @@ class EmployeeNoveltyTypesRecordsController
      */
     public function __invoke(NoveltyTypesResumeByEmployeeRequest $request)
     {
-        $startDate = Carbon::parse($request->start_date)->startOfDay();
-        $endDate = Carbon::parse($request->end_date)->endOfDay();
+        $startDate = Carbon::parse($request->start_date);
+        $endDate = Carbon::parse($request->end_date);
 
         $paginatedEmployees = $this->employeeRepository
             ->pushCriteria(app(RequestCriteria::class))

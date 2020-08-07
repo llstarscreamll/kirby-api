@@ -38,11 +38,11 @@ class CreateBalanceNoveltyCest
      * @test
      * @param ApiTester $I
      */
-    public function createAdditionBalanceNoveltySuccessfully(ApiTester $I)
+    public function shouldCreateAdditionBalanceNoveltySuccessfully(ApiTester $I)
     {
         $payload = [
             'employee_id' => ($employee = factory(Employee::class)->create())->id,
-            'start_date' => '2020-01-01',
+            'start_date' => '2020-01-01T05:00:00.000Z',
             'time' => '-5', // negative time should write addition novelty
             'comment' => 'test comment',
         ];
@@ -53,8 +53,8 @@ class CreateBalanceNoveltyCest
         $I->seeRecord('novelties', [
             'employee_id' => $employee->id,
             'novelty_type_id' => NoveltyType::whereCode('B+')->first()->id, // default novelty for addition
-            'start_at' => '2020-01-01 00:00:00',
-            'end_at' => '2020-01-01 05:00:00', // 5 hours
+            'start_at' => '2020-01-01 05:00:00',
+            'end_at' => '2020-01-01 10:00:00', // 5 hours
             'comment' => 'test comment',
         ]);
     }
@@ -63,11 +63,11 @@ class CreateBalanceNoveltyCest
      * @test
      * @param ApiTester $I
      */
-    public function createSubtractBalanceNoveltySuccessfully(ApiTester $I)
+    public function shouldCreateSubtractBalanceNoveltySuccessfully(ApiTester $I)
     {
         $payload = [
             'employee_id' => ($employee = factory(Employee::class)->create())->id,
-            'start_date' => '2020-01-01',
+            'start_date' => now()->setTimezone('America/Bogota')->setDateTime(2020, 01, 01, 00, 00, 00)->toISOString(),
             'time' => '5', // positive time should write subtract novelty
             'comment' => 'test comment',
         ];
@@ -78,8 +78,8 @@ class CreateBalanceNoveltyCest
         $I->seeRecord('novelties', [
             'employee_id' => $employee->id,
             'novelty_type_id' => NoveltyType::whereCode('B-')->first()->id, // default novelty for subtract
-            'start_at' => '2020-01-01 00:00:00',
-            'end_at' => '2020-01-01 05:00:00', // 5 hours
+            'start_at' => '2020-01-01 05:00:00',
+            'end_at' => '2020-01-01 10:00:00', // 5 hours
             'comment' => 'test comment',
         ]);
     }

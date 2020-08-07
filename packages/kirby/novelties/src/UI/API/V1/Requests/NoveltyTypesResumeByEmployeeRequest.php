@@ -3,6 +3,7 @@
 namespace Kirby\Novelties\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Kirby\Core\Rules\IsoDateTimeRule;
 
 /**
  * Class NoveltyTypesResumeByEmployeeRequest.
@@ -29,8 +30,8 @@ class NoveltyTypesResumeByEmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            'start_date' => ['required', 'date_format:Y-m-d'],
-            'end_date' => ['required', 'date_format:Y-m-d', 'after:start_date'],
+            'start_date' => ['required', new IsoDateTimeRule()],
+            'end_date' => ['required', new IsoDateTimeRule(), 'after:start_date'],
         ];
     }
 }
