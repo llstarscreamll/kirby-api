@@ -3,6 +3,7 @@
 namespace Kirby\Novelties\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Kirby\Core\Rules\IsoDateTimeRule;
 
 /**
  * Class CreateBalanceNoveltyRequest.
@@ -31,7 +32,7 @@ class CreateBalanceNoveltyRequest extends FormRequest
         return [
             'employee_id' => ['required', 'numeric', 'exists:employees,id'],
             'time' => ['required', 'numeric'],
-            'start_date' => ['required', 'date_format:Y-m-d'],
+            'start_date' => ['required', new IsoDateTimeRule()],
             'comment' => ['required', 'string', 'max:255'],
         ];
     }

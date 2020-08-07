@@ -73,8 +73,8 @@ class GetNoveltiesGroupedByNoveltyTypeCest
         DB::table('novelty_types')->whereIn('code', ['PP', 'CM', 'HN'])->update(['keep_in_report' => 1]);
 
         $I->sendGET($this->endpoint, [
-            'start_date' => now()->startOfMonth()->toDateString(),
-            'end_date' => now()->endOfMonth()->toDateString(),
+            'start_date' => now()->startOfMonth()->toIsoString(),
+            'end_date' => now()->endOfMonth()->toIsoString(),
         ]);
 
         // first employee data
