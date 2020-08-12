@@ -1,5 +1,16 @@
 # Release notes
 
+## [v0.3 (2020-08-11)](https://github.com/llstarscreamll/kirby-api/compare/v0.2.2..v0.3)
+
+### Added
+
+-   hide sql errors from api responses and return generic 500 server error message
+-   novelties: new endpoint to create balance novelty
+-   novelties: add default novelty types B+ and B- for novelties balance purposes
+-   novelties: new endpoint to get novelties settings
+-   novelties: new novelties resume by novelty type endpoint
+-   time-clock: update settings entity and time clock package settings keys names
+
 ## [v0.2.2 (2020-07-06)](https://github.com/llstarscreamll/kirby-api/compare/v0.2.1..v0.2.2)
 
 ### Fixed
