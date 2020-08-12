@@ -4,6 +4,7 @@ namespace Kirby\Employees\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Kirby\Company\UI\API\V1\Resources\CostCenterResource;
+use Kirby\Novelties\UI\API\V1\Resources\NoveltyTypeResource;
 use Kirby\WorkShifts\UI\API\V1\Resources\WorkShiftResource;
 
 /**
@@ -37,9 +38,10 @@ class EmployeeResource extends JsonResource
             'cost_center' => new CostCenterResource($this->whenLoaded('costCenter')),
             'work_shifts' => WorkShiftResource::collection($this->whenLoaded('workShifts')),
             'identifications' => IdentificationResource::collection($this->whenLoaded('identifications')),
-            'created_at' => optional($this->created_at)->toIsoString(),
-            'updated_at' => optional($this->updated_at)->toIsoString(),
-            'deleted_at' => optional($this->updated_at)->toIsoString(),
+            'novelty_types' => NoveltyTypeResource::collection($this->whenLoaded('noveltyTypes')),
+            'created_at' => optional($this->created_at)->toIso8601String(),
+            'updated_at' => optional($this->updated_at)->toIso8601String(),
+            'deleted_at' => optional($this->updated_at)->toIso8601String(),
         ];
     }
 }

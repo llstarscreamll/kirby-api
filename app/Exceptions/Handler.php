@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use PDOException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,6 +51,10 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof ValidationException && $request->expectsJson()) {
             return response()->json(['message' => trans('validation.validation_error'), 'errors' => $exception->validator->getMessageBag()], 422);
+        }
+
+        if ($exception instanceof PDOException && $request->expectsJson()) {
+            return response()->json(['message' => 'Server error.'], 500);
         }
 
         return parent::render($request, $exception);

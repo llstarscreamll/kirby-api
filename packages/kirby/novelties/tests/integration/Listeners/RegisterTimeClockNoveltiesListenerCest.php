@@ -1,11 +1,11 @@
 <?php
 
-namespace Novelties\Listeners;
+namespace Kirby\Novelties\Tests\Listeners;
 
 use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
+use Kirby\Novelties\Tests\IntegrationTester;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Mockery;
-use Novelties\IntegrationTester;
 
 /**
  * Class RegisterTimeClockNoveltiesListenerCest.

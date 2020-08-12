@@ -1,6 +1,6 @@
 <?php
 
-namespace Novelties;
+namespace Kirby\Novelties\Tests;
 
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;

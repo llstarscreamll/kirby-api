@@ -15,8 +15,18 @@ class TimeClockSettingsSeeder extends Seeder
      * @var array
      */
     private $settings = [
-        ['key' => 'time-clock.require-subtract-novelty-type-on-checks', 'value' => false],
-        ['key' => 'time-clock.adjust-scheduled-novelties-times-based-on-checks', 'value' => false],
+        [
+            'key' => 'time-clock.require-novelty-type-for-non-punctual-checks',
+            'name' => 'Require novelty type for non punctual checks',
+            'description' => 'If true, then novelty type is required for non punctual checkin or checkout',
+            'value' => false,
+        ],
+        [
+            'key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks',
+            'name' => 'Adjust scheduled novelties datetime based on checks',
+            'description' => 'If true, then scheduled novelties start/end datetime are adjusted relative to check in/out datetime',
+            'value' => true,
+        ],
     ];
 
     /**

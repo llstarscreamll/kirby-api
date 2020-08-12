@@ -19,6 +19,8 @@ class NoveltyTypeResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($this);
+        return [
+            'novelties' => NoveltyResource::collection($this->whenLoaded('novelties')),
+        ] + parent::toArray($this);
     }
 }

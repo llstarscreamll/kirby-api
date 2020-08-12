@@ -1,11 +1,11 @@
 <?php
 
-namespace Novelties\Listeners;
+namespace Kirby\Novelties\Tests\Listeners;
 
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Repositories\EloquentNoveltyRepository;
+use Kirby\Novelties\Tests\IntegrationTester;
 use Mockery;
-use Novelties\IntegrationTester;
 
 /**
  * Class EloquentNoveltyRepositoryCest.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Novelties;
+namespace Kirby\Novelties\Tests;
 
 use Illuminate\Support\Facades\Queue;
 use Kirby\Employees\Models\Employee;

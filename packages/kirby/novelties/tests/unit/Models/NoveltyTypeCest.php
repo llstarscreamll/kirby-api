@@ -1,14 +1,14 @@
 <?php
 
-namespace Novelties\Models;
+namespace Kirby\Novelties\Tests\Models;
 
 use Carbon\Carbon;
 use Codeception\Example;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
 use Kirby\Novelties\Enums\DayType;
 use Kirby\Novelties\Models\NoveltyType;
+use Kirby\Novelties\Tests\UnitTester;
 use Mockery;
-use Novelties\UnitTester;
 
 /**
  * Class NoveltyTypeCest.

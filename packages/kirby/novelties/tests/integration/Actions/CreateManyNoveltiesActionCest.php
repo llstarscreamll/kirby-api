@@ -1,15 +1,15 @@
 <?php
 
-namespace Novelties\Actions;
+namespace Kirby\Novelties\Tests\Actions;
 
 use Codeception\Example;
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Actions\CreateManyNoveltiesAction;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\Models\NoveltyType;
+use Kirby\Novelties\Tests\IntegrationTester;
 use Kirby\Users\Models\User;
 use Mockery;
-use Novelties\IntegrationTester;
 
 /**
  * Class CreateManyNoveltiesActionCest.
@@ -82,7 +82,7 @@ class CreateManyNoveltiesActionCest
         $I->assertTrue($result);
 
         // novelties should be created successfully
-        $employees->each(function ($employee) use ($I, $data, $approvers) {
+        $employees->each(function ($employee) use ($I, $data) {
             foreach ($data['novelties'] as $novelty) {
                 $I->seeRecord('novelties', [
                     'employee_id' => $employee->id,

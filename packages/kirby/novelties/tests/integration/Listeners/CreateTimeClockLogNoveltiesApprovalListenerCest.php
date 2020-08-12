@@ -1,12 +1,12 @@
 <?php
 
-namespace Novelties\Listeners;
+namespace Kirby\Novelties\Tests\Listeners;
 
 use Illuminate\Support\Collection;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
+use Kirby\Novelties\Tests\IntegrationTester;
 use Kirby\TimeClock\Events\TimeClockLogApprovalCreatedEvent;
 use Mockery;
-use Novelties\IntegrationTester;
 
 /**
  * Class CreateTimeClockLogNoveltiesApprovalListenerCest.

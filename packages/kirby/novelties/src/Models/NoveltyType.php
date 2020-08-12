@@ -69,6 +69,18 @@ class NoveltyType extends Model
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
     // ######################################################################## #
+    // Relations
+    // ######################################################################## #
+
+    /**
+     * Novelties relationship.
+     */
+    public function novelties()
+    {
+        return $this->hasMany(Novelty::class);
+    }
+
+    // ######################################################################## #
     // Methods
     // ######################################################################## #
 
