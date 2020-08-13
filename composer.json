@@ -40,7 +40,6 @@
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
         "blastcloud/guzzler": "^1.5",
-        "codeception/codeception": "^3",
         "filp/whoops": "^2.0",
         "flow/jsonpath": "0.3.0",
         "fzaninotto/faker": "^1.4",
