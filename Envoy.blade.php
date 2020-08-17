@@ -23,6 +23,7 @@ return "echo '\033[32m" .$message. "\033[0m';\n";
 @story('deploy')
 startDeployment
 cloneRepository
+setPermissions
 runComposer
 updateSymlinks
 optimizeInstallation
@@ -41,8 +42,6 @@ setPermissions
 
 @task('startDeployment', ['on' => 'local'])
 {{ logMessage("🏃  Starting deployment...") }}
-git checkout {{ $branch }}
-git pull origin {{ $branch }}
 @endtask
 
 @task('cloneRepository', ['on' => 'remote'])
@@ -74,7 +73,7 @@ echo "{{ $newReleaseName }}" > public/release-name.txt
 {{ logMessage("🚚  Running Composer...") }}
 cd {{ $newReleaseDir }};
 COMPOSER=$(which composer)
-php7.4 $COMPOSER install --prefer-dist --no-scripts -a -q -o
+php7.4 $COMPOSER --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile install
 @endtask
 
 @task('runYarn', ['on' => 'local'])
@@ -131,7 +130,6 @@ sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 {{ logMessage("🙏  Blessing new release...") }}
 ln -nfs {{ $newReleaseDir }} {{ $currentDir }};
 cd {{ $newReleaseDir }}
-php7.4 artisan db:seed --class=NoveltiesPermissionsSeeder --force
 php7.4 artisan authorization:refresh-admin-permissions
 php7.4 artisan optimize
 php7.4 artisan storage:link
@@ -156,8 +154,10 @@ ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 @task('deployOnlyCode',['on' => 'remote'])
 {{ logMessage("💻  Deploying code changes form $branch to $currentDir") }}
 cd {{ $currentDir }}
+git checkout $branch
+git pull origin $branch
 COMPOSER=$(which composer)
-php7.4 $COMPOSER install -q
+php7.4 $COMPOSER --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile install
 php7.4 artisan optimize
 php7.4 artisan storage:link
 php7.4 artisan queue:restart
