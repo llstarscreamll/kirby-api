@@ -1,9 +1,0 @@
-actor: UnitTester
-modules:
-    enabled:
-        - \WorkShifts\Helper\Unit
-        - Asserts
-        - Laravel5:
-            root: ../../../
-            environment_file: .env.testing
-            run_database_migrations: true

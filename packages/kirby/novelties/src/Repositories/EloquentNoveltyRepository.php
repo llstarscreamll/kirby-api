@@ -62,7 +62,8 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
         $this->model = $this->model
             ->join('novelty_types', 'novelty_types.id', 'novelties.novelty_type_id')
             ->where('employee_id', $employeeId)
-            ->where(fn ($q) => $q
+            ->where(
+                fn ($q) => $q
                     ->where('novelty_types.context_type', '!=', 'normal_work_shift_time')
                     ->orWhereNull('novelty_types.context_type')
             )

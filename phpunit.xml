@@ -11,15 +11,22 @@
     <testsuites>
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit</directory>
+            <directory suffix="Test.php">./packages/kirby/**/tests/unit</directory>
+        </testsuite>
+
+        <testsuite name="Integration">
+            <directory suffix="Test.php">./packages/kirby/**/tests/integration</directory>
         </testsuite>
 
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
+            <directory suffix="Test.php">./packages/kirby/**/tests/api</directory>
         </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
+            <directory suffix=".php">./packages/kirby/**/src</directory>
         </whitelist>
     </filter>
     <php>

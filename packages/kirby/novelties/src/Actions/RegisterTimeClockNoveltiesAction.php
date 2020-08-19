@@ -202,7 +202,8 @@ class RegisterTimeClockNoveltiesAction
 
         // novelty type selected in late checkin
         if ($timeClockLog->lateCheckIn() && $noveltySelectedInCheckIn) {
-            $result = new PeriodCollection(...collect([...$noveltyTypePeriods])
+            $result = new PeriodCollection(
+                ...collect([...$noveltyTypePeriods])
                     ->map(fn (Period $n) => [...$n->diff($logPeriod)])
                     ->collapse()
             );
@@ -210,7 +211,8 @@ class RegisterTimeClockNoveltiesAction
 
         // novelty selected in early checkout
         if ($timeClockLog->earlyCheckout() && $noveltySelectedInCheckOut) {
-            $result = new PeriodCollection(...collect([...$noveltyTypePeriods])
+            $result = new PeriodCollection(
+                ...collect([...$noveltyTypePeriods])
                     ->map(fn (Period $noveltyPeriod) => [...$noveltyPeriod->diff($logPeriod)])
                     ->collapse()
             );
@@ -303,7 +305,8 @@ class RegisterTimeClockNoveltiesAction
         if ($takenOverlaps->count()) {
             $takenOverlapsPeriods = new PeriodCollection(...$takenOverlaps);
 
-            return new PeriodCollection(...collect([...$noveltyTypePeriods->filter(fn (Period $np) => $np->overlap(...$takenOverlapsPeriods))])
+            return new PeriodCollection(
+                ...collect([...$noveltyTypePeriods->filter(fn (Period $np) => $np->overlap(...$takenOverlapsPeriods))])
                     ->map(fn (Period $np) => [...$np->diff(...$takenOverlapsPeriods)])
                     ->collapse()
             );
@@ -397,7 +400,8 @@ class RegisterTimeClockNoveltiesAction
         // dd(
         $noveltyTypePeriods =
         collect([...$basePeriodForNovelty])
-            ->map(fn (array $base) => $noveltyType
+            ->map(
+                fn (array $base) => $noveltyType
                     ->applicablePeriods(Carbon::instance($base[0]), Carbon::instance($base[1]))
                     ->map(fn ($i) => array_filter($i))
                     ->filter()
@@ -574,7 +578,8 @@ class RegisterTimeClockNoveltiesAction
         $comparisonFlag = $flag === 'start' ? 'end_at' : 'start_at';
 
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
-            ->filter(fn (Novelty $novelty) => ! $novelty->hasTimeClockLog() ||
+            ->filter(
+                fn (Novelty $novelty) => ! $novelty->hasTimeClockLog() ||
                 $novelty->end_at->between($timeClockLog->checked_in_at->copy()->subMinutes(30), $timeClockLog->checked_out_at->copy()->addMinutes(30))
                 //$novelty->hasTimeClockLogCheckInBetween($timeClockLog->checked_in_at, $timeClockLog->checked_out_at)
             );

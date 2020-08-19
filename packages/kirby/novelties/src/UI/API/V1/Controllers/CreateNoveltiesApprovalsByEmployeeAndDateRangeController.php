@@ -29,7 +29,8 @@ class CreateNoveltiesApprovalsByEmployeeAndDateRangeController
 
             $novelties = $noveltyRepository->forEmployeeAndStartDateRange($employeeId, $startDate, $endDate)->get();
 
-            $novelties->each(fn ($novelty) => $noveltyRepository
+            $novelties->each(
+                fn ($novelty) => $noveltyRepository
                     ->sync($novelty->id, 'approvals', $request->user()->id, $detachOthers = false)
             );
         } catch (\Throwable $th) {

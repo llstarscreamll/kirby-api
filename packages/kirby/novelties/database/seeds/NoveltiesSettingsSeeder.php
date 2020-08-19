@@ -19,7 +19,9 @@ class NoveltiesSettingsSeeder extends Seeder
     public function run()
     {
         $settings = $this->settings();
-        array_walk($settings, fn ($setting) => Setting::where('key', $setting['key'])
+        array_walk(
+            $settings,
+            fn ($setting) => Setting::where('key', $setting['key'])
                 ->existsOr(fn () => Setting::create($setting))
         );
     }
@@ -35,28 +37,28 @@ class NoveltiesSettingsSeeder extends Seeder
                 'name' => 'Default addition novelty type',
                 'description' => 'Default novelty type for addition operations',
                 'data_type' => 'int',
-                'value' => NoveltyType::where('code', 'HADI')->first()->id,
+                'value' => (string) NoveltyType::where('code', 'HADI')->first()->id,
             ],
             [
                 'key' => 'novelties.default-subtraction-novelty-type',
                 'name' => 'Default subtraction novelty type',
                 'description' => 'Default novelty type for subtraction operations',
                 'data_type' => 'int',
-                'value' => NoveltyType::where('code', 'PP')->first()->id,
+                'value' => (string) NoveltyType::where('code', 'PP')->first()->id,
             ],
             [
                 'key' => 'novelties.default-addition-balance-novelty-type',
                 'name' => 'Default addition balance novelty type ',
                 'description' => 'Default novelty type for addition balance',
                 'data_type' => 'int',
-                'value' => NoveltyType::where('code', 'B+')->first()->id,
+                'value' => (string) NoveltyType::where('code', 'B+')->first()->id,
             ],
             [
                 'key' => 'novelties.default-subtraction-balance-novelty-type',
                 'name' => 'Default subtraction balance novelty type',
                 'description' => 'Default novelty type for subtraction balance',
                 'data_type' => 'int',
-                'value' => NoveltyType::where('code', 'B-')->first()->id,
+                'value' => (string) NoveltyType::where('code', 'B-')->first()->id,
             ],
         ];
     }

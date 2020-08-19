@@ -17,7 +17,7 @@ install:
   - php artisan passport:keys
 
 script:
-  - php vendor/bin/codecept run --coverage-xml --fail-fast
+  - php vendor/bin/phpunit --coverage-xml --stop-on-error --stop-on-failure
 
 after_success:
-    - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash)

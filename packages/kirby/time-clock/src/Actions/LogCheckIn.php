@@ -154,7 +154,10 @@ class LogCheckIn
             // can't be discovered
             $scheduledNovelty = $this->noveltyRepository
                 ->whereScheduledForEmployee(
-                    $identification->employee_id, 'end_at', $expectedStart, now()->addMinutes(30)
+                    $identification->employee_id,
+                    'end_at',
+                    $expectedStart,
+                    now()->addMinutes(30)
                 )
                 ->orderBy('id', 'DESC')
                 ->first(['novelties.*']);
