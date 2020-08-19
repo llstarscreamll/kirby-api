@@ -2,8 +2,11 @@
 
 [![Build Status](https://travis-ci.com/llstarscreamll/kirby-api.svg?branch=master)](https://travis-ci.com/llstarscreamll/kirby-api)
 [![StyleCI](https://github.styleci.io/repos/171598863/shield?branch=master)](https://github.styleci.io/repos/171598863)
-[![codecov](https://codecov.io/gh/llstarscreamll/laravel/branch/master/graph/badge.svg)](https://codecov.io/gh/llstarscreamll/laravel)
+[![codecov](https://codecov.io/gh/llstarscreamll/kirby-api/branch/master/graph/badge.svg)](https://codecov.io/gh/llstarscreamll/laravel)
 ![GitHub](https://img.shields.io/github/license/llstarscreamll/kirby-api?logo=github)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/llstarscreamll/kirby-api/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/llstarscreamll/kirby-api/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/llstarscreamll/kirby-api/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/llstarscreamll/kirby-api/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/llstarscreamll/kirby-api/badges/build.png?b=master)](https://scrutinizer-ci.com/g/llstarscreamll/kirby-api/build-status/master)
 
 This project aims to be as a base for reutilizable Laravel packages used for multipurpose stuff. The laravel libraries are located on the `packages` folder under de **Kirby** vendor name. Here are some things this package currently does:
 
