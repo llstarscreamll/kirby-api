@@ -1,10 +1,8 @@
 build:
   environment:
     php: "7.4"
+    compile_options: "--enable-gd"
     node: "v12.9.1"
-  dependencies:
-    before:
-      - sudo apt install php-gd
   cache:
     directories:
       - vendor/
