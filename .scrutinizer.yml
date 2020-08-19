@@ -7,7 +7,7 @@ build:
   project_setup:
     override:
       - composer install
-      - php artisan passport:install
+      - php artisan passport:keys
   cache:
     directories:
       - vendor/
