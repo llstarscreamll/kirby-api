@@ -16,7 +16,6 @@
     "require": {
         "php": "^7.4",
         "barryvdh/laravel-cors": "^0.11.2",
-        "codeception/codeception": " 3.*",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "kirby/authentication": "*",
@@ -42,7 +41,6 @@
         "beyondcode/laravel-dump-server": "^1.0",
         "blastcloud/guzzler": "^1.5",
         "filp/whoops": "^2.0",
-        "flow/jsonpath": "0.3.0",
         "fzaninotto/faker": "^1.4",
         "jeroen-g/laravel-packager": "^2.1",
         "makeabledk/laravel-factory-enhanced": "^1.2",
