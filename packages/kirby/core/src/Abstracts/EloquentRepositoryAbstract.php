@@ -10,6 +10,8 @@ use Prettus\Repository\Eloquent\BaseRepository;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
+use function Matrix\trace;
+
 /**
  * Class EloquentRepositoryAbstract.
  *
