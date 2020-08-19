@@ -4,10 +4,6 @@ build:
       version: "7.4"
       compile_options: "--enable-gd --enable-cli --with-xsl --with-sodium --with-openssl --enable-bcmath --enable-mbstring --with-imap-ssl --enable-pcntl --with-zlib"
     node: "v12.9.1"
-  dependencies:
-    override:
-      - pecl install zip
-      - pecl install phar
   project_setup:
     override:
       - composer install
