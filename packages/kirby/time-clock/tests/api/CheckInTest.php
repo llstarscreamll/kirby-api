@@ -1,6 +1,6 @@
 <?php
 
-namespace ClockTime;
+namespace Kirby\TimeClock\Tests\api;
 
 use DefaultNoveltyTypesSeed;
 use Illuminate\Support\Carbon;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Company;
+namespace Kirby\Company\Tests\api;
 
 use Kirby\Company\Models\SubCostCenter;
 use Symfony\Component\HttpFoundation\Response;

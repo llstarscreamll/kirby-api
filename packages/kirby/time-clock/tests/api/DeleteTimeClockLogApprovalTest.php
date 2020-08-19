@@ -1,6 +1,6 @@
 <?php
 
-namespace ClockTime;
+namespace Kirby\TimeClock\Tests\api;
 
 use Illuminate\Support\Facades\Artisan;
 use Kirby\TimeClock\Events\TimeClockLogApprovalDeletedEvent;

@@ -1,6 +1,6 @@
 <?php
 
-namespace WorkShifts;
+namespace Kirby\WorkShifts\Tests\api;
 
 /**
  * Class SearchWorkShiftsTest.

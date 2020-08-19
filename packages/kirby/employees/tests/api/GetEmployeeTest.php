@@ -1,6 +1,6 @@
 <?php
 
-namespace Employees;
+namespace Kirby\Employees\Tests\api;
 
 use EmployeesPackageSeed;
 use Kirby\Employees\Models\Employee;
