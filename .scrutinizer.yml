@@ -4,7 +4,7 @@ build:
     node: "v12.9.1"
   dependencies:
     before:
-      - pecl install gd
+      - sudo apt install php-gd
   cache:
     directories:
       - vendor/
