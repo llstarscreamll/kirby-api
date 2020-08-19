@@ -2,10 +2,8 @@
 
 namespace Kirby\Novelties\Tests\api\Novelties;
 
-use NoveltiesPackageSeed;
-use NoveltiesPermissionsSeeder;
 use Kirby\Novelties\Models\Novelty;
-use Illuminate\Support\Facades\Artisan;
+use NoveltiesPackageSeed;
 
 /**
  * Class DeleteNoveltyTest.
@@ -29,7 +27,6 @@ class DeleteNoveltyTest extends \Tests\TestCase
      */
     private $novelty;
 
-    
     public function setUp(): void
     {
         parent::setUp();
@@ -42,7 +39,6 @@ class DeleteNoveltyTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function shouldDeleteNoveltySuccessfully()
     {
@@ -61,7 +57,6 @@ class DeleteNoveltyTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
@@ -79,7 +74,6 @@ class DeleteNoveltyTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function shouldReturnNotFoundIfNoveltyDoesntExists()
     {

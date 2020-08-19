@@ -2,12 +2,12 @@
 
 namespace Kirby\Novelties\Tests\api\Novelties;
 
-use NoveltiesPackageSeed;
-use Kirby\Novelties\Models\Novelty;
-use Kirby\Employees\Models\Employee;
 use Kirby\Company\Models\SubCostCenter;
+use Kirby\Employees\Models\Employee;
+use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Models\TimeClockLog;
+use NoveltiesPackageSeed;
 
 /**
  * Class SearchNoveltiesTest.

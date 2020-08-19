@@ -2,8 +2,8 @@
 
 namespace Kirby\Novelties\Tests\api\Novelties;
 
-use NoveltiesPackageSeed;
 use Kirby\Novelties\Novelties;
+use NoveltiesPackageSeed;
 
 /**
  * Class GetSettingsTest.

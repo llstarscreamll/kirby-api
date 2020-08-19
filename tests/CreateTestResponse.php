@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use Tests\TestResponse;
-
 trait CreateTestResponse
 {
     /**

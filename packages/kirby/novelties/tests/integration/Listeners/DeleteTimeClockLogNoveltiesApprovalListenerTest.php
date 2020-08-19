@@ -4,7 +4,6 @@ namespace Kirby\Novelties\Tests\Listeners;
 
 use Illuminate\Support\Collection;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\Tests\IntegrationTester;
 use Kirby\TimeClock\Events\TimeClockLogApprovalDeletedEvent;
 use Mockery;
 
@@ -15,15 +14,8 @@ use Mockery;
  */
 class DeleteTimeClockLogNoveltiesApprovalListenerTest extends \Tests\TestCase
 {
-    
-    
-
-    
-    
-
     /**
      * @test
-
      */
     public function shouldBeCalledOnEventDispatchAndInvokeRunMethodOnActionClass()
     {
