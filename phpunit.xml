@@ -27,6 +27,11 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
             <directory suffix=".php">./packages/kirby/**/src</directory>
+            <exclude>
+                <directory>./routes</directory>
+                <file>./packages/kirby/**/src/UI/API/**/routes.php</file>
+                <file>./packages/kirby/**/src/UI/WEB/**/routes.php</file>
+            </exclude>
         </whitelist>
     </filter>
     <php>
@@ -36,5 +41,6 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="MAIL_DRIVER" value="array"/>
+        <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
 </phpunit>

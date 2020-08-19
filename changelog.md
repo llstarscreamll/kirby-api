@@ -1,5 +1,11 @@
 # Release notes
 
+## [v1.0.1 (2020-08-18)](https://github.com/llstarscreamll/kirby-api/compare/v1.0.0..v1.0.1)
+
+### Fixed
+
+-   CI error with missing class and miss phpunit config  
+
 ## [v1.0.0 (2020-08-18)](https://github.com/llstarscreamll/kirby-api/compare/v0.3..v1.0.0)
 
 ### Changed
