@@ -1,9 +1,6 @@
 build:
   environment:
     php: "7.4"
-    pecl_extensions:
-      - redis
-      - gd
     node: "v12.9.1"
   cache:
     directories:
@@ -11,6 +8,7 @@ build:
       - ~/.composer/cache/
   tests:
     before:
+      - pecl install gd
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
     override:
