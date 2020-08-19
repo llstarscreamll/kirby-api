@@ -2,13 +2,15 @@ build:
   environment:
     php: "7.4"
     node: "v12.9.1"
+  dependencies:
+    before:
+      - pecl install gd
   cache:
     directories:
       - vendor/
       - ~/.composer/cache/
   tests:
     before:
-      - pecl install gd
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
     override:
