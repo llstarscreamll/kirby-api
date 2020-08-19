@@ -21,7 +21,6 @@ class DeleteWorkShiftByIdTest extends \Tests\TestCase
      */
     private $workShift;
 
-    
     public function setUp(): void
     {
         parent::setUp();
@@ -46,7 +45,6 @@ class DeleteWorkShiftByIdTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function whenIdExistsExpectNoContentAndResourceToBeDeleted()
     {
@@ -57,7 +55,6 @@ class DeleteWorkShiftByIdTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function whenIdDoesNotExistsExpectNotFound()
     {

@@ -5,7 +5,6 @@ namespace Kirby\Novelties\Tests\api\Novelties;
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Models\Novelty;
 use NoveltiesPackageSeed;
-use NoveltiesPermissionsSeeder;
 
 /**
  * Class CreateNoveltiesApprovalsByEmployeeAndDateRangeTest.
