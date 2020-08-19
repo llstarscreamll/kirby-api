@@ -1,5 +1,15 @@
 # Release notes
 
+## [v1.0.0 (2020-08-18)](https://github.com/llstarscreamll/kirby-api/compare/v0.3..v1.0.0)
+
+### Changed
+
+-   change test framework from Codeception to PHPUnit
+
+### Fixed
+
+-   fix error seeding default settings
+
 ## [v0.3 (2020-08-11)](https://github.com/llstarscreamll/kirby-api/compare/v0.2.2..v0.3)
 
 ### Added
