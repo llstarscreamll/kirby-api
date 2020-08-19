@@ -1,6 +1,7 @@
 build:
   environment:
     php: "7.4"
+    node: "v12.9.1"
   cache:
     directories:
       - vendor/
