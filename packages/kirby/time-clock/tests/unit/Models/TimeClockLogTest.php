@@ -1,6 +1,6 @@
 <?php
 
-namespace ClockTime;
+namespace Kirby\TimeClock\Tests\unit\Models;
 
 use Carbon\Carbon;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;

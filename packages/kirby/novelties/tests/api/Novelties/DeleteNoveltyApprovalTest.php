@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Novelties\Tests;
+namespace Kirby\Novelties\Tests\api\Novelties;
 
 use Kirby\Novelties\Models\Novelty;
 use NoveltiesPackageSeed;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Novelties\Tests;
+namespace Kirby\Novelties\Tests\api\NoveltyTypes;
 
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;

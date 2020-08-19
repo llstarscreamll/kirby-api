@@ -1,6 +1,6 @@
 <?php
 
-namespace Company\Services;
+namespace Kirby\Company\Tests\unit\Services;
 
 use BlastCloud\Guzzler\UsesGuzzler;
 use GuzzleHttp\Exception\RequestException;

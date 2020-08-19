@@ -1,6 +1,6 @@
 <?php
 
-namespace Company\UI\CLI;
+namespace Kirby\Company\Tests\integration\UI\CLI;
 
 use Kirby\Company\Contracts\HolidaysServiceInterface;
 
@@ -11,7 +11,6 @@ use Kirby\Company\Contracts\HolidaysServiceInterface;
  */
 class SyncHolidaysCommandTest extends \Tests\TestCase
 {
-
     /**
      * @test
      */
@@ -29,7 +28,7 @@ class SyncHolidaysCommandTest extends \Tests\TestCase
             'updated_at' => now()->subDays(5),
         ]);
 
-        $serviceMock = $this->mock(HolidaysServiceInterface::class)
+        $this->mock(HolidaysServiceInterface::class)
             ->shouldReceive('get')
             ->once()
             ->with('co', now()->year)
@@ -38,8 +37,6 @@ class SyncHolidaysCommandTest extends \Tests\TestCase
                 'description' => 'example description',
                 'date' => $holidayDate,
             ]])->getMock();
-
-        $this->instance(HolidaysServiceInterface::class, $serviceMock);
 
         $this->artisan('company:sync-holidays');
 
@@ -60,11 +57,9 @@ class SyncHolidaysCommandTest extends \Tests\TestCase
     public function testSyncNextYearHolidays()
     {
         $year = now()->addYear()->year;
-        $serviceMock = $this->mock(HolidaysServiceInterface::class)
+        $this->mock(HolidaysServiceInterface::class)
             ->shouldReceive('get')->once()->with('co', $year)->andReturn([])
             ->getMock();
-
-        $this->instance(HolidaysServiceInterface::class, $serviceMock);
 
         $this->artisan('company:sync-holidays', ['--next-year' => true]);
     }

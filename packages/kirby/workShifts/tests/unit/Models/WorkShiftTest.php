@@ -1,10 +1,8 @@
 <?php
 
-namespace WorkShifts\Models;
+namespace Kirby\WorkShifts\Tests\unit\Models;
 
 use Carbon\Carbon;
-use Codeception\Example;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Kirby\WorkShifts\Models\WorkShift;
 

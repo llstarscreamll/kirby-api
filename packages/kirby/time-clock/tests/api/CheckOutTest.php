@@ -1,6 +1,6 @@
 <?php
 
-namespace ClockTime;
+namespace Kirby\TimeClock\Tests\api;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Artisan;

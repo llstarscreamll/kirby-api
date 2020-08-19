@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication;
+namespace Kirby\Authentication\Tests\api;
 
 /**
  * Class SignUpTest.

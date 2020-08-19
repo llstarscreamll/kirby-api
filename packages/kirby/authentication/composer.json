@@ -31,7 +31,9 @@
         }
     },
     "autoload-dev": {
-        "psr-4": {}
+        "psr-4": {
+            "Kirby\\Authentication\\Tests\\": "tests"
+        }
     },
     "extra": {
         "laravel": {

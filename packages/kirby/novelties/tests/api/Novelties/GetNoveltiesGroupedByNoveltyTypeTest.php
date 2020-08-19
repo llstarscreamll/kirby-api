@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Novelties\Tests;
+namespace Kirby\Novelties\Tests\api\Novelties;
 
 use Illuminate\Support\Facades\DB;
 use Kirby\Employees\Models\Employee;
