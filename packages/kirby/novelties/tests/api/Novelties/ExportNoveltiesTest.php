@@ -35,7 +35,7 @@ class ExportNoveltiesTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function updateNoveltySuccessfully()
     {
@@ -47,7 +47,7 @@ class ExportNoveltiesTest extends \Tests\TestCase
             'time_clock_log_check_out_end_date' => now()->endOfMonth()->toDateTimeString(),
         ];
 
-        $this->json('POST',$this->endpoint, $requestData)
+        $this->json('POST', $this->endpoint, $requestData)
             ->assertOk()
             ->assertJsonFragment(['data' => 'ok']);
 
@@ -59,14 +59,14 @@ class ExportNoveltiesTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
 
-        $this->json('POST',$this->endpoint, [])
+        $this->json('POST', $this->endpoint, [])
             ->assertForbidden();
     }
 }

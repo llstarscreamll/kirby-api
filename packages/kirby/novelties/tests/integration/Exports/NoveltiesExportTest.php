@@ -15,7 +15,6 @@ use Kirby\Users\Models\User;
  */
 class NoveltiesExportTest extends \Tests\TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();

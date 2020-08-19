@@ -331,7 +331,8 @@ class WorkShift extends Model
             ->mapSpread(function ($even, $odd) use ($relativeToTime) {
                 return $this->mapTimeSlot(
                     ['start' => $even, 'end' => $odd],
-                    $relativeToTime, false
+                    $relativeToTime,
+                    false
                 );
             });
     }

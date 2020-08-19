@@ -23,7 +23,7 @@ class DeleteTimeClockLogNoveltiesApprovalListenerTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldBeCalledOnEventDispatchAndInvokeRunMethodOnActionClass()
     {

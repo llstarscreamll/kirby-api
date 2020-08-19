@@ -22,7 +22,7 @@ class RegisterTimeClockNoveltiesListenerTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldBeCalledOnEventDispatchAndInvokeRunMethodOnActionClass()
     {

@@ -44,7 +44,6 @@ class DeleteNoveltyApprovalTest extends \Tests\TestCase
             'user_id' => $this->user->id,
             'novelty_id' => $this->novelties->first()->id,
         ]);
-
     }
 
     /**

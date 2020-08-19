@@ -22,7 +22,6 @@ class DeleteNoveltyTypeTest extends \Tests\TestCase
         parent::setUp();
         $this->seed(NoveltiesPackageSeed::class);
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
-
     }
 
     /**

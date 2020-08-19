@@ -16,9 +16,6 @@ class LoginTest extends \Tests\TestCase
      */
     private $endpoint = 'api/v1/auth/login';
 
-    /**
-     *
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -43,7 +40,6 @@ class LoginTest extends \Tests\TestCase
             'email' => 'john@doe.com',
             'password' => Hash::make('123456'),
         ]);
-
     }
 
     /**

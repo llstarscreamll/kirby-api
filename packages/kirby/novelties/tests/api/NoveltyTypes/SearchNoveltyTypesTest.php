@@ -23,18 +23,17 @@ class SearchNoveltyTypesTest extends \Tests\TestCase
         parent::setUp();
         $this->seed(NoveltiesPackageSeed::class);
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
-        
     }
 
     /**
      * @test
-     
+
      */
     public function searchSuccessfully()
     {
         factory(NoveltyType::class, 5)->create();
 
-        $this->json('GET',$this->endpoint)
+        $this->json('GET', $this->endpoint)
             ->assertOk()
             ->assertJsonHasPath('data.0.id')
             ->assertJsonHasPath('data.1.id')
@@ -45,14 +44,14 @@ class SearchNoveltyTypesTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
 
-        $this->json('GET',$this->endpoint)
+        $this->json('GET', $this->endpoint)
             ->assertForbidden();
     }
 }

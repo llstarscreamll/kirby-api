@@ -15,7 +15,7 @@ class NoveltiesTest extends \Tests\TestCase
 {
     /**
      * @test
-     
+
      */
     public function shouldReturnRawSettings()
     {
@@ -33,7 +33,7 @@ class NoveltiesTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldReturnSettings()
     {

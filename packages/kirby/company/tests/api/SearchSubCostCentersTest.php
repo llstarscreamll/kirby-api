@@ -17,23 +17,20 @@ class SearchSubCostCentersTest extends \Tests\TestCase
      */
     private $endpoint = 'api/v1/sub-cost-centers';
 
-    
     public function setUp(): void
     {
         parent::setUp();
         $this->actingAsAdmin();
-        
     }
 
     /**
      * @test
-     
      */
     public function withoutQueryString()
     {
         factory(SubCostCenter::class, 5)->create();
 
-        $this->json('GET',$this->endpoint)
+        $this->json('GET', $this->endpoint)
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonHasPath('data.0.id')
             ->assertJsonHasPath('meta')

@@ -38,30 +38,29 @@ class GetWorkShiftByIdTest extends \Tests\TestCase
         ];
 
         $this->haveRecord('work_shifts', $this->workShift);
-        $this->workShift['id'] = DB::table('work_shifts')->where('name', 'work shift A',)->first()->id;
+        $this->workShift['id'] = DB::table('work_shifts')->where('name', 'work shift A', )->first()->id;
 
         $this->actingAsAdmin();
-        
     }
 
     /**
      * @test
-     
+
      */
     public function whenIdExistsExpectOkWithSaidResourceAsJson()
     {
-        $this->json('GET',str_replace(':id', $this->workShift['id'], $this->endpoint))
+        $this->json('GET', str_replace(':id', $this->workShift['id'], $this->endpoint))
             ->assertOk()
             ->assertJsonPath('data.id', $this->workShift['id']);
     }
 
     /**
      * @test
-     
+
      */
     public function whenIdDoesNotExistsExpectNotFound()
     {
-        $this->json('GET',str_replace(':id', 123, $this->endpoint))
+        $this->json('GET', str_replace(':id', 123, $this->endpoint))
             ->assertNotFound();
     }
 }

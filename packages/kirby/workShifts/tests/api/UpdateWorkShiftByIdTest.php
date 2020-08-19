@@ -55,7 +55,6 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
         $this->workShift['id'] = DB::table('work_shifts')->where('name', 'work shift A', )->first()->id;
 
         $this->actingAsAdmin();
-
     }
 
     /**

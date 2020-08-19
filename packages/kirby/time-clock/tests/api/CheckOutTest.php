@@ -67,7 +67,6 @@ class CheckOutTest extends \Tests\TestCase
             'operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP',
             'apply_on_days_of_type' => null,
         ]);
-
     }
 
     /**

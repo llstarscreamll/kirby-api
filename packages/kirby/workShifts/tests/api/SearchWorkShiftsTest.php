@@ -54,7 +54,6 @@ class SearchWorkShiftsTest extends \Tests\TestCase
         $this->haveRecord('work_shifts', $this->workShiftB);
 
         $this->actingAsAdmin();
-
     }
 
     /**

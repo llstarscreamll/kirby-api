@@ -39,30 +39,29 @@ class DeleteWorkShiftByIdTest extends \Tests\TestCase
         ];
 
         $this->haveRecord('work_shifts', $this->workShift);
-        $this->workShift['id'] = DB::table('work_shifts')->where('name', 'work shift A',)->first()->id;
+        $this->workShift['id'] = DB::table('work_shifts')->where('name', 'work shift A', )->first()->id;
 
         $this->actingAsAdmin();
-        
     }
 
     /**
      * @test
-     
+
      */
     public function whenIdExistsExpectNoContentAndResourceToBeDeleted()
     {
-        $this->json('DELETE',str_replace(':id', $this->workShift['id'], $this->endpoint))
+        $this->json('DELETE', str_replace(':id', $this->workShift['id'], $this->endpoint))
             ->assertStatus(204);
         $this->assertDatabaseMissing('work_shifts', $this->workShift);
     }
 
     /**
      * @test
-     
+
      */
     public function whenIdDoesNotExistsExpectNotFound()
     {
-        $this->json('DELETE',str_replace(':id', 123, $this->endpoint))
+        $this->json('DELETE', str_replace(':id', 123, $this->endpoint))
             ->assertNotFound();
     }
 }

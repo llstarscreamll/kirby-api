@@ -78,7 +78,6 @@ class CheckInTest extends \Tests\TestCase
             'operator' => NoveltyTypeOperator::Addition, 'code' => 'HADI',
             'apply_on_days_of_type' => null,
         ]);
-
     }
 
     /**

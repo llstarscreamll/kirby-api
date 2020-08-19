@@ -13,7 +13,6 @@ use Kirby\Novelties\Repositories\EloquentNoveltyRepository;
  */
 class EloquentNoveltyRepositoryTest extends \Tests\TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();

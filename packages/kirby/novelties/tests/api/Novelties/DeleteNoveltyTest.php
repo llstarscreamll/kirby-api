@@ -38,12 +38,11 @@ class DeleteNoveltyTest extends \Tests\TestCase
         $this->novelty = factory(Novelty::class)->create();
 
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
-        
     }
 
     /**
      * @test
-     
+
      */
     public function shouldDeleteNoveltySuccessfully()
     {
@@ -52,7 +51,7 @@ class DeleteNoveltyTest extends \Tests\TestCase
             $this->novelty->id,
             $this->endpoint
         );
-        $this->json('DELETE',$endpoint)
+        $this->json('DELETE', $endpoint)
             ->assertOk();
         $this->assertDatabaseMissing('novelties', [
             'id' => $this->novelty->id,
@@ -62,7 +61,7 @@ class DeleteNoveltyTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
@@ -70,7 +69,7 @@ class DeleteNoveltyTest extends \Tests\TestCase
         $this->user->permissions()->delete();
 
         $endpoint = str_replace('{id}', $this->novelty->id, $this->endpoint);
-        $this->json('DELETE',$endpoint)
+        $this->json('DELETE', $endpoint)
             ->assertForbidden();
         $this->assertDatabaseHas('novelties', [
             'id' => $this->novelty->id,
@@ -80,12 +79,12 @@ class DeleteNoveltyTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldReturnNotFoundIfNoveltyDoesntExists()
     {
         $endpoint = str_replace('{id}', 111, $this->endpoint);
-        $this->json('DELETE',$endpoint)
+        $this->json('DELETE', $endpoint)
             ->assertNotFound();
     }
 }

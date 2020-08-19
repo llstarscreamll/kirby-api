@@ -90,7 +90,7 @@ class TimeClockLogTest extends \Tests\TestCase
 
         $this->assertEquals($expected['holiday_minutes'], $holidayResult[0], 'holiday minutes');
         $this->assertEquals($expected['workday_minutes'], $workdayResult[0], 'workday minutes');
-        $this->assertEquals($expected['holiday_time_range'], array_map(fn($date) => (string) $date, $holidayResult[1]));
-        $this->assertEquals($expected['workday_time_range'], array_map(fn($date) => (string) $date, $workdayResult[1]));
+        $this->assertEquals($expected['holiday_time_range'], array_map(fn ($date) => (string) $date, $holidayResult[1]));
+        $this->assertEquals($expected['workday_time_range'], array_map(fn ($date) => (string) $date, $workdayResult[1]));
     }
 }

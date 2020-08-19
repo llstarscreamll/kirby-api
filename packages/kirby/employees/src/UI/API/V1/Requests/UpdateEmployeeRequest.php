@@ -47,7 +47,8 @@ class UpdateEmployeeRequest extends FormRequest
                 'string',
                 'max:255',
                 Rule::unique('identifications')->ignore(
-                    $this->route()->parameter('employee'), 'employee_id'
+                    $this->route()->parameter('employee'),
+                    'employee_id'
                 ),
             ],
         ];

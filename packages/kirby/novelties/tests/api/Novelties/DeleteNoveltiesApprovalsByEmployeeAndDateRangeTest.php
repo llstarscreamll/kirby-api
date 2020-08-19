@@ -75,7 +75,6 @@ class DeleteNoveltiesApprovalsByEmployeeAndDateRangeTest extends \Tests\TestCase
         $this->steveRogersNoveltiesFromLastMonth->last()->approvals()->attach($this->user);
         $this->tonyStarkNovelties->first()->approvals()->attach($this->user);
         $this->tonyStarkNovelties->last()->approvals()->attach($this->user);
-
     }
 
     /**

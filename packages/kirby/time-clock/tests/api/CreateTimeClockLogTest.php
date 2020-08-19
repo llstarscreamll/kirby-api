@@ -32,7 +32,6 @@ class CreateTimeClockLogTest extends \Tests\TestCase
         Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
 
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
-
     }
 
     /**

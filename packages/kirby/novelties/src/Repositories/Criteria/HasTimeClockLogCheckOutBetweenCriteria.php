@@ -42,7 +42,8 @@ class HasTimeClockLogCheckOutBetweenCriteria implements CriteriaInterface
     {
         return $model
             ->leftJoin('time_clock_logs', 'time_clock_logs.id', 'novelties.time_clock_log_id')
-            ->where(fn ($q) => $q
+            ->where(
+                fn ($q) => $q
                     ->whereBetween('time_clock_logs.checked_out_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()])
                     ->orWhereBetween('novelties.end_at', [$this->start->toDateTimeString(), $this->end->toDateTimeString()])
             );

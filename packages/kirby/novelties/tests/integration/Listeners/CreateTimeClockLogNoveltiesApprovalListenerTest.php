@@ -23,7 +23,7 @@ class CreateTimeClockLogNoveltiesApprovalListenerTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldBeCalledOnEventDispatchAndInvokeRunMethodOnActionClass()
     {

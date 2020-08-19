@@ -34,7 +34,6 @@ class CreateNoveltyApprovalTest extends \Tests\TestCase
         $this->seed(NoveltiesPackageSeed::class);
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
         $this->novelties = factory(Novelty::class, 2)->create();
-
     }
 
     /**

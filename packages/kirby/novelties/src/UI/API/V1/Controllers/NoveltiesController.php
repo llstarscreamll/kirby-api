@@ -54,13 +54,15 @@ class NoveltiesController
 
         if ($request->time_clock_log_check_out_start_date) {
             $novelties->pushCriteria(new HasTimeClockLogCheckOutBetweenCriteria(
-                Carbon::parse($request->time_clock_log_check_out_start_date), Carbon::parse($request->time_clock_log_check_out_end_date)
+                Carbon::parse($request->time_clock_log_check_out_start_date),
+                Carbon::parse($request->time_clock_log_check_out_end_date)
             ));
         }
 
         if ($request->start_at) {
             $novelties->pushCriteria(new ByStartDateRangeCriteria(
-                Carbon::parse($request->start_at['from']), Carbon::parse($request->start_at['to'])
+                Carbon::parse($request->start_at['from']),
+                Carbon::parse($request->start_at['to'])
             ));
         }
 

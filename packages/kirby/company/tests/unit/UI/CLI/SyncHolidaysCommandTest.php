@@ -29,7 +29,7 @@ class SyncHolidaysCommandTest extends \Tests\TestCase
             'updated_at' => now()->subDays(5),
         ]);
 
-        $serviceMock = \Mockery::mock(HolidaysServiceInterface::class)
+        $serviceMock = $this->mock(HolidaysServiceInterface::class)
             ->shouldReceive('get')
             ->once()
             ->with('co', now()->year)
@@ -60,7 +60,7 @@ class SyncHolidaysCommandTest extends \Tests\TestCase
     public function testSyncNextYearHolidays()
     {
         $year = now()->addYear()->year;
-        $serviceMock = \Mockery::mock(HolidaysServiceInterface::class)
+        $serviceMock = $this->mock(HolidaysServiceInterface::class)
             ->shouldReceive('get')->once()->with('co', $year)->andReturn([])
             ->getMock();
 

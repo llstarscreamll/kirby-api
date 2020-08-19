@@ -19,18 +19,15 @@ class UpdateEmployeeTest extends \Tests\TestCase
      */
     private $endpoint = 'api/v1/employees/{id}';
 
-    
     public function setUp(): void
     {
         parent::setUp();
         $this->seed(EmployeesPackageSeed::class);
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
-        
     }
 
     /**
      * @test
-     
      */
     public function getSuccessfully()
     {
@@ -56,7 +53,7 @@ class UpdateEmployeeTest extends \Tests\TestCase
             'identifications' => [$pinIdentification, $eCardIdentification],
         ];
 
-        $this->json('PUT',str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
+        $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
             ->assertOk()
             ->assertJsonHasPath('data.id');
         $this->assertDatabaseHas('employees', [
@@ -88,7 +85,6 @@ class UpdateEmployeeTest extends \Tests\TestCase
 
     /**
      * @test
-     
      */
     public function shouldReturnNotFoundIfEmployeeDoesNotExists()
     {
@@ -107,13 +103,12 @@ class UpdateEmployeeTest extends \Tests\TestCase
             'identifications' => [['name' => 'PIN', 'code' => '123']],
         ];
 
-        $this->json('PUT',str_replace('{id}', 999, $this->endpoint), $requestPayload)
+        $this->json('PUT', str_replace('{id}', 999, $this->endpoint), $requestPayload)
             ->assertNotFound();
     }
 
     /**
      * @test
-     
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
@@ -121,7 +116,7 @@ class UpdateEmployeeTest extends \Tests\TestCase
         $this->user->permissions()->delete();
         $employee = factory(Employee::class)->create();
 
-        $this->json('PUT',str_replace('{id}', $employee->id, $this->endpoint))
+        $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint))
             ->assertForbidden();
     }
 }

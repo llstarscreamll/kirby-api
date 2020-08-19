@@ -15,7 +15,6 @@ use Kirby\Users\Models\User;
  */
 class CreateManyNoveltiesActionTest extends \Tests\TestCase
 {
-
     public function setUp(): void
     {
         parent::setUp();
@@ -78,8 +77,10 @@ class CreateManyNoveltiesActionTest extends \Tests\TestCase
         });
 
         // novelty approvals
-        $approvers->each(fn($approver) => $this->assertDatabaseRecordsCount(
-            count($novelties) * $employees->count(), 'novelty_approvals', ['user_id' => $approver->id]
+        $approvers->each(fn ($approver) => $this->assertDatabaseRecordsCount(
+            count($novelties) * $employees->count(),
+            'novelty_approvals',
+            ['user_id' => $approver->id]
         ));
     }
 }

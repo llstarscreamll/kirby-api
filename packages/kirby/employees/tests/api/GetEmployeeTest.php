@@ -17,42 +17,37 @@ class GetEmployeeTest extends \Tests\TestCase
      */
     private $endpoint = 'api/v1/employees/{id}';
 
-    
     public function setUp(): void
     {
         parent::setUp();
 
         $this->seed(EmployeesPackageSeed::class);
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
-        
     }
 
     /**
      * @test
-     
      */
     public function getSuccessfully()
     {
         $employee = factory(Employee::class)->create();
 
-        $this->json('GET',str_replace('{id}', $employee->id, $this->endpoint))
+        $this->json('GET', str_replace('{id}', $employee->id, $this->endpoint))
             ->assertOk()
             ->assertJsonHasPath('data.id');
     }
 
     /**
      * @test
-     
      */
     public function shouldReturnNotFoundIfEmployeeDoesNotExists()
     {
-        $this->json('GET',str_replace('{id}', 999, $this->endpoint))
+        $this->json('GET', str_replace('{id}', 999, $this->endpoint))
             ->assertNotFound();
     }
 
     /**
      * @test
-     
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
@@ -60,7 +55,7 @@ class GetEmployeeTest extends \Tests\TestCase
         $this->user->permissions()->delete();
         $employee = factory(Employee::class)->create();
 
-        $this->json('GET',str_replace('{id}', $employee->id, $this->endpoint))
+        $this->json('GET', str_replace('{id}', $employee->id, $this->endpoint))
             ->assertForbidden();
     }
 }

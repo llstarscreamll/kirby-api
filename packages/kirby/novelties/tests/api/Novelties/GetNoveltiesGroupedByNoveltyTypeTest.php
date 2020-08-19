@@ -32,7 +32,6 @@ class GetNoveltiesGroupedByNoveltyTypeTest extends \Tests\TestCase
         $this->noveltyTypes = NoveltyType::all();
 
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
-
     }
 
     /**

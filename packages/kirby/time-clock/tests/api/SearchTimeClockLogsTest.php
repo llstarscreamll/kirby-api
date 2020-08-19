@@ -31,14 +31,12 @@ class SearchTimeClockLogsTest extends \Tests\TestCase
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
         // time clock logs
         factory(TimeClockLog::class, 2)->create();
-
-        
     }
 
     
     public function shouldReturnPaginatedData()
     {
-        $this->json('GET',$this->endpoint)
+        $this->json('GET', $this->endpoint)
             ->assertOk()
             ->assertJsonHasPath('data.0')
             ->assertJsonHasPath('data.1');
@@ -52,14 +50,14 @@ class SearchTimeClockLogsTest extends \Tests\TestCase
 
     /**
      * @test
-     
+
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
 
-        $this->json('GET',$this->endpoint, [])
+        $this->json('GET', $this->endpoint, [])
             ->assertForbidden();
     }
 }

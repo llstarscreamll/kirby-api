@@ -17,25 +17,22 @@ class SearchEmployeesTest extends \Tests\TestCase
      */
     private $endpoint = 'api/v1/employees/';
 
-    
     public function setUp(): void
     {
         parent::setUp();
 
         $this->seed(EmployeesPackageSeed::class);
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
-        
     }
 
     /**
      * @test
-     
      */
     public function searchSuccessfully()
     {
         factory(Employee::class, 5)->create();
 
-        $this->json('GET',$this->endpoint)
+        $this->json('GET', $this->endpoint)
             ->assertOk()
             ->assertJsonHasPath('data.0.id')
             ->assertJsonHasPath('data.1.id')
@@ -46,7 +43,6 @@ class SearchEmployeesTest extends \Tests\TestCase
 
     /**
      * @test
-     
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
@@ -54,7 +50,7 @@ class SearchEmployeesTest extends \Tests\TestCase
         $this->user->permissions()->delete();
         factory(Employee::class, 5)->create();
 
-        $this->json('GET',$this->endpoint)
+        $this->json('GET', $this->endpoint)
             ->assertForbidden();
     }
 }
