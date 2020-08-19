@@ -128,8 +128,8 @@ class LogCheckOut
         if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
             $scheduledNovelty = $this->noveltyRepository->update(
                 [
-                        'start_at' => now(),
-                    ],
+                    'start_at' => now(),
+                ],
                 $scheduledNovelty->id
             );
         }

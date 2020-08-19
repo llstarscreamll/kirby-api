@@ -2,12 +2,12 @@
 
 namespace Tests;
 
-use Kirby\Users\Models\User;
-use Illuminate\Support\Facades\DB;
-use Kirby\Authorization\Models\Role;
-use Kirby\Authorization\Models\Permission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\DB;
+use Kirby\Authorization\Models\Permission;
+use Kirby\Authorization\Models\Role;
+use Kirby\Users\Models\User;
 
 abstract class TestCase extends BaseTestCase
 {

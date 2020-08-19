@@ -2,9 +2,9 @@
 
 namespace Kirby\Novelties\Tests\api\Novelties;
 
-use NoveltiesPackageSeed;
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Employees\Models\Employee;
+use Kirby\Novelties\Models\Novelty;
+use NoveltiesPackageSeed;
 
 /**
  * Class DeleteNoveltiesApprovalsByEmployeeAndDateRangeTest.

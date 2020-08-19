@@ -2,8 +2,8 @@
 
 namespace Kirby\Novelties\Tests\api\NoveltyTypes;
 
-use NoveltiesPackageSeed;
 use Kirby\Novelties\Models\NoveltyType;
+use NoveltiesPackageSeed;
 
 /**
  * Class SearchNoveltyTypesTest.
@@ -17,7 +17,6 @@ class SearchNoveltyTypesTest extends \Tests\TestCase
      */
     private $endpoint = 'api/v1/novelty-types/';
 
-    
     public function setUp(): void
     {
         parent::setUp();
@@ -27,7 +26,6 @@ class SearchNoveltyTypesTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function searchSuccessfully()
     {
@@ -44,7 +42,6 @@ class SearchNoveltyTypesTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {

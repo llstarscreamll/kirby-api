@@ -14,7 +14,6 @@ use Kirby\TimeClock\Models\TimeClockLog;
  */
 class TimeClockLogTest extends \Tests\TestCase
 {
-
     /**
      * @return array
      */

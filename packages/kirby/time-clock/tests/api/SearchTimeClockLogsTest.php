@@ -23,7 +23,6 @@ class SearchTimeClockLogsTest extends \Tests\TestCase
      */
     private $user;
 
-    
     public function setUp(): void
     {
         parent::setUp();
@@ -33,7 +32,6 @@ class SearchTimeClockLogsTest extends \Tests\TestCase
         factory(TimeClockLog::class, 2)->create();
     }
 
-    
     public function shouldReturnPaginatedData()
     {
         $this->json('GET', $this->endpoint)
@@ -50,7 +48,6 @@ class SearchTimeClockLogsTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
