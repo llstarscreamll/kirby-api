@@ -1,7 +1,8 @@
 build:
   environment:
-    php: "7.4"
-    compile_options: "--enable-gd"
+    php:
+      version: "7.4"
+      compile_options: "--enable-gd"
     node: "v12.9.1"
   cache:
     directories:
