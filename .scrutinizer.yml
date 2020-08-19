@@ -2,7 +2,7 @@ build:
   environment:
     php:
       version: "7.4"
-      compile_options: "--enable-gd"
+      compile_options: "--enable-gd --enable-cli --with-xsl --with-sodium --with-openssl --enable-bcmath --enable-mbstring --with-imap-ssl --with-imap --with-sqlite=shared"
     node: "v12.9.1"
   cache:
     directories:
