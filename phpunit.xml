@@ -29,8 +29,12 @@
             <directory suffix=".php">./packages/kirby/**/src</directory>
             <exclude>
                 <directory>./routes</directory>
-                <file>./packages/kirby/**/src/UI/API/**/routes.php</file>
-                <file>./packages/kirby/**/src/UI/WEB/**/routes.php</file>
+                <file>./app/Console/Kernel.php</file>
+                <file>./app/Providers/HorizonServiceProvider.php</file>
+                <file>./app/Providers/TelescopeServiceProvider.php</file>
+                <directory suffix=".php">./packages/kirby/**/src/Facades</directory>
+                <directory suffix="routes.php">./packages/kirby/**/src/UI/API/**</directory>
+                <directory suffix="routes.php">./packages/kirby/**/src/UI/WEB/**</directory>
             </exclude>
         </whitelist>
     </filter>
