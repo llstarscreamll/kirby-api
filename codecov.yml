@@ -8,5 +8,5 @@ ignore:
   - "packages/kirby/**/database"
   - "packages/kirby/**/src/Facades"
   - "packages/kirby/**/src/*ServiceProvider.php"
-  - "packages/kirby/**/src/UI/API/Routes/*"
-  - "packages/kirby/**/src/UI/WEB/Routes/*"
+  - "packages/kirby/**/src/UI/API/**/routes.php"
+  - "packages/kirby/**/src/UI/WEB/routes.php"
