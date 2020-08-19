@@ -2,10 +2,10 @@
 
 namespace Kirby\Novelties\Tests\api\Novelties;
 
-use NoveltiesPackageSeed;
-use Kirby\Employees\Models\Employee;
 use Illuminate\Support\Facades\Queue;
+use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Jobs\GenerateCsvReportByEmployeeJob;
+use NoveltiesPackageSeed;
 
 /**
  * Class ExportNoveltiesTest.
@@ -24,7 +24,6 @@ class ExportNoveltiesTest extends \Tests\TestCase
      */
     private $user;
 
-    
     public function setUp(): void
     {
         parent::setUp();
@@ -35,7 +34,6 @@ class ExportNoveltiesTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function updateNoveltySuccessfully()
     {
@@ -59,7 +57,6 @@ class ExportNoveltiesTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {

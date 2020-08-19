@@ -8,7 +8,7 @@ use Illuminate\Support\Arr;
 
 /**
  * Class TestResponse.
- * 
+ *
  * @mixing \Illuminate\Foundation\Testing\TestResponse
  */
 class TestResponse extends BaseTestResponse

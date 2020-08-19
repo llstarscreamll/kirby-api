@@ -21,7 +21,6 @@ class GetWorkShiftByIdTest extends \Tests\TestCase
      */
     private $workShift;
 
-    
     public function setUp(): void
     {
         parent::setUp();
@@ -45,7 +44,6 @@ class GetWorkShiftByIdTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function whenIdExistsExpectOkWithSaidResourceAsJson()
     {
@@ -56,7 +54,6 @@ class GetWorkShiftByIdTest extends \Tests\TestCase
 
     /**
      * @test
-
      */
     public function whenIdDoesNotExistsExpectNotFound()
     {
