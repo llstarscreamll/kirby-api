@@ -21,8 +21,8 @@ use Lcobucci\JWT\Parser;
 class ApiAuthenticationController
 {
     /**
-     * @param  \Kirby\Authentication\UI\API\V1\Requests\LoginRequest  $request
-     * @param  \Kirby\Authentication\Actions\WebLoginProxyAction $action
+     * @param  \Kirby\Authentication\UI\API\V1\Requests\LoginRequest $request
+     * @param  \Kirby\Authentication\Actions\WebLoginProxyAction     $action
      * @return \Illuminate\Http\Response
      */
     public function login(LoginRequest $request, WebLoginProxyAction $action)
@@ -81,7 +81,7 @@ class ApiAuthenticationController
     /**
      * @todo El código de este controlador está repetido, se debe abstraer
      * @param  \Kirby\Authentication\UI\API\V1\Requests\SignUpRequest $request
-     * @param  \Kirby\Authentication\Actions\WebLoginProxyAction $action
+     * @param  \Kirby\Authentication\Actions\WebLoginProxyAction      $action
      * @return \Illuminate\Http\Response
      */
     public function signUp(SignUpRequest $request, WebLoginProxyAction $action)
@@ -89,6 +89,7 @@ class ApiAuthenticationController
         DB::table('users')->insert([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
+            'phone_number' => $request->phone_number,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -103,20 +104,12 @@ class ApiAuthenticationController
             'accessToken',
             $oAuthResponse['content']['access_token'],
             config('auth.api.token-expires-in'),
-            null,
-            null,
-            false,
-            true
         );
 
         $refreshTokenCookie = cookie(
             'refreshToken',
             $oAuthResponse['content']['refresh_token'],
             config('auth.api.refresh-token-expires-in'),
-            null,
-            null,
-            false,
-            true
         );
 
         return response($oAuthResponse['content'], $oAuthResponse['statusCode'])

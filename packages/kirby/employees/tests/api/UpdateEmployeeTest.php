@@ -45,7 +45,7 @@ class UpdateEmployeeTest extends \Tests\TestCase
             'identification_number' => '654',
             'location' => 'Medellín',
             'address' => 'Calle 3#2-1',
-            'phone' => '3219876543',
+            'phone' => '+573219876543',
             'position' => 'designer',
             'salary' => 5000000,
             'cost_center' => $costCenter->toArray(),
@@ -56,29 +56,35 @@ class UpdateEmployeeTest extends \Tests\TestCase
         $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
             ->assertOk()
             ->assertJsonHasPath('data.id');
+
         $this->assertDatabaseHas('employees', [
             'id' => $employee->id,
             'code' => '987',
             'identification_number' => '654',
             'location' => 'Medellín',
             'address' => 'Calle 3#2-1',
-            'phone' => '3219876543',
+            'phone' => '+573219876543',
             'position' => 'designer',
             'salary' => 5000000,
             'cost_center_id' => $costCenter->id,
         ]);
+
         $this->assertDatabaseHas('users', [
             'first_name' => 'Bruce',
             'last_name' => 'Banner',
+            'phone_number' => '+573219876543',
         ]);
+
         $this->assertDatabaseHas('employee_work_shift', [
             'employee_id' => $employee->id,
             'work_shift_id' => $morningWorkShift->id,
         ]);
+
         $this->assertDatabaseHas('employee_work_shift', [
             'employee_id' => $employee->id,
             'work_shift_id' => $afternoonWorkShift->id,
         ]);
+
         $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $pinIdentification);
         $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $eCardIdentification);
     }
@@ -95,7 +101,7 @@ class UpdateEmployeeTest extends \Tests\TestCase
             'identification_number' => '654',
             'location' => 'Medellín',
             'address' => 'Calle 3#2-1',
-            'phone' => '3219876543',
+            'phone' => '+573219876543',
             'position' => 'designer',
             'salary' => 5000000,
             'cost_center' => factory(CostCenter::class)->create(),
