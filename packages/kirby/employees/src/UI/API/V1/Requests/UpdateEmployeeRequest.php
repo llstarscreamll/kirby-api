@@ -36,7 +36,7 @@ class UpdateEmployeeRequest extends FormRequest
             'identification_number' => ['required', 'string'],
             'location' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'phone' => ['required', 'string'],
+            'phone' => ['required', 'regex:/\+\d{12}$/', Rule::unique('users', 'phone_number')->ignore((int) $this->route()->parameter('employee'))],
             'position' => ['required', 'string'],
             'salary' => ['required', 'numeric'],
             'cost_center.id' => ['required', 'numeric'],
@@ -47,7 +47,7 @@ class UpdateEmployeeRequest extends FormRequest
                 'string',
                 'max:255',
                 Rule::unique('identifications')->ignore(
-                    $this->route()->parameter('employee'),
+                    (int) $this->route()->parameter('employee'),
                     'employee_id'
                 ),
             ],

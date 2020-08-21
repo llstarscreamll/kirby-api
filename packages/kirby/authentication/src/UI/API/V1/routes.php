@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Kirby\Authentication\UI\API\V1\Controllers\ApiAuthenticationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('api/v1/auth')
     ->middleware('api')
-    ->namespace('Kirby\Authentication\UI\API\V1\Controllers')
     ->group(function ($route) {
-        $route->post('login', 'ApiAuthenticationController@login');
-        $route->post('sign-up', 'ApiAuthenticationController@signUp');
-        $route->delete('logout', 'ApiAuthenticationController@logout')->middleware('auth:api');
-        $route->get('user', 'ApiAuthenticationController@getAuthUser')->middleware('auth:api');
+        $route->post('login', [ApiAuthenticationController::class, 'login']);
+        $route->post('sign-up', [ApiAuthenticationController::class, 'signUp']);
+        $route->delete('logout', [ApiAuthenticationController::class, 'logout'])->middleware('auth:api');
+        $route->get('user', [ApiAuthenticationController::class, 'getAuthUser'])->middleware('auth:api');
     });

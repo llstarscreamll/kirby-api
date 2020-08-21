@@ -3,6 +3,7 @@
 namespace Kirby\Authentication\Tests\api;
 
 use Illuminate\Support\Facades\Hash;
+use Kirby\Users\Models\User;
 
 /**
  * Class LoginTest.
@@ -34,7 +35,7 @@ class LoginTest extends \Tests\TestCase
             'updated_at' => date('Y-m-d H:i:s'),
         ]);
 
-        $this->haveRecord('users', [
+        factory(User::class)->create([
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'john@doe.com',

@@ -2,7 +2,9 @@
 
 namespace Kirby\Employees\UI\API\V1\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
@@ -93,9 +95,12 @@ class EmployeesController
         $requestData = $request->validated();
 
         try {
+            DB::beginTransaction();
+
             $user = $this->userRepository->create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
+                'phone_number' => $request->phone,
                 'email' => "{$request->code}@domain.com",
                 'password' => Hash::make("{$request->code}@domain.com_".now()->toDateString()),
             ]);
@@ -113,13 +118,15 @@ class EmployeesController
             data_set($requestData['identifications'], '*.created_at', now(), true);
             data_set($requestData['identifications'], '*.updated_at', now(), true);
             $this->identificationRepository->insert($requestData['identifications']);
+
+            DB::commit();
         } catch (\Throwable $th) {
             return response()->json([
                 'errors' => [
                     'title' => 'Error inesperado',
                     'detail' => 'Un error inesperado ha ocurrido',
                 ],
-            ], 417);
+            ], Response::HTTP_EXPECTATION_FAILED);
         }
 
         return new EmployeeResource($employee);
@@ -136,13 +143,14 @@ class EmployeesController
         $employeeData = $request->validated();
         $workShiftIds = data_get($employeeData, 'work_shifts.*.id', []);
         $identifications = Arr::get($employeeData, 'identifications', []);
-        $userNames = Arr::only($employeeData, ['first_name', 'last_name']);
         $employeeData['cost_center_id'] = Arr::get($employeeData, 'cost_center.id');
-
-        $employee = $this->employeeRepository->update($employeeData, $id);
+        $userData = Arr::only($employeeData, ['first_name', 'last_name']) + ['phone_number' => $request->phone];
 
         try {
-            $this->userRepository->update($userNames, $id);
+            DB::beginTransaction();
+
+            $employee = $this->employeeRepository->update($employeeData, $id);
+            $this->userRepository->update($userData, $id);
             $this->employeeRepository->sync($id, 'workShifts', $workShiftIds);
 
             $identificationCodes = collect($identifications)
@@ -156,13 +164,17 @@ class EmployeesController
                 ->toArray();
 
             $this->identificationRepository->deleteWhereEmployeeIdCodesNotIn($id, $identificationCodes);
+
+            DB::commit();
+        } catch (ModelNotFoundException $th) {
+            throw $th;
         } catch (\Throwable $th) {
             return response()->json([
                 'errors' => [
                     'title' => 'Error inesperado',
                     'detail' => 'Un error inesperado ha ocurrido',
                 ],
-            ], 417);
+            ], Response::HTTP_EXPECTATION_FAILED);
         }
 
         return new EmployeeResource($employee);

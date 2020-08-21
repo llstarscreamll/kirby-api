@@ -45,7 +45,7 @@ class CreateEmployeeTest extends \Tests\TestCase
             'identification_number' => '654',
             'location' => 'Medellín',
             'address' => 'Calle 3#2-1',
-            'phone' => '3219876543',
+            'phone' => '+573219876543',
             'position' => 'designer',
             'salary' => 5000000,
             'cost_center' => $costCenter->toArray(),
@@ -64,7 +64,7 @@ class CreateEmployeeTest extends \Tests\TestCase
             'identification_number' => '654',
             'location' => 'Medellín',
             'address' => 'Calle 3#2-1',
-            'phone' => '3219876543',
+            'phone' => '+573219876543',
             'position' => 'designer',
             'salary' => 5000000,
             'cost_center_id' => $costCenter->id,
@@ -72,6 +72,7 @@ class CreateEmployeeTest extends \Tests\TestCase
         $this->assertDatabaseHas('users', [
             'first_name' => 'Bruce',
             'last_name' => 'Banner',
+            'phone_number' => '+573219876543',
             'email' => '987@domain.com',
         ]);
         $this->assertDatabaseHas('employee_work_shift', [

@@ -35,7 +35,7 @@ class CreateEmployeeRequest extends FormRequest
             'identification_number' => ['required', 'string', 'unique:employees'],
             'location' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'phone' => ['required', 'string'],
+            'phone' => ['required', 'regex:/\+\d{12}$/', 'unique:users,phone_number'],
             'position' => ['required', 'string'],
             'salary' => ['required', 'numeric'],
             'cost_center.id' => ['required', 'numeric'],
