@@ -1,5 +1,11 @@
 # Release notes
 
+## [v1.1.1 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1..v1.1.1)
+
+### Fixed
+
+-   Fix error with the way that phone number and phone prefix are handled
+
 ## [v1.1 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.0.2..v1.1)
 
 ### Added
