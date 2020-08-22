@@ -25,7 +25,6 @@ $factory->define(Employee::class, function (Faker $faker) {
         'position' => $faker->jobTitle,
         'location' => $faker->city,
         'address' => $faker->address,
-        'phone' => $faker->phoneNumber,
         'salary' => $faker->numberBetween(828116, 828116 * 10),
     ];
 });
