@@ -26,7 +26,6 @@ class CreateEmployeesTable extends Migration
             $table->string('position');
             $table->string('location');
             $table->string('address');
-            $table->string('phone');
             $table->bigInteger('salary');
             $table->timestamps();
             $table->softDeletes();

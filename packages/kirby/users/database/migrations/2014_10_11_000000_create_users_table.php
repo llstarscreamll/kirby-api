@@ -17,7 +17,8 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('phone_number')->unique();
+            $table->string('phone_prefix')->unique();
+            $table->bigInteger('phone_number')->unique();
             $table->string('email', 100)->unique();
             $table->string('password');
             $table->timestamp('email_verified_at')->nullable();
@@ -27,6 +28,7 @@ class CreateUsersTable extends Migration
             $table->softDeletes();
 
             $table->index(['first_name', 'last_name']);
+            $table->unique(['phone_prefix', 'phone_number']);
         });
     }
 
