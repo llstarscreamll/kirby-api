@@ -162,6 +162,22 @@ class Employee extends Model
     /**
      * @return string|null
      */
+    public function getPhoneAttribute(): ?string
+    {
+        return $this->user->phone_number;
+    }
+    
+    /**
+     * @return string|null
+     */
+    public function getPhonePrefixAttribute(): ?string
+    {
+        return $this->user->phone_prefix;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getEmailAttribute(): ?string
     {
         return $this->user->email;

@@ -1,5 +1,11 @@
 # Release notes
 
+## [v1.1.2 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.1..v1.1.2)
+
+### Fixed
+
+-   Fix error serving phone data on employee resource
+
 ## [v1.1.1 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1..v1.1.1)
 
 ### Fixed
