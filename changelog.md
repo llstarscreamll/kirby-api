@@ -1,5 +1,11 @@
 # Release notes
 
+## [v1.1.3 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.2..v1.1.3)
+
+### Fixed
+
+- Error with backup.php config file cleaning up old backups 
+
 ## [v1.1.2 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.1..v1.1.2)
 
 ### Fixed
