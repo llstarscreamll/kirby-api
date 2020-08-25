@@ -166,7 +166,7 @@ class Employee extends Model
     {
         return $this->user->phone_number;
     }
-    
+
     /**
      * @return string|null
      */
