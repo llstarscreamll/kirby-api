@@ -1,5 +1,40 @@
 # Release notes
 
+## [v1.1.4 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.3..v1.1.4)
+
+### Fixed
+
+- Update composer dependencies and remove dd() from employees controller.
+
+## [v1.1.3 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.2..v1.1.3)
+
+### Fixed
+
+- Error with backup.php config file cleaning up old backups 
+
+## [v1.1.2 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.1..v1.1.2)
+
+### Fixed
+
+-   Fix error serving phone data on employee resource
+
+## [v1.1.1 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1..v1.1.1)
+
+### Fixed
+
+-   Fix error with the way that phone number and phone prefix are handled
+
+## [v1.1 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.0.2..v1.1)
+
+### Added
+
+-   feat(users): users entity now supports phone numbers and phone validation date, so when a users are signed up the phone number is now required and when a employee is created some phone number validations are mede in order to keep data consistency. Employee data and user data are in sync.
+
+### Changed
+
+-   data consistency guarded on employees data operations
+-   test suite framework changed from Codeception to PHPUnit
+
 ## [v1.0.2 (2020-08-19)](https://github.com/llstarscreamll/kirby-api/compare/v1.0.1..v1.0.2)
 
 ### Fixed

@@ -41,7 +41,8 @@ class SignUpTest extends \Tests\TestCase
         $this->json('POST', $this->endpoint, [
             'first_name' => 'John',
             'last_name' => 'Doe',
-            'phone_number' => '+573119876543',
+            'phone_prefix' => '+57',
+            'phone_number' => '3119876543',
             'email' => 'john@doe.com',
             'password' => '123456',
             'password_confirmation' => '123456',
@@ -58,7 +59,8 @@ class SignUpTest extends \Tests\TestCase
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'john@doe.com',
-            'phone_number' => '+573119876543',
+            'phone_prefix' => '+57',
+            'phone_number' => '3119876543',
         ]);
     }
 
@@ -79,7 +81,8 @@ class SignUpTest extends \Tests\TestCase
         $this->haveRecord('users', [
             'first_name' => 'John',
             'last_name' => 'Doe',
-            'phone_number' => '+573216549879',
+            'phone_prefix' => '+57',
+            'phone_number' => '3216549879',
             'email' => 'john@doe.com',
             'password' => bcrypt('123456'),
         ]);

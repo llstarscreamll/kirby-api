@@ -33,6 +33,7 @@ class EmployeeResource extends JsonResource
             'position' => $this->position,
             'location' => $this->location,
             'address' => $this->address,
+            'phone_prefix' => $this->phone_prefix,
             'phone' => $this->phone,
             'salary' => $this->salary,
             'cost_center' => new CostCenterResource($this->whenLoaded('costCenter')),

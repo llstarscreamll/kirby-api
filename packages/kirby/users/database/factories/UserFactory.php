@@ -17,7 +17,8 @@ $factory->define(Kirby\Users\Models\User::class, function (Faker $faker) {
     return [
         'first_name' => $faker->firstName,
         'last_name' => $faker->lastName,
-        'phone_number' => $faker->unique()->phoneNumber,
+        'phone_prefix' => '+'.$faker->unique()->numberBetween(1, 999),
+        'phone_number' => $faker->unique()->numberBetween(1000000000, 9999999999),
         'email' => $faker->unique()->safeEmail,
         'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
         'email_verified_at' => now(),

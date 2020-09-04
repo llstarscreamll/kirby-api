@@ -100,13 +100,14 @@ class EmployeesController
             $user = $this->userRepository->create([
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
+                'phone_prefix' => $request->phone_prefix,
                 'phone_number' => $request->phone,
                 'email' => "{$request->code}@domain.com",
                 'password' => Hash::make("{$request->code}@domain.com_".now()->toDateString()),
             ]);
 
             $employee = $this->employeeRepository->create(
-                $requestData + [
+                Arr::except($requestData, ['phone']) + [
                     'id' => $user->id,
                     'cost_center_id' => $requestData['cost_center']['id'],
                 ]
@@ -144,7 +145,8 @@ class EmployeesController
         $workShiftIds = data_get($employeeData, 'work_shifts.*.id', []);
         $identifications = Arr::get($employeeData, 'identifications', []);
         $employeeData['cost_center_id'] = Arr::get($employeeData, 'cost_center.id');
-        $userData = Arr::only($employeeData, ['first_name', 'last_name']) + ['phone_number' => $request->phone];
+        $userData = Arr::only($employeeData, ['first_name', 'last_name', 'phone_prefix']) + ['phone_number' => $request->phone];
+        $employeeData = Arr::except($employeeData, ['phone_prefix', 'phone']);
 
         try {
             DB::beginTransaction();

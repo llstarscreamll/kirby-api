@@ -6,12 +6,16 @@ build:
     node: "v12.9.1"
   project_setup:
     override:
-      - composer install
       - php artisan passport:keys
   cache:
     directories:
       - vendor/
       - ~/.composer/cache/
+  nodes:
+    analysis:
+      tests:
+        override:
+          - php-scrutinizer-run
   tests:
     before:
       - chmod -R 777 storage
