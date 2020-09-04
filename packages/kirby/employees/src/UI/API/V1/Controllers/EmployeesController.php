@@ -122,8 +122,6 @@ class EmployeesController
 
             DB::commit();
         } catch (\Throwable $th) {
-            dd($th);
-
             return response()->json([
                 'errors' => [
                     'title' => 'Error inesperado',
