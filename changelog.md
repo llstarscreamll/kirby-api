@@ -1,5 +1,11 @@
 # Release notes
 
+## [v1.1.4 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.3..v1.1.4)
+
+### Fixed
+
+- Update composer dependencies and remove dd() from employees controller.
+
 ## [v1.1.3 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.2..v1.1.3)
 
 ### Fixed
