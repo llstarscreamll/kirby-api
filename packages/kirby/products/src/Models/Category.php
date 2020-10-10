@@ -46,4 +46,24 @@ class Category extends Model
         'position' => 'int',
         'active' => 'bool',
     ];
+
+    # ######################################################################## #
+    # Relations
+    # ######################################################################## #
+
+    /**
+     * @return mixed
+     */
+    public function products()
+    {
+        return $this->belongsToMany(Product::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function firstTenProducts()
+    {
+        return $this->products()->limit(10);
+    }
 }

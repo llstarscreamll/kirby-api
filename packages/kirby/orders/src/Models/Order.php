@@ -1,20 +1,19 @@
 <?php
 
-namespace Kirby\Products\Models;
+namespace Kirby\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Product.
+ * Class Order.
  *
- * @property string $name
- * @property string $slug
+ * @property int $id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class Product extends Model
+class Order extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -22,12 +21,9 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'code',
-        'slug',
-        'sm_image_url', 'md_image_url', 'lg_image_url',
-        'cost', 'price', 'unity', 'quantity',
-        'pum_unity', 'pum_price',
-        'active',
+        'user_id',
+        'address',
+        'address_additional_info',
     ];
 
     /**
@@ -47,6 +43,5 @@ class Product extends Model
      */
     protected $casts = [
         'id' => 'int',
-        'active' => 'bool',
     ];
 }

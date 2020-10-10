@@ -2,10 +2,11 @@
 
 namespace Kirby\Products\Repositories;
 
-use Kirby\Core\Abstracts\EloquentRepositoryAbstract;
-use Kirby\Products\Contracts\CategoryRepository;
 use Kirby\Products\Models\Category;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Kirby\Products\Contracts\CategoryRepository;
+use Kirby\Core\Abstracts\EloquentRepositoryAbstract;
 
 /**
  * Class EloquentCategoryRepository.
@@ -30,8 +31,10 @@ class EloquentCategoryRepository extends EloquentRepositoryAbstract implements C
     public function paginate($limit = null, $columns = ['*'], $method = 'paginate')
     {
         return QueryBuilder::for($this->model())
+                ->allowedIncludes('firstTenProducts')
+                ->defaultSort('-id')
                 ->allowedSorts('position')
-                ->allowedFilters('active')
-                ->paginate($limit, $columns, $method);
+                ->allowedFilters([AllowedFilter::exact('active')])
+                ->paginate($limit, $columns);
     }
 }

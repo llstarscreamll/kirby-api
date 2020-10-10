@@ -1,26 +1,26 @@
 <?php
 
-namespace kirby\Products;
+namespace Kirby\Orders;
 
 use Illuminate\Support\ServiceProvider;
-use Kirby\Products\Contracts\CategoryRepository;
-use Kirby\Products\Contracts\ProductRepository;
-use Kirby\Products\Repositories\EloquentCategoryRepository;
-use Kirby\Products\Repositories\EloquentProductRepository;
+use Kirby\Orders\Contracts\OrderRepository;
+use Kirby\Orders\Contracts\OrderProductRepository;
+use Kirby\Orders\Repositories\EloquentOrderRepository;
+use Kirby\Orders\Repositories\EloquentOrderProductRepository;
 
 /**
- * Class ProductsServiceProvider.
+ * Class OrdersServiceProvider.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
-class ProductsServiceProvider extends ServiceProvider
+class OrdersServiceProvider extends ServiceProvider
 {
     /**
      * @var array
      */
     private $binds = [
-        ProductRepository::class => EloquentProductRepository::class,
-        CategoryRepository::class => EloquentCategoryRepository::class,
+        OrderRepository::class => EloquentOrderRepository::class,
+        OrderProductRepository::class => EloquentOrderProductRepository::class,
     ];
 
     /**
@@ -32,8 +32,8 @@ class ProductsServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kirby');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'kirby');
-        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -48,13 +48,13 @@ class ProductsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/products.php', 'products');
+        $this->mergeConfigFrom(__DIR__.'/../config/orders.php', 'orders');
 
         array_walk($this->binds, fn($concrete, $abstract) => $this->app->bind($abstract, $concrete));
 
         // Register the service the package provides.
-        $this->app->singleton('products', function ($app) {
-            return new Products();
+        $this->app->singleton('orders', function ($app) {
+            return new Orders();
         });
     }
 
@@ -65,7 +65,7 @@ class ProductsServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['products'];
+        return ['orders'];
     }
 
     /**
@@ -77,23 +77,23 @@ class ProductsServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/products.php' => config_path('products.php'),
-        ], 'products.config');
+            __DIR__.'/../config/orders.php' => config_path('orders.php'),
+        ], 'orders.config');
 
         // Publishing the views.
         /*$this->publishes([
         __DIR__.'/../resources/views' => base_path('resources/views/vendor/kirby'),
-        ], 'products.views');*/
+        ], 'orders.views');*/
 
         // Publishing assets.
         /*$this->publishes([
         __DIR__.'/../resources/assets' => public_path('vendor/kirby'),
-        ], 'products.views');*/
+        ], 'orders.views');*/
 
         // Publishing the translation files.
         /*$this->publishes([
         __DIR__.'/../resources/lang' => resource_path('lang/vendor/kirby'),
-        ], 'products.views');*/
+        ], 'orders.views');*/
 
         // Registering package commands.
         // $this->commands([]);

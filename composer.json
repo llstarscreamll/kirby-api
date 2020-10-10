@@ -25,6 +25,7 @@
         "kirby/employees": "*",
         "kirby/novelties": "*",
         "kirby/products": "*",
+        "kirby/orders": "*",
         "kirby/time-clock": "*",
         "kirby/users": "*",
         "kirby/work-shifts": "*",

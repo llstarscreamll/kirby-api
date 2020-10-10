@@ -24,7 +24,9 @@ class CategoryTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = [];
+    protected $availableIncludes = [
+        'firstTenProducts',
+    ];
 
     /**
      * A Fractal transformer.
@@ -44,5 +46,14 @@ class CategoryTransformer extends TransformerAbstract
             'created_at' => (string) $category->created_at->toISOString(),
             'updated_at' => (string) $category->updated_at->toISOString(),
         ];
+    }
+
+    /**
+     * @param  Category $category
+     * @return mixed
+     */
+    public function includeFirstTenProducts(Category $category)
+    {
+        return $this->collection($category->firstTenProducts, new ProductTransformer(), 'Product');
     }
 }

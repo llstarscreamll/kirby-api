@@ -5,6 +5,7 @@ namespace Kirby\Products\UI\API\V1\Controllers;
 use Illuminate\Http\Request;
 use Kirby\Products\Contracts\CategoryRepository;
 use Kirby\Products\UI\API\V1\Transformers\CategoryTransformer;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CategoriesController.
@@ -36,6 +37,28 @@ class CategoriesController
             ->paginate(min($request->get('limit', 10), 100));
 
         return fractal($paginatedCategories, CategoryTransformer::class)
+            ->withResourceName('Category');
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $id
+     */
+    public function show(Request $request, string $id)
+    {
+        if ($request->by_slug) {
+            $category = $this->categoryRepository->findWhere(['slug' => $id])->first();
+        }
+
+        if (! $request->by_slug) {
+            $category = $this->categoryRepository->find($id);
+        }
+
+        if (! $category) {
+            return response(['errors' => ['code' => Response::HTTP_NOT_FOUND, 'title' => 'Not found']], Response::HTTP_NOT_FOUND);
+        }
+
+        return fractal($category, CategoryTransformer::class)
             ->withResourceName('Category');
     }
 }

@@ -16,14 +16,14 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->string('image_url')->nullable();
             $table->integer('position')->default(1);
             $table->boolean('active')->default(false);
             $table->timestamps();
         });
 
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('code')->unique();
@@ -35,7 +35,9 @@ class CreateCategoriesTable extends Migration
             $table->decimal('price', 19, 4)->unsigned();
             $table->string('unity');
             $table->decimal('quantity', 10, 4)->unsigned();
-            $table->boolean('active')->default(true);
+            $table->string('pum_unity');
+            $table->decimal('pum_price', 19, 4)->unsigned();
+            $table->boolean('active')->default(false);
             $table->timestamps();
         });
 
@@ -56,6 +58,7 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('category_product');
         Schema::dropIfExists('products');
         Schema::dropIfExists('categories');
     }

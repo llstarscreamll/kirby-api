@@ -3,6 +3,7 @@
 namespace Kirby\Products\Tests\Feature\API\V1;
 
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use Kirby\Products\Models\Category;
 use ProductsPackageSeed;
 use Tests\TestCase;
 
@@ -40,10 +41,13 @@ class SearchCategoriesTest extends TestCase
             ->assertOk()
             ->assertJsonCount(4, 'data')
             ->assertJsonPath('data.0.type', 'Category')
-            ->assertJsonPath('data.0.id', '1') // default sorting by id
-            ->assertJsonPath('data.1.id', '2')
-            ->assertJsonPath('data.2.id', '3')
-            ->assertJsonPath('data.3.id', '4');
+            ->assertJsonPath('data.0.id', '4') // default sorting by id desc
+            ->assertJsonPath('data.1.id', '3')
+            ->assertJsonPath('data.2.id', '2')
+            ->assertJsonPath('data.3.id', '1')
+            ->assertJsonStructure(['data', 'links', 'meta'])
+            ->assertJsonStructure(['links' => ['self', 'first', 'last']])
+            ->assertJsonStructure(['meta' => ['pagination' => ['total', 'count', 'per_page', 'current_page', 'total_pages']]]);
     }
 
     /**
@@ -67,5 +71,20 @@ class SearchCategoriesTest extends TestCase
             ->assertJsonPath('data.1.attributes.position', 2)
             ->assertJsonPath('data.2.attributes.position', 3)
             ->assertJsonPath('data.3.attributes.position', 4);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnCategoryWithTheFirstRelatedProducts()
+    {
+        Category::first()->products()->delete();
+        $this->json($this->method, $this->endpoint, ['include' => 'firstTenProducts'])
+            ->assertOk()
+            ->assertJsonPath('data.0.id', 4)
+            ->assertJsonPath('data.0.relationships.firstTenProducts.data.0.id', 7)
+            ->assertJsonPath('data.0.relationships.firstTenProducts.data.0.type', 'Product')
+            ->assertJsonPath('included.0.type', 'Product')
+            ->assertJsonStructure(['data', 'included', 'links', 'meta']);
     }
 }

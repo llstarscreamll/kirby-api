@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3cf77eb86bc12485088247dbb75e6f88",
+    "content-hash": "df8aa51a88177d4b44e4098b9296f286",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1700,6 +1700,64 @@
             "keywords": [
                 "Laravel",
                 "Novelties"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "kirby/orders",
+            "version": "dev-feature/shop-api",
+            "dist": {
+                "type": "path",
+                "url": "./packages/kirby/Orders",
+                "reference": "f125f8f7ff4c74da41b34a928379b067994b8f1a"
+            },
+            "require": {
+                "illuminate/support": "~5|~6|~7"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.1",
+                "orchestra/testbench": "~3|~4",
+                "phpunit/phpunit": "^8.0",
+                "sempro/phpunit-pretty-print": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Kirby\\Orders\\OrdersServiceProvider"
+                    ],
+                    "aliases": {
+                        "Orders": "Kirby\\Orders\\Facades\\Orders"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Kirby\\Orders\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Kirby\\Orders\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "license"
+            ],
+            "authors": [
+                {
+                    "name": "author name",
+                    "email": "author email",
+                    "homepage": "author homepage"
+                }
+            ],
+            "description": ":package_description",
+            "homepage": "https://github.com/kirby/orders",
+            "keywords": [
+                "Laravel",
+                "Orders"
             ],
             "transport-options": {
                 "relative": true

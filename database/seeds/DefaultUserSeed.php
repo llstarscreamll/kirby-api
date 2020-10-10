@@ -18,7 +18,7 @@ class DefaultUserSeed extends Seeder
             'phone_prefix' => '+57',
             'phone_number' => '3001234567',
             'email' => 'admin@pascal.com',
-            'password' => bcrypt('secret'),
+            'password' => bcrypt('secret.123'),
         ]);
 
         $user->assignRole('admin');

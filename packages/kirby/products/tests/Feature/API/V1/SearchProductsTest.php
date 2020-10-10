@@ -38,11 +38,11 @@ class SearchProductsTest extends TestCase
     {
         $this->json($this->method, $this->endpoint)
             ->assertOk()
-            ->assertJsonCount(4, 'data')
-            ->assertJsonPath('data.0.type', 'Products')
-            ->assertJsonPath('data.0.id', '1') // default sorting by id
-            ->assertJsonPath('data.1.id', '2')
-            ->assertJsonPath('data.2.id', '3')
-            ->assertJsonPath('data.3.id', '4');
+            ->assertJsonCount(8, 'data')
+            ->assertJsonPath('data.0.type', 'Product')
+            ->assertJsonPath('data.0.id', '8') // default sorting by id desc
+            ->assertJsonPath('data.1.id', '7')
+            ->assertJsonPath('data.2.id', '6')
+            ->assertJsonPath('data.3.id', '5');
     }
 }

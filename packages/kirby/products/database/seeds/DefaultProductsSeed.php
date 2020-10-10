@@ -20,35 +20,36 @@ class DefaultProductsSeed extends Seeder
      */
     public function run()
     {
-        if (! App::runningUnitTests()) {
-            return;
-        }
 
         $products = [
             [
                 'name' => 'MacBook Pro Intel Core I7 16" Pulgadas RAM 16 GB Disco Sólido 512 GB Gris espacial',
                 'code' => '190199368217',
                 'slug' => 'macbook-pro-intel-core-i7-16-pulgadas-ram-16-gb-disco-solido-512-gb-gris',
-                'sm_image_url' => 'http://localhost:8000/images/products/1.jpg',
-                'md_image_url' => 'http://localhost:8000/images/products/1.jpg',
-                'lg_image_url' => 'http://localhost:8000/images/products/1.jpg',
+                'sm_image_url' => 'http://localhost:8000/images/products/1.png',
+                'md_image_url' => 'http://localhost:8000/images/products/1.png',
+                'lg_image_url' => 'http://localhost:8000/images/products/1.png',
                 'cost' => 9000000,
                 'price' => 10629000,
                 'unity' => 'UND',
                 'quantity' => '1',
+                'pum_unity' => 'UND',
+                'pum_price' => 10629000,
                 'active' => true,
             ],
             [
                 'name' => 'Portátil Gamer ROG Strix Scar III G531GW-AZ080T Intel Core i7 16GB RAM Disco Híbrido 1TB + 512GB SSD 15,6" Pulgadas Negro',
                 'code' => '4718017354059',
                 'slug' => 'portatil-gamer-asus-rog-strix-g531gw-intel-core-i7-15-6-pulgadas-disco-hibrido-1tb-y-512gb-ssd-negro',
-                'sm_image_url' => 'http://localhost:8000/images/products/2.jpg',
-                'md_image_url' => 'http://localhost:8000/images/products/2.jpg',
-                'lg_image_url' => 'http://localhost:8000/images/products/2.jpg',
+                'sm_image_url' => 'http://localhost:8000/images/products/2.png',
+                'md_image_url' => 'http://localhost:8000/images/products/2.png',
+                'lg_image_url' => 'http://localhost:8000/images/products/2.png',
                 'cost' => 8000000,
                 'price' => 9749000,
                 'unity' => 'UND',
                 'quantity' => '1',
+                'pum_unity' => 'UND',
+                'pum_price' => 9749000,
                 'active' => true,
             ],
             [
@@ -62,19 +63,23 @@ class DefaultProductsSeed extends Seeder
                 'price' => 3999900,
                 'unity' => 'UND',
                 'quantity' => '1',
+                'pum_unity' => 'UND',
+                'pum_price' => 3999900,
                 'active' => true,
             ],
             [
                 'name' => 'iPhone 11 64 GB en negro',
                 'code' => '190199221086',
                 'slug' => 'iphone-11-64-gb-en-negro',
-                'sm_image_url' => 'http://localhost:8000/images/products/4.jpg',
-                'md_image_url' => 'http://localhost:8000/images/products/4.jpg',
-                'lg_image_url' => 'http://localhost:8000/images/products/4.jpg',
+                'sm_image_url' => 'http://localhost:8000/images/products/4.png',
+                'md_image_url' => 'http://localhost:8000/images/products/4.png',
+                'lg_image_url' => 'http://localhost:8000/images/products/4.png',
                 'cost' => 300000,
                 'price' => 3449000,
                 'unity' => 'UND',
                 'quantity' => '1',
+                'pum_unity' => 'UND',
+                'pum_price' => 3449000,
                 'active' => true,
             ],
             [
@@ -88,19 +93,23 @@ class DefaultProductsSeed extends Seeder
                 'price' => 3449000,
                 'unity' => 'UND',
                 'quantity' => '1',
+                'pum_unity' => 'UND',
+                'pum_price' => 3449000,
                 'active' => true,
             ],
             [
                 'name' => 'Galaxy Tab S6 10,5" Pulgadas Cloud blue',
                 'code' => '7707222703803',
                 'slug' => 'galaxy-tab-s6-10-5-pulgadas-cloud-blue',
-                'sm_image_url' => 'http://localhost:8000/images/products/6.jpg',
-                'md_image_url' => 'http://localhost:8000/images/products/6.jpg',
-                'lg_image_url' => 'http://localhost:8000/images/products/6.jpg',
+                'sm_image_url' => 'http://localhost:8000/images/products/6.png',
+                'md_image_url' => 'http://localhost:8000/images/products/6.png',
+                'lg_image_url' => 'http://localhost:8000/images/products/6.png',
                 'cost' => 2800000,
                 'price' => 3199900,
                 'unity' => 'UND',
                 'quantity' => '1',
+                'pum_unity' => 'UND',
+                'pum_price' => 3199900,
                 'active' => true,
             ],
             [
@@ -114,6 +123,8 @@ class DefaultProductsSeed extends Seeder
                 'price' => 1399900,
                 'unity' => 'UND',
                 'quantity' => '1',
+                'pum_unity' => 'UND',
+                'pum_price' => 1399900,
                 'active' => true,
             ],
             [
@@ -127,6 +138,8 @@ class DefaultProductsSeed extends Seeder
                 'price' => 1694000,
                 'unity' => 'UND',
                 'quantity' => '1',
+                'pum_unity' => 'UND',
+                'pum_price' => 1694000,
                 'active' => true,
             ],
         ];
@@ -134,7 +147,7 @@ class DefaultProductsSeed extends Seeder
         $products = array_map(fn($product) => Product::updateOrCreate(Arr::only($product, ['code']), $product), $products);
 
         array_map(
-            fn($products, $categoryId) => Category::find($categoryId)->products()->sync($products),
+            fn($products, $categoryId) => Category::find($categoryId + 1)->products()->sync(data_get($products, '*.id')),
             array_chunk($products, 2), array_keys(array_chunk($products, 2))
         );
     }

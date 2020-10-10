@@ -19,9 +19,7 @@ class DefaultCategoriesSeed extends Seeder
      */
     public function run()
     {
-        if (! App::runningUnitTests()) {
-            return;
-        }
+
 
         $categories = [
             ['name' => 'Laptops', 'slug' => 'laptops', 'position' => 4, 'active' => true],
