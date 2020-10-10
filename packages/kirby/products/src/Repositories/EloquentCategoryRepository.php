@@ -2,11 +2,11 @@
 
 namespace Kirby\Products\Repositories;
 
-use Kirby\Products\Models\Category;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\AllowedFilter;
-use Kirby\Products\Contracts\CategoryRepository;
 use Kirby\Core\Abstracts\EloquentRepositoryAbstract;
+use Kirby\Products\Contracts\CategoryRepository;
+use Kirby\Products\Models\Category;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * Class EloquentCategoryRepository.

@@ -5,7 +5,6 @@ namespace Kirby\Products\UI\API\V1\Controllers;
 use Illuminate\Http\Request;
 use Kirby\Products\Contracts\ProductRepository;
 use Kirby\Products\UI\API\V1\Transformers\ProductTransformer;
-use Kirby\Products\UI\API\V1\Transformers\CategoryTransformer;
 
 /**
  * Class ProductsController.

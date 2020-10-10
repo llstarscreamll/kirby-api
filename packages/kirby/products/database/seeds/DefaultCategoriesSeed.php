@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Arr;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\App;
+use Illuminate\Support\Arr;
 use Kirby\Products\Models\Category;
 
 /**
@@ -19,8 +18,6 @@ class DefaultCategoriesSeed extends Seeder
      */
     public function run()
     {
-
-
         $categories = [
             ['name' => 'Laptops', 'slug' => 'laptops', 'position' => 4, 'active' => true],
             ['name' => 'Cellphones', 'slug' => 'cellphones', 'position' => 3, 'active' => true],
@@ -28,6 +25,6 @@ class DefaultCategoriesSeed extends Seeder
             ['name' => 'Video Games', 'slug' => 'video-games', 'position' => 1, 'active' => false],
         ];
 
-        array_map(fn($category) => Category::updateOrCreate(Arr::only($category, ['slug']), $category), $categories);
+        array_map(fn ($category) => Category::updateOrCreate(Arr::only($category, ['slug']), $category), $categories);
     }
 }

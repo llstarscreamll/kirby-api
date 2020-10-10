@@ -11,5 +11,4 @@ use Kirby\Core\Contracts\BaseRepositoryInterface;
  */
 interface CategoryRepository extends BaseRepositoryInterface
 {
-
 }

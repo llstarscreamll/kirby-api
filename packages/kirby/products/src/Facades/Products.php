@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * Facade Products.
- * 
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class Products extends Facade

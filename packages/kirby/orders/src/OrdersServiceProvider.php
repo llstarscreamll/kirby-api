@@ -3,10 +3,10 @@
 namespace Kirby\Orders;
 
 use Illuminate\Support\ServiceProvider;
-use Kirby\Orders\Contracts\OrderRepository;
 use Kirby\Orders\Contracts\OrderProductRepository;
-use Kirby\Orders\Repositories\EloquentOrderRepository;
+use Kirby\Orders\Contracts\OrderRepository;
 use Kirby\Orders\Repositories\EloquentOrderProductRepository;
+use Kirby\Orders\Repositories\EloquentOrderRepository;
 
 /**
  * Class OrdersServiceProvider.
@@ -50,7 +50,7 @@ class OrdersServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/orders.php', 'orders');
 
-        array_walk($this->binds, fn($concrete, $abstract) => $this->app->bind($abstract, $concrete));
+        array_walk($this->binds, fn ($concrete, $abstract) => $this->app->bind($abstract, $concrete));
 
         // Register the service the package provides.
         $this->app->singleton('orders', function ($app) {

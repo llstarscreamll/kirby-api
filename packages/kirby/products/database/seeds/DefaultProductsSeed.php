@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
 use Kirby\Products\Models\Category;
 use Kirby\Products\Models\Product;
 
@@ -20,7 +19,6 @@ class DefaultProductsSeed extends Seeder
      */
     public function run()
     {
-
         $products = [
             [
                 'name' => 'MacBook Pro Intel Core I7 16" Pulgadas RAM 16 GB Disco Sólido 512 GB Gris espacial',
@@ -144,10 +142,10 @@ class DefaultProductsSeed extends Seeder
             ],
         ];
 
-        $products = array_map(fn($product) => Product::updateOrCreate(Arr::only($product, ['code']), $product), $products);
+        $products = array_map(fn ($product) => Product::updateOrCreate(Arr::only($product, ['code']), $product), $products);
 
         array_map(
-            fn($products, $categoryId) => Category::find($categoryId + 1)->products()->sync(data_get($products, '*.id')),
+            fn ($products, $categoryId) => Category::find($categoryId + 1)->products()->sync(data_get($products, '*.id')),
             array_chunk($products, 2), array_keys(array_chunk($products, 2))
         );
     }

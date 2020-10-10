@@ -29,7 +29,7 @@ class OrdersController
         ]);
 
         $products = $productRepo->whereIn('id', data_get($orderData, 'products.*.product.id'))->get();
-        $orderProducts = array_map(fn($cartItem) => [
+        $orderProducts = array_map(fn ($cartItem) => [
             'order_id' => $order->id,
             'product_id' => ($product = $products->firstWhere('id', $cartItem['product']['id']))->id,
             'product_name' => $product->name,

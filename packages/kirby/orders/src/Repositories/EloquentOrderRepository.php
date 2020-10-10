@@ -2,10 +2,10 @@
 
 namespace Kirby\Orders\Repositories;
 
-use Spatie\QueryBuilder\QueryBuilder;
-use Kirby\Orders\Contracts\OrderRepository;
 use Kirby\Core\Abstracts\EloquentRepositoryAbstract;
+use Kirby\Orders\Contracts\OrderRepository;
 use Kirby\Orders\Models\Order;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * Class EloquentOrderRepository.
