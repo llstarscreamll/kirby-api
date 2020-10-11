@@ -78,7 +78,7 @@ class NoveltiesController
             $novelties->pushCriteria(new ByNoveltyTypeCriteria(data_get($request->novelty_types, '*.id')));
         }
 
-        return NoveltyResource::collection($novelties->simplePaginate(null, ['novelties.*']));
+        return NoveltyResource::collection($novelties->paginate(null, ['novelties.*']));
     }
 
     /**

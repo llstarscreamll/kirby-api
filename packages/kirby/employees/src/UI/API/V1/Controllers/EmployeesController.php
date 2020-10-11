@@ -66,7 +66,7 @@ class EmployeesController
             ->pushCriteria(app(RequestCriteria::class))
             ->with('user')
             ->orderBy('id', 'DESC')
-            ->simplePaginate();
+            ->paginate();
 
         return EmployeeResource::collection($employees);
     }

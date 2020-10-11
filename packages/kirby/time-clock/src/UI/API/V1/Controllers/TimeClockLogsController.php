@@ -50,7 +50,7 @@ class TimeClockLogsController
                 'approvals:users.id,users.first_name,users.last_name',
             ])
             ->orderBy('id', 'DESC')
-            ->simplePaginate();
+            ->paginate();
 
         return TimeClockLogResource::collection($timeClockLogs);
     }
