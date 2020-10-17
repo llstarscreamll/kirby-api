@@ -9,6 +9,7 @@ use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\TimeClock\Actions\LogCheckIn;
 use Kirby\TimeClock\Actions\LogCheckOut;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Kirby\TimeClock\Criteria\ByEmployeeIdCriterion;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\UI\API\V1\Requests\CreateTimeClockLogRequest;
 use Kirby\TimeClock\UI\API\V1\Requests\SearchTimeClockLogsRequest;
@@ -43,6 +44,12 @@ class TimeClockLogsController
      */
     public function index(SearchTimeClockLogsRequest $request)
     {
+        $user = $request->user();
+
+        if ($user->can('time-clock-logs.employee-search')) {
+            $this->timeClockLogRepository->pushCriteria(new ByEmployeeIdCriterion($user->id));
+        }
+
         $timeClockLogs = $this->timeClockLogRepository
             ->pushCriteria(app(RequestCriteria::class))
             ->with([
