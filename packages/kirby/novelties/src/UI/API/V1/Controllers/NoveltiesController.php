@@ -5,6 +5,7 @@ namespace Kirby\Novelties\UI\API\V1\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
+use Kirby\Novelties\Criteria\ByEmployeeIdCriterion;
 use Kirby\Novelties\Repositories\Criteria\ByNoveltyTypeCriteria;
 use Kirby\Novelties\Repositories\Criteria\ByStartDateRangeCriteria;
 use Kirby\Novelties\Repositories\Criteria\CostCentersCriteria;
@@ -45,6 +46,10 @@ class NoveltiesController
      */
     public function index(SearchNoveltiesRequest $request)
     {
+        if ($request->user()->can('novelties.employee-search')) {
+            $this->noveltyRepository->pushCriteria(new ByEmployeeIdCriterion($request->user()->id));
+        }
+
         $novelties = $this->noveltyRepository
             ->pushCriteria(app(RequestCriteria::class))
             ->with([
@@ -66,7 +71,7 @@ class NoveltiesController
             ));
         }
 
-        if ($request->employees) {
+        if (! $request->user()->can('novelties.employee-search') && $request->employees) {
             $novelties->pushCriteria(new EmployeeCriteria(data_get($request->employees, '*.id')));
         }
 

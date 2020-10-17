@@ -2,6 +2,7 @@
 
 namespace Kirby\Novelties\Tests\api\Novelties;
 
+use Kirby\Authorization\Models\Permission;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Models\Novelty;
@@ -27,13 +28,16 @@ class SearchNoveltiesTest extends \Tests\TestCase
 
         $this->seed(NoveltiesPackageSeed::class);
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
+        // user with permission to make global search by default
+        $this->user->syncPermissions(Permission::where('name', 'novelties.global-search')->get());
     }
 
     /**
      * @test
      */
-    public function searchSuccessfullyWithoutAnyParams()
+    public function shouldReturnAllEmployeesDataWhenDoesNotHaveEmployeeSearchPermission()
     {
+        $this->user->syncPermissions(Permission::where('name', 'novelties.global-search')->get());
         $novelties = factory(Novelty::class, 5)->create();
 
         $this->json('GET', $this->endpoint)
@@ -43,6 +47,21 @@ class SearchNoveltiesTest extends \Tests\TestCase
             ->assertJsonHasPath('data.2.id')
             ->assertJsonHasPath('data.3.id')
             ->assertJsonHasPath('data.4.id');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnCurrentUserDataWhenHasEmployeeSearchPermission()
+    {
+        $this->user->syncPermissions(Permission::where('name', 'novelties.employee-search')->get());
+        factory(Novelty::class)->create(['employee_id' => $this->user->id]);
+        factory(Novelty::class, 5)->create();
+
+        $this->json('GET', $this->endpoint)
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonHasPath('data.0.id');
     }
 
     /**
@@ -76,6 +95,9 @@ class SearchNoveltiesTest extends \Tests\TestCase
     }
 
     /**
+     * This filter search can be performed only if current user doesn't have
+     * novelties.employee-search permission.
+     *
      * @test
      */
     public function searchByEmployees()
