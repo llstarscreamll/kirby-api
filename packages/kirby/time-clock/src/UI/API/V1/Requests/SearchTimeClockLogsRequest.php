@@ -19,7 +19,7 @@ class SearchTimeClockLogsRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('time-clock-logs.search');
+        return $this->user()->hasAnyPermission(['time-clock-logs.global-search', 'time-clock-logs.employee-search']);
     }
 
     /**
