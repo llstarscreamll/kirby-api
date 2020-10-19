@@ -163,12 +163,7 @@ class LogCheckIn
                 ->first(['novelties.*']);
 
             if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
-                $scheduledNovelty = $this->noveltyRepository->update(
-                    [
-                        'end_at' => now(),
-                    ],
-                    $scheduledNovelty->id
-                );
+                $scheduledNovelty = $this->noveltyRepository->update(['end_at' => now()], $scheduledNovelty->id);
             }
 
             $checkInOffset = optional($scheduledNovelty)->end_at;

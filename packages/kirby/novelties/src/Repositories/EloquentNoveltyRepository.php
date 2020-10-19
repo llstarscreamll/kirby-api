@@ -67,7 +67,8 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
                     ->where('novelty_types.context_type', '!=', 'normal_work_shift_time')
                     ->orWhereNull('novelty_types.context_type')
             )
-            ->whereBetween($field, [$start->timezone('UTC'), $end->timezone('UTC')]);
+            ->whereBetween($field, [$start->timezone('UTC'), $end->timezone('UTC')])
+            ->orWhere(fn ($q) => $q->where('start_at', '<', $end)->where('end_at', '>', $end));
 
         return $this;
     }
