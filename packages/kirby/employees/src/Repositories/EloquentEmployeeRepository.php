@@ -24,8 +24,9 @@ class EloquentEmployeeRepository extends EloquentRepositoryAbstract implements E
      * @var array
      */
     protected $fieldSearchable = [
-        'user.first_name' => 'like',
-        'user.last_name' => 'like',
+        'users.first_name' => 'like',
+        'users.last_name' => 'like',
+        'users.email' => 'like',
         'code' => 'like',
         'identification_number' => 'like',
     ];
