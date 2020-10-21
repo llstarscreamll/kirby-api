@@ -33,6 +33,7 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
         'grace_minutes_after_end_times' => 45,
         'meal_time_in_minutes' => 45,
         'min_minutes_required_to_discount_meal_time' => 30 * 2,
+        'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
         'time_slots' => [['start' => '07:00', 'end' => '12:30']],
     ];
 
@@ -66,7 +67,10 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
             ->assertOk()
             ->assertJsonPath('data.id', $this->workShift['id']);
 
-        $this->assertDatabaseHas('work_shifts', Arr::except($this->requestData, 'time_slots'));
+        $this->assertDatabaseHas('work_shifts',
+            ['time_slots' => json_encode($this->requestData['time_slots'])] +
+            ['applies_on_days' => json_encode($this->requestData['applies_on_days'])] +
+            $this->requestData);
     }
 
     /**

@@ -47,6 +47,7 @@ class CreateWorkShiftRequest extends FormRequestAbstract
             'meal_time_in_minutes' => ['numeric', 'min:0'],
             'min_minutes_required_to_discount_meal_time' => ['numeric', 'min:0'],
             'time_slots' => ['required', 'array'],
+            'applies_on_days.*' => ['numeric', 'in:1,2,3,4,5,6,7'],
         ];
     }
 }
