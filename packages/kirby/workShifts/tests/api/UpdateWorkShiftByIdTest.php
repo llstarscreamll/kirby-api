@@ -2,7 +2,6 @@
 
 namespace Kirby\WorkShifts\Tests\api;
 
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
