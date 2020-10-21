@@ -2,8 +2,6 @@
 
 namespace Kirby\WorkShifts\Tests\api;
 
-use Illuminate\Support\Arr;
-
 /**
  * Class CreateWorkShiftTest.
  *
