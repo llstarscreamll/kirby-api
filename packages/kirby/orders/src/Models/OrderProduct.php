@@ -3,6 +3,7 @@
 namespace Kirby\Orders\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use NumberFormatter;
 
 /**
  * Class OrderProduct.
@@ -55,10 +56,40 @@ class OrderProduct extends Model
     protected $casts = [
         'id' => 'int',
         'product_id' => 'int',
-        'product_cost' => 'double',
-        'product_price' => 'double',
-        'product_quantity' => 'double',
-        'product_pum_price' => 'double',
+        'product_cost' => 'float',
+        'product_price' => 'float',
+        'product_quantity' => 'float',
+        'product_pum_price' => 'float',
         'requested_quantity' => 'int',
     ];
+
+    /**
+     * @return float
+     */
+    public function total(): float
+    {
+        return $this->requested_quantity * $this->product_price;
+    }
+
+    /**
+     * @return string
+     */
+    public function productPriceFormatted(): string
+    {
+        $formatter = new NumberFormatter('es_CO', NumberFormatter::CURRENCY);
+        $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
+
+        return $formatter->formatCurrency($this->product_price, 'COP');
+    }
+
+    /**
+     * @return string
+     */
+    public function totalFormatted(): string
+    {
+        $formatter = new NumberFormatter('es_CO', NumberFormatter::CURRENCY);
+        $formatter->setAttribute(NumberFormatter::FRACTION_DIGITS, 2);
+
+        return $formatter->formatCurrency($this->total(), 'COP');
+    }
 }

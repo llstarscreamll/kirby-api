@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Product extends Model
 {
+    use \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -49,4 +51,12 @@ class Product extends Model
         'id' => 'int',
         'active' => 'bool',
     ];
+
+    /**
+     * @return mixed
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+    }
 }

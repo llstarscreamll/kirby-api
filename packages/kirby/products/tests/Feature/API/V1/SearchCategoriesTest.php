@@ -3,7 +3,9 @@
 namespace Kirby\Products\Tests\Feature\API\V1;
 
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use Illuminate\Support\Facades\DB;
 use Kirby\Products\Models\Category;
+use Kirby\Products\Models\Product;
 use ProductsPackageSeed;
 use Tests\TestCase;
 
@@ -53,7 +55,7 @@ class SearchCategoriesTest extends TestCase
     /**
      * @test
      */
-    public function shouldSearchActiveCategories()
+    public function shouldSearchByActiveCategories()
     {
         $this->json($this->method, $this->endpoint, ['filter' => ['active' => true]])
             ->assertOk()
@@ -76,15 +78,19 @@ class SearchCategoriesTest extends TestCase
     /**
      * @test
      */
-    public function shouldReturnCategoryWithTheFirstRelatedProducts()
+    public function shouldReturnCategoryWithTheFirstTenRelatedProducts()
     {
-        Category::first()->products()->delete();
+        // delete all relations
+        DB::table('category_product')->delete();
+        // set related products to first two categories
+        $categories = Category::orderBy('id', 'desc')->get();
+        $categories[0]->products()->sync(factory(Product::class, 15)->create());
+        $categories[1]->products()->sync(factory(Product::class, 15)->create());
+
         $this->json($this->method, $this->endpoint, ['include' => 'firstTenProducts'])
             ->assertOk()
-            ->assertJsonPath('data.0.id', 4)
-            ->assertJsonPath('data.0.relationships.firstTenProducts.data.0.id', 7)
-            ->assertJsonPath('data.0.relationships.firstTenProducts.data.0.type', 'Product')
-            ->assertJsonPath('included.0.type', 'Product')
-            ->assertJsonStructure(['data', 'included', 'links', 'meta']);
+            ->assertJsonCount(Category::count(), 'data')
+            ->assertJsonCount(10, 'data.0.relationships.firstTenProducts.data')
+            ->assertJsonCount(10, 'data.1.relationships.firstTenProducts.data');
     }
 }

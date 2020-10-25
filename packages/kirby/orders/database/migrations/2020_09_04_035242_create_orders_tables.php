@@ -24,6 +24,7 @@ class CreateOrdersTables extends Migration
             $table->string('payment_method')->default('cash');
             $table->string('address');
             $table->string('address_additional_info')->nullable();
+            $table->decimal('shipping_price')->default(0);
             $table->timestamps();
 
             $table->index(['user_id']);

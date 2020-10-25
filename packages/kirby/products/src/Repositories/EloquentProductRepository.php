@@ -33,15 +33,19 @@ class EloquentProductRepository extends EloquentRepositoryAbstract implements Pr
     {
         return QueryBuilder::for($this->model())
             ->allowedFilters([
-                AllowedFilter::exact('products.active'),
+                AllowedFilter::partial('name', 'products.name'),
+                AllowedFilter::exact('active', 'products.active'),
                 AllowedFilter::callback(
                     'category_slug',
-                    fn (Builder $q, string $slug) => $q
-                        ->join('category_product', 'category_product.product_id', 'products.id')
-                        ->join('categories', 'categories.id', 'category_product.category_id')
-                        ->where(['categories.slug' => $slug])
+                    fn(Builder $q, string $slug) => $q->where(['categories.slug' => $slug])
+                ),
+                AllowedFilter::callback(
+                    'categories.active',
+                    fn(Builder $q, string $active) => $q->where(['categories.active' => filter_var($active, FILTER_VALIDATE_BOOLEAN)])
                 ),
             ])
+            ->join('category_product', 'category_product.product_id', 'products.id')
+            ->join('categories', 'categories.id', 'category_product.category_id')
             ->defaultSort('-products.id')
             ->paginate($limit, $columns);
     }

@@ -59,4 +59,9 @@ class User extends Authenticatable
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    public function getFullPhoneAttribute()
+    {
+        return "{$this->phone_prefix} {$this->phone_number}";
+    }
 }

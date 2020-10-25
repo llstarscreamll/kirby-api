@@ -2,6 +2,8 @@
 
 namespace Orders\Tests\Feature\API\V1;
 
+use App\Mail\OrderCreated;
+use Illuminate\Support\Facades\Mail;
 use Kirby\Orders\Models\Order;
 use Kirby\Products\Models\Product;
 use Kirby\Users\Models\User;
@@ -48,6 +50,8 @@ class CheckOutTest extends TestCase
             'payment_method' => ['name' => 'cash'],
         ];
 
+        Mail::fake();
+
         $this->actingAs($user = factory(User::class)->create(), 'api')
             ->json($this->method, $this->endpoint, $orderData)
             ->assertStatus(202);
@@ -57,6 +61,7 @@ class CheckOutTest extends TestCase
             'payment_method' => 'cash',
             'address' => 'Carrera 12 #2D - 29',
             'address_additional_info' => 'Edificio Villa Sofía, apartamento 301',
+            'shipping_price' => 4000, // is a default value
         ]);
 
         $order = Order::first();
@@ -96,5 +101,11 @@ class CheckOutTest extends TestCase
             'product_pum_price' => $products[1]->pum_price,
             'requested_quantity' => 7,
         ]);
+
+        Mail::assertQueued(OrderCreated::class, function ($mail) use ($order, $user) {
+            return $mail->order->id === $order->id &&
+            $mail->hasTo($user->email) &&
+            $mail->hasBcc(config('shop.email'));
+        });
     }
 }

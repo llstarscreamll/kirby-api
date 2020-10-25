@@ -19,6 +19,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Category extends Model
 {
+    use \Staudenmeir\EloquentEagerLimit\HasEagerLimit;
+
     /**
      * The attributes that are mass assignable.
      *
