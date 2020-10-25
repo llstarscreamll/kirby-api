@@ -64,8 +64,9 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
             : $this->allowedFilters;
 
         $this->model = QueryBuilder::for($query)
-                ->allowedFilters($allowedFilters)
-                ->allowedIncludes($this->allowedIncludes);
+            ->allowedFilters($allowedFilters)
+            ->allowedIncludes($this->allowedIncludes)
+            ->defaultSort('-id');
 
         return $this;
     }
@@ -116,6 +117,12 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
         return $this->parserResult($model);
     }
 
+    /**
+     * @param string $field
+     * @param array $values
+     * @param array $updates
+     * @return mixed
+     */
     public function updateWhereIn(string $field, array $values, array $updates)
     {
         $this->applyScope();
@@ -133,11 +140,10 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
      * by applying ?limit=0 to the request, if 'repository.pagination.maxLimit'
      * is set to true.
      *
-     * @param null   $limit
-     * @param array  $columns
-     * @param string $method
-     *
-     * @return  mixed
+     * @param  null     $limit
+     * @param  array    $columns
+     * @param  string   $method
+     * @return mixed
      */
     public function paginate($limit = null, $columns = ['*'], $method = 'paginate')
     {
