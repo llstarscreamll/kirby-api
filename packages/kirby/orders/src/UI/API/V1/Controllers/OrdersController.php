@@ -7,7 +7,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Kirby\Orders\Contracts\OrderRepository;
-use Kirby\Orders\Models\Order;
 use Kirby\Orders\UI\API\V1\Requests\StoreOrderRequest;
 use Kirby\Products\Contracts\ProductRepository;
 use Symfony\Component\HttpFoundation\Response;

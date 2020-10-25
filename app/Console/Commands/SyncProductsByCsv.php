@@ -66,7 +66,7 @@ class SyncProductsByCsv extends Command
             }
 
             $categories = collect(explode('|', $row['categories']))
-                ->map(fn($categoryName) => $this->writeCategory($categoryName, Str::slug($categoryName)));
+                ->map(fn ($categoryName) => $this->writeCategory($categoryName, Str::slug($categoryName)));
 
             $product->categories()->sync($categories->pluck('id'));
         }

@@ -87,7 +87,7 @@ class Order extends Model
      */
     public function total(): float
     {
-        return $this->products->sum(fn($product) => $product->total()) + $this->shipping_price;
+        return $this->products->sum(fn ($product) => $product->total()) + $this->shipping_price;
     }
 
     /**

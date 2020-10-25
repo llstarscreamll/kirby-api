@@ -15,7 +15,7 @@ class SyncProductsByCsvTest extends TestCase
     /**
      * @var string
      */
-    private $filePath = "/tmp/importer-tests.csv";
+    private $filePath = '/tmp/importer-tests.csv';
 
     /**
      * @inheritdoc
