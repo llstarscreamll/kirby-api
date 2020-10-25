@@ -3,6 +3,7 @@
 namespace Kirby\WorkShifts\Tests\api;
 
 use Illuminate\Support\Facades\DB;
+use Kirby\WorkShifts\Models\WorkShift;
 
 /**
  * Class UpdateWorkShiftByIdTest.
@@ -32,6 +33,7 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
         'grace_minutes_after_end_times' => 45,
         'meal_time_in_minutes' => 45,
         'min_minutes_required_to_discount_meal_time' => 30 * 2,
+        'time_zone' => 'America/Bogota',
         'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
         'time_slots' => [['start' => '07:00', 'end' => '12:30']],
     ];
@@ -48,6 +50,8 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
             'grace_minutes_after_end_times' => 15,
             'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
+            'time_zone' => 'UTC',
+            'applies_on_days' => json_encode([6, 7]),
             'time_slots' => json_encode([['start' => '07:00', 'end' => '12:30'], ['start' => '02:00', 'end' => '06:00']]),
         ];
 
