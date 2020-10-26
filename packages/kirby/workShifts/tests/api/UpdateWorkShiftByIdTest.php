@@ -3,7 +3,6 @@
 namespace Kirby\WorkShifts\Tests\api;
 
 use Illuminate\Support\Facades\DB;
-use Kirby\WorkShifts\Models\WorkShift;
 
 /**
  * Class UpdateWorkShiftByIdTest.

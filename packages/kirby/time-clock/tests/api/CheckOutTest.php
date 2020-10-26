@@ -901,7 +901,7 @@ class CheckOutTest extends \Tests\TestCase
      * Given the next scenario:
      * - 7-18 work shift
      * - 7-9 time clock
-     * - 9-18 scheduled novelty
+     * - 9-18 scheduled novelty.
      *
      * When employee checks in again at 10, scheduled novelty should be updated
      * from 9-18 to to 9-10, so this tests is for verify that said scheduled
