@@ -12,6 +12,7 @@ use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\Models\Setting;
+use Kirby\TimeClock\Models\TimeClockLog;
 use TimeClockPermissionsSeeder;
 
 /**
@@ -833,7 +834,7 @@ class CheckOutTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function whenHasShiftAndLeavesOnTimeShouldIgnoreCheckInScheduledNovelty()
+    public function shouldIgnoreCheckInScheduledNoveltyWhenHasShiftAndLeavesOnTime()
     {
         // fake current date time, monday at 6pm
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
@@ -863,16 +864,14 @@ class CheckOutTest extends \Tests\TestCase
         // create scheduled novelty from 7am to 8am, since employee leaves at
         // 6pm, he's on time to check out, scheduled novelty has no effect in
         // this scenario because of out of time range from said novelty
-        $noveltyData = [
+        $novelty = factory(Novelty::class)->create([
             'employee_id' => $employee->id,
             // The novelty should be attached to a time clock log because it's a
             // past tense record
             'time_clock_log_id' => $employee->timeClockLogs->first()->id,
             'start_at' => now()->setTime(7, 00),
             'end_at' => now()->setTime(8, 00),
-        ];
-
-        factory(Novelty::class)->create($noveltyData);
+        ]);
 
         $requestData = [
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
@@ -889,6 +888,87 @@ class CheckOutTest extends \Tests\TestCase
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'check_out_novelty_type_id' => null,
             'check_out_sub_cost_center_id' => null,
+        ]);
+        // scheduled novelty should not be updated
+        $this->assertDatabaseHas('novelties', [
+            'id' => $novelty->id,
+            'start_at' => now()->setTime(7, 00)->toDateTimeString(),
+            'end_at' => now()->setTime(8, 00)->toDateTimeString(),
+        ]);
+    }
+
+    /**
+     * Given the next scenario:
+     * - 7-18 work shift
+     * - 7-9 time clock
+     * - 9-18 scheduled novelty
+     *
+     * When employee checks in again at 10, scheduled novelty should be updated
+     * from 9-18 to to 9-10, so this tests is for verify that said scheduled
+     * novelty is not modified any more when employee checkout early for said
+     * work shift.
+     *
+     * @test
+     */
+    public function shouldIgnoreBurnedScheduledNoveltyWhenHasShiftAndLeavesTooEarly()
+    {
+        // fake current date time, monday at 6pm
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 12, 42));
+        $checkedInTime = now()->setTime(12, 00);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '12 to 19',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '12:00', 'end' => '19:00']], // should check out at 6pm
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => now()->setTime(12, 29),
+            ])
+            ->create();
+
+        $novelty = factory(Novelty::class)->create([
+            'employee_id' => $employee->id,
+            'time_clock_log_id' => $employee->timeClockLogs->first()->id,
+            'start_at' => now()->setTime(12, 29),
+            'end_at' => now()->setTime(12, 41),
+        ]);
+
+        $lastTimeClockLog = factory(TimeClockLog::class)->create([
+            'work_shift_id' => 1,
+            'employee_id' => $employee->id,
+            'checked_in_at' => now()->setTime(12, 41),
+            'checked_out_at' => null,
+        ]);
+
+        // set setting to NOT require novelty type when check out is too early,
+        // this sets a default novelty type for the early check out
+        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => true]);
+
+        $requestData = [
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $this->json('POST', $this->endpoint, $requestData)
+            ->assertOk()
+            ->assertJsonHasPath('data.id');
+
+        $this->assertDatabaseHas('time_clock_logs', [
+            'id' => $lastTimeClockLog->id,
+            'employee_id' => $employee->id,
+            'checked_in_at' => now()->setTime(12, 41),
+            'checked_out_at' => now()->setTime(12, 42),
+        ]);
+        // scheduled novelty should not be updated
+        $this->assertDatabaseHas('novelties', [
+            'id' => $novelty->id,
+            'start_at' => $novelty->start_at->toDateTimeString(),
+            'end_at' => $novelty->end_at->toDateTimeString(),
         ]);
     }
 
