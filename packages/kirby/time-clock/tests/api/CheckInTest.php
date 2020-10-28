@@ -1428,6 +1428,105 @@ class CheckInTest extends \Tests\TestCase
         ]);
     }
 
+    /**
+     * Given the next scenario:
+     * - 10-18 work shift
+     * - 11:48-11:57 time clock
+     * - 11:57-18:00 scheduled novelty
+     *
+     * This test verifies that check in at 12:15 set the end of said scheduled
+     * novelty to 12:15 and no other novelties are created.
+     *
+     * @test
+     */
+    public function shouldNotReplicateScheduledNoveltyWhenHasShiftAndCheckInTooEarlyToSaidNovelty()
+    {
+        // fake current date time, monday at 6pm
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 12, 15));
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '10 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '10:00', 'end' => '18:00']], // should check out at 6pm
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => now()->setTime(11, 48),
+                'checked_out_at' => now()->setTime(11, 57),
+            ])
+            ->create();
+
+        // is important to note that scheduled novelty is created before the
+        // first time clock novelties
+        $scheduledNovelty = factory(Novelty::class)->create([
+            'employee_id' => $employee->id,
+            'time_clock_log_id' => $employee->timeClockLogs->first()->id,
+            'start_at' => now()->setTime(11, 57),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+
+        // create novelties from first time clock log
+        $firstNovelty = factory(Novelty::class)->create([
+            'employee_id' => $employee->id,
+            'novelty_type_id' => $this->subtractTimeNovelty, // PP
+            'time_clock_log_id' => $employee->timeClockLogs->first()->id,
+            'start_at' => now()->setTime(10, 00),
+            'end_at' => now()->setTime(11, 47, 59),
+        ]);
+
+        $secondNovelty = factory(Novelty::class)->create([
+            'employee_id' => $employee->id,
+            'novelty_type_id' => $this->subtractTimeNovelty, // PP
+            'time_clock_log_id' => $employee->timeClockLogs->first()->id,
+            'start_at' => now()->setTime(11, 57),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+
+        // set setting to NOT require novelty type when check out is too early
+        // or too late, and set automatic adjustment to scheduled novelties
+        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => true]);
+
+        $requestData = [
+            'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $this->json('POST', $this->endpoint, $requestData)
+            ->assertCreated()
+            ->assertJsonHasPath('data.id');
+
+        $this->assertDatabaseRecordsCount(2, 'time_clock_logs', ['employee_id' => $employee->id]);
+        $this->assertDatabaseHas('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'checked_in_at' => now(),
+            'checked_out_at' => null,
+        ]);
+
+        $this->assertDatabaseRecordsCount(3, 'novelties', ['employee_id' => $employee->id]);
+
+        // scheduled novelty end should be updated to now
+        $this->assertDatabaseHas('novelties', [
+            'id' => $scheduledNovelty->id,
+            'start_at' => $scheduledNovelty->start_at->toDateTimeString(),
+            'end_at' => now()->toDateTimeString(),
+        ]);
+
+        $this->assertDatabaseHas('novelties', [
+            'id' => $firstNovelty->id,
+            'start_at' => now()->setTime(10, 00),
+            'end_at' => now()->setTime(11, 47, 59),
+        ]);
+
+        $this->assertDatabaseHas('novelties', [
+            'id' => $secondNovelty->id,
+            'start_at' => now()->setTime(11, 57),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+    }
+
     // ######################################################################## #
     //             Automatic novelty deduction on eager/late check in           #
     // ######################################################################## #
@@ -1528,7 +1627,7 @@ class CheckInTest extends \Tests\TestCase
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 
