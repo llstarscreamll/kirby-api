@@ -126,12 +126,7 @@ class LogCheckOut
             ->orderBy('id', 'DESC')
             ->first(['novelties.*']);
         if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
-            $scheduledNovelty = $this->noveltyRepository->update(
-                [
-                    'start_at' => now(),
-                ],
-                $scheduledNovelty->id
-            );
+            $scheduledNovelty = $this->noveltyRepository->update(['start_at' => now()], $scheduledNovelty->id);
         }
 
         $checkOutOffset = optional($scheduledNovelty)->start_at;
