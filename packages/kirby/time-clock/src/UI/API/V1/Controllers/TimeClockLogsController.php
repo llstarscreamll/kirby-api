@@ -85,18 +85,20 @@ class TimeClockLogsController
             ->find($request->employee_id);
 
         DB::transaction(function () use ($request, $timeClockLogData, $employee, $logCheckInAction, $logCheckOutAction) {
-            Carbon::setTestNow($timeClockLogData['checked_in_at']);
-            $timeClockLog = $logCheckInAction->run(
-                $request->user(),
-                $employee->identifications->first()->code,
-                $request->work_shift_id,
-                $request->check_in_novelty_type_id,
-                $request->check_in_sub_cost_center_id,
-            );
+            if ($request->checked_in_at) {
+                Carbon::setTestNow($timeClockLogData['checked_in_at']);
+                $timeClockLog = $logCheckInAction->run(
+                    $request->user(),
+                    $employee->identifications->first()->code,
+                    $request->work_shift_id,
+                    $request->check_in_novelty_type_id,
+                    $request->check_in_sub_cost_center_id,
+                );
+            }
 
             if ($request->checked_out_at) {
                 Carbon::setTestNow($timeClockLogData['checked_out_at']);
-                $logCheckOutAction->run(
+                $timeClockLog = $logCheckOutAction->run(
                     $request->user(),
                     $employee->identifications->first()->code,
                     $request->sub_cost_center_id,
