@@ -1432,7 +1432,7 @@ class CheckInTest extends \Tests\TestCase
      * Given the next scenario:
      * - 10-18 work shift
      * - 11:48-11:57 time clock
-     * - 11:57-18:00 scheduled novelty
+     * - 11:57-18:00 scheduled novelty.
      *
      * This test verifies that check in at 12:15 set the end of said scheduled
      * novelty to 12:15 and no other novelties are created.
@@ -1627,7 +1627,7 @@ class CheckInTest extends \Tests\TestCase
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ]]);
+            ], ]);
 
         $employee->workShifts()->attach($novelty);
 
