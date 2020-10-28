@@ -964,6 +964,9 @@ class CheckOutTest extends \Tests\TestCase
             'checked_in_at' => now()->setTime(12, 41),
             'checked_out_at' => now()->setTime(12, 42),
         ]);
+
+        $this->assertDatabaseRecordsCount(1, 'novelties');
+
         // scheduled novelty should not be updated
         $this->assertDatabaseHas('novelties', [
             'id' => $novelty->id,
