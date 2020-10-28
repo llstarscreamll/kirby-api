@@ -159,7 +159,7 @@ class LogCheckIn
                     $expectedStart,
                     now()->addMinutes(30)
                 )
-                ->orderBy('id', 'DESC')
+                ->orderBy('start_at', 'DESC')
                 ->first(['novelties.*']);
 
             if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
