@@ -28,6 +28,9 @@ return [
 
     'cloud' => env('FILESYSTEM_CLOUD', 's3'),
 
+    'public-images-disk' => env('FILESYSTEM_PUBLIC_IMAGES_DISK', 'public-local-images'),
+    'private-images-disk' => env('FILESYSTEM_PRIVATE_IMAGES_DISK', 'private-local-images'),
+
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
@@ -53,6 +56,20 @@ return [
             'root' => storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
+        ],
+
+        'public-local-images' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/images/products'),
+            'url' => env('APP_URL').'/storage/images/products',
+            'visibility' => 'public',
+        ],
+
+        'private-local-images' => [
+            'driver' => 'local',
+            'root' => storage_path('app/images/products'),
+            'url' => env('APP_URL').'/storage/images/products',
+            'visibility' => 'private',
         ],
 
         's3' => [

@@ -166,7 +166,7 @@ return [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'auto',
-                'processes' => 1,
+                'processes' => 2,
                 'tries' => 3,
             ],
         ],

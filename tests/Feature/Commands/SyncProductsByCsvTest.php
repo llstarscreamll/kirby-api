@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Commands;
 
+use App\Events\ProductCreated;
+use App\Events\ProductUpdated;
+use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Event;
 use Kirby\Products\Models\Product;
 use Tests\TestCase;
 
@@ -12,6 +16,8 @@ use Tests\TestCase;
  */
 class SyncProductsByCsvTest extends TestCase
 {
+    use WithFaker;
+
     /**
      * @var string
      */
@@ -29,7 +35,7 @@ class SyncProductsByCsvTest extends TestCase
     /**
      * @test
      */
-    public function shouldCreateProductsFromFileIfTheyDoesNotExistsOnDb()
+    public function shouldCreateProductsFromFileIfTheyDoesNotExistOnDb()
     {
         $file = [
             implode(';', ['code', 'name', 'cost', 'price', 'unity', 'quantity', 'pum_unity', 'pum_price', 'active', 'categories']),
@@ -39,10 +45,16 @@ class SyncProductsByCsvTest extends TestCase
 
         file_put_contents($this->filePath, implode("\n", $file));
 
+        Event::fake();
+
         $this->artisan('products:sync-by-csv', ['csv-path' => $this->filePath])
             ->assertExitCode(0)
             ->expectsOutput('2 products created successfully')
             ->expectsOutput('0 products updated successfully');
+
+        Event::assertDispatched(ProductCreated::class, 2);
+        Event::assertDispatched(ProductCreated::class, fn($e) => $e->product->code === 'A1');
+        Event::assertDispatched(ProductCreated::class, fn($e) => $e->product->code === 'B2');
 
         $this->assertDatabaseRecordsCount(2, 'products');
         $this->assertDatabaseHas('products', [
@@ -54,9 +66,9 @@ class SyncProductsByCsvTest extends TestCase
             'quantity' => '1',
             'pum_unity' => 'UND',
             'pum_price' => '450000',
-            'sm_image_url' => config('shop.default-product-image'),
-            'md_image_url' => config('shop.default-product-image'),
-            'lg_image_url' => config('shop.default-product-image'),
+            'sm_image_url' => null,
+            'md_image_url' => null,
+            'lg_image_url' => null,
             'active' => 1,
         ]);
         $this->assertDatabaseHas('products', [
@@ -68,9 +80,9 @@ class SyncProductsByCsvTest extends TestCase
             'quantity' => '1',
             'pum_unity' => 'UND',
             'pum_price' => '600000',
-            'sm_image_url' => config('shop.default-product-image'),
-            'md_image_url' => config('shop.default-product-image'),
-            'lg_image_url' => config('shop.default-product-image'),
+            'sm_image_url' => null,
+            'md_image_url' => null,
+            'lg_image_url' => null,
             'active' => 1,
         ]);
     }
@@ -78,7 +90,7 @@ class SyncProductsByCsvTest extends TestCase
     /**
      * @test
      */
-    public function shouldUpdateProductsFromFileIfTheyAlreadyExistsOnDb()
+    public function shouldUpdateProductsFromFileIfTheyAlreadyExistOnDb()
     {
         // product to update
         $product = factory(Product::class)->create(['code' => 'A1', 'active' => false]);
@@ -90,10 +102,14 @@ class SyncProductsByCsvTest extends TestCase
 
         file_put_contents($this->filePath, implode("\n", $file));
 
+        Event::fake();
+
         $this->artisan('products:sync-by-csv', ['csv-path' => $this->filePath])
             ->assertExitCode(0)
             ->expectsOutput('0 products created successfully')
             ->expectsOutput('1 products updated successfully');
+
+        Event::assertDispatched(ProductUpdated::class, fn($e) => $e->product->code === 'A1');
 
         $this->assertDatabaseRecordsCount(1, 'products');
         $this->assertDatabaseHas('products', [
@@ -115,7 +131,7 @@ class SyncProductsByCsvTest extends TestCase
     /**
      * @test
      */
-    public function shouldCreateFileCategoriesIfDoesNotExists()
+    public function shouldCreateCategoriesFromFileIfTheyDoesNotExist()
     {
         $file = [
             implode(';', ['code', 'name', 'cost', 'price', 'unity', 'quantity', 'pum_unity', 'pum_price', 'active', 'categories']),

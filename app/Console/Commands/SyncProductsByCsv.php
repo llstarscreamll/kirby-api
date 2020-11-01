@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Events\ProductCreated;
+use App\Events\ProductUpdated;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -36,7 +38,7 @@ class SyncProductsByCsv extends Command
         $csvPath = $this->argument('csv-path');
         $reader = Reader::createFromPath($csvPath);
         $imagesPath = $this->option('images-path');
-        $reader->setDelimiter(';')->setHeaderOffset(0);
+        $reader->setDelimiter(',')->setHeaderOffset(0);
 
         $createdCount = 0;
         $updatedCount = 0;
@@ -49,19 +51,17 @@ class SyncProductsByCsv extends Command
              */
             $product = $productRepo->firstOrNew(Arr::only($row, ['code']));
 
-            if (! $product->exists && empty($imagesPath)) {
-                $row['sm_image_url'] = config('shop.default-product-image');
-                $row['md_image_url'] = config('shop.default-product-image');
-                $row['lg_image_url'] = config('shop.default-product-image');
-            }
-
             if ($product->exists) {
-                $productRepo->update(Arr::except($row, ['categories']), $product->id);
+                $product = $productRepo->update(Arr::except($row, ['categories']), $product->id);
+                event(new ProductUpdated($product));
+
                 $updatedCount++;
             }
 
             if (! $product->exists) {
                 $product = $productRepo->create(Arr::except($row, ['categories']));
+                event(new ProductCreated($product));
+
                 $createdCount++;
             }
 

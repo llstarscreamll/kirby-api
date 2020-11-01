@@ -28,9 +28,9 @@ class CreateCategoriesTable extends Migration
             $table->string('name');
             $table->string('code')->unique();
             $table->string('slug')->unique();
-            $table->string('sm_image_url');
-            $table->string('md_image_url');
-            $table->string('lg_image_url');
+            $table->string('sm_image_url')->nullable();
+            $table->string('md_image_url')->nullable();
+            $table->string('lg_image_url')->nullable();
             $table->decimal('cost', 19, 4)->unsigned();
             $table->decimal('price', 19, 4)->unsigned();
             $table->string('unity');

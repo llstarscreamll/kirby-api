@@ -25,6 +25,16 @@ class EloquentProductRepository extends EloquentRepositoryAbstract implements Pr
     }
 
     /**
+     * @param array $data
+     * @param string $code
+     * @return int
+     */
+    public function updateByCode(array $data, string $code): int
+    {
+        return Product::where('code', $code)->update($data);
+    }
+
+    /**
      * @param $limit
      * @param array     $columns
      * @param $method
