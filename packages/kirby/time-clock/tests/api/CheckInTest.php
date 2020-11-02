@@ -1167,13 +1167,18 @@ class CheckInTest extends \Tests\TestCase
         // 9am, he's 1 hour late to check in, so the default novelty type for
         // check in should NOT be setted and novelty end_at attribute
         // should be adjusted to the employee entry time (9am)
-        $noveltyData = [
+        $scheduledNovelty = factory(Novelty::class)->create([
             'employee_id' => $employee->id,
             'start_at' => now()->setTime(7, 0), // 7am
             'end_at' => now()->setTime(8, 0), // 8am
-        ];
-
-        $scheduledNovelty = factory(Novelty::class)->create($noveltyData);
+        ]);
+        // create another employees novelties on same time range
+        $anotherScheduledNovelty = factory(Novelty::class)->create([
+            'time_clock_log_id' => $timeClockLog = factory(TimeClockLog::class)->create(),
+            'employee_id' => $timeClockLog->employee_id,
+            'start_at' => now()->setTime(7, 0), // 7am
+            'end_at' => now()->setTime(8, 0), // 8am
+        ]);
 
         $requestData = [
             'identification_code' => $employee->identifications->first()->code,
@@ -1197,6 +1202,12 @@ class CheckInTest extends \Tests\TestCase
             'id' => $scheduledNovelty->id,
             'start_at' => now()->setTime(7, 0),
             'end_at' => now()->setTime(9, 0),
+        ]);
+        // another employees novelties should not be changed
+        $this->assertDatabaseHas('novelties', [
+            'id' => $anotherScheduledNovelty->id,
+            'start_at' => now()->setTime(7, 0), // 7am
+            'end_at' => now()->setTime(8, 0), // 8am
         ]);
     }
 
@@ -1627,7 +1638,7 @@ class CheckInTest extends \Tests\TestCase
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 
