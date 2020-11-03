@@ -62,12 +62,12 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
         $this->model = $this->model
             ->join('novelty_types', 'novelty_types.id', 'novelties.novelty_type_id')
             ->where('employee_id', $employeeId)
-            ->where(fn($q) => $q
+            ->where(fn ($q) => $q
                     ->where('novelty_types.context_type', '!=', 'normal_work_shift_time')
                     ->orWhereNull('novelty_types.context_type')
             )
-            ->where(fn($q) => $q->whereBetween($field, [$start->timezone('UTC'), $end->timezone('UTC')])
-                    ->orWhere(fn($q) => $q->where('start_at', '<', $end)->where('end_at', '>', $end))
+            ->where(fn ($q) => $q->whereBetween($field, [$start->timezone('UTC'), $end->timezone('UTC')])
+                    ->orWhere(fn ($q) => $q->where('start_at', '<', $end)->where('end_at', '>', $end))
             );
 
         return $this;
@@ -113,7 +113,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     {
         $currentDate = Carbon::now()->toDateTimeString();
 
-        $rows = array_map(fn($approverId) => array_map(fn($noveltyId) => [
+        $rows = array_map(fn ($approverId) => array_map(fn ($noveltyId) => [
             'novelty_id' => $noveltyId,
             'user_id' => $approverId,
             'created_at' => $currentDate,

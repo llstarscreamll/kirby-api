@@ -125,7 +125,7 @@ class LogCheckOut
             ->whereScheduledForEmployee($identification->employee_id, 'start_at', now(), now()->endOfDay())
             ->orderBy('novelties.id', 'DESC')
             ->first(['novelties.*']);
-        
+
         if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
             $scheduledNovelty = $this->noveltyRepository->update(['start_at' => now()], $scheduledNovelty->id);
         }

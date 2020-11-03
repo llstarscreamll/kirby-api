@@ -1748,25 +1748,25 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
             'employee_id' => $employee,
             'time_clock_log_id' => $firstTimeClockLog,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP'),
-            'start_at' => "2020-11-03 20:08:00", // scheduled novelty
-            'end_at' => "2020-11-03 20:17:00",
-            'comment' => "test permissions novelty",
+            'start_at' => '2020-11-03 20:08:00', // scheduled novelty
+            'end_at' => '2020-11-03 20:17:00',
+            'comment' => 'test permissions novelty',
         ]);
         factory(Novelty::class)->create([
             'time_clock_log_id' => $firstTimeClockLog,
             'employee_id' => $employee,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN'),
             'sub_cost_center_id' => $this->subCostCenters->first(),
-            'start_at' => "2020-11-03 19:44:00", // work time
-            'end_at' => "2020-11-03 20:07:59",
+            'start_at' => '2020-11-03 19:44:00', // work time
+            'end_at' => '2020-11-03 20:07:59',
         ]);
         factory(Novelty::class)->create([
             'time_clock_log_id' => $firstTimeClockLog,
             'employee_id' => $employee,
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP'),
             'sub_cost_center_id' => $this->subCostCenters->first(),
-            'start_at' => "2020-11-03 19:35:00", // too late checkout novelty
-            'end_at' => "2020-11-03 19:43:59",
+            'start_at' => '2020-11-03 19:35:00', // too late checkout novelty
+            'end_at' => '2020-11-03 19:43:59',
         ]);
 
         // last time clock log
@@ -1801,18 +1801,18 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
         // first time clock novelties should not be changed
         $this->assertDatabaseHas('novelties', [
             'time_clock_log_id' => $firstTimeClockLog->id,
-            'start_at' => "2020-11-03 20:08:00",
-            'end_at' => "2020-11-03 20:17:00",
+            'start_at' => '2020-11-03 20:08:00',
+            'end_at' => '2020-11-03 20:17:00',
         ]);
         $this->assertDatabaseHas('novelties', [
             'time_clock_log_id' => $firstTimeClockLog->id,
-            'start_at' => "2020-11-03 19:44:00",
-            'end_at' => "2020-11-03 20:07:59",
+            'start_at' => '2020-11-03 19:44:00',
+            'end_at' => '2020-11-03 20:07:59',
         ]);
         $this->assertDatabaseHas('novelties', [
             'time_clock_log_id' => $firstTimeClockLog->id,
-            'start_at' => "2020-11-03 19:35:00",
-            'end_at' => "2020-11-03 19:43:59",
+            'start_at' => '2020-11-03 19:35:00',
+            'end_at' => '2020-11-03 19:43:59',
         ]);
     }
 }
