@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d67ffa920f13e16ae76eafca7fc891b",
+    "content-hash": "19b26d13de6f0b1ae7149e33554661c2",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -5634,16 +5634,16 @@
         },
         {
             "name": "spatie/period",
-            "version": "1.5.1",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/period.git",
-                "reference": "14e56b619fb430b9bcfb7e79ebdbec86310648e3"
+                "reference": "50395af339814a3b062690201dab1ce0752b9e52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/period/zipball/14e56b619fb430b9bcfb7e79ebdbec86310648e3",
-                "reference": "14e56b619fb430b9bcfb7e79ebdbec86310648e3",
+                "url": "https://api.github.com/repos/spatie/period/zipball/50395af339814a3b062690201dab1ce0752b9e52",
+                "reference": "50395af339814a3b062690201dab1ce0752b9e52",
                 "shasum": ""
             },
             "require": {
@@ -5680,9 +5680,9 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/period/issues",
-                "source": "https://github.com/spatie/period/tree/1.5.1"
+                "source": "https://github.com/spatie/period/tree/master"
             },
-            "time": "2020-10-21T09:17:33+00:00"
+            "time": "2020-03-31T10:04:35+00:00"
         },
         {
             "name": "spatie/temporary-directory",
