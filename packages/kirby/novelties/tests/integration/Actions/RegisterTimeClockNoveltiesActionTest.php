@@ -184,7 +184,7 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 07:00:01', // on time
-                    'checked_out_at' => '2019-04-01 07:04:10', // four minutes after check in
+                    'checked_out_at' => '2019-04-01 07:01:10', // one minutes after check in
                     'check_out_novelty_type_code' => 'PP',
                     'sub_cost_center_id' => 1,
                 ],
