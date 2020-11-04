@@ -128,7 +128,7 @@ class RegisterTimeClockNoveltiesAction
     {
         $validations = [
             ! empty($timeClockLog->checked_out_at),
-            $timeClockLog->checked_out_at && $timeClockLog->checked_in_at->diffInMinutes($timeClockLog->checked_out_at) > 5,
+            $timeClockLog->checked_out_at && $timeClockLog->checked_in_at->diffInMinutes($timeClockLog->checked_out_at) > 2,
         ];
 
         return ! in_array(false, $validations);
