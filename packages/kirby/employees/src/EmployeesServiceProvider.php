@@ -2,7 +2,6 @@
 
 namespace Kirby\Employees;
 
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
@@ -76,8 +75,6 @@ class EmployeesServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
-
         // publishing the configuration file
         $this->publishes([
             __DIR__.'/../config/employees.php' => config_path('employees.php'),

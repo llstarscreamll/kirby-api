@@ -2,7 +2,6 @@
 
 namespace Kirby\Company;
 
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Company\Contracts\CostCenterRepositoryInterface;
 use Kirby\Company\Contracts\HolidayRepositoryInterface;
@@ -83,8 +82,6 @@ class CompanyServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
-
         // publishing the configuration file
         $this->publishes([
             __DIR__.'/../config/company.php' => config_path('company.php'),

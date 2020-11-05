@@ -2,7 +2,6 @@
 
 namespace Kirby\TimeClock;
 
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
@@ -77,8 +76,6 @@ class TimeClockServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
-
         // publishing the configuration file
         $this->publishes([
             __DIR__.'/../config/time-clock.php' => config_path('time-clock.php'),

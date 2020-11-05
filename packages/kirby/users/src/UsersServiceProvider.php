@@ -2,7 +2,6 @@
 
 namespace Kirby\Users;
 
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Users\Contracts\UserRepositoryInterface;
 use Kirby\Users\Repositories\EloquentUserRepository;
@@ -72,8 +71,6 @@ class UsersServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
-
         // publishing the configuration file
         $this->publishes([
             __DIR__.'/../config/users.php' => config_path('users.php'),

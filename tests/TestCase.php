@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
@@ -13,13 +14,24 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication, CreateTestResponse, RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->app->make(EloquentFactory::class)->load(base_path('packages/kirby/company/database/factories'));
+        $this->app->make(EloquentFactory::class)->load(base_path('packages/kirby/employees/database/factories'));
+        $this->app->make(EloquentFactory::class)->load(base_path('packages/kirby/novelties/database/factories'));
+        $this->app->make(EloquentFactory::class)->load(base_path('packages/kirby/time-clock/database/factories'));
+        $this->app->make(EloquentFactory::class)->load(base_path('packages/kirby/users/database/factories'));
+        $this->app->make(EloquentFactory::class)->load(base_path('packages/kirby/workShifts/database/factories'));
+    }
+
     /**
      * Call the given URI with a JSON request.
      *
-     * @param  string  $method
-     * @param  string  $uri
-     * @param  array  $data
-     * @param  array  $headers
+     * @param  string                                        $method
+     * @param  string                                        $uri
+     * @param  array                                         $data
+     * @param  array                                         $headers
      * @return \Illuminate\Foundation\Testing\TestResponse
      */
     public function json($method, $uri, array $data = [], array $headers = [])
@@ -78,6 +90,13 @@ abstract class TestCase extends BaseTestCase
         return $this->be($user, $driver);
     }
 
+    /**
+     * @param int $count
+     * @param string $table
+     * @param array $data
+     * @param $connection
+     * @return mixed
+     */
     public function assertDatabaseRecordsCount(int $count, string $table, array $data = [], $connection = null)
     {
         $this->assertThat(

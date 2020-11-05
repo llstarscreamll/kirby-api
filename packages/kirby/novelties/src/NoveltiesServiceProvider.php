@@ -2,7 +2,6 @@
 
 namespace Kirby\Novelties;
 
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
@@ -95,8 +94,6 @@ class NoveltiesServiceProvider extends ServiceProvider
      */
     protected function bootForConsole()
     {
-        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
-
         // publishing the configuration file
         $this->publishes([
             __DIR__.'/../config/novelties.php' => config_path('novelties.php'),
