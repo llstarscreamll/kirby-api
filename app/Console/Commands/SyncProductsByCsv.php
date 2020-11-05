@@ -19,7 +19,7 @@ class SyncProductsByCsv extends Command
      *
      * @var string
      */
-    protected $signature = 'products:sync-by-csv {csv-path : path to csv file} {--images-path= : path from product images}';
+    protected $signature = 'products:sync-by-csv {csv-path : path to csv file}';
 
     /**
      * The console command description.
@@ -37,8 +37,7 @@ class SyncProductsByCsv extends Command
     {
         $csvPath = $this->argument('csv-path');
         $reader = Reader::createFromPath($csvPath);
-        $imagesPath = $this->option('images-path');
-        $reader->setDelimiter(',')->setHeaderOffset(0);
+        $reader->setDelimiter(';')->setHeaderOffset(0);
 
         $createdCount = 0;
         $updatedCount = 0;

@@ -55,6 +55,7 @@ return [
             'prefix' => env('SQS_PREFIX', 'https://sqs.us-east-1.amazonaws.com/your-account-id'),
             'queue' => env('SQS_QUEUE', 'your-queue-name'),
             'region' => env('SQS_REGION', 'us-east-1'),
+            'token' => env('AWS_SESSION_TOKEN'),
         ],
 
         'redis' => [

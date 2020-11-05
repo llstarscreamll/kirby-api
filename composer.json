@@ -16,6 +16,8 @@
     "require": {
         "php": "^7.4",
         "barryvdh/laravel-cors": "^0.11.2",
+        "bref/bref": "^0.5.31",
+        "bref/laravel-bridge": "^0.2.2",
         "doctrine/dbal": "^2.10",
         "fideloper/proxy": "^4.0",
         "kirby/authentication": "*",

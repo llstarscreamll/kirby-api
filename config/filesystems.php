@@ -11,7 +11,7 @@ return [
     | by the framework. The "local" disk, as well as a variety of cloud
     | based disks are available to your application. Just store away!
     |
-    */
+     */
 
     'default' => env('FILESYSTEM_DRIVER', 'local'),
 
@@ -24,7 +24,7 @@ return [
     | reason, you may specify a default "cloud" driver here. This driver
     | will be bound as the Cloud disk implementation in the container.
     |
-    */
+     */
 
     'cloud' => env('FILESYSTEM_CLOUD', 's3'),
 
@@ -42,7 +42,7 @@ return [
     |
     | Supported Drivers: "local", "ftp", "sftp", "s3", "rackspace"
     |
-    */
+     */
 
     'disks' => [
 
@@ -72,12 +72,45 @@ return [
             'visibility' => 'private',
         ],
 
+        'public-s3-images' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'token' => env('AWS_SESSION_TOKEN'),
+            'bucket' => env('AWS_BUCKET'),
+            'url' => env('AWS_URL'),
+            'root' => 'images/',
+        ],
+
+        'private-s3-images' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'token' => env('AWS_SESSION_TOKEN'),
+            'bucket' => env('AWS_PRIVATE_BUCKET'),
+            'url' => env('AWS_URL'),
+            'root' => 'images/',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
+            'token' => env('AWS_SESSION_TOKEN'),
             'bucket' => env('AWS_BUCKET'),
+            'url' => env('AWS_URL'),
+        ],
+
+        's3-private' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'token' => env('AWS_SESSION_TOKEN'),
+            'bucket' => env('AWS_PRIVATE_BUCKET'),
             'url' => env('AWS_URL'),
         ],
 
