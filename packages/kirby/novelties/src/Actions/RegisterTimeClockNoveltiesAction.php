@@ -112,7 +112,6 @@ class RegisterTimeClockNoveltiesAction
             })
             ->filter()
             ->collapse()
-            // ->dd()
             ->filter(fn ($novelty) => ! empty($novelty['total_time_in_minutes']))
             ->map(fn ($i) => Arr::except($i, ['code', 'total_time_in_minutes']));
 
@@ -528,16 +527,6 @@ class RegisterTimeClockNoveltiesAction
             ->filter(fn (Novelty $novelty) => $novelty->{$comparisonFlag}->{$comparison}($timeClockLog->{$logAction}))
             ->sortBy(fn (Novelty $novelty) => $novelty->{$comparisonFlag}->diffInMinutes($timeClockLog->{$logAction}))
             ->first();
-
-        //     dd($scheduledNovelties
-        //     ->filter(fn (Novelty $novelty) => $novelty->{$comparisonFlag}->{$comparison}($timeClockLog->{$logAction})),
-        //     $comparisonFlag,
-        //     $comparison,
-        //     $logAction,
-        //     '---',
-        //     $scheduledNovelties->pluck($comparisonFlag, 'id'),
-        //     $timeClockLog->{$logAction},
-        // );
 
         return $closestScheduledNovelty
             ? Period::make($closestScheduledNovelty->start_at, $closestScheduledNovelty->end_at, Precision::SECOND)

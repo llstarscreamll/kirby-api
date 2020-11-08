@@ -213,11 +213,6 @@ class Employee extends Model
                             $slotEndTo = $slotEndTo->addDay();
                         }
 
-                        // dd($slotStartFrom->toDateTimeString(), $slotEndTo->toDateTimeString(),
-                        //     $time->toDateTimeString(),
-                        //     $time->between($slotStartFrom, $slotEndTo), (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0)
-                        // );
-
                         return $time->between($slotStartFrom, $slotEndTo) && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
                     });
 
