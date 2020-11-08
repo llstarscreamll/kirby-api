@@ -244,13 +244,12 @@ class LogCheckIn
                 ->filter(function ($shift) {
                     $now = now();
                     $timeSlot = $shift->matchingTimeSlot('start', $now);
-    
+
                     return $now
                         ->closest($timeSlot['start'], $timeSlot['end'])
                         ->equalTo($timeSlot['start']);
                 });
         }
-
 
         $employeeWorkShiftsCount = $identification->employee->workShifts->count();
 

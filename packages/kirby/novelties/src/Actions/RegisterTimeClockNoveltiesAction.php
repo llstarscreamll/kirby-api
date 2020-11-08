@@ -518,13 +518,12 @@ class RegisterTimeClockNoveltiesAction
         $comparison = $flag === 'start' ? 'lessThanOrEqualTo' : 'greaterThanOrEqualTo';
         $comparisonFlag = $flag === 'start' ? 'end_at' : 'start_at';
 
-        
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
         ->filter(
             fn (Novelty $novelty) => ! $novelty->hasTimeClockLog() ||
             $novelty->end_at->between($timeClockLog->checked_in_at->copy()->subMinutes(30), $timeClockLog->checked_out_at->copy()->addMinutes(30))
         );
-        
+
         $closestScheduledNovelty = $scheduledNovelties
             ->filter(fn (Novelty $novelty) => $novelty->{$comparisonFlag}->{$comparison}($timeClockLog->{$logAction}))
             ->sortBy(fn (Novelty $novelty) => $novelty->{$comparisonFlag}->diffInMinutes($timeClockLog->{$logAction}))
