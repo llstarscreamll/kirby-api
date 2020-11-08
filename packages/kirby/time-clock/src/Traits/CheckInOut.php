@@ -141,7 +141,7 @@ trait CheckInOut
                 return ($noveltyType->isApplicableInAnyTime() || $currentDateTime->between($start, $end)) &&
                     ($noveltyType->isApplicableInAnyDay() || $noveltyType->apply_on_days_of_type->is($currentDayType));
             })
-            ->filter(fn ($n) => ($n->isApplicableInAnyTime() || $n->isApplicableInAnyDay()) || (bool) $n->minStartTimeSlot($currentDateTime) && (bool) $n->maxEndTimeSlot($currentDateTime))
+            ->filter(fn($n) => ($n->isApplicableInAnyTime() || $n->isApplicableInAnyDay()) || (bool) $n->minStartTimeSlot($currentDateTime) && (bool) $n->maxEndTimeSlot($currentDateTime))
             ->filter(function ($noveltyType) use ($currentDateTime, $flag) {
                 $start = $noveltyType->minStartTimeSlot($currentDateTime);
                 $end = $noveltyType->maxEndTimeSlot($currentDateTime);

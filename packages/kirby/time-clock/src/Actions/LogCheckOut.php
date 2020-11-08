@@ -115,22 +115,12 @@ class LogCheckOut
     public function run(User $registrar, string $identificationCode, ?int $subCostCenterId, ?int $noveltyTypeId, ?int $noveltySubCostCenterId): TimeClockLog
     {
         $noveltyType = null;
+        $now = now()->toDateTimeString();
         $noveltyTypeIsRequired = $this->noveltyTypeIsRequiredForNonPunctualChecks();
 
         $identification = $this->identificationRepository
             ->findByField('code', $identificationCode, ['id', 'employee_id'])
             ->first();
-
-        $scheduledNovelty = $this->noveltyRepository
-            ->whereScheduledForEmployee($identification->employee_id, 'start_at', now(), now()->endOfDay())
-            ->orderBy('novelties.id', 'DESC')
-            ->first(['novelties.*']);
-
-        if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
-            $scheduledNovelty = $this->noveltyRepository->update(['start_at' => now()], $scheduledNovelty->id);
-        }
-
-        $checkOutOffset = optional($scheduledNovelty)->start_at;
 
         if ($noveltyTypeId) {
             $noveltyType = $this->noveltyTypeRepository->find($noveltyTypeId);
@@ -152,6 +142,17 @@ class LogCheckOut
 
         if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification, $workShift->id));
+        }
+
+        $scheduledNovelty = $this->noveltyRepository
+            ->whereScheduledForEmployee($identification->employee_id, 'start_at', now(), now()->endOfDay())
+            ->orderBy('novelties.id', 'DESC')
+            ->first(['novelties.*']);
+
+        $checkOutOffset = optional($scheduledNovelty)->start_at;
+
+        if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
+            $checkOutOffset = now();
         }
 
         $shiftPunctuality = optional($workShift)->slotPunctuality('end', now(), $checkOutOffset);
@@ -180,8 +181,12 @@ class LogCheckOut
             $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
         }
 
+        if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
+            $scheduledNovelty = $this->noveltyRepository->update(['start_at' => $now], $scheduledNovelty->id);
+        }
+
         $timeClockLogUpdate = [
-            'checked_out_at' => now(),
+            'checked_out_at' => $now,
             'expected_check_out_at' => $expectedEnd,
             'checked_out_by_id' => $registrar->id,
             'sub_cost_center_id' => $subCostCenterId,

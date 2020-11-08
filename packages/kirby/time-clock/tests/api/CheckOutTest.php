@@ -66,7 +66,7 @@ class CheckOutTest extends \Tests\TestCase
             'context_type' => 'elegible_by_user',
         ]);
 
-        factory(NoveltyType::class)->create([
+        $this->ppNoveltyType = factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP',
             'apply_on_days_of_type' => null,
         ]);
@@ -122,7 +122,7 @@ class CheckOutTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function whenCheckInHasNotShiftAndHasNotSubCostCenter()
+    public function shouldReturnUnprocesableEntityWhenSubCostCenterIsEmpty()
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));
@@ -148,6 +148,51 @@ class CheckOutTest extends \Tests\TestCase
         $this->json('POST', $this->endpoint, $requestData)
             ->assertStatus(422) // error, sub cost center is required
             ->assertJsonHasPath('errors.0.meta.sub_cost_centers');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotUpdateScheduledNoveltyStartWhenSubCostCenterIsEmpty()
+    {
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 14, 15));
+        $checkedInTime = now()->setTime(7, 0);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('timeClockLogs', [ // check in with novelty type but without sub cost center
+                'work_shift_id' => null, // empty shift
+                'check_in_novelty_type_id' => 3, // some novelty type setted
+                'check_in_sub_cost_center_id' => null, // empty sub cost center
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        $scheduledNovelty = factory(Novelty::class)->create([
+            'novelty_type_id' => $this->ppNoveltyType,
+            'employee_id' => $employee,
+            'start_at' => now()->addMinutes(10), // permission starts at 14:30
+            'end_at' => now()->addHours(5),
+        ]);
+
+        $this->artisan('db:seed', ['--class' => TimeClockSettingsSeeder::class]);
+
+        // missing sub cost center field
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $this->json('POST', $this->endpoint, $requestData)
+            ->assertStatus(422) // error, sub cost center is required
+            ->assertJsonHasPath('errors.0.meta.sub_cost_centers');
+
+        $this->assertDatabaseHas('novelties', [
+            'id' => $scheduledNovelty->id,
+            'start_at' => $scheduledNovelty->start_at,
+            'end_at' => $scheduledNovelty->end_at,
+        ]);
     }
 
     /**
@@ -198,7 +243,7 @@ class CheckOutTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function whenHasNotCheckIn()
+    public function sohuldReturnUnprocesableEntityWhenHasNotCheckIn()
     {
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 18, 00));

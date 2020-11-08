@@ -1579,6 +1579,42 @@ class CheckInTest extends \Tests\TestCase
     /**
      * @test
      */
+    public function shouldCheckInWhenHasSingleWorkShiftAndArrivesTooLateClosestToShiftEndAndNoveltyIsNotRequired()
+    {
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 18',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+            ])->create();
+
+        // fake current date time, one hour late
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 14, 00));
+
+        // set setting to NOT require novelty type when check in is too late
+        $this->seed(TimeClockSettingsSeeder::class);
+
+        $requestData = [
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $this->json('POST', $this->endpoint, $requestData)
+            ->assertCreated()
+            ->assertJsonHasPath('data.id');
+
+        $this->assertDatabaseHas('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'check_in_novelty_type_id' => $this->subtractTimeNovelty->id,
+            'checked_in_at' => now(),
+            'expected_check_in_at' => now()->setTime(07, 00),
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function whenHasSingleWorkShiftAndArrivesTooEarlyButNoveltyIsNotRequired()
     {
         $employee = factory(Employee::class)
@@ -1638,7 +1674,7 @@ class CheckInTest extends \Tests\TestCase
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:00'], // should check in at 7am
                 ['start' => '13:30', 'end' => '18:00'],
-            ], ]);
+            ]]);
 
         $employee->workShifts()->attach($novelty);
 
