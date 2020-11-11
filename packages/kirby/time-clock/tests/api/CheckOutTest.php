@@ -820,7 +820,7 @@ class CheckOutTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldUpdateScheduledNoveltyTimesWhenLeavesTooEarlyToSaidNovelty()
+    public function shouldUpdateScheduledNoveltyStartTimeWhenLeavesTooEarlyToSaidNovelty()
     {
         // fake current date time, monday at 4pm
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 16, 00));
@@ -851,6 +851,92 @@ class CheckOutTest extends \Tests\TestCase
         $scheduledNovelty = factory(Novelty::class)->create([
             'employee_id' => $employee->id,
             'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+
+        // create another scheduled and burned novelties from other employees
+        $anotherEmployeeScheduledNovelty = factory(Novelty::class)->create([
+            'employee_id' => factory(Employee::class)->create(),
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+
+        $anotherEmployeeScheduledNoveltyWithTimeclock = factory(Novelty::class)->create([
+            'time_clock_log_id' => $timeClockLog = factory(TimeClockLog::class)->create(),
+            'employee_id' => $timeClockLog->employee_id,
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+
+        $requestData = [
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'identification_code' => $employee->identifications->first()->code,
+        ];
+
+        $this->json('POST', $this->endpoint, $requestData)
+            ->assertOk()
+            ->assertJsonHasPath('data.id');
+
+        $this->assertDatabaseHas('time_clock_logs', [
+            'employee_id' => $employee->id,
+            'expected_check_out_at' => now(),
+            'sub_cost_center_id' => $this->firstSubCostCenter->id,
+            'check_out_novelty_type_id' => null,
+            'check_out_sub_cost_center_id' => null,
+        ]);
+        $this->assertDatabaseHas('novelties', [
+            'id' => $scheduledNovelty->id,
+            'start_at' => now(),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+        // another employees novelty should not be changed
+        $this->assertDatabaseHas('novelties', [
+            'id' => $anotherEmployeeScheduledNovelty->id,
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+        $this->assertDatabaseHas('novelties', [
+            'id' => $anotherEmployeeScheduledNoveltyWithTimeclock->id,
+            'time_clock_log_id' => $anotherEmployeeScheduledNoveltyWithTimeclock->time_clock_log_id,
+            'start_at' => now()->setTime(17, 00),
+            'end_at' => now()->setTime(18, 00),
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldUpdateScheduledNoveltyStartTimeWhenLeavesTooLateToSaidNovelty()
+    {
+        // fake current date time, monday at 4pm
+        Carbon::setTestNow(Carbon::create(2019, 04, 01, 16, 00));
+        $checkedInTime = now()->setTime(7, 00);
+
+        $employee = factory(Employee::class)
+            ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
+            ->with('workShifts', [
+                'name' => '7 to 6',
+                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
+            ])
+            ->with('timeClockLogs', [
+                'work_shift_id' => 1,
+                'checked_in_at' => $checkedInTime,
+                'checked_out_at' => null,
+                'check_in_novelty_type_id' => null,
+                'checked_in_by_id' => $this->user->id,
+            ])
+            ->create();
+
+        // set setting to NOT require novelty type when check out is too early,
+        // this make to set a default novelty type id for the early check out
+        $this->artisan('db:seed', ['--class' => TimeClockSettingsSeeder::class]);
+
+        // create scheduled novelty from 03:30pm to 6pm, since employee leaves at
+        // 4pm, he's too late to check out
+        $scheduledNovelty = factory(Novelty::class)->create([
+            'employee_id' => $employee->id,
+            'start_at' => now()->setTime(15, 30),
             'end_at' => now()->setTime(18, 00),
         ]);
 
