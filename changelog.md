@@ -1,6 +1,12 @@
 # Release notes
 
-## [v1.2 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.2..v1.1.3)
+## [v1.2.1 (2020-11-11)](https://github.com/llstarscreamll/kirby-api/compare/v1.2.1..v1.2)
+
+### Fixed
+
+-   novelties: error using decimals to create balance novelties
+
+## [v1.2 (2020-11-11)](https://github.com/llstarscreamll/kirby-api/compare/v1.2..v1.1.3)
 
 ### Added
 
