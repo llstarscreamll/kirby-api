@@ -80,6 +80,30 @@ class CreateBalanceNoveltyTest extends \Tests\TestCase
     /**
      * @test
      */
+    public function shouldCreateBalanceNoveltySuccessfullyWithDecimalPressition()
+    {
+        $payload = [
+            'employee_id' => ($employee = factory(Employee::class)->create())->id,
+            'start_date' => now()->setTimezone('America/Bogota')->setDateTime(2020, 01, 01, 00, 00, 00)->toISOString(),
+            'time' => '0.5', // decimal positive
+            'comment' => 'test comment',
+        ];
+
+        $this->json('POST', $this->endpoint, $payload)
+            ->assertCreated();
+
+        $this->assertDatabaseHas('novelties', [
+            'employee_id' => $employee->id,
+            'novelty_type_id' => NoveltyType::whereCode('B-')->first()->id, // default novelty for subtract
+            'start_at' => '2020-01-01 05:00:00',
+            'end_at' => '2020-01-01 05:30:00', // 0.5 hours (30 minutes)
+            'comment' => 'test comment',
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->actingAsGuest()
