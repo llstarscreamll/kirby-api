@@ -21,7 +21,8 @@ class CreateBalanceNoveltyController
      */
     public function __invoke(CreateBalanceNoveltyRequest $request, NoveltyRepositoryInterface $noveltyRepository)
     {
-        $noveltyTypeId = $request->time > 0
+        $hours = floatval($request->time);
+        $noveltyTypeId = $hours > 0
             ? Novelties::defaultSubTractNoveltyTypeId()
             : Novelties::defaultAdditionNoveltyTypeId();
 
@@ -29,7 +30,7 @@ class CreateBalanceNoveltyController
             'employee_id' => $request->employee_id,
             'novelty_type_id' => $noveltyTypeId,
             'start_at' => $start = Carbon::parse($request->start_date),
-            'end_at' => $start->copy()->addHours(abs((int) $request->time)),
+            'end_at' => $start->copy()->addSeconds(abs($hours * 60 * 60)),
             'comment' => $request->comment,
         ]);
 
