@@ -3,6 +3,7 @@
 namespace Kirby\TimeClock\Tests\api;
 
 use Illuminate\Support\Facades\Artisan;
+use Kirby\Authorization\Models\Permission;
 use Kirby\TimeClock\Models\TimeClockLog;
 use TimeClockPermissionsSeeder;
 
@@ -32,18 +33,37 @@ class SearchTimeClockLogsTest extends \Tests\TestCase
         factory(TimeClockLog::class, 2)->create();
     }
 
-    public function shouldReturnPaginatedData()
+    /**
+     * @test
+     */
+    public function shouldReturnDataFromAllEmployeesWhenDoesNotHaveEmployeePermission()
     {
+        $this->user->syncPermissions(Permission::where('name', 'time-clock-logs.global-search')->get());
+
         $this->json('GET', $this->endpoint)
             ->assertOk()
             ->assertJsonHasPath('data.0')
-            ->assertJsonHasPath('data.1');
-        // relations
-        $this->assertJsonHasPath('data.1.novelties')
+            ->assertJsonHasPath('data.1')
+            ->assertJsonHasPath('data.1.novelties') // relations
             ->assertJsonHasPath('data.1.employee.user')
             ->assertJsonHasPath('data.1.work_shift')
             ->assertJsonHasPath('data.1.approvals')
             ->assertJsonHasPath('data.1.sub_cost_center');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnDataFromCurrentUserWhenHasEmployeeSearchAndNotGlobalSearchPermission()
+    {
+        // remove current user global search permission
+        $this->user->syncPermissions(Permission::where('name', 'time-clock-logs.employee-search')->get());
+        factory(TimeClockLog::class)->create(['employee_id' => $this->user->id]);
+
+        $this->json('GET', $this->endpoint)
+            ->assertOk()
+            ->assertJsonCount(1, 'data') // current user logs only
+            ->assertJsonHasPath('data.0.id', $this->user->id);
     }
 
     /**
@@ -54,7 +74,6 @@ class SearchTimeClockLogsTest extends \Tests\TestCase
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
 
-        $this->json('GET', $this->endpoint, [])
-            ->assertForbidden();
+        $this->json('GET', $this->endpoint, [])->assertForbidden();
     }
 }

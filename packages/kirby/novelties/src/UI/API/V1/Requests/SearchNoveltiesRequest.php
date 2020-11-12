@@ -18,7 +18,7 @@ class SearchNoveltiesRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('novelties.search');
+        return $this->user()->hasAnyPermission(['novelties.global-search', 'novelties.employee-search']);
     }
 
     /**

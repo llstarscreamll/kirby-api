@@ -42,7 +42,7 @@ class NoveltyTypesController
     {
         $noveltyTypes = $this->noveltyTypeRepository
             ->pushCriteria(app(RequestCriteria::class))
-            ->simplePaginate();
+            ->paginate();
 
         return NoveltyTypeResource::collection($noveltyTypes);
     }

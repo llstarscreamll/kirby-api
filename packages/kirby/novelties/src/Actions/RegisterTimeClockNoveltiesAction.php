@@ -128,7 +128,7 @@ class RegisterTimeClockNoveltiesAction
     {
         $validations = [
             ! empty($timeClockLog->checked_out_at),
-            $timeClockLog->checked_out_at && $timeClockLog->checked_in_at->diffInMinutes($timeClockLog->checked_out_at) > 5,
+            $timeClockLog->checked_out_at && $timeClockLog->checked_in_at->diffInMinutes($timeClockLog->checked_out_at) > 2,
         ];
 
         return ! in_array(false, $validations);
@@ -518,10 +518,10 @@ class RegisterTimeClockNoveltiesAction
         $comparisonFlag = $flag === 'start' ? 'end_at' : 'start_at';
 
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
-            ->filter(
-                fn (Novelty $novelty) => ! $novelty->hasTimeClockLog() ||
-                $novelty->end_at->between($timeClockLog->checked_in_at->copy()->subMinutes(30), $timeClockLog->checked_out_at->copy()->addMinutes(30))
-            );
+        ->filter(
+            fn (Novelty $novelty) => ! $novelty->hasTimeClockLog() ||
+            $novelty->end_at->between($timeClockLog->checked_in_at->copy()->subMinutes(30), $timeClockLog->checked_out_at->copy()->addMinutes(30))
+        );
 
         $closestScheduledNovelty = $scheduledNovelties
             ->filter(fn (Novelty $novelty) => $novelty->{$comparisonFlag}->{$comparison}($timeClockLog->{$logAction}))

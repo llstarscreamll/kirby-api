@@ -1,16 +1,40 @@
 # Release notes
 
+## [v1.2 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.2..v1.1.3)
+
+### Added
+
+-   time-clock: new ability to manually create checkouts only
+-   employees: new ability to search by emails
+-   time-clock: new ability to make users see only their own employee time clock logs
+-   novelties: new ability to make users see only their own employee novelties
+
+### Changed
+
+-   novelties: change minimum time from 5 minutes to 2 minutes for deducting novelties from time clock log
+-   work-shifts: sorting search results by id desc
+-   time-clock: improve algorithm to deduce scheduled novelty for check in/out
+-   use full pagination instead of simple pagination on all paginated resources
+
+### Fixed
+
+-   work shifts: many improvements deducting work shifts on check in
+-   novelties: a lot of improvements solving novelties based in time clock logs
+-   time clock: errors updating dates from scheduled novelties on check in/out
+-   work shifts: error writing time zone data
+-   work shifts: error writing days which a work shift applies
+
 ## [v1.1.4 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.3..v1.1.4)
 
 ### Fixed
 
-- Update composer dependencies and remove dd() from employees controller.
+-   Update composer dependencies and remove dd() from employees controller.
 
 ## [v1.1.3 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.2..v1.1.3)
 
 ### Fixed
 
-- Error with backup.php config file cleaning up old backups 
+-   Error with backup.php config file cleaning up old backups
 
 ## [v1.1.2 (2020-08-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.1.1..v1.1.2)
 

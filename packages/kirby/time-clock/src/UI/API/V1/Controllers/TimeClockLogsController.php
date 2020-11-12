@@ -9,6 +9,7 @@ use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\TimeClock\Actions\LogCheckIn;
 use Kirby\TimeClock\Actions\LogCheckOut;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Kirby\TimeClock\Criteria\ByEmployeeIdCriterion;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\UI\API\V1\Requests\CreateTimeClockLogRequest;
 use Kirby\TimeClock\UI\API\V1\Requests\SearchTimeClockLogsRequest;
@@ -43,6 +44,12 @@ class TimeClockLogsController
      */
     public function index(SearchTimeClockLogsRequest $request)
     {
+        $user = $request->user();
+
+        if ($user->can('time-clock-logs.employee-search')) {
+            $this->timeClockLogRepository->pushCriteria(new ByEmployeeIdCriterion($user->id));
+        }
+
         $timeClockLogs = $this->timeClockLogRepository
             ->pushCriteria(app(RequestCriteria::class))
             ->with([
@@ -50,7 +57,7 @@ class TimeClockLogsController
                 'approvals:users.id,users.first_name,users.last_name',
             ])
             ->orderBy('id', 'DESC')
-            ->simplePaginate();
+            ->paginate();
 
         return TimeClockLogResource::collection($timeClockLogs);
     }
@@ -78,18 +85,20 @@ class TimeClockLogsController
             ->find($request->employee_id);
 
         DB::transaction(function () use ($request, $timeClockLogData, $employee, $logCheckInAction, $logCheckOutAction) {
-            Carbon::setTestNow($timeClockLogData['checked_in_at']);
-            $timeClockLog = $logCheckInAction->run(
-                $request->user(),
-                $employee->identifications->first()->code,
-                $request->work_shift_id,
-                $request->check_in_novelty_type_id,
-                $request->check_in_sub_cost_center_id,
-            );
+            if ($request->checked_in_at) {
+                Carbon::setTestNow($timeClockLogData['checked_in_at']);
+                $timeClockLog = $logCheckInAction->run(
+                    $request->user(),
+                    $employee->identifications->first()->code,
+                    $request->work_shift_id,
+                    $request->check_in_novelty_type_id,
+                    $request->check_in_sub_cost_center_id,
+                );
+            }
 
             if ($request->checked_out_at) {
                 Carbon::setTestNow($timeClockLogData['checked_out_at']);
-                $logCheckOutAction->run(
+                $timeClockLog = $logCheckOutAction->run(
                     $request->user(),
                     $employee->identifications->first()->code,
                     $request->sub_cost_center_id,

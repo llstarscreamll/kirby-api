@@ -159,16 +159,11 @@ class LogCheckIn
                     $expectedStart,
                     now()->addMinutes(30)
                 )
-                ->orderBy('id', 'DESC')
+                ->orderBy('start_at', 'DESC')
                 ->first(['novelties.*']);
 
             if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {
-                $scheduledNovelty = $this->noveltyRepository->update(
-                    [
-                        'end_at' => now(),
-                    ],
-                    $scheduledNovelty->id
-                );
+                $scheduledNovelty = $this->noveltyRepository->update(['end_at' => now()], $scheduledNovelty->id);
             }
 
             $checkInOffset = optional($scheduledNovelty)->end_at;
@@ -244,15 +239,17 @@ class LogCheckIn
             return $foundWorkShift;
         }
 
-        $deductedWorkShifts = $deductedWorkShifts
-            ->filter(function ($shift) {
-                $now = now();
-                $timeSlot = $shift->matchingTimeSlot('start', $now);
+        if ($deductedWorkShifts->count() > 1) {
+            $deductedWorkShifts = $deductedWorkShifts
+                ->filter(function ($shift) {
+                    $now = now();
+                    $timeSlot = $shift->matchingTimeSlot('start', $now);
 
-                return $now
-                    ->closest($timeSlot['start'], $timeSlot['end'])
-                    ->equalTo($timeSlot['start']);
-            });
+                    return $now
+                        ->closest($timeSlot['start'], $timeSlot['end'])
+                        ->equalTo($timeSlot['start']);
+                });
+        }
 
         $employeeWorkShiftsCount = $identification->employee->workShifts->count();
 

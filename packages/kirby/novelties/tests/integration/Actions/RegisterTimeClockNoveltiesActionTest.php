@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Kirby\Company\Models\Holiday;
 use Kirby\Company\Models\SubCostCenter;
+use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
@@ -183,7 +184,7 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
                 'timeClockLog' => [
                     'work_shift_name' => '7-18',
                     'checked_in_at' => '2019-04-01 07:00:01', // on time
-                    'checked_out_at' => '2019-04-01 07:04:10', // four minutes after check in
+                    'checked_out_at' => '2019-04-01 07:01:10', // one minutes after check in
                     'check_out_novelty_type_code' => 'PP',
                     'sub_cost_center_id' => 1,
                 ],
@@ -1283,8 +1284,10 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
         $action = app(RegisterTimeClockNoveltiesAction::class);
         $this->assertEquals($expectedOutPut, $action->run($timeClockLog->id));
 
-        $this->assertDatabaseRecordsCount(count($createdNovelties), 'novelties');
-        // $this->assertEquals(count($data['createdNovelties']), $createdRecordsCount, 'created novelties count');
+        $this->assertDatabaseRecordsCount(count($createdNovelties), 'novelties', [
+            'time_clock_log_id' => $timeClockLog->id,
+            'employee_id' => $timeClockLog->employee_id,
+        ]);
 
         foreach ($createdNovelties as $novelty) {
             $noveltyType = $this->noveltyTypes->firstWhere('code', $novelty['novelty_type_code']);
@@ -1703,6 +1706,113 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
             'novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP')->id,
             'start_at' => '2020-05-20 19:38:06',
             'end_at' => '2020-05-20 20:30:00',
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldBeAwareOfExistingNoveltyTimeFromOtherTimeClockLogs()
+    {
+        $this->artisan('db:seed', ['--class' => DefaultNoveltyTypesSeed::class]);
+        $noveltyTypes = NoveltyType::all();
+
+        $workShift = factory(WorkShift::class)->create([
+            'name' => '14:35-22:35',
+            'grace_minutes_before_start_times' => 5,
+            'grace_minutes_after_start_times' => 5,
+            'grace_minutes_before_end_times' => 5,
+            'grace_minutes_after_end_times' => 5,
+            'meal_time_in_minutes' => 0,
+            'min_minutes_required_to_discount_meal_time' => 0,
+            'applies_on_days' => [1, 2, 3, 4, 5],
+            'time_zone' => 'America/Bogota',
+            'time_slots' => [['end' => '22:35', 'start' => '14:35']],
+        ]);
+
+        $employee = factory(Employee::class)->create();
+
+        // first time clock log and novelties
+        $firstTimeClockLog = factory(TimeClockLog::class)->create([
+            'employee_id' => $employee,
+            'work_shift_id' => $workShift,
+            'sub_cost_center_id' => $this->subCostCenters->first(),
+            'checked_in_at' => '2020-11-03 19:44:00',
+            'expected_check_in_at' => '2020-11-03 19:35:00',
+            'check_in_novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP'),
+            'checked_out_at' => '2020-11-03 20:08:00',
+            'expected_check_out_at' => '2020-11-03 20:08:00',
+        ]);
+
+        factory(Novelty::class)->create([
+            'employee_id' => $employee,
+            'time_clock_log_id' => $firstTimeClockLog,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP'),
+            'start_at' => '2020-11-03 20:08:00', // scheduled novelty
+            'end_at' => '2020-11-03 20:17:00',
+            'comment' => 'test permissions novelty',
+        ]);
+        factory(Novelty::class)->create([
+            'time_clock_log_id' => $firstTimeClockLog,
+            'employee_id' => $employee,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN'),
+            'sub_cost_center_id' => $this->subCostCenters->first(),
+            'start_at' => '2020-11-03 19:44:00', // work time
+            'end_at' => '2020-11-03 20:07:59',
+        ]);
+        factory(Novelty::class)->create([
+            'time_clock_log_id' => $firstTimeClockLog,
+            'employee_id' => $employee,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP'),
+            'sub_cost_center_id' => $this->subCostCenters->first(),
+            'start_at' => '2020-11-03 19:35:00', // too late checkout novelty
+            'end_at' => '2020-11-03 19:43:59',
+        ]);
+
+        // last time clock log
+        $lastTimeClock = factory(TimeClockLog::class)->create([
+            'employee_id' => $employee,
+            'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
+            'work_shift_id' => $workShift->id,
+            'checked_in_at' => '2020-11-03 20:17:00',
+            'checked_out_at' => '2020-11-03 20:25:00',
+            'check_out_sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
+        ]);
+
+        $action = app(RegisterTimeClockNoveltiesAction::class);
+        $action->run($lastTimeClock->id);
+
+        $this->assertDatabaseRecordsCount(5, 'novelties', ['employee_id' => $employee->id]);
+        $this->assertDatabaseRecordsCount(3, 'novelties', ['time_clock_log_id' => $firstTimeClockLog->id]);
+        $this->assertDatabaseRecordsCount(2, 'novelties', ['time_clock_log_id' => $lastTimeClock->id]);
+        // created novelties
+        $this->assertDatabaseHas('novelties', [
+            'time_clock_log_id' => $lastTimeClock->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'HN')->id,
+            'start_at' => '2020-11-03 20:17:01',
+            'end_at' => '2020-11-03 20:25:00',
+        ]);
+        $this->assertDatabaseHas('novelties', [
+            'time_clock_log_id' => $lastTimeClock->id,
+            'novelty_type_id' => $noveltyTypes->firstWhere('code', 'PP')->id,
+            'start_at' => '2020-11-03 20:25:01',
+            'end_at' => '2020-11-04 03:35:00',
+        ]);
+        // first time clock novelties should not be changed
+        $this->assertDatabaseHas('novelties', [
+            'time_clock_log_id' => $firstTimeClockLog->id,
+            'start_at' => '2020-11-03 20:08:00',
+            'end_at' => '2020-11-03 20:17:00',
+        ]);
+        $this->assertDatabaseHas('novelties', [
+            'time_clock_log_id' => $firstTimeClockLog->id,
+            'start_at' => '2020-11-03 19:44:00',
+            'end_at' => '2020-11-03 20:07:59',
+        ]);
+        $this->assertDatabaseHas('novelties', [
+            'time_clock_log_id' => $firstTimeClockLog->id,
+            'start_at' => '2020-11-03 19:35:00',
+            'end_at' => '2020-11-03 19:43:59',
         ]);
     }
 }

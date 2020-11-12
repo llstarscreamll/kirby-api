@@ -2,8 +2,6 @@
 
 namespace Kirby\WorkShifts\Tests\api;
 
-use Illuminate\Support\Arr;
-
 /**
  * Class CreateWorkShiftTest.
  *
@@ -36,6 +34,8 @@ class CreateWorkShiftTest extends \Tests\TestCase
             'grace_minutes_after_end_times' => 15,
             'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
+            'time_zone' => 'America/Bogota',
+            'applies_on_days' => [1, 2], // monday to friday
             'time_slots' => [
                 ['start' => '07:00', 'end' => '12:30'],
                 ['start' => '02:00', 'end' => '06:00'],
@@ -46,10 +46,17 @@ class CreateWorkShiftTest extends \Tests\TestCase
             ->assertCreated()
             ->assertJsonHasPath('data.id');
 
-        $this->assertDatabaseHas('work_shifts', Arr::except($requestBody, 'time_slots'));
         $this->assertDatabaseHas('work_shifts', [
             'name' => 'work shift one',
+            'grace_minutes_before_start_times' => 15,
+            'grace_minutes_after_start_times' => 15,
+            'grace_minutes_before_end_times' => 15,
+            'grace_minutes_after_end_times' => 15,
+            'meal_time_in_minutes' => 90,
+            'min_minutes_required_to_discount_meal_time' => 60 * 6,
+            'time_zone' => 'America/Bogota',
             'time_slots' => json_encode($requestBody['time_slots']),
+            'applies_on_days' => json_encode($requestBody['applies_on_days']),
         ]);
     }
 
