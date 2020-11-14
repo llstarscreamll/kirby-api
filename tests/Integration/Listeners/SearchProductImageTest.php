@@ -38,9 +38,9 @@ class SearchProductImageTest extends TestCase
         $product = factory(Product::class)->create();
         $event = new ProductCreated($product);
 
-        @mkdir(storage_path("app/public/images/products/sm/"), 0777, true);
-        @mkdir(storage_path("app/public/images/products/md/"), 0777, true);
-        @mkdir(storage_path("app/public/images/products/lg/"), 0777, true);
+        @mkdir(storage_path('app/public/images/products/sm/'), 0777, true);
+        @mkdir(storage_path('app/public/images/products/md/'), 0777, true);
+        @mkdir(storage_path('app/public/images/products/lg/'), 0777, true);
 
         touch(storage_path("app/public/images/products/sm/{$product->code}.jpg"));
         touch(storage_path("app/public/images/products/md/{$product->code}.jpg"));

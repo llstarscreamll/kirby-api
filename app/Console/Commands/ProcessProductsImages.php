@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Support\Str;
-use Illuminate\Console\Command;
 use App\Jobs\ProcessProductImage;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProcessProductsImages extends Command
 {
@@ -31,8 +31,8 @@ class ProcessProductsImages extends Command
     public function handle()
     {
         $images = collect(Storage::disk(config('filesystems.private-images-disk'))->allFiles())
-            ->filter(fn($image) => Str::endsWith($image, ['.jpg', '.png', '.jpeg', '.webp']))
-            ->map(fn($image) => ProcessProductImage::dispatch($image));
+            ->filter(fn ($image) => Str::endsWith($image, ['.jpg', '.png', '.jpeg', '.webp']))
+            ->map(fn ($image) => ProcessProductImage::dispatch($image));
 
         $this->info("{$images->count()} images scheduled for processing");
     }

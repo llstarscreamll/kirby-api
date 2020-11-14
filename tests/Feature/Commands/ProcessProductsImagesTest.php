@@ -18,10 +18,10 @@ class ProcessProductsImagesTest extends TestCase
 
     protected function tearDown(): void
     {
-        @unlink(storage_path("app/images/products/foo/A1-B2.jpg"));
-        @unlink(storage_path("app/images/products/bar/baz/C3-D4.png"));
-        @unlink(storage_path("app/images/products/E5-C6.jpeg"));
-        @rmdir(storage_path("app/images/products"));
+        @unlink(storage_path('app/images/products/foo/A1-B2.jpg'));
+        @unlink(storage_path('app/images/products/bar/baz/C3-D4.png'));
+        @unlink(storage_path('app/images/products/E5-C6.jpeg'));
+        @rmdir(storage_path('app/images/products'));
 
         parent::tearDown();
     }
@@ -31,11 +31,11 @@ class ProcessProductsImagesTest extends TestCase
      */
     public function shouldDispatchJobsByEachImagePresentOnStorage()
     {
-        @mkdir(storage_path("app/images/products/foo"), 0777, true);
-        @mkdir(storage_path("app/images/products/bar/baz"), 0777, true);
-        @touch(storage_path("app/images/products/foo/A1-B2.jpg"));
-        @touch(storage_path("app/images/products/bar/baz/C3-D4.png"));
-        @touch(storage_path("app/images/products/E5-C6.jpeg"));
+        @mkdir(storage_path('app/images/products/foo'), 0777, true);
+        @mkdir(storage_path('app/images/products/bar/baz'), 0777, true);
+        @touch(storage_path('app/images/products/foo/A1-B2.jpg'));
+        @touch(storage_path('app/images/products/bar/baz/C3-D4.png'));
+        @touch(storage_path('app/images/products/E5-C6.jpeg'));
 
         Queue::fake();
 
@@ -43,8 +43,8 @@ class ProcessProductsImagesTest extends TestCase
             ->assertExitCode(0)
             ->expectsOutput('3 images scheduled for processing');
 
-        Queue::assertPushed(ProcessProductImage::class, fn($job) => $job->imagePath === 'foo/A1-B2.jpg');
-        Queue::assertPushed(ProcessProductImage::class, fn($job) => $job->imagePath === 'bar/baz/C3-D4.png');
-        Queue::assertPushed(ProcessProductImage::class, fn($job) => $job->imagePath === 'E5-C6.jpeg');
+        Queue::assertPushed(ProcessProductImage::class, fn ($job) => $job->imagePath === 'foo/A1-B2.jpg');
+        Queue::assertPushed(ProcessProductImage::class, fn ($job) => $job->imagePath === 'bar/baz/C3-D4.png');
+        Queue::assertPushed(ProcessProductImage::class, fn ($job) => $job->imagePath === 'E5-C6.jpeg');
     }
 }

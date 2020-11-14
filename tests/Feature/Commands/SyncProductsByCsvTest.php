@@ -53,8 +53,8 @@ class SyncProductsByCsvTest extends TestCase
             ->expectsOutput('0 products updated successfully');
 
         Event::assertDispatched(ProductCreated::class, 2);
-        Event::assertDispatched(ProductCreated::class, fn($e) => $e->product->code === 'A1');
-        Event::assertDispatched(ProductCreated::class, fn($e) => $e->product->code === 'B2');
+        Event::assertDispatched(ProductCreated::class, fn ($e) => $e->product->code === 'A1');
+        Event::assertDispatched(ProductCreated::class, fn ($e) => $e->product->code === 'B2');
 
         $this->assertDatabaseRecordsCount(2, 'products');
         $this->assertDatabaseHas('products', [
@@ -109,7 +109,7 @@ class SyncProductsByCsvTest extends TestCase
             ->expectsOutput('0 products created successfully')
             ->expectsOutput('1 products updated successfully');
 
-        Event::assertDispatched(ProductUpdated::class, fn($e) => $e->product->code === 'A1');
+        Event::assertDispatched(ProductUpdated::class, fn ($e) => $e->product->code === 'A1');
 
         $this->assertDatabaseRecordsCount(1, 'products');
         $this->assertDatabaseHas('products', [
