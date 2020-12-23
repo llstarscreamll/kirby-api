@@ -4,7 +4,6 @@ namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Kirby\Novelties\DTOs\SearchEmployeeNoveltiesData;
 use Kirby\Novelties\Jobs\GenerateCsvEmployeeResumeByNoveltyTypeJob;
-use Kirby\Novelties\Jobs\GenerateCsvReportByEmployeeJob;
 use Kirby\Novelties\UI\API\V1\Requests\ExportEmployeeResumeByNoveltyTypesRequest;
 
 /**

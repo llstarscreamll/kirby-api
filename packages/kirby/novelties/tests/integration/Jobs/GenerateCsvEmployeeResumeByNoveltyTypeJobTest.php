@@ -11,12 +11,12 @@ use Illuminate\Support\Str;
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\DTOs\SearchEmployeeNoveltiesData;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
-use Tests\TestCase;
 use Kirby\Novelties\Jobs\GenerateCsvEmployeeResumeByNoveltyTypeJob;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Novelties\Notifications\ExportNoveltiesResumeByTypeReady;
 use Kirby\Users\Models\User;
+use Tests\TestCase;
 
 class GenerateCsvEmployeeResumeByNoveltyTypeJobTest extends TestCase
 {
@@ -46,7 +46,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJobTest extends TestCase
                 'key' => 'novelties.default-subtraction-balance-novelty-type',
                 'name' => 'Default subtraction balance novelty type', 'description' => '',
                 'data_type' => 'int', 'value' => $this->subtractBalance->id,
-            ]
+            ],
         ]);
     }
 
@@ -80,7 +80,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJobTest extends TestCase
                 $this->additionBalance->code, $this->additionNoveltyType->code,
                 // subtract novelties
                 $this->subtractBalance->code, $this->subtractNoveltyType->code,
-                'Total' // addition novelties - subtract novelties
+                'Total', // addition novelties - subtract novelties
             ])
         );
     }
@@ -228,7 +228,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJobTest extends TestCase
             'novelty_type_id' => $this->subtractNoveltyType,
             'start_at' => Carbon::parse('2020-01-03 14:00:00'),
             'end_at' => Carbon::parse('2020-01-03 18:00:00'),
-            'deleted_at' => now()
+            'deleted_at' => now(),
         ]);
 
         $makeReportData = new SearchEmployeeNoveltiesData([
@@ -253,7 +253,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJobTest extends TestCase
                 4 => '3.5', // elapsed hours from first and second created addition novelties
                 5 => '0', // non existing negative balance novelty, then 0
                 6 => '-4', // elapsed hours from third created subtraction novelty
-                7 => '-0.5' // = (0 + 2) + (0 + -4)
+                7 => '-0.5', // = (0 + 2) + (0 + -4)
             ],
             Arr::except(explode(';', $fileRows[1]), [0, 1, 2]),
         );

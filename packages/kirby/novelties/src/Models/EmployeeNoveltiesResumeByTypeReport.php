@@ -43,7 +43,7 @@ class EmployeeNoveltiesResumeByTypeReport
                 fn ($noveltyTypeId) => $this->noveltiesResume->where('noveltyTypeId', $noveltyTypeId)->map->elapsedTimeInHours()->sum(),
                 $sortedSubtractNoveltyTypes
             ),
-            round($this->noveltiesResume->reduce(fn ($acc, $row) => $acc + $row->elapsedTimeInHours(), 0), 2)
+            round($this->noveltiesResume->reduce(fn ($acc, $row) => $acc + $row->elapsedTimeInHours(), 0), 2),
         ];
     }
 }

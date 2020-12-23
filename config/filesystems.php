@@ -51,7 +51,7 @@ return [
         'public' => [
             'driver' => env('PUBLIC_DISK_DRIVER', 'local'),
             'root' => env('PUBLIC_DISK_ROOT', storage_path('app/public')),
-            'url' => env('AWS_URL', env('APP_URL') . '/storage'),
+            'url' => env('AWS_URL', env('APP_URL').'/storage'),
             'visibility' => 'public',
             // if driver is cloud, then these settings are needed
             'key' => env('AWS_ACCESS_KEY_ID'),
@@ -63,7 +63,7 @@ return [
         'private' => [
             'driver' => env('PRIVATE_DISK_DRIVER', 'local'),
             'root' => env('PRIVATE_DISK_ROOT', storage_path('app/public')),
-            'url' => env('AWS_URL', env('APP_URL') . '/storage'),
+            'url' => env('AWS_URL', env('APP_URL').'/storage'),
             'visibility' => 'private',
             // if driver is cloud, then these settings are needed
             'key' => env('AWS_ACCESS_KEY_ID'),

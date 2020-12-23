@@ -10,7 +10,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyReportingRepository;
 use Kirby\Novelties\DTOs\SearchEmployeeNoveltiesData;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
@@ -84,9 +83,9 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 
     private function generateReport()
     {
-        $fileName = now()->format('Y-m-d_H_i_s') . ".csv";
+        $fileName = now()->format('Y-m-d_H_i_s').'.csv';
         $writer = Writer::createFromStream($file = tmpfile());
-        $writer->setDelimiter(";");
+        $writer->setDelimiter(';');
         $writer->insertOne($this->getHeaders());
 
         app(NoveltyReportingRepository::class)->employeesResumeByNoveltyTypeChunk(
@@ -113,7 +112,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
             // subtract novelties
             ...$this->getSortedSubtractNoveltyTypes()->pluck('code'),
             // addition novelties - subtract novelties
-            'Total'
+            'Total',
         ];
     }
 

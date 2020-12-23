@@ -2,8 +2,6 @@
 
 namespace Kirby\Novelties\Contracts;
 
-use Carbon\Carbon;
-use Kirby\Core\Contracts\BaseRepositoryInterface;
 use Kirby\Novelties\DTOs\SearchEmployeeNoveltiesData;
 
 /**
