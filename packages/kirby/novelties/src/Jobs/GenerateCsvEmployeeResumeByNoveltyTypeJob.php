@@ -28,13 +28,6 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @todo There is an error on laravel/telescope 3.x accessing typed
-     * properties, solution was to make nullable this property. Maybe upgrading
-     * the laravel framework and telescope to the latest version fix this
-     * unnecessary nullable thing.
-     * @var null|\Kirby\Novelties\DTOs\SearchEmployeeNoveltiesData
-     */
     public ?SearchEmployeeNoveltiesData $makeReportData = null;
 
     private Collection $noveltyTypes;
@@ -48,6 +41,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
     public function __construct(SearchEmployeeNoveltiesData $makeReportData)
     {
         $this->makeReportData = $makeReportData;
+        $this->noveltyTypes = new Collection();
     }
 
     /**
