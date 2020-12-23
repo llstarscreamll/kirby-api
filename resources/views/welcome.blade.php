@@ -78,11 +78,12 @@
 
             <div class="content">
                 <div class="title m-b-md">{{ config('app.name', 'Laravel') }}</div>
-
+{{--
                 <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
                     <a href="https://github.com/llstarscreamll/kirby-api">GitHub</a>
                 </div>
+--}}
             </div>
         </div>
     </body>
