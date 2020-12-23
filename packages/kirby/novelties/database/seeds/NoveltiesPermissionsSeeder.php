@@ -21,6 +21,7 @@ class NoveltiesPermissionsSeeder extends Seeder
         ['name' => 'novelties.update'],
         ['name' => 'novelties.delete'],
         ['name' => 'novelties.export'],
+        ['name' => 'novelties.export-resume-by-novelty-type'],
         ['name' => 'novelties.create-many'],
         ['name' => 'novelties.report-by-employee'],
         ['name' => 'novelties.create-balance-novelty'],
