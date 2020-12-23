@@ -46,7 +46,7 @@ class ExportEmployeesResumeByNoveltyTypeTest extends TestCase
             'end_at' => now()->endOfMonth()->toISOString(),
         ];
 
-        $this->json('POST', $this->endpoint, $requestData)
+        $this->json('GET', $this->endpoint, $requestData)
             ->assertOk()
             ->assertJsonFragment(['data' => 'ok']);
 
@@ -66,7 +66,7 @@ class ExportEmployeesResumeByNoveltyTypeTest extends TestCase
         $this->user->roles()->delete();
         $this->user->permissions()->delete();
 
-        $this->json('POST', $this->endpoint, [])
+        $this->json('GET', $this->endpoint, [])
             ->assertForbidden();
     }
 }
