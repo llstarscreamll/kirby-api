@@ -90,7 +90,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 
     private function generateReport()
     {
-        $fileName = now()->format('Y-m-d_H_i_s') . '.csv';
+        $fileName = now()->format('Y-m-d_H_i_s').'.csv';
         $writer = Writer::createFromStream($file = tmpfile());
         $writer->setDelimiter(';');
         $writer->insertOne($this->getHeaders());
