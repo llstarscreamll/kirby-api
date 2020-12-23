@@ -29,7 +29,7 @@
         "kirby/work-shifts": "*",
         "laravel/framework": "6.*",
         "laravel/horizon": "^3.1",
-        "laravel/telescope": "^2.1",
+        "laravel/telescope": "^3",
         "laravel/tinker": "^1.0",
         "lcobucci/jwt": "3.3.2",
         "maatwebsite/excel": "^3.1",
