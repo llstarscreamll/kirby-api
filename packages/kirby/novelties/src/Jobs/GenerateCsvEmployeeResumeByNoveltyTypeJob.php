@@ -28,7 +28,14 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public SearchEmployeeNoveltiesData $makeReportData;
+    /**
+     * @todo There is an error on laravel/telescope 3.x accessing typed
+     * properties, solution was to make nullable this property. Maybe upgrading
+     * the laravel framework and telescope to the latest version fix this
+     * unnecessary nullable thing.
+     * @var null|\Kirby\Novelties\DTOs\SearchEmployeeNoveltiesData
+     */
+    public ?SearchEmployeeNoveltiesData $makeReportData = null;
 
     private Collection $noveltyTypes;
 
@@ -83,7 +90,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 
     private function generateReport()
     {
-        $fileName = now()->format('Y-m-d_H_i_s').'.csv';
+        $fileName = now()->format('Y-m-d_H_i_s') . '.csv';
         $writer = Writer::createFromStream($file = tmpfile());
         $writer->setDelimiter(';');
         $writer->insertOne($this->getHeaders());
