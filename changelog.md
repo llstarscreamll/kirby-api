@@ -1,5 +1,11 @@
 # Release notes
 
+## [v1.3 (2020-12-28)](https://github.com/llstarscreamll/kirby-api/compare/v1.3..v1.2.1)
+
+### Added
+
+-   Novelties, new endpoint to export resume by novelty type from all employees to csv, and email with a download link is send to the user who invoked the endpoint.
+
 ## [v1.2.1 (2020-11-11)](https://github.com/llstarscreamll/kirby-api/compare/v1.2.1..v1.2)
 
 ### Fixed
