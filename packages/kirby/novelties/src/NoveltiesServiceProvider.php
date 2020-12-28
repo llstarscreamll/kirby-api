@@ -4,9 +4,11 @@ namespace Kirby\Novelties;
 
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use Kirby\Novelties\Contracts\NoveltyReportingRepository;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\Novelties\Providers\EventServiceProvider;
+use Kirby\Novelties\Repositories\DbNoveltyReportingRepository;
 use Kirby\Novelties\Repositories\EloquentNoveltyRepository;
 use Kirby\Novelties\Repositories\EloquentNoveltyTypeRepository;
 
@@ -30,6 +32,7 @@ class NoveltiesServiceProvider extends ServiceProvider
      * @var array
      */
     public $bindings = [
+        NoveltyReportingRepository::class => DbNoveltyReportingRepository::class,
         NoveltyRepositoryInterface::class => EloquentNoveltyRepository::class,
         NoveltyTypeRepositoryInterface::class => EloquentNoveltyTypeRepository::class,
     ];

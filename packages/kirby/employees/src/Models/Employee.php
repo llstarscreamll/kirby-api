@@ -14,6 +14,18 @@ use Kirby\WorkShifts\Models\WorkShift;
 /**
  * Class Employee.
  *
+ * @param int $cost_center_id
+ * @param string $code
+ * @param string $identification_number
+ * @param string $first_name
+ * @param string $last_name
+ * @param string $full_name
+ * @param string $position
+ * @param string $location
+ * @param string $address
+ * @param string $phone
+ * @param float $salary
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class Employee extends Model
@@ -157,6 +169,11 @@ class Employee extends Model
     public function getLastNameAttribute(): ?string
     {
         return $this->user->last_name;
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return "{$this->user->first_name} {$this->user->last_name}";
     }
 
     /**

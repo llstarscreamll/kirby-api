@@ -49,10 +49,27 @@ return [
         ],
 
         'public' => [
-            'driver' => 'local',
-            'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'driver' => env('PUBLIC_DISK_DRIVER', 'local'),
+            'root' => env('PUBLIC_DISK_ROOT', storage_path('app/public')),
+            'url' => env('AWS_URL', env('APP_URL').'/storage'),
             'visibility' => 'public',
+            // if driver is cloud, then these settings are needed
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_PUBLIC_BUCKET'),
+        ],
+
+        'private' => [
+            'driver' => env('PRIVATE_DISK_DRIVER', 'local'),
+            'root' => env('PRIVATE_DISK_ROOT', storage_path('app/public')),
+            'url' => env('AWS_URL', env('APP_URL').'/storage'),
+            'visibility' => 'private',
+            // if driver is cloud, then these settings are needed
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_PRIVATE_BUCKET'),
         ],
 
         's3' => [
