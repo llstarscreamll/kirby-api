@@ -5,7 +5,7 @@ namespace Kirby\Novelties\UI\API\V1\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
-use Kirby\Novelties\Criteria\ByEmployeeIdCriterion;
+use Kirby\Novelties\Criteria\ByEmployeeIdsCriterion;
 use Kirby\Novelties\Repositories\Criteria\ByNoveltyTypeCriteria;
 use Kirby\Novelties\Repositories\Criteria\ByStartDateRangeCriteria;
 use Kirby\Novelties\Repositories\Criteria\CostCentersCriteria;
@@ -46,8 +46,14 @@ class NoveltiesController
      */
     public function index(SearchNoveltiesRequest $request)
     {
-        if ($request->user()->can('novelties.employee-search')) {
-            $this->noveltyRepository->pushCriteria(new ByEmployeeIdCriterion($request->user()->id));
+        if ($request->user()->can('novelties.global-search') && !empty($request->employees)) {
+            $this->noveltyRepository->pushCriteria(new ByEmployeeIdsCriterion(data_get($request->employees, '*.id')));
+        }
+
+        // si el empleado no tiene permisos para hacer búsquedas globales,
+        // entonces nada más podrá ver datos de sí mismo
+        if (!$request->user()->can('novelties.global-search')) {
+            $this->noveltyRepository->pushCriteria(new ByEmployeeIdsCriterion([$request->user()->id]));
         }
 
         $novelties = $this->noveltyRepository
@@ -71,7 +77,7 @@ class NoveltiesController
             ));
         }
 
-        if (! $request->user()->can('novelties.employee-search') && $request->employees) {
+        if (!$request->user()->can('novelties.employee-search') && $request->employees) {
             $novelties->pushCriteria(new EmployeeCriteria(data_get($request->employees, '*.id')));
         }
 

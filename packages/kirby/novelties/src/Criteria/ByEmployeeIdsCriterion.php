@@ -5,19 +5,19 @@ namespace Kirby\Novelties\Criteria;
 use Prettus\Repository\Contracts\CriteriaInterface;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
-class ByEmployeeIdCriterion implements CriteriaInterface
+class ByEmployeeIdsCriterion implements CriteriaInterface
 {
     /**
-     * @var mixed
+     * @var array
      */
-    private $employeeId;
+    private $employeeIds;
 
     /**
-     * @param int $employeeId
+     * @param int[] $employeeIds
      */
-    public function __construct(int $employeeId)
+    public function __construct(array $employeeIds)
     {
-        $this->employeeId = $employeeId;
+        $this->employeeIds = $employeeIds;
     }
 
     /**
@@ -26,6 +26,6 @@ class ByEmployeeIdCriterion implements CriteriaInterface
      */
     public function apply($model, RepositoryInterface $repository)
     {
-        return $model->where('employee_id', $this->employeeId);
+        return $model->whereIn('novelties.employee_id', $this->employeeIds);
     }
 }
