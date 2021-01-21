@@ -48,7 +48,7 @@ class EmployeeNoveltyTypesRecordsController
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
 
-        if (!$request->user()->can('novelties.global-search')) {
+        if (! $request->user()->can('novelties.global-search')) {
             $this->employeeRepository->pushCriteria(new ByEmployeeIdsCriterion([$request->user()->id]));
         }
 
