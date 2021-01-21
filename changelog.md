@@ -1,5 +1,11 @@
 # Release notes
 
+## [v1.5 (2021-01-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.5..v1.4)
+
+### Changed
+
+-   Novelties: return current user data based on ACL rules in report resume by novelty types (llstarscreamll@hotmail.com)
+
 ## [v1.4 (2021-01-20)](https://github.com/llstarscreamll/kirby-api/compare/v1.4..v1.3)
 
 ### Changed
