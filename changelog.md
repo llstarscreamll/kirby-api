@@ -1,5 +1,11 @@
 # Release notes
 
+## [v1.4 (2021-01-20)](https://github.com/llstarscreamll/kirby-api/compare/v1.4..v1.3)
+
+### Changed
+
+-   Novelties: refactor global and employee search (llstarscreamll@hotmail.com)
+
 ## [v1.3 (2020-12-28)](https://github.com/llstarscreamll/kirby-api/compare/v1.3..v1.2.1)
 
 ### Added

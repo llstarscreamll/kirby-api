@@ -33,9 +33,12 @@ class SearchNoveltiesTest extends \Tests\TestCase
     }
 
     /**
+     * Permite búsquedas de todos los empleados cuando tiene el permiso adecuado
+     * y no se ha especificado un id de empleado específico.
+     *
      * @test
      */
-    public function shouldReturnAllEmployeesDataWhenDoesNotHaveEmployeeSearchPermission()
+    public function shouldReturnAllEmployeesDataWhenHasGlobalSearchPermissionAndEmployeeIdIsMissing()
     {
         $this->user->syncPermissions(Permission::where('name', 'novelties.global-search')->get());
         $novelties = factory(Novelty::class, 5)->create();
@@ -50,13 +53,16 @@ class SearchNoveltiesTest extends \Tests\TestCase
     }
 
     /**
+     * Debe retornar datos relacionados con el usuario autenticado nada más
+     * cuando no tiene permiso de búsqueda global.
+     *
      * @test
      */
     public function shouldReturnCurrentUserDataWhenHasEmployeeSearchPermission()
     {
         $this->user->syncPermissions(Permission::where('name', 'novelties.employee-search')->get());
-        factory(Novelty::class)->create(['employee_id' => $this->user->id]);
-        factory(Novelty::class, 5)->create();
+        factory(Novelty::class)->create(['employee_id' => $this->user->id]); // expected data
+        factory(Novelty::class, 5)->create(); // unexpected data
 
         $this->json('GET', $this->endpoint)
             ->assertOk()
