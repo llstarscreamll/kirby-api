@@ -58,5 +58,7 @@ class SyncHolidaysCommand extends Command
             $keys = Arr::only($holiday, ['country_code', 'date']);
             $holidayRepository->updateOrCreate($keys, $holiday);
         });
+
+        return 0;
     }
 }
