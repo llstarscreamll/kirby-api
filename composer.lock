@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e3539b8b60c331b60c5d012aad9f9b8",
+    "content-hash": "e330d56188598e616e9cfe6d5283540b",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1784,6 +1784,62 @@
             }
         },
         {
+            "name": "kirby/customers",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "/home/johan/Code/J0H4N_AC/kirby-api/packages/kirby/Customers",
+                "reference": "8f5b9bb38a56568a09ded833911f87db6d9613bc"
+            },
+            "require": {
+                "illuminate/support": "~7|~8"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~5|~6",
+                "phpunit/phpunit": "~9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "kirby\\Customers\\CustomersServiceProvider"
+                    ],
+                    "aliases": {
+                        "Customers": "kirby\\Customers\\Facades\\Customers"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kirby\\Customers\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "kirby\\Customers\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "license"
+            ],
+            "authors": [
+                {
+                    "name": "author name",
+                    "email": "author email",
+                    "homepage": "author homepage"
+                }
+            ],
+            "description": ":package_description",
+            "homepage": "https://github.com/kirby/customers",
+            "keywords": [
+                "Customers",
+                "Laravel"
+            ],
+            "transport-options": {
+                "relative": false
+            }
+        },
+        {
             "name": "kirby/employees",
             "version": "dev-develop",
             "dist": {
@@ -1846,6 +1902,62 @@
             }
         },
         {
+            "name": "kirby/machines",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./packages/kirby/machines",
+                "reference": "167c719cb530c8cd4fb0a542efa03a56d8c15a15"
+            },
+            "require": {
+                "illuminate/support": "~7|~8"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~5|~6",
+                "phpunit/phpunit": "~9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "kirby\\Machines\\MachinesServiceProvider"
+                    ],
+                    "aliases": {
+                        "Machines": "kirby\\Machines\\Facades\\Machines"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kirby\\Machines\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "kirby\\Machines\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "license"
+            ],
+            "authors": [
+                {
+                    "name": "Johan Alvarez",
+                    "email": "llstarscreamll@hotmail.com",
+                    "homepage": "github.com/llstarscreamll"
+                }
+            ],
+            "description": ":package_description",
+            "homepage": "https://github.com/kirby/machines",
+            "keywords": [
+                "Laravel",
+                "Machines"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
             "name": "kirby/novelties",
             "version": "dev-develop",
             "dist": {
@@ -1902,6 +2014,62 @@
             "keywords": [
                 "Laravel",
                 "Novelties"
+            ],
+            "transport-options": {
+                "relative": true
+            }
+        },
+        {
+            "name": "kirby/products",
+            "version": "dev-develop",
+            "dist": {
+                "type": "path",
+                "url": "./packages/kirby/products",
+                "reference": "4f75a33d1ea9016bbe06ce333b036e0159e5d387"
+            },
+            "require": {
+                "illuminate/support": "~7|~8"
+            },
+            "require-dev": {
+                "orchestra/testbench": "~5|~6",
+                "phpunit/phpunit": "~9.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "kirby\\Products\\ProductsServiceProvider"
+                    ],
+                    "aliases": {
+                        "Products": "kirby\\Products\\Facades\\Products"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "kirby\\Products\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "kirby\\Products\\Tests\\": "tests"
+                }
+            },
+            "license": [
+                "license"
+            ],
+            "authors": [
+                {
+                    "name": "Johan Alvarez",
+                    "email": "llstarscreamll@hotmail.com",
+                    "homepage": "github.com/llstarscreamll"
+                }
+            ],
+            "description": ":package_description",
+            "homepage": "https://github.com/kirby/products",
+            "keywords": [
+                "Laravel",
+                "Products"
             ],
             "transport-options": {
                 "relative": true
@@ -10900,7 +11068,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "kirby/customers": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

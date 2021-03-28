@@ -7,12 +7,12 @@
     ],
     "license": "MIT",
     "type": "project",
-    "repositories": [
-        {
+    "repositories": {
+        "0": {
             "type": "path",
             "url": "./packages/kirby/*"
         }
-    ],
+    },
     "require": {
         "php": "^7.4",
         "ext-redis": "*",
@@ -23,8 +23,11 @@
         "kirby/authorization": "*",
         "kirby/company": "*",
         "kirby/core": "*",
+        "kirby/customers": "*",
         "kirby/employees": "*",
+        "kirby/machines": "*",
         "kirby/novelties": "*",
+        "kirby/products": "*",
         "kirby/time-clock": "*",
         "kirby/users": "*",
         "kirby/work-shifts": "*",
