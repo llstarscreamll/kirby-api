@@ -1,0 +1,41 @@
+{
+    "name": "kirby/products",
+    "description": ":package_description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/kirby/products",
+    "keywords": ["Laravel", "Products"],
+    "require": {
+        "illuminate/support": "~7|~8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~5|~6"
+    },
+    "autoload": {
+        "psr-4": {
+            "kirby\\Products\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "kirby\\Products\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "kirby\\Products\\ProductsServiceProvider"
+            ],
+            "aliases": {
+                "Products": "kirby\\Products\\Facades\\Products"
+            }
+        }
+    }
+}
