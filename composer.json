@@ -8,6 +8,10 @@
     "license": "MIT",
     "type": "project",
     "repositories": {
+        "kirby/production": {
+            "type": "path",
+            "url": "/home/johan/Code/J0H4N_AC/kirby-api/packages/kirby/Production"
+        },
         "0": {
             "type": "path",
             "url": "./packages/kirby/*"
@@ -27,6 +31,7 @@
         "kirby/employees": "*",
         "kirby/machines": "*",
         "kirby/novelties": "*",
+        "kirby/production": "dev-develop",
         "kirby/products": "*",
         "kirby/time-clock": "*",
         "kirby/users": "*",
