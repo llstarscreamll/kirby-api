@@ -14,13 +14,7 @@ abstract class TestCase extends BaseTestCase
     use CreatesApplication, CreateTestResponse, RefreshDatabase;
 
     /**
-     * Call the given URI with a JSON request.
-     *
-     * @param  string  $method
-     * @param  string  $uri
-     * @param  array  $data
-     * @param  array  $headers
-     * @return \Illuminate\Foundation\Testing\TestResponse
+     * @inheritdoc
      */
     public function json($method, $uri, array $data = [], array $headers = [])
     {
@@ -37,7 +31,7 @@ abstract class TestCase extends BaseTestCase
         ], $headers);
 
         return $this->call(
-            $method, $uri, $parameters, [], $files, $this->transformHeadersToServerVars($headers), $content
+            $method, $uri, $parameters, $this->prepareCookiesForJsonRequest(), $files, $this->transformHeadersToServerVars($headers), $content
         );
     }
 
@@ -78,6 +72,13 @@ abstract class TestCase extends BaseTestCase
         return $this->be($user, $driver);
     }
 
+    /**
+     * @param  int         $count
+     * @param  string      $table
+     * @param  array       $data
+     * @param  null|string $connection
+     * @return mixed
+     */
     public function assertDatabaseRecordsCount(int $count, string $table, array $data = [], $connection = null)
     {
         $this->assertThat(
