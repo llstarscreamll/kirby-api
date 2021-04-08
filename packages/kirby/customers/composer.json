@@ -20,21 +20,21 @@
     },
     "autoload": {
         "psr-4": {
-            "kirby\\Customers\\": "src/"
+            "Kirby\\Customers\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "kirby\\Customers\\Tests\\": "tests"
+            "Kirby\\Customers\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "kirby\\Customers\\CustomersServiceProvider"
+                "Kirby\\Customers\\CustomersServiceProvider"
             ],
             "aliases": {
-                "Customers": "kirby\\Customers\\Facades\\Customers"
+                "Customers": "Kirby\\Customers\\Facades\\Customers"
             }
         }
     }
