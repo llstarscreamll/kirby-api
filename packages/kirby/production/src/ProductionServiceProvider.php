@@ -46,7 +46,7 @@ class ProductionServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/production.php', 'production');
-        array_walk($this->binds, fn($concrete, $abstract) => $this->app->bind($abstract, $concrete));
+        array_walk($this->binds, fn ($concrete, $abstract) => $this->app->bind($abstract, $concrete));
 
         // Register the service the package provides.
         $this->app->singleton('production', function ($app) {

@@ -20,10 +20,10 @@ use Kirby\Products\Models\Product;
 
 $factory->define(ProductionLog::class, function (Faker $faker) {
     return [
-        'product_id' => fn() => factory(Product::class)->create(),
-        'machine_id' => fn() => factory(Machine::class)->create(),
-        'employee_id' => fn() => factory(Employee::class)->create(),
-        'customer_id' => fn() => factory(Customer::class)->create(),
+        'product_id' => fn () => factory(Product::class)->create(),
+        'machine_id' => fn () => factory(Machine::class)->create(),
+        'employee_id' => fn () => factory(Employee::class)->create(),
+        'customer_id' => fn () => factory(Customer::class)->create(),
         'batch' => $faker->numerify('#######'),
         'tare_weight' => $tare = $faker->numberBetween(10, 150),
         'gross_weight' => $faker->numberBetween($tare, $tare * 5),

@@ -3,10 +3,8 @@
 namespace Kirby\Production\Repositories;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Kirby\Core\Filters\QuerySearchFilter;
-use Kirby\Production\Models\ProductionLog;
 use Kirby\Production\Contracts\ProductionLogRepository;
-use Spatie\QueryBuilder\AllowedFilter;
+use Kirby\Production\Models\ProductionLog;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class EloquentProductionLogRepository implements ProductionLogRepository

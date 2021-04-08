@@ -20,6 +20,6 @@ class ProductionPermissionsSeed extends Seeder
      */
     public function run()
     {
-        array_walk($this->permissions, fn($permission) => Permission::updateOrCreate($permission));
+        array_walk($this->permissions, fn ($permission) => Permission::updateOrCreate($permission));
     }
 }
