@@ -15,12 +15,10 @@ class CreateMachinesTable extends Migration
     {
         Schema::create('machines', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigIncrements('cost_center_id');
+            $table->foreignId('cost_center_id')->references('id')->on('cost_centers');
             $table->string('code');
             $table->string('name');
             $table->timestamps();
-
-            $table->foreign('cost_center_id')->references('id')->on('cost_centers');
         });
     }
 

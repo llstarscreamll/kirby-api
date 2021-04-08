@@ -20,21 +20,21 @@
     },
     "autoload": {
         "psr-4": {
-            "kirby\\Machines\\": "src/"
+            "Kirby\\Machines\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "kirby\\Machines\\Tests\\": "tests"
+            "Kirby\\Machines\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "kirby\\Machines\\MachinesServiceProvider"
+                "Kirby\\Machines\\MachinesServiceProvider"
             ],
             "aliases": {
-                "Machines": "kirby\\Machines\\Facades\\Machines"
+                "Machines": "Kirby\\Machines\\Facades\\Machines"
             }
         }
     }
