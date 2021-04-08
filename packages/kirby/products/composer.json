@@ -20,21 +20,21 @@
     },
     "autoload": {
         "psr-4": {
-            "kirby\\Products\\": "src/"
+            "Kirby\\Products\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "kirby\\Products\\Tests\\": "tests"
+            "Kirby\\Products\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "kirby\\Products\\ProductsServiceProvider"
+                "Kirby\\Products\\ProductsServiceProvider"
             ],
             "aliases": {
-                "Products": "kirby\\Products\\Facades\\Products"
+                "Products": "Kirby\\Products\\Facades\\Products"
             }
         }
     }

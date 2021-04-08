@@ -2,6 +2,7 @@
 
 namespace kirby\Products;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 
 class ProductsServiceProvider extends ServiceProvider
@@ -16,11 +17,15 @@ class ProductsServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kirby');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'kirby');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
+        }
+
+        if ($this->app->runningUnitTests()) {
+            $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
         }
     }
 
