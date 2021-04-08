@@ -2,10 +2,20 @@
 
 namespace kirby\Production;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
+use Kirby\Production\Contracts\ProductionLogRepository;
+use Kirby\Production\Repositories\EloquentProductionLogRepository;
 
 class ProductionServiceProvider extends ServiceProvider
 {
+    /**
+     * @var array
+     */
+    private $binds = [
+        ProductionLogRepository::class => EloquentProductionLogRepository::class,
+    ];
+
     /**
      * Perform post-registration booting of services.
      *
@@ -15,12 +25,16 @@ class ProductionServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kirby');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'kirby');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
+        }
+
+        if ($this->app->runningUnitTests()) {
+            $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
         }
     }
 
@@ -32,6 +46,7 @@ class ProductionServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/production.php', 'production');
+        array_walk($this->binds, fn($concrete, $abstract) => $this->app->bind($abstract, $concrete));
 
         // Register the service the package provides.
         $this->app->singleton('production', function ($app) {
@@ -59,7 +74,7 @@ class ProductionServiceProvider extends ServiceProvider
         // Publishing the configuration file.
         $this->publishes([
             __DIR__.'/../config/production.php' => config_path('production.php'),
-        ], 'production.config');
+        ], 'production');
 
         // Publishing the views.
         /*$this->publishes([
