@@ -8,11 +8,7 @@
     "license": "MIT",
     "type": "project",
     "repositories": {
-        "kirby/production": {
-            "type": "path",
-            "url": "/home/johan/Code/J0H4N_AC/kirby-api/packages/kirby/Production"
-        },
-        "0": {
+        "kirby/*": {
             "type": "path",
             "url": "./packages/kirby/*"
         }

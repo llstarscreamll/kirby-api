@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49ff8b324865a0949303e0cce269a972",
+    "content-hash": "2d3d43052462e17af75c9d4e7802ba57",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1827,7 +1827,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/customers",
-                "reference": "25897ceb140221384bd017f41ab0d710a2cfa9cd"
+                "reference": "243b88a5a7900ae2cfbb696fdc6d9334e0c5d4ef"
             },
             "require": {
                 "illuminate/support": "~7|~8"
@@ -1840,21 +1840,21 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "kirby\\Customers\\CustomersServiceProvider"
+                        "Kirby\\Customers\\CustomersServiceProvider"
                     ],
                     "aliases": {
-                        "Customers": "kirby\\Customers\\Facades\\Customers"
+                        "Customers": "Kirby\\Customers\\Facades\\Customers"
                     }
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "kirby\\Customers\\": "src/"
+                    "Kirby\\Customers\\": "src/"
                 }
             },
             "autoload-dev": {
                 "psr-4": {
-                    "kirby\\Customers\\Tests\\": "tests"
+                    "Kirby\\Customers\\Tests\\": "tests"
                 }
             },
             "license": [
@@ -1945,7 +1945,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/machines",
-                "reference": "167c719cb530c8cd4fb0a542efa03a56d8c15a15"
+                "reference": "5b982f34c7b0e53b81a1c6cd7b115c4d4d2f2ca5"
             },
             "require": {
                 "illuminate/support": "~7|~8"
@@ -1958,21 +1958,21 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "kirby\\Machines\\MachinesServiceProvider"
+                        "Kirby\\Machines\\MachinesServiceProvider"
                     ],
                     "aliases": {
-                        "Machines": "kirby\\Machines\\Facades\\Machines"
+                        "Machines": "Kirby\\Machines\\Facades\\Machines"
                     }
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "kirby\\Machines\\": "src/"
+                    "Kirby\\Machines\\": "src/"
                 }
             },
             "autoload-dev": {
                 "psr-4": {
-                    "kirby\\Machines\\Tests\\": "tests"
+                    "Kirby\\Machines\\Tests\\": "tests"
                 }
             },
             "license": [
@@ -2062,8 +2062,8 @@
             "version": "dev-develop",
             "dist": {
                 "type": "path",
-                "url": "/home/johan/Code/J0H4N_AC/kirby-api/packages/kirby/Production",
-                "reference": "ec05020a1441cdb99ad904e13db2ace86c45d4f7"
+                "url": "./packages/kirby/production",
+                "reference": "1a4972892586cf988c98bf6d52fc7d1d21441151"
             },
             "require": {
                 "illuminate/support": "~7|~8"
@@ -2076,21 +2076,24 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "kirby\\Production\\ProductionServiceProvider"
+                        "Kirby\\Production\\ProductionServiceProvider"
                     ],
                     "aliases": {
-                        "Production": "kirby\\Production\\Facades\\Production"
+                        "Production": "Kirby\\Production\\Facades\\Production"
                     }
                 }
             },
             "autoload": {
+                "classmap": [
+                    "database/seeds"
+                ],
                 "psr-4": {
-                    "kirby\\Production\\": "src/"
+                    "Kirby\\Production\\": "src/"
                 }
             },
             "autoload-dev": {
                 "psr-4": {
-                    "kirby\\Production\\Tests\\": "tests"
+                    "Kirby\\Production\\Tests\\": "tests"
                 }
             },
             "license": [
@@ -2098,9 +2101,9 @@
             ],
             "authors": [
                 {
-                    "name": "author name",
-                    "email": "author email",
-                    "homepage": "author homepage"
+                    "name": "Johan Alvarez",
+                    "email": "llstarscreamll@hotmail.com",
+                    "homepage": "github.com/llstarscreamll"
                 }
             ],
             "description": ":package_description",
@@ -2110,7 +2113,7 @@
                 "Production"
             ],
             "transport-options": {
-                "relative": false
+                "relative": true
             }
         },
         {
@@ -2119,7 +2122,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/products",
-                "reference": "4f75a33d1ea9016bbe06ce333b036e0159e5d387"
+                "reference": "fcd2583f5285bc1a7ed05613154cea9661c3c203"
             },
             "require": {
                 "illuminate/support": "~7|~8"
@@ -2132,21 +2135,21 @@
             "extra": {
                 "laravel": {
                     "providers": [
-                        "kirby\\Products\\ProductsServiceProvider"
+                        "Kirby\\Products\\ProductsServiceProvider"
                     ],
                     "aliases": {
-                        "Products": "kirby\\Products\\Facades\\Products"
+                        "Products": "Kirby\\Products\\Facades\\Products"
                     }
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "kirby\\Products\\": "src/"
+                    "Kirby\\Products\\": "src/"
                 }
             },
             "autoload-dev": {
                 "psr-4": {
-                    "kirby\\Products\\Tests\\": "tests"
+                    "Kirby\\Products\\Tests\\": "tests"
                 }
             },
             "license": [
@@ -8954,16 +8957,16 @@
         },
         {
             "name": "facade/flare-client-php",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facade/flare-client-php.git",
-                "reference": "ef0f5bce23b30b32d98fd9bb49c6fa37b40eb546"
+                "reference": "9dd6f2b56486d939c4467b3f35475d44af57cf17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facade/flare-client-php/zipball/ef0f5bce23b30b32d98fd9bb49c6fa37b40eb546",
-                "reference": "ef0f5bce23b30b32d98fd9bb49c6fa37b40eb546",
+                "url": "https://api.github.com/repos/facade/flare-client-php/zipball/9dd6f2b56486d939c4467b3f35475d44af57cf17",
+                "reference": "9dd6f2b56486d939c4467b3f35475d44af57cf17",
                 "shasum": ""
             },
             "require": {
@@ -9007,7 +9010,7 @@
             ],
             "support": {
                 "issues": "https://github.com/facade/flare-client-php/issues",
-                "source": "https://github.com/facade/flare-client-php/tree/1.4.0"
+                "source": "https://github.com/facade/flare-client-php/tree/1.5.0"
             },
             "funding": [
                 {
@@ -9015,7 +9018,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-02-16T12:42:06+00:00"
+            "time": "2021-03-31T07:32:54+00:00"
         },
         {
             "name": "facade/ignition",
