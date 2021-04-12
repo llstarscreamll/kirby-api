@@ -15,7 +15,7 @@ class CreateProductionTables extends Migration
     {
         Schema::create('production_logs', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('product_id')->references('product_id')->on('products');
+            $table->foreignId('product_id')->references('id')->on('products');
             $table->foreignId('machine_id')->references('id')->on('machines');
             $table->foreignId('employee_id')->references('id')->on('employees');
             $table->foreignId('customer_id')->nullable()->references('id')->on('customers');

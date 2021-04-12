@@ -41,8 +41,14 @@ class ProductionLogsController
      */
     public function store(CreateProductionLogRequest $request)
     {
+        $currentUserId = $request->user()->id;
+
+        $employeeId = $request->user()->can('production-logs.create-on-behalf-of-another-person')
+            ? $request->get('employee_id', $currentUserId)
+            : $currentUserId;
+
         $productionLog = $this->productionLogRepository
-            ->create(['employee_id' => $request->user()->id] + $request->validated());
+            ->create(['employee_id' => $employeeId] + $request->validated());
 
         return response()->json(['data' => $productionLog]);
     }
