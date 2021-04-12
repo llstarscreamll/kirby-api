@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             WorkShiftsPackageSeeder::class,
             TimeClockPackageSeeder::class,
             NoveltiesPackageSeed::class,
+            ProductionPackageSeed::class,
             AuthorizationPackageSeeder::class,
             DefaultUserSeed::class,
         ]);
