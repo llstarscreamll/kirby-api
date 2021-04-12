@@ -15,5 +15,4 @@ class Product extends Model
         'name',
         'diameter_in_mm',
     ];
-
 }
