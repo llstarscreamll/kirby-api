@@ -3,7 +3,9 @@
 namespace Kirby\Products\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
+use Kirby\Core\Filters\QuerySearchFilter;
 use Kirby\Products\Models\Product;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ProductsController
@@ -15,16 +17,18 @@ class ProductsController
      */
     public function index()
     {
-        return response()->json(QueryBuilder::for(Product::query())
-            ->allowedFilters(['name', 'internal_code', 'customer_code'])
-            ->defaultSort('-id')
-            ->paginate());
+        return response()->json(
+            QueryBuilder::for(Product::class)
+                ->allowedFilters([AllowedFilter::custom('search', new QuerySearchFilter(['name', 'internal_code']))])
+                ->defaultSort('-id')
+                ->paginate()
+            );
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request    $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -35,7 +39,7 @@ class ProductsController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int                         $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -46,8 +50,8 @@ class ProductsController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request    $request
+     * @param  int                         $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -58,7 +62,7 @@ class ProductsController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int                         $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
