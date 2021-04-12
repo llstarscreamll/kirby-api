@@ -3,7 +3,9 @@
 namespace Kirby\Machines\UI\API\V1\Controllers;
 
 use Illuminate\Http\Request;
+use Kirby\Core\Filters\QuerySearchFilter;
 use Kirby\Machines\Models\Machine;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class MachinesController
@@ -16,7 +18,7 @@ class MachinesController
     public function index()
     {
         return response()->json(QueryBuilder::for(Machine::query())
-            ->allowedFilters(['name', 'internal_code', 'customer_code'])
+            ->allowedFilters([AllowedFilter::custom('search', new QuerySearchFilter(['name', 'code']))])
             ->defaultSort('-id')
             ->paginate());
     }
