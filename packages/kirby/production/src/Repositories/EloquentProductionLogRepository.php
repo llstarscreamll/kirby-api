@@ -19,8 +19,9 @@ class EloquentProductionLogRepository implements ProductionLogRepository
 
     public function search(): LengthAwarePaginator
     {
-        return QueryBuilder::for(ProductionLog::query())
+        return QueryBuilder::for(ProductionLog::class)
             ->allowedFilters(['employee_id'])
+            ->allowedIncludes(['employee', 'product', 'machine', 'customer'])
             ->defaultSort('-id')
             ->paginate();
     }
