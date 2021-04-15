@@ -1,6 +1,6 @@
 @setup
 require __DIR__.'/vendor/autoload.php';
-\Dotenv\Dotenv::create(__DIR__, '.env')->load();
+\Dotenv\Dotenv::createImmutable(__DIR__, '.env')->load();
 
 $site = env(strtoupper($target ?? 'lab').'_SITE');
 $userAndServer = explode(';', env(strtoupper($target ?? 'lab').'_SERVERS'));
@@ -130,6 +130,7 @@ sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 {{ logMessage("🙏  Blessing new release...") }}
 ln -nfs {{ $newReleaseDir }} {{ $currentDir }};
 cd {{ $newReleaseDir }}
+php7.4 artisan db:seed
 php7.4 artisan authorization:refresh-admin-permissions
 php7.4 artisan optimize
 php7.4 artisan storage:link
