@@ -27,8 +27,8 @@ class CreateProductionLogRequest extends FormRequest
             'employee_id' => ['nullable', 'integer', 'exists:employees,id'],
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'machine_id' => ['required', 'integer', 'exists:machines,id'],
-            'customer_id' => ['integer', 'exists:customers,id'],
-            'batch' => ['integer'],
+            'customer_id' => ['nullable', 'integer', 'exists:customers,id'],
+            'batch' => ['nullable', 'integer'],
             'tare_weight' => ['required', 'numeric'],
             'gross_weight' => ['required', 'numeric', 'gt:tare_weight'],
         ];
