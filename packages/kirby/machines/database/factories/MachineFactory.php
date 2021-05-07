@@ -17,7 +17,7 @@ use Kirby\Machines\Models\Machine;
 
 $factory->define(Machine::class, function (Faker $faker) {
     return [
-        'cost_center_id' => fn () => factory(CostCenter::class)->create(),
+        'cost_center_id' => fn () => factory(CostCenter::class)->create()->id,
         'code' => $faker->unique()->word(),
         'name' => $faker->numerify('MACH-##'),
     ];
