@@ -16,8 +16,8 @@ class MachinesServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kirby');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'kirby');
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadRoutesFrom(__DIR__ . '/UI/API/V1/routes.php');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -25,7 +25,7 @@ class MachinesServiceProvider extends ServiceProvider
         }
 
         if ($this->app->environment('local') || $this->app->runningUnitTests()) {
-            $this->app->make(EloquentFactory::class)->load(__DIR__ . '/../database/factories');
+            $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
         }
     }
 
@@ -36,7 +36,7 @@ class MachinesServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/machines.php', 'machines');
+        $this->mergeConfigFrom(__DIR__.'/../config/machines.php', 'machines');
 
         // Register the service the package provides.
         $this->app->singleton('machines', function ($app) {
@@ -63,7 +63,7 @@ class MachinesServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__ . '/../config/machines.php' => config_path('machines.php'),
+            __DIR__.'/../config/machines.php' => config_path('machines.php'),
         ], 'machines.config');
 
         // Publishing the views.
