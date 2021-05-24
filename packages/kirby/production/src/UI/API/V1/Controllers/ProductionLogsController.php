@@ -50,7 +50,7 @@ class ProductionLogsController
         $productionLog = $this->productionLogRepository
             ->create(['employee_id' => $employeeId] + $request->validated());
 
-        return response()->json(['data' => $productionLog]);
+        return response()->json(['data' => $productionLog->load(['machine', 'product', 'customer', 'employee'])]);
     }
 
     /**
@@ -61,7 +61,13 @@ class ProductionLogsController
      */
     public function show($id)
     {
-        return response()->json(['data' => 'ok']);
+        $productionLog = $this->productionLogRepository->findById($id, ['*'], ['employee', 'machine', 'product', 'customer']);
+
+        if (empty($productionLog)) {
+            return response()->json(['error' => 'Not found'], 404);
+        }
+
+        return response()->json(['data' => $productionLog]);
     }
 
     /**

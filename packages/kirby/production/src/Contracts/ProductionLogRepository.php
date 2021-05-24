@@ -21,4 +21,9 @@ interface ProductionLogRepository
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
     public function search(): LengthAwarePaginator;
+
+    /**
+     * Find a record by the given $id.
+     */
+    public function findById(int $id, $columns = ['*'], $with = []): ?ProductionLog;
 }

@@ -25,4 +25,12 @@ class EloquentProductionLogRepository implements ProductionLogRepository
             ->defaultSort('-id')
             ->paginate();
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function findById(int $id, $columns = ['*'], $with = []): ?ProductionLog
+    {
+        return ProductionLog::with($with)->find($id, $columns);
+    }
 }

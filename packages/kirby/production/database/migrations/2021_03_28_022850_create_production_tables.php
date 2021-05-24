@@ -20,8 +20,8 @@ class CreateProductionTables extends Migration
             $table->foreignId('employee_id')->references('id')->on('employees');
             $table->foreignId('customer_id')->nullable()->references('id')->on('customers');
             $table->integer('batch')->unsigned()->nullable();
-            $table->decimal('tare_weight');
-            $table->decimal('gross_weight');
+            $table->decimal('tare_weight')->comment('measure unit in Kg');
+            $table->decimal('gross_weight')->comment('measure unit in Kg');
             $table->timestamps();
         });
     }
