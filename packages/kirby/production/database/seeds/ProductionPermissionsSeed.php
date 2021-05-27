@@ -12,6 +12,7 @@ class ProductionPermissionsSeed extends Seeder
         ['name' => 'production-logs.create'],
         ['name' => 'production-logs.create-on-behalf-of-another-person'],
         ['name' => 'production-logs.search'],
+        ['name' => 'production-logs.export-to-csv'],
     ];
 
     /**

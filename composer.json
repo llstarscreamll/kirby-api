@@ -53,8 +53,7 @@
         "laravel/tinker": "^2.0",
         "makeabledk/laravel-factory-enhanced": "^2",
         "mockery/mockery": "^1.0",
-        "phpunit/phpunit": "^8.5",
-        "roave/security-advisories": "dev-latest"
+        "phpunit/phpunit": "^8.5"
     },
     "autoload": {
         "classmap": [
