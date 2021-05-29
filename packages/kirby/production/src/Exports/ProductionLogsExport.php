@@ -28,7 +28,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
      */
     public function query()
     {
-        $startDate = Arr::get($this->params, 'from', now()->startOfMonth()->startOfDay()->toISOString());
+        $startDate = Arr::get($this->params, 'from', now()->subMonths(2)->startOfDay()->toISOString());
         $endDate = Arr::get($this->params, 'to', now()->endOfDay()->toISOString());
 
         $productionLogs = ProductionLog::whereBetween('created_at', [$startDate, $endDate]);
