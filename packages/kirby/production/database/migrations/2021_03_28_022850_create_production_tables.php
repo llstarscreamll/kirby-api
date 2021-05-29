@@ -33,6 +33,6 @@ class CreateProductionTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('production_records');
+        Schema::dropIfExists('production_logs');
     }
 }

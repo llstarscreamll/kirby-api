@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('internal_code')->unique();
             $table->string('customer_code')->unique();
             $table->string('name');
-            $table->string('wire_gauge_in_bwg')->comment('wire gauge in BGW');
+            $table->string('wire_gauge_in_bwg')->default('')->comment('wire gauge in BGW');
             $table->unsignedDecimal('wire_gauge_in_mm')->comment('wire gauge in millimeters');
             $table->timestamps();
         });
