@@ -15,7 +15,7 @@ class CreateMachinesTable extends Migration
     {
         Schema::create('machines', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('cost_center_id')->references('id')->on('cost_centers');
+            $table->foreignId('sub_cost_center_id')->references('id')->on('sub_cost_centers');
             $table->string('code');
             $table->string('name');
             $table->timestamps();

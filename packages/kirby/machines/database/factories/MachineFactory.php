@@ -1,7 +1,7 @@
 <?php
 
 use Faker\Generator as Faker;
-use Kirby\Company\Models\CostCenter;
+use Kirby\Company\Models\SubCostCenter;
 use Kirby\Machines\Models\Machine;
 
 /*
@@ -17,7 +17,7 @@ use Kirby\Machines\Models\Machine;
 
 $factory->define(Machine::class, function (Faker $faker) {
     return [
-        'cost_center_id' => fn () => factory(CostCenter::class)->create()->id,
+        'sub_cost_center_id' => fn() => factory(SubCostCenter::class)->create()->id,
         'code' => $faker->unique()->word(),
         'name' => $faker->numerify('MACH-##'),
     ];
