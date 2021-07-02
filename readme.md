@@ -10,14 +10,14 @@
 
 This project aims to be as a base for reutilizable Laravel packages used for multipurpose stuff. The laravel libraries are located on the `packages` folder under de **Kirby** vendor name. Here are some things this package currently does:
 
--   Authentication API
--   Employees API
--   Employees Time Clock API
--   Work shifts API
--   Employee Novelties API
--   Novelty types API
--   Company API
--   Users API
+- Authentication API
+- Employees API
+- Employees Time Clock API
+- Work shifts API
+- Employee Novelties API
+- Novelty types API
+- Company API
+- Users API
 
 ## Install
 
