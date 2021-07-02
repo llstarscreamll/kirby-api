@@ -19,7 +19,7 @@ class ProductsController
     {
         return response()->json(
             QueryBuilder::for(Product::class)
-                ->allowedFilters([AllowedFilter::custom('search', new QuerySearchFilter(['name', 'internal_code']))])
+                ->allowedFilters(['short_name', AllowedFilter::custom('search', new QuerySearchFilter(['name', 'internal_code']))])
                 ->defaultSort('-id')
                 ->paginate()
             );
