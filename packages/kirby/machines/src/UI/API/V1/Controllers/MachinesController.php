@@ -18,7 +18,7 @@ class MachinesController
     public function index()
     {
         return response()->json(QueryBuilder::for(Machine::query())
-            ->allowedFilters([AllowedFilter::custom('search', new QuerySearchFilter(['name', 'code']))])
+            ->allowedFilters(['short_name', AllowedFilter::custom('search', new QuerySearchFilter(['name', 'code']))])
             ->defaultSort('-id')
             ->paginate());
     }

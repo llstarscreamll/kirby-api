@@ -19,6 +19,7 @@ class CreateMachinesTable extends Migration
             $table->foreign('sub_cost_center_id')->references('id')->on('sub_cost_centers');
             $table->string('code');
             $table->string('name');
+            $table->string('short_name');
             $table->timestamps();
         });
     }
