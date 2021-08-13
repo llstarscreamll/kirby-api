@@ -12,6 +12,7 @@ cache:
     - $HOME/.composer/cache
 
 install:
+  - printf "\n" | pecl install redis
   - composer install
   - php artisan passport:keys
 
