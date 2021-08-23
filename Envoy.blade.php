@@ -41,7 +41,7 @@ setPermissions
 @endstory
 
 @task('startDeployment', ['on' => 'local'])
-{{ logMessage("🏃  Starting deployment...") }}
+{{ logMessage("🏃  Starting {$site} {$branch} deployment...") }}
 @endtask
 
 @task('cloneRepository', ['on' => 'remote'])
@@ -73,7 +73,7 @@ echo "{{ $newReleaseName }}" > public/release-name.txt
 {{ logMessage("🚚  Running Composer...") }}
 cd {{ $newReleaseDir }};
 COMPOSER=$(which composer)
-php7.4 $COMPOSER --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile install
+php7.4 $COMPOSER --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile install -q
 @endtask
 
 @task('runYarn', ['on' => 'local'])
