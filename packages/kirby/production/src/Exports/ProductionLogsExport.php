@@ -74,7 +74,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
             $log->machine->name,
             $log->machine->code,
             $log->product->name,
-            $log->product->code,
+            $log->product->internal_code,
             $log->batch,
             $log->tare_weight,
             $log->gross_weight,
