@@ -153,7 +153,7 @@ ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 @endtask
 
 @task('deployOnlyCode',['on' => 'remote'])
-{{ logMessage("💻  Deploying code changes form $branch to $currentDir") }}
+{{ logMessage("💻  Deploying code changes from $branch to $currentDir") }}
 cd {{ $currentDir }}
 git checkout $branch
 git pull origin $branch
