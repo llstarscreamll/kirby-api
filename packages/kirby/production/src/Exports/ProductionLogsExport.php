@@ -56,6 +56,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
             'Lote',
             'Peso Tara (kg)',
             'Peso Bruto (kg)',
+            'Peso Neto (kg)',
             'Fecha',
         ];
     }
@@ -78,6 +79,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
             $log->batch,
             $log->tare_weight,
             $log->gross_weight,
+            $log->netWeight(),
             $log->created_at->toIsoString(),
         ];
     }

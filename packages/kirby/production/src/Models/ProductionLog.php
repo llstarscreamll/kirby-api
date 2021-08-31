@@ -68,4 +68,12 @@ class ProductionLog extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    /**
+     * @return float
+     */
+    public function netWeight(): float
+    {
+        return $this->gross_weight - $this->tare_weight;
+    }
 }
