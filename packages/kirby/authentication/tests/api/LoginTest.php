@@ -73,7 +73,7 @@ class LoginTest extends \Tests\TestCase
     public function whenPasswordDoesNotMatchExpectUnauthorizedWithMessageAndErrorOnResponse()
     {
         $this->json('POST', $this->endpoint, ['email' => 'foo@email.com', 'password' => '123456'])
-            ->assertStatus(401)
+            ->assertStatus(400)
             ->assertJsonHasPath('error')
             ->assertJsonHasPath('message');
     }

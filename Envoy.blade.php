@@ -1,6 +1,6 @@
 @setup
 require __DIR__.'/vendor/autoload.php';
-\Dotenv\Dotenv::create(__DIR__, '.env')->load();
+\Dotenv\Dotenv::createImmutable(__DIR__, '.env')->load();
 
 $site = env(strtoupper($target ?? 'lab').'_SITE');
 $userAndServer = explode(';', env(strtoupper($target ?? 'lab').'_SERVERS'));
@@ -41,7 +41,7 @@ setPermissions
 @endstory
 
 @task('startDeployment', ['on' => 'local'])
-{{ logMessage("🏃  Starting deployment...") }}
+{{ logMessage("🏃  Starting {$site} {$branch} deployment...") }}
 @endtask
 
 @task('cloneRepository', ['on' => 'remote'])
@@ -73,7 +73,7 @@ echo "{{ $newReleaseName }}" > public/release-name.txt
 {{ logMessage("🚚  Running Composer...") }}
 cd {{ $newReleaseDir }};
 COMPOSER=$(which composer)
-php7.4 $COMPOSER --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile install
+php7.4 $COMPOSER --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile install -q
 @endtask
 
 @task('runYarn', ['on' => 'local'])
@@ -130,6 +130,7 @@ sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 {{ logMessage("🙏  Blessing new release...") }}
 ln -nfs {{ $newReleaseDir }} {{ $currentDir }};
 cd {{ $newReleaseDir }}
+php7.4 artisan db:seed
 php7.4 artisan authorization:refresh-admin-permissions
 php7.4 artisan optimize
 php7.4 artisan storage:link
@@ -152,7 +153,7 @@ ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 @endtask
 
 @task('deployOnlyCode',['on' => 'remote'])
-{{ logMessage("💻  Deploying code changes form $branch to $currentDir") }}
+{{ logMessage("💻  Deploying code changes from $branch to $currentDir") }}
 cd {{ $currentDir }}
 git checkout $branch
 git pull origin $branch

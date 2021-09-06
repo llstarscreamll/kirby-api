@@ -1,5 +1,12 @@
 # Release notes
 
+## [2.0.0 (2021-09-05)](https://github.com/llstarscreamll/kirby-api/compare/2.0.0..v1.5)
+
+### Added
+
+-   Production: new module to handle production (manufacturing) data, this new functionality relies on employees, productos, machines and customers information in order to create production logs. Data can be exported as csv files.
+-   Many security updates and bug fixes
+
 ## [v1.5 (2021-01-21)](https://github.com/llstarscreamll/kirby-api/compare/v1.5..v1.4)
 
 ### Changed

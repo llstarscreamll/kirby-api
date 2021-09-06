@@ -2,9 +2,9 @@
 
 namespace Tests;
 
-use Illuminate\Foundation\Testing\Assert as PHPUnit;
-use Illuminate\Foundation\Testing\TestResponse as BaseTestResponse;
 use Illuminate\Support\Arr;
+use Illuminate\Testing\Assert as PHPUnit;
+use Illuminate\Testing\TestResponse as BaseTestResponse;
 
 /**
  * Class TestResponse.
@@ -14,7 +14,7 @@ use Illuminate\Support\Arr;
 class TestResponse extends BaseTestResponse
 {
     /**
-     * @param string $path
+     * @param  string  $path
      * @return $this
      */
     public function assertJsonHasPath(string $path)
@@ -25,7 +25,7 @@ class TestResponse extends BaseTestResponse
     }
 
     /**
-     * @param string $path
+     * @param  string  $path
      * @return $this
      */
     public function assertJsonMissingPath(string $path)

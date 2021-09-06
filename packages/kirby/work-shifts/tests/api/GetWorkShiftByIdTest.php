@@ -49,7 +49,7 @@ class GetWorkShiftByIdTest extends \Tests\TestCase
     {
         $this->json('GET', str_replace(':id', $this->workShift['id'], $this->endpoint))
             ->assertOk()
-            ->assertJsonPath('data.id', $this->workShift['id']);
+            ->assertJsonPath('data.id', (int) $this->workShift['id']);
     }
 
     /**

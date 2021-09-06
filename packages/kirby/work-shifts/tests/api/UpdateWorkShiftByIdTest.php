@@ -67,7 +67,7 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
     {
         $this->json('PUT', str_replace(':id', $this->workShift['id'], $this->endpoint), $this->requestData)
             ->assertOk()
-            ->assertJsonPath('data.id', $this->workShift['id']);
+            ->assertJsonPath('data.id', (int) $this->workShift['id']);
 
         $this->assertDatabaseHas('work_shifts',
             ['time_slots' => json_encode($this->requestData['time_slots'])] +

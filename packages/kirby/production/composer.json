@@ -1,0 +1,44 @@
+{
+    "name": "kirby/production",
+    "description": ":package_description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Johan Alvarez",
+            "email": "llstarscreamll@hotmail.com",
+            "homepage": "github.com/llstarscreamll"
+        }
+    ],
+    "homepage": "https://github.com/kirby/production",
+    "keywords": ["Laravel", "Production"],
+    "require": {
+        "illuminate/support": "~7|~8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~9.0",
+        "orchestra/testbench": "~5|~6"
+    },
+    "autoload": {
+        "classmap": [
+            "database/seeds"
+        ],
+        "psr-4": {
+            "Kirby\\Production\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Kirby\\Production\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Kirby\\Production\\ProductionServiceProvider"
+            ],
+            "aliases": {
+                "Production": "Kirby\\Production\\Facades\\Production"
+            }
+        }
+    }
+}
