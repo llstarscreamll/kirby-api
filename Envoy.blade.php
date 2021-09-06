@@ -128,15 +128,15 @@ sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 
 @task('blessNewRelease', ['on' => 'remote'])
 {{ logMessage("🙏  Blessing new release...") }}
-ln -nfs {{ $newReleaseDir }} {{ $currentDir }};
 cd {{ $newReleaseDir }}
-php7.4 artisan db:seed
+php7.4 artisan db:seed --force
 php7.4 artisan authorization:refresh-admin-permissions
 php7.4 artisan optimize
 php7.4 artisan storage:link
 php7.4 artisan queue:restart
 sudo php7.4 artisan horizon:terminate
 
+ln -nfs {{ $newReleaseDir }} {{ $currentDir }};
 sudo service php7.4-fpm restart
 @endtask
 
