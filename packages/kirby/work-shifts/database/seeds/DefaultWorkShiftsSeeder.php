@@ -57,6 +57,10 @@ class DefaultWorkShiftsSeeder extends Seeder
      */
     public function run()
     {
+        if (WorkShift::count() > 0) {
+            return;
+        }
+
         collect($this->defaultWorkShifts)->map(function ($shift) {
             $keys = Arr::only($shift, ['name']);
 
