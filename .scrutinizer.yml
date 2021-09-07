@@ -2,10 +2,11 @@ build:
   environment:
     php:
       version: "7.4"
-      compile_options: "--enable-gd --enable-cli --with-xsl --with-sodium --with-openssl --enable-bcmath --enable-mbstring --enable-redis --with-imap-ssl --enable-pcntl --with-zlib"
+      compile_options: "--enable-gd --enable-cli --with-xsl --with-sodium --with-openssl --enable-bcmath --enable-mbstring --with-imap-ssl --enable-pcntl --with-zlib"
     node: "v12.9.1"
   project_setup:
     override:
+      - yes | pecl install redis
       - php artisan passport:keys
   cache:
     directories:
