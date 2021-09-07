@@ -27,6 +27,7 @@ build:
             - zip
             - redis
             - pcov
+
   tests:
     before:
       - chmod -R 777 storage
