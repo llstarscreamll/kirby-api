@@ -27,7 +27,7 @@
         "kirby/employees": "*",
         "kirby/machines": "*",
         "kirby/novelties": "*",
-        "kirby/production": "dev-develop",
+        "kirby/production": "*",
         "kirby/products": "*",
         "kirby/time-clock": "*",
         "kirby/users": "*",
