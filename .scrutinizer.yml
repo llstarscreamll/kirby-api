@@ -10,9 +10,10 @@ build:
       - ~/.composer/cache/
   nodes:
     tests:
-      php:
-        version: 7.4
-        pecl_extensions:
+      environment:
+        php:
+          version: 7.4
+          pecl_extensions:
             - zip
             - bcmath
             - redis
@@ -21,10 +22,10 @@ build:
       php:
         version: 7.4
         pecl_extensions:
-            - zip
-            - bcmath
-            - redis
-            - mbstring
+          - zip
+          - bcmath
+          - redis
+          - mbstring
       tests:
         override:
           - php-scrutinizer-run
