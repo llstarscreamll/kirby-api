@@ -1,8 +1,5 @@
 build:
   environment:
-    php:
-      version: "7.4"
-      compile_options: "--enable-gd --enable-cli --with-xsl --with-sodium --with-openssl --enable-bcmath --enable-mbstring --enable-redis --with-imap-ssl --enable-pcntl --with-zlib"
     node: "v12.9.1"
   project_setup:
     override:
@@ -12,7 +9,22 @@ build:
       - vendor/
       - ~/.composer/cache/
   nodes:
+    tests:
+      php:
+        version: 7.4
+        pecl_extensions:
+            - zip
+            - bcmath
+            - redis
+            - mbstring
     analysis:
+      php:
+        version: 7.4
+        pecl_extensions:
+            - zip
+            - bcmath
+            - redis
+            - mbstring
       tests:
         override:
           - php-scrutinizer-run
