@@ -160,11 +160,11 @@ class WorkShift extends Model
         $flagGraceEnd = $targetTime->copy()->addSecond(); // second to fix end offsets
 
         if ($flag == 'start') {
-            $flagGraceEnd = $flagGraceEnd->addMinutes($this->{"grace_minutes_before_{$flag}_times"}+$this->{"grace_minutes_after_{$flag}_times"});
+            $flagGraceEnd = $flagGraceEnd->addMinutes($this->{"grace_minutes_before_{$flag}_times"} + $this->{"grace_minutes_after_{$flag}_times"});
         }
 
         if ($flag == 'end') {
-            $flagGraceStart = $flagGraceStart->subMinutes($this->{"grace_minutes_before_{$flag}_times"}+$this->{"grace_minutes_after_{$flag}_times"});
+            $flagGraceStart = $flagGraceStart->subMinutes($this->{"grace_minutes_before_{$flag}_times"} + $this->{"grace_minutes_after_{$flag}_times"});
         }
 
         if ($time->between($flagGraceStart, $flagGraceEnd)) {
