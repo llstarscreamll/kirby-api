@@ -12,6 +12,10 @@ class DefaultUserSeed extends Seeder
      */
     public function run()
     {
+        if (User::count() > 0) {
+            return;
+        }
+
         $user = User::updateOrCreate(['email' => 'admin@pascal.com'], [
             'first_name' => 'Pascal',
             'last_name' => 'Admin',
