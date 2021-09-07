@@ -19,13 +19,14 @@ build:
             - redis
             - mbstring
     analysis:
-      php:
-        version: 7.4
-        pecl_extensions:
-          - zip
-          - bcmath
-          - redis
-          - mbstring
+      environment:
+        php:
+          version: 7.4
+          pecl_extensions:
+            - zip
+            - bcmath
+            - redis
+            - mbstring
       tests:
         override:
           - php-scrutinizer-run
