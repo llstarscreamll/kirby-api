@@ -3,6 +3,7 @@ build:
     node: "v12.9.1"
   project_setup:
     override:
+      - yes | pecl install redis
       - php artisan passport:keys
   cache:
     directories:
