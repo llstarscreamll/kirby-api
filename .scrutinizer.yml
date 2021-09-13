@@ -17,20 +17,17 @@ build:
       environment:
         php:
           version: 7.4
+          complie_options: '--enable-bcmath --without-pear --enable-mbstring'
           pecl_extensions:
             - zip
-            - bcmath
             - redis
-            - mbstring
     analysis:
       environment:
         php:
           version: 7.4
           pecl_extensions:
             - zip
-            - bcmath
             - redis
-            - mbstring
   tests:
     before:
       - chmod -R 777 storage
