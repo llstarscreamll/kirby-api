@@ -31,9 +31,6 @@ build:
             - bcmath
             - redis
             - mbstring
-      tests:
-        override:
-          - php-scrutinizer-run
   tests:
     before:
       - chmod -R 777 storage
