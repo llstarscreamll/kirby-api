@@ -1,7 +1,4 @@
 build:
-  project_setup:
-    override:
-      - php artisan passport:keys
   cache:
     directories:
       - vendor/
@@ -25,6 +22,7 @@ build:
     before:
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
+      - php artisan passport:keys
     override:
       - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml
         coverage:
