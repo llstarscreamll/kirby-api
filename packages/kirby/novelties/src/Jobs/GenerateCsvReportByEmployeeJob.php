@@ -35,7 +35,7 @@ class GenerateCsvReportByEmployeeJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param  int    $userId
+     * @param  int  $userId
      * @param  array  $params
      * @return void
      */

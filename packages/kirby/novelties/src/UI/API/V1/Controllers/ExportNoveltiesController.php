@@ -13,7 +13,7 @@ use Kirby\Novelties\UI\API\V1\Requests\ExportNoveltiesRequest;
 class ExportNoveltiesController
 {
     /**
-     * @param ExportNoveltiesRequest $request
+     * @param  ExportNoveltiesRequest  $request
      */
     public function __invoke(ExportNoveltiesRequest $request)
     {

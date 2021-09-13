@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Setting.
  *
  * @todo move this entity and related stuff to specific package
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class Setting extends Model

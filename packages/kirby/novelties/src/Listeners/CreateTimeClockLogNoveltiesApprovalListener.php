@@ -19,7 +19,7 @@ class CreateTimeClockLogNoveltiesApprovalListener implements ShouldQueue
     private $noveltyRepository;
 
     /**
-     * @param NoveltyRepositoryInterface $noveltyRepository
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
      */
     public function __construct(NoveltyRepositoryInterface $noveltyRepository)
     {
@@ -29,7 +29,7 @@ class CreateTimeClockLogNoveltiesApprovalListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  TimeClockLogApprovalCreatedEvent $event
+     * @param  TimeClockLogApprovalCreatedEvent  $event
      * @return void
      */
     public function handle(TimeClockLogApprovalCreatedEvent $event)

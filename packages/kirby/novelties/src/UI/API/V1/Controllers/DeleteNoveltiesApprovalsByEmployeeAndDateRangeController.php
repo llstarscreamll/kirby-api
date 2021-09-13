@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 class DeleteNoveltiesApprovalsByEmployeeAndDateRangeController
 {
     /**
-     * @param DeleteNoveltiesApprovalsByEmployeeAndDateRangeRequest $request
-     * @param NoveltyRepositoryInterface                            $noveltyRepository
+     * @param  DeleteNoveltiesApprovalsByEmployeeAndDateRangeRequest  $request
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
      */
     public function __invoke(DeleteNoveltiesApprovalsByEmployeeAndDateRangeRequest $request, NoveltyRepositoryInterface $noveltyRepository)
     {

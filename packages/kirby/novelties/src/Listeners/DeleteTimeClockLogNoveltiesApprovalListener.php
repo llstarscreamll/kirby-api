@@ -19,7 +19,7 @@ class DeleteTimeClockLogNoveltiesApprovalListener implements ShouldQueue
     private $noveltyRepository;
 
     /**
-     * @param NoveltyRepositoryInterface $noveltyRepository
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
      */
     public function __construct(NoveltyRepositoryInterface $noveltyRepository)
     {
@@ -29,7 +29,7 @@ class DeleteTimeClockLogNoveltiesApprovalListener implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  TimeClockLogApprovalDeletedEvent $event
+     * @param  TimeClockLogApprovalDeletedEvent  $event
      * @return void
      */
     public function handle(TimeClockLogApprovalDeletedEvent $event)

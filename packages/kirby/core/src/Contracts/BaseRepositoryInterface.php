@@ -24,19 +24,19 @@ interface BaseRepositoryInterface extends RepositoryInterface
     public function getAllowedFilters();
 
     /**
-     * @param array $rows
+     * @param  array  $rows
      */
     public function insert(array $rows);
 
     /**
-     * @param string $field
-     * @param array  $values
-     * @param array  $updates
+     * @param  string  $field
+     * @param  array  $values
+     * @param  array  $updates
      */
     public function updateWhereIn(string $field, array $values, array $updates);
 
     /**
-     * @param  string $field
+     * @param  string  $field
      * @param  array  $values
      * @return int
      */
@@ -44,7 +44,7 @@ interface BaseRepositoryInterface extends RepositoryInterface
 
     /**
      * @param $field
-     * @param array    $values
+     * @param  array  $values
      */
     public function deleteWhereIn($field, array $values);
 }

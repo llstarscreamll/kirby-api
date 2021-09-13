@@ -26,8 +26,8 @@ class TimeClockLogApprovalCreatedEvent
     /**
      * Create a new event instance.
      *
-     * @param int $timeClockLogId
-     * @param int $approverId
+     * @param  int  $timeClockLogId
+     * @param  int  $approverId
      */
     public function __construct(int $timeClockLogId, int $approverId)
     {

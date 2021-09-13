@@ -70,14 +70,14 @@ class LogCheckOut
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
     /**
-     * @param HolidayRepositoryInterface                     $holidayRepository
-     * @param SettingRepositoryInterface                     $settingRepository
-     * @param NoveltyRepositoryInterface                     $noveltyRepository
-     * @param NoveltyTypeRepositoryInterface                 $noveltyTypeRepository
-     * @param TimeClockLogRepositoryInterface                $timeClockLogRepository
-     * @param SubCostCenterRepositoryInterface               $subCostCenterRepository
-     * @param IdentificationRepositoryInterface              $identificationRepository
-     * @param ValidateNoveltyTypeBasedOnWorkShiftPunctuality $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
+     * @param  HolidayRepositoryInterface  $holidayRepository
+     * @param  SettingRepositoryInterface  $settingRepository
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
+     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
+     * @param  TimeClockLogRepositoryInterface  $timeClockLogRepository
+     * @param  SubCostCenterRepositoryInterface  $subCostCenterRepository
+     * @param  IdentificationRepositoryInterface  $identificationRepository
+     * @param  ValidateNoveltyTypeBasedOnWorkShiftPunctuality  $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
         HolidayRepositoryInterface $holidayRepository,
@@ -100,17 +100,18 @@ class LogCheckOut
     }
 
     /**
-     * @param  User                            $registrar
-     * @param  string                          $identificationCode
-     * @param  int                             $subCostCenterId
-     * @param  int                             $noveltyTypeId
-     * @param  int                             $noveltySubCostCenterId
+     * @param  User  $registrar
+     * @param  string  $identificationCode
+     * @param  int  $subCostCenterId
+     * @param  int  $noveltyTypeId
+     * @param  int  $noveltySubCostCenterId
+     * @return TimeClockLog
+     *
      * @throws MissingCheckInException
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
      * @throws InvalidNoveltyTypeException
      * @throws MissingSubCostCenterException
-     * @return TimeClockLog
      */
     public function run(User $registrar, string $identificationCode, ?int $subCostCenterId, ?int $noveltyTypeId, ?int $noveltySubCostCenterId): TimeClockLog
     {

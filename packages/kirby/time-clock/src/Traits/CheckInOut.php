@@ -45,8 +45,8 @@ trait CheckInOut
     }
 
     /**
-     * @param Identification $identification
-     * @param int            $workShiftId
+     * @param  Identification  $identification
+     * @param  int  $workShiftId
      */
     protected function getApplicableWorkShifts(Identification $identification, ?int $workShiftId): Collection
     {
@@ -65,9 +65,9 @@ trait CheckInOut
     }
 
     /**
-     * @param  string           $flag
-     * @param  WorkShift        $workShift
-     * @param  NoveltyType|null $noveltyType
+     * @param  string  $flag
+     * @param  WorkShift  $workShift
+     * @param  NoveltyType|null  $noveltyType
      * @return mixed
      */
     protected function noveltyIsValid(string $flag, ?WorkShift $workShift, ?NoveltyType $noveltyType = null): bool
@@ -90,9 +90,9 @@ trait CheckInOut
     }
 
     /**
-     * @param  string         $flag
-     * @param  Identification $identification
-     * @param  int            $workShiftId
+     * @param  string  $flag
+     * @param  Identification  $identification
+     * @param  int  $workShiftId
      * @return array
      */
     protected function getTimeClockData(string $flag, Identification $identification, ?int $workShiftId = null): array

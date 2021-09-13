@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Schema;
  * Class CreateSettingsTable.
  *
  * @todo move this migration to a package
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class CreateSettingsTable extends Migration

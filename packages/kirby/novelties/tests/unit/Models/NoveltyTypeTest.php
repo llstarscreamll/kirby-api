@@ -72,7 +72,7 @@ class NoveltyTypeTest extends \Tests\TestCase
     }
 
     /**
-     * @param int $result
+     * @param  int  $result
      */
     private function setupHolidayRepositoryMock(int $result)
     {

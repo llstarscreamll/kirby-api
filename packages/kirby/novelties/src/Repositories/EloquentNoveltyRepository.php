@@ -36,7 +36,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     }
 
     /**
-     * @param  int     $employeeId
+     * @param  int  $employeeId
      * @param  Carbon  $start
      * @param  Carbon  $end
      * @return mixed
@@ -51,7 +51,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     }
 
     /**
-     * @param  int     $employeeId
+     * @param  int  $employeeId
      * @param  string  $field
      * @param  Carbon  $start
      * @param  Carbon  $end
@@ -75,7 +75,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
 
     /**
      * @param  array  $noveltiesIds
-     * @param  int    $approverId
+     * @param  int  $approverId
      * @return void
      */
     public function setApprovals(array $noveltiesIds, int $approverId): void
@@ -86,7 +86,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
 
     /**
      * @param  array  $noveltiesIds
-     * @param  int    $approverId
+     * @param  int  $approverId
      * @return void
      */
     public function deleteApprovals(array $noveltiesIds, int $approverId): void
@@ -106,8 +106,8 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     }
 
     /**
-     * @param array $approversIds
-     * @param array $noveltiesIds
+     * @param  array  $approversIds
+     * @param  array  $noveltiesIds
      */
     public function attachApproversToNovelties(array $approversIds, array $noveltiesIds): bool
     {
@@ -124,7 +124,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     }
 
     /**
-     * @param int $employeeId
+     * @param  int  $employeeId
      */
     public function findByEmployeeId(int $employeeId): self
     {

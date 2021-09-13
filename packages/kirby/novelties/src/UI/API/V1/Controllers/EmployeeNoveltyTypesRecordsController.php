@@ -29,8 +29,8 @@ class EmployeeNoveltyTypesRecordsController
     private $noveltyTypeRepository;
 
     /**
-     * @param EmployeeRepositoryInterface    $employeeRepository
-     * @param NoveltyTypeRepositoryInterface $noveltyTypeRepository
+     * @param  EmployeeRepositoryInterface  $employeeRepository
+     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
      */
     public function __construct(
         EmployeeRepositoryInterface $employeeRepository,
@@ -41,7 +41,7 @@ class EmployeeNoveltyTypesRecordsController
     }
 
     /**
-     * @param NoveltyTypesResumeByEmployeeRequest $request
+     * @param  NoveltyTypesResumeByEmployeeRequest  $request
      */
     public function __invoke(NoveltyTypesResumeByEmployeeRequest $request)
     {
@@ -72,8 +72,8 @@ class EmployeeNoveltyTypesRecordsController
     }
 
     /**
-     * @param  Collection   $noveltyTypes
-     * @param  Employee     $employee
+     * @param  Collection  $noveltyTypes
+     * @param  Employee  $employee
      * @return Collection
      */
     private function mapNovelties($noveltyTypes, $employee): Collection

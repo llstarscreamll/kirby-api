@@ -18,7 +18,7 @@ class QuerySearchFilter implements Filter
     private $allowedFilters;
 
     /**
-     * @param array $allowedFilters
+     * @param  array  $allowedFilters
      */
     public function __construct(array $allowedFilters = [])
     {
@@ -31,9 +31,9 @@ class QuerySearchFilter implements Filter
     }
 
     /**
-     * @param  Builder   $query
-     * @param  mixed     $value
-     * @param  string    $property
+     * @param  Builder  $query
+     * @param  mixed  $value
+     * @param  string  $property
      * @return Builder
      */
     public function __invoke(Builder $query, $value, string $property): Builder

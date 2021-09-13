@@ -31,7 +31,7 @@ class NoveltiesController
     private $noveltyRepository;
 
     /**
-     * @param NoveltyRepositoryInterface $noveltyRepository
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
      */
     public function __construct(NoveltyRepositoryInterface $noveltyRepository)
     {
@@ -41,7 +41,7 @@ class NoveltiesController
     /**
      * Display a listing of the resource.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest $request
+     * @param  \Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function index(SearchNoveltiesRequest $request)
@@ -95,7 +95,7 @@ class NoveltiesController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request    $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -106,8 +106,8 @@ class NoveltiesController
     /**
      * Display the specified resource.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest $request
-     * @param  int                                                   $id
+     * @param  \Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(GetNoveltyRequest $request, $id)
@@ -122,8 +122,8 @@ class NoveltiesController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest $request
-     * @param  int                                                      $id
+     * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateNoveltyRequest $request, $id)
@@ -141,7 +141,7 @@ class NoveltiesController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int                         $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(DeleteNoveltyRequest $request, $id)
