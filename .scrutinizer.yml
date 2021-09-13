@@ -1,9 +1,6 @@
 build:
-  environment:
-    node: "v12.9.1"
   project_setup:
     override:
-      - yes | pecl install redis
       - php artisan passport:keys
   cache:
     directories:
@@ -23,10 +20,6 @@ build:
       environment:
         php:
           version: 7.4
-          pecl_extensions:
-            - zip
-            - redis
-            - pcov
 
   tests:
     before:
