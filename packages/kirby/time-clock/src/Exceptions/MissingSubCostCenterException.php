@@ -27,7 +27,7 @@ class MissingSubCostCenterException extends Exception
     public $timeClockData;
 
     /**
-     * @param array $timeClockData
+     * @param  array  $timeClockData
      */
     public function __construct(array $timeClockData)
     {

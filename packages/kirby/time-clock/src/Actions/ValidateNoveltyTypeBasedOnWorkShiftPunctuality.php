@@ -14,12 +14,13 @@ use Kirby\WorkShifts\Models\WorkShift;
  * Class ValidateNoveltyTypeBasedOnWorkShiftPunctuality.
  *
  * @todo this class needs tests!!
+ *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
 class ValidateNoveltyTypeBasedOnWorkShiftPunctuality
 {
     /**
-     * @param NoveltyTypeRepositoryInterface $noveltyTypeRepository
+     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
      */
     public function __construct(NoveltyTypeRepositoryInterface $noveltyTypeRepository)
     {
@@ -27,12 +28,13 @@ class ValidateNoveltyTypeBasedOnWorkShiftPunctuality
     }
 
     /**
-     * @param  string                     $flag
-     * @param  null|WorkShift             $workShift
-     * @param  null|array                 $noveltyType
+     * @param  string  $flag
+     * @param  null|WorkShift  $workShift
+     * @param  null|array  $noveltyType
+     * @return Novelty
+     *
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
-     * @return Novelty
      */
     public function run(string $flag, ?WorkShift $workShift, array $noveltyType = null): ?NoveltyType
     {

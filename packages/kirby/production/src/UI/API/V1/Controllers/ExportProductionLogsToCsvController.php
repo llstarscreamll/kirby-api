@@ -9,7 +9,7 @@ use Kirby\Production\UI\API\V1\Requests\ExportProductionLogsToCsvRequest;
 class ExportProductionLogsToCsvController
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      */
     public function __invoke(ExportProductionLogsToCsvRequest $request)
     {

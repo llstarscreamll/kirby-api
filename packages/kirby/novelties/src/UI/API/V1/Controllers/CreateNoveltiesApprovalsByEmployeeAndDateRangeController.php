@@ -17,8 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 class CreateNoveltiesApprovalsByEmployeeAndDateRangeController
 {
     /**
-     * @param CreateNoveltiesApprovalsByEmployeeAndDateRangeRequest $request
-     * @param NoveltyRepositoryInterface                            $noveltyRepository
+     * @param  CreateNoveltiesApprovalsByEmployeeAndDateRangeRequest  $request
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
      */
     public function __invoke(CreateNoveltiesApprovalsByEmployeeAndDateRangeRequest $request, NoveltyRepositoryInterface $noveltyRepository)
     {

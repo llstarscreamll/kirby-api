@@ -68,6 +68,7 @@ class WorkShift extends Model
 
     /**
      * @todo return time in minutes, not hours
+     *
      * @return int diff in hours
      */
     public function getTotalTimeAttribute()
@@ -95,7 +96,7 @@ class WorkShift extends Model
     // ######################################################################## #
 
     /**
-     * @param  int    $timeInMinutes
+     * @param  int  $timeInMinutes
      * @return bool
      */
     public function canMealTimeApply(int $timeInMinutes): bool
@@ -105,7 +106,7 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon|null $time
+     * @param  Carbon|null  $time
      * @return int
      */
     public function startPunctuality(?Carbon $time = null, Carbon $offSet = null): int
@@ -114,7 +115,7 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon|null $time
+     * @param  Carbon|null  $time
      * @return int
      */
     public function endPunctuality(?Carbon $time = null, Carbon $offSet = null): int
@@ -123,10 +124,10 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  string       $flag
-     * @param  Carbon       $time
+     * @param  string  $flag
+     * @param  Carbon  $time
      * @param  Carbon|null  $offSet
-     * @param  bool         $beGraceTimeAware
+     * @param  bool  $beGraceTimeAware
      * @return array|null
      */
     public function matchingTimeSlot(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false): ?array
@@ -145,9 +146,9 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  string   $flag     'start'|'end'
-     * @param  Carbon   $time
-     * @param  Carbon   $offset
+     * @param  string  $flag  'start'|'end'
+     * @param  Carbon  $time
+     * @param  Carbon  $offset
      * @return int|null -1 early, zero on time, 1 late
      */
     public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false): ?int
@@ -175,7 +176,7 @@ class WorkShift extends Model
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      */
     public function mappedTimeSlots(Carbon $date)
     {
@@ -188,10 +189,10 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  array   $timeSlot
+     * @param  array  $timeSlot
      * @param  Carbon  $date
-     * @param  bool    $beGraceTimeAware
-     * @param  bool    $relativeToEnd
+     * @param  bool  $beGraceTimeAware
+     * @param  bool  $relativeToEnd
      * @param  Carbon  $offSet
      * @return array
      */
@@ -224,9 +225,9 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  string        $flag
-     * @param  Carbon        $time
-     * @param  Carbon        $offSet
+     * @param  string  $flag
+     * @param  Carbon  $time
+     * @param  Carbon  $offSet
      * @return Carbon|null
      */
     public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
@@ -237,8 +238,8 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon        $relativeToTime
-     * @param  bool          $beGraceTimeAware
+     * @param  Carbon  $relativeToTime
+     * @param  bool  $beGraceTimeAware
      * @return Carbon|null
      */
     public function minStartTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false): ?Carbon
@@ -254,10 +255,10 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon $start
-     * @param  Carbon $end
-     * @param  Carbon $relativeToTime
-     * @param  null   $beGraceTimeAware
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Carbon  $relativeToTime
+     * @param  null  $beGraceTimeAware
      * @return bool
      */
     public function isMinStartTimeSlotInRage(Carbon $start, Carbon $end, Carbon $relativeToTime = null, $beGraceTimeAware = false): bool
@@ -266,9 +267,9 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon|null   $relativeToTime
-     * @param  bool          $beGraceTimeAware
-     * @param  bool          $relativeToEnd
+     * @param  Carbon|null  $relativeToTime
+     * @param  bool  $beGraceTimeAware
+     * @param  bool  $relativeToEnd
      * @return Carbon|null
      */
     public function maxEndTimeSlot(?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): ?Carbon
@@ -284,10 +285,10 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon $start
-     * @param  Carbon $end
-     * @param  Carbon $relativeToTime
-     * @param  null   $beGraceTimeAware
+     * @param  Carbon  $start
+     * @param  Carbon  $end
+     * @param  Carbon  $relativeToTime
+     * @param  null  $beGraceTimeAware
      * @param  false  $relativeToEnd
      * @return bool
      */
@@ -338,7 +339,7 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon|null $relativeToTime
+     * @param  Carbon|null  $relativeToTime
      * @return bool
      */
     public function hasDeadTimes(?Carbon $relativeToTime = null): bool
@@ -347,8 +348,8 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon       $start
-     * @param  Carbon       $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      * @return Collection
      */
     public function deadTimesSlotsFromTimeRange(Carbon $start, Carbon $end): Collection
@@ -361,8 +362,8 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  Carbon $start
-     * @param  Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      * @return int
      */
     public function deadTimeInMinutesFromTimeRange(Carbon $start, Carbon $end): int

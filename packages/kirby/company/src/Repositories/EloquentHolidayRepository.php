@@ -29,8 +29,8 @@ class EloquentHolidayRepository extends EloquentRepositoryAbstract implements Ho
     }
 
     /**
-     * @param string $field
-     * @param array $values
+     * @param  string  $field
+     * @param  array  $values
      * @return mixed
      */
     public function countWhereIn(string $field, array $values)

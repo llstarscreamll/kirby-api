@@ -16,7 +16,7 @@ class ByNoveltyTypeCriteria implements CriteriaInterface
     private $noveltyTypeIds;
 
     /**
-     * @param int[] $noveltyTypeIds
+     * @param  int[]  $noveltyTypeIds
      */
     public function __construct(array $noveltyTypeIds)
     {
@@ -26,8 +26,8 @@ class ByNoveltyTypeCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  RepositoryInterface                 $repository
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  RepositoryInterface  $repository
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)

@@ -14,7 +14,7 @@ use Kirby\Novelties\UI\API\V1\Requests\ExportEmployeeResumeByNoveltyTypesRequest
 class ExportEmployeeResumeByNoveltyTypesController
 {
     /**
-     * @param ExportEmployeeResumeByNoveltyTypesRequest $request
+     * @param  ExportEmployeeResumeByNoveltyTypesRequest  $request
      */
     public function __invoke(ExportEmployeeResumeByNoveltyTypesRequest $request)
     {

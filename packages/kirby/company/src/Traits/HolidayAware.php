@@ -28,7 +28,7 @@ trait HolidayAware
     /**
      * Check if $date is holiday.
      *
-     * @param  Carbon $date
+     * @param  Carbon  $date
      * @return bool
      */
     public function isHoliday(Carbon $date): bool

@@ -44,8 +44,8 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
     }
 
     /**
-     * @param  int                 $userId
-     * @param  array               $columns
+     * @param  int  $userId
+     * @param  array  $columns
      * @return TimeClockLog|null
      */
     public function lastCheckInWithOutCheckOutFromEmployeeId(int $userId, array $columns = ['*']): ?TimeClockLog
@@ -66,9 +66,9 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
     }
 
     /**
-     * @param  int                              $employeeId
-     * @param  int                              $rows
-     * @param  array                            $columns
+     * @param  int  $employeeId
+     * @param  int  $rows
+     * @param  array  $columns
      * @return \Illuminate\Support\Collection
      */
     public function lastEmployeeLogs(int $employeeId, int $rows = 5, array $columns = ['*']): Collection
@@ -99,7 +99,7 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
     }
 
     /**
-     * @param int $employeeId
+     * @param  int  $employeeId
      */
     public function findByEmployeeId(int $employeeId): TimeClockLogRepositoryInterface
     {

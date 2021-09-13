@@ -36,8 +36,8 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param string $table
-     * @param array  $data
+     * @param  string  $table
+     * @param  array  $data
      */
     public function haveRecord(string $table, array $data)
     {
@@ -47,7 +47,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  User    $user
+     * @param  User  $user
      * @param  string  $driver
      * @return $this
      */
@@ -61,7 +61,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  User    $user
+     * @param  User  $user
      * @param  string  $driver
      * @return $this
      */
@@ -73,10 +73,10 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  int         $count
-     * @param  string      $table
-     * @param  array       $data
-     * @param  null|string $connection
+     * @param  int  $count
+     * @param  string  $table
+     * @param  array  $data
+     * @param  null|string  $connection
      * @return mixed
      */
     public function assertDatabaseRecordsCount(int $count, string $table, array $data = [], $connection = null)

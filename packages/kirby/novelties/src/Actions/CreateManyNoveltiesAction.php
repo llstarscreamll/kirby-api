@@ -19,7 +19,7 @@ class CreateManyNoveltiesAction
     private $noveltyRepository;
 
     /**
-     * @param NoveltyRepositoryInterface $noveltyRepository
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
      */
     public function __construct(NoveltyRepositoryInterface $noveltyRepository)
     {
@@ -27,7 +27,7 @@ class CreateManyNoveltiesAction
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      */
     public function run(array $data): bool
     {

@@ -14,17 +14,17 @@ use Kirby\WorkShifts\Models\WorkShift;
 /**
  * Class Employee.
  *
- * @param int $cost_center_id
- * @param string $code
- * @param string $identification_number
- * @param string $first_name
- * @param string $last_name
- * @param string $full_name
- * @param string $position
- * @param string $location
- * @param string $address
- * @param string $phone
- * @param float $salary
+ * @param  int  $cost_center_id
+ * @param  string  $code
+ * @param  string  $identification_number
+ * @param  string  $first_name
+ * @param  string  $last_name
+ * @param  string  $full_name
+ * @param  string  $position
+ * @param  string  $location
+ * @param  string  $address
+ * @param  string  $phone
+ * @param  float  $salary
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
@@ -205,7 +205,7 @@ class Employee extends Model
     // ######################################################################## #
 
     /**
-     * @param  Carbon      $time
+     * @param  Carbon  $time
      * @return WorkShift
      */
     public function getWorkShiftsThatMatchesTime(Carbon $time): ?Collection

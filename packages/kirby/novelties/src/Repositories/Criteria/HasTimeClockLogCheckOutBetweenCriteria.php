@@ -22,8 +22,8 @@ class HasTimeClockLogCheckOutBetweenCriteria implements CriteriaInterface
     private $end;
 
     /**
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param  Carbon  $start
+     * @param  Carbon  $end
      */
     public function __construct(Carbon $start, Carbon $end)
     {
@@ -34,8 +34,8 @@ class HasTimeClockLogCheckOutBetweenCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository.
      *
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @param  RepositoryInterface                 $repository
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  RepositoryInterface  $repository
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)

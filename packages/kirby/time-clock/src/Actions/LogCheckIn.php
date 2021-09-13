@@ -73,14 +73,14 @@ class LogCheckIn
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
     /**
-     * @param HolidayRepositoryInterface                     $holidayRepository
-     * @param SettingRepositoryInterface                     $settingRepository
-     * @param NoveltyRepositoryInterface                     $noveltyRepository
-     * @param NoveltyTypeRepositoryInterface                 $noveltyTypeRepository
-     * @param TimeClockLogRepositoryInterface                $timeClockLogRepository
-     * @param SubCostCenterRepositoryInterface               $subCostCenterRepository
-     * @param IdentificationRepositoryInterface              $identificationRepository
-     * @param ValidateNoveltyTypeBasedOnWorkShiftPunctuality $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
+     * @param  HolidayRepositoryInterface  $holidayRepository
+     * @param  SettingRepositoryInterface  $settingRepository
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
+     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
+     * @param  TimeClockLogRepositoryInterface  $timeClockLogRepository
+     * @param  SubCostCenterRepositoryInterface  $subCostCenterRepository
+     * @param  IdentificationRepositoryInterface  $identificationRepository
+     * @param  ValidateNoveltyTypeBasedOnWorkShiftPunctuality  $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
      */
     public function __construct(
         HolidayRepositoryInterface $holidayRepository,
@@ -103,16 +103,17 @@ class LogCheckIn
     }
 
     /**
-     * @param  User                            $registrar
-     * @param  string                          $identificationCode
-     * @param  int                             $workShiftId
-     * @param  null|int                        $noveltyType
-     * @param  null|int                        $subCostCenterId
+     * @param  User  $registrar
+     * @param  string  $identificationCode
+     * @param  int  $workShiftId
+     * @param  null|int  $noveltyType
+     * @param  null|int  $subCostCenterId
+     * @return TimeClockLog
+     *
      * @throws InvalidNoveltyTypeException
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
      * @throws MissingSubCostCenterException
-     * @return TimeClockLog
      */
     public function run(User $registrar, string $identificationCode, ?int $workShiftId = null, ?int $noveltyTypeId = null, ?int $subCostCenterId = null): TimeClockLog
     {
@@ -210,7 +211,8 @@ class LogCheckIn
     }
 
     /**
-     * @param  Identification              $identification
+     * @param  Identification  $identification
+     *
      * @throws AlreadyCheckedInException
      */
     private function validateUnfinishedCheckIn(Identification $identification): void
@@ -226,10 +228,11 @@ class LogCheckIn
     }
 
     /**
-     * @param  Identification                   $identification
-     * @param  null|int                         $workShiftId
-     * @throws CanNotDeductWorkShiftException
+     * @param  Identification  $identification
+     * @param  null|int  $workShiftId
      * @return null|WorkShift
+     *
+     * @throws CanNotDeductWorkShiftException
      */
     private function validateDeductibleWorkShift(Identification $identification, ?int $workShiftId): ?WorkShift
     {
