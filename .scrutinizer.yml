@@ -17,9 +17,9 @@ build:
             - redis
             - pcov
     analysis:
-      environment:
-        php:
-          version: 7.4
+      tests:
+        override:
+          - php-scrutinizer-run
 
   tests:
     before:
