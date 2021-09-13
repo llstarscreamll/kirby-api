@@ -49,9 +49,9 @@ class RegisterTimeClockNoveltiesAction
     private $takenPeriods = [];
 
     /**
-     * @param NoveltyRepositoryInterface      $noveltyRepository
-     * @param NoveltyTypeRepositoryInterface  $noveltyTypeRepository
-     * @param TimeClockLogRepositoryInterface $timeClockLogRepository
+     * @param  NoveltyRepositoryInterface  $noveltyRepository
+     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
+     * @param  TimeClockLogRepositoryInterface  $timeClockLogRepository
      */
     public function __construct(
         NoveltyRepositoryInterface $noveltyRepository,
@@ -64,7 +64,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  int    $timeClockLogId
+     * @param  int  $timeClockLogId
      * @return bool
      */
     public function run(int $timeClockLogId): bool
@@ -121,7 +121,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  TimeClockLog $timeClockLog
+     * @param  TimeClockLog  $timeClockLog
      * @return bool
      */
     private function noveltiesCanBeCalculated(TimeClockLog $timeClockLog): bool
@@ -135,7 +135,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  TimeClockLog $timeClockLog
+     * @param  TimeClockLog  $timeClockLog
      * @param  NoveltyType  $noveltyType
      * @return array
      */
@@ -247,8 +247,8 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  Period           $timeClockPeriod
-     * @param  PeriodCollection $workShiftPeriods
+     * @param  Period  $timeClockPeriod
+     * @param  PeriodCollection  $workShiftPeriods
      * @return mixed
      */
     private function getLogPeriodWithoutWorkShiftTime(Period $timeClockPeriod, PeriodCollection $workShiftPeriods): PeriodCollection
@@ -260,7 +260,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  PeriodCollection $noveltyTypePeriods
+     * @param  PeriodCollection  $noveltyTypePeriods
      * @return mixed
      */
     private function subtractTimeAlreadyTaken(PeriodCollection $noveltyTypePeriods, $novelty): PeriodCollection
@@ -298,7 +298,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  TimeClockLog       $timeClockLog
+     * @param  TimeClockLog  $timeClockLog
      * @return PeriodCollection
      */
     private function getWorkShiftPeriods(TimeClockLog $timeClockLog): PeriodCollection
@@ -421,7 +421,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  TimeClockLog $timeClockLog
+     * @param  TimeClockLog  $timeClockLog
      * @param  NoveltyType  $noveltyType
      * @return array
      */
@@ -463,7 +463,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  TimeClockLog $timeClockLog
+     * @param  TimeClockLog  $timeClockLog
      * @return int
      */
     private function attachScheduledNovelties(TimeClockLog $timeClockLog): int
@@ -482,7 +482,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  TimeClockLog $timeClockLog
+     * @param  TimeClockLog  $timeClockLog
      * @return Collection
      */
     private function scheduledNovelties(TimeClockLog $timeClockLog): Collection

@@ -21,7 +21,7 @@ class TimeClockLogApprovalsController
     private $timeClockLogRepository;
 
     /**
-     * @param TimeClockLogRepositoryInterface $timeClockLogRepository
+     * @param  TimeClockLogRepositoryInterface  $timeClockLogRepository
      */
     public function __construct(TimeClockLogRepositoryInterface $timeClockLogRepository)
     {
@@ -31,8 +31,8 @@ class TimeClockLogApprovalsController
     /**
      * Display a listing of the resource.
      *
-     * @param  CreateTimeClockLogApprovalRequest $request
-     * @param  string                            $timeClockLogId
+     * @param  CreateTimeClockLogApprovalRequest  $request
+     * @param  string  $timeClockLogId
      * @return \Illuminate\Http\Response
      */
     public function store(CreateTimeClockLogApprovalRequest $request, string $timeClockLogId)
@@ -46,8 +46,8 @@ class TimeClockLogApprovalsController
     /**
      * Display a listing of the resource.
      *
-     * @param  DeleteTimeClockLogApprovalRequest $request
-     * @param  string                            $timeClockLogId
+     * @param  DeleteTimeClockLogApprovalRequest  $request
+     * @param  string  $timeClockLogId
      * @return \Illuminate\Http\Response
      */
     public function destroy(DeleteTimeClockLogApprovalRequest $request, string $timeClockLogId)

@@ -21,7 +21,7 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
     private $params;
 
     /**
-     * @param array $params
+     * @param  array  $params
      */
     public function __construct(array $params)
     {
@@ -72,7 +72,7 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @param Novelty $novelty
+     * @param  Novelty  $novelty
      */
     public function map($novelty): array
     {

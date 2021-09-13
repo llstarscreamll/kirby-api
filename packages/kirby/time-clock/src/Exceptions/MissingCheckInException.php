@@ -22,7 +22,7 @@ class MissingCheckInException extends Exception
     protected $code = 1052;
 
     /**
-     * @param string $message
+     * @param  string  $message
      */
     public function __construct(string $message = null)
     {

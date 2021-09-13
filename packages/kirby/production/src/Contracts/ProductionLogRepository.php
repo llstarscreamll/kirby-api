@@ -10,7 +10,7 @@ interface ProductionLogRepository
     /**
      * Creates a new record on storage.
      *
-     * @param  array                                    $data
+     * @param  array  $data
      * @return \Kirby\Production\Models\ProductionLog
      */
     public function create(array $data): ProductionLog;

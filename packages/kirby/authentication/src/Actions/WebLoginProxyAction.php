@@ -28,8 +28,8 @@ class WebLoginProxyAction
     }
 
     /**
-     * @param string $email
-     * @param string $password
+     * @param  string  $email
+     * @param  string  $password
      */
     public function run(string $email, string $password): array
     {

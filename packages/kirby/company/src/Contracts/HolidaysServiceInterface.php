@@ -11,7 +11,7 @@ interface HolidaysServiceInterface
 {
     /**
      * @param  string  $countryCode
-     * @param  int     $year
+     * @param  int  $year
      * @return array
      */
     public function get(string $countryCode, int $year): array;

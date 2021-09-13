@@ -31,7 +31,7 @@ class HolidaysService implements HolidaysServiceInterface
     private $apiKey;
 
     /**
-     * @param \GuzzleHttp\Client $httpClient
+     * @param  \GuzzleHttp\Client  $httpClient
      */
     public function __construct(Client $httpClient)
     {
@@ -58,7 +58,7 @@ class HolidaysService implements HolidaysServiceInterface
 
     /**
      * @param  string  $countryCode
-     * @param  int     $year
+     * @param  int  $year
      * @return array
      */
     public function get(string $countryCode, int $year): array
@@ -81,7 +81,7 @@ class HolidaysService implements HolidaysServiceInterface
     }
 
     /**
-     * @param array $responseData
+     * @param  array  $responseData
      */
     private function mapApiResponse($responseData): array
     {

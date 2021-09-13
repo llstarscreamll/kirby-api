@@ -31,7 +31,7 @@ class FormRequestAbstract extends FormRequest
      * Override method to make the route params available on request data to be
      * validated.
      *
-     * @param  null    $keys
+     * @param  null  $keys
      * @return array
      */
     public function all($keys = null): array
@@ -45,7 +45,7 @@ class FormRequestAbstract extends FormRequest
     /**
      * Merge route params into $requestData.
      *
-     * @param  array   $requestData
+     * @param  array  $requestData
      * @return array
      */
     private function mergeUrlParametersToRequestData(array $requestData): array

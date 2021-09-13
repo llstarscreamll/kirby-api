@@ -35,7 +35,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param SearchEmployeeNoveltiesData $makeReportData
+     * @param  SearchEmployeeNoveltiesData  $makeReportData
      * @return void
      */
     public function __construct(SearchEmployeeNoveltiesData $makeReportData)

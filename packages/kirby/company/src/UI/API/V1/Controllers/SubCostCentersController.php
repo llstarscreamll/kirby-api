@@ -15,7 +15,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 class SubCostCentersController
 {
     /**
-     * @param Request $request
+     * @param  Request  $request
      */
     public function index(Request $request, SubCostCenterRepositoryInterface $subCostCenterRepository)
     {

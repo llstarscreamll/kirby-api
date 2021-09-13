@@ -1308,7 +1308,7 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
     /**
      * Map time clock provider data to be used on Laravel factory.
      *
-     * @param  array   $timeClock
+     * @param  array  $timeClock
      * @return array
      */
     private function mapTimeClockData(array $timeClock): array

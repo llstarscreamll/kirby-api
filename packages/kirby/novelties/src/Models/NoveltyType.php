@@ -127,7 +127,7 @@ class NoveltyType extends Model
     }
 
     /**
-     * @param  DayType $dayType
+     * @param  DayType  $dayType
      * @return mixed
      */
     public function canApplyOnDayType(DayType $dayType): bool
@@ -164,7 +164,7 @@ class NoveltyType extends Model
     }
 
     /**
-     * @param  Carbon|null   $relativeToTime
+     * @param  Carbon|null  $relativeToTime
      * @return Carbon|null
      */
     public function minStartTimeSlot(Carbon $relativeToTime = null): ?Carbon
@@ -220,7 +220,7 @@ class NoveltyType extends Model
     }
 
     /**
-     * @param Carbon $relativeToTime
+     * @param  Carbon  $relativeToTime
      */
     public function maxEndTimeSlot(Carbon $relativeToTime = null): ?Carbon
     {
@@ -275,8 +275,8 @@ class NoveltyType extends Model
     }
 
     /**
-     * @param array  $timeSlot
-     * @param Carbon $date
+     * @param  array  $timeSlot
+     * @param  Carbon  $date
      */
     private function mapTimeSlot(array $timeSlot, Carbon $relativeDate = null): array
     {
@@ -301,8 +301,8 @@ class NoveltyType extends Model
     }
 
     /**
-     * @param  Carbon $checkedInAt
-     * @param  Carbon $checkedOutAt
+     * @param  Carbon  $checkedInAt
+     * @param  Carbon  $checkedOutAt
      * @return int
      */
     public function applicableTimeInMinutesFromTimeRange(Carbon $checkedInAt, Carbon $checkedOutAt): int

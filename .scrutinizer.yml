@@ -13,7 +13,7 @@ build:
       environment:
         php:
           version: 7.4
-          complie_options: '--enable-bcmath --without-pear --enable-mbstring'
+          compile_options: '--enable-bcmath --without-pear --enable-mbstring'
           pecl_extensions:
             - zip
             - redis

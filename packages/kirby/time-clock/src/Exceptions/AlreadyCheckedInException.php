@@ -28,8 +28,8 @@ class AlreadyCheckedInException extends Exception
     public $checkedInAt;
 
     /**
-     * @param string $message
-     * @param Carbon $checkedInAt
+     * @param  string  $message
+     * @param  Carbon  $checkedInAt
      */
     public function __construct(Carbon $checkedInAt)
     {

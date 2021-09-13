@@ -40,9 +40,9 @@ class EmployeesController
     private $identificationRepository;
 
     /**
-     * @param UserRepositoryInterface           $UserRepository
-     * @param EmployeeRepositoryInterface       $employeeRepository
-     * @param IdentificationRepositoryInterface $identificationRepository
+     * @param  UserRepositoryInterface  $UserRepository
+     * @param  EmployeeRepositoryInterface  $employeeRepository
+     * @param  IdentificationRepositoryInterface  $identificationRepository
      */
     public function __construct(
         UserRepositoryInterface $userRepository,

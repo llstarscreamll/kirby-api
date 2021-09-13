@@ -178,7 +178,8 @@ class TimeClockLog extends Model
      * @todo this is here because NoveltyResource cant call TimeClockLogResource
      * because a circular relation issue that kill the request. Check ohw to
      * resolve that problem.
-     * @param  \DateTimeInterface $date
+     *
+     * @param  \DateTimeInterface  $date
      * @return mixed
      */
     protected function serializeDate(\DateTimeInterface $date)
@@ -323,7 +324,7 @@ class TimeClockLog extends Model
     }
 
     /**
-     * @param DayType $dayType
+     * @param  DayType  $dayType
      */
     public function getClockedTimeMinutesByDayType(DayType $dayType)
     {
@@ -410,7 +411,7 @@ class TimeClockLog extends Model
     }
 
     /**
-     * @param Carbon $offSet
+     * @param  Carbon  $offSet
      */
     public function checkInPunctuality(Carbon $offSet = null): ?int
     {
@@ -468,7 +469,7 @@ class TimeClockLog extends Model
     }
 
     /**
-     * @param Carbon $offSet
+     * @param  Carbon  $offSet
      */
     public function checkOutPunctuality(Carbon $offSet = null): ?int
     {

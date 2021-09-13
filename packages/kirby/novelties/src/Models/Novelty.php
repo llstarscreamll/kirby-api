@@ -118,7 +118,7 @@ class Novelty extends Model
     // ######################################################################## #
 
     /**
-     * @param  int    $approverId
+     * @param  int  $approverId
      * @return void
      */
     public function approve(int $approverId)
@@ -127,7 +127,7 @@ class Novelty extends Model
     }
 
     /**
-     * @param  int    $approverId
+     * @param  int  $approverId
      * @return void
      */
     public function deleteApprove(int $approverId)
