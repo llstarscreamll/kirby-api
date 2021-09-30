@@ -28,7 +28,7 @@ class UpdateProductionLogRequest extends FormRequest
             'employee_id' => ['required', 'integer', 'exists:employees,id'],
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'machine_id' => ['required', 'integer', 'exists:machines,id'],
-            'tag' => ['nullable', 'in:' . implode(',', Tag::getValues())],
+            'tag' => ['nullable', 'in:'.implode(',', Tag::getValues())],
             'batch' => ['nullable', 'integer'],
         ];
     }
