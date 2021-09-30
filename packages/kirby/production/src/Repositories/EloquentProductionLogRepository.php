@@ -17,6 +17,17 @@ class EloquentProductionLogRepository implements ProductionLogRepository
         return ProductionLog::create($data);
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function update(int $id, array $data): bool
+    {
+        return ProductionLog::where('id', $id)->update($data);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function search(): LengthAwarePaginator
     {
         return QueryBuilder::for(ProductionLog::class)
