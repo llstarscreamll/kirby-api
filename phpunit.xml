@@ -21,6 +21,7 @@
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature</directory>
             <directory suffix="Test.php">./packages/kirby/**/tests/api</directory>
+            <directory suffix="Test.php">./packages/kirby/**/tests/feature</directory>
         </testsuite>
     </testsuites>
     <filter>
