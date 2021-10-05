@@ -11,14 +11,16 @@ cache:
     - vendor
     - $HOME/.composer/cache
 
-before_install: echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+before_install:
+  - echo "extension = redis.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - pecl install pcov
 
 install:
   - composer install
   - php artisan passport:keys
 
 script:
-  - php vendor/bin/phpunit --stop-on-error --stop-on-failure --coverage-clover coverage.xml
+  - php -d extension=pcov -d pcov.enabled=1 vendor/bin/phpunit --stop-on-error --stop-on-failure --coverage-clover coverage.xml
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
