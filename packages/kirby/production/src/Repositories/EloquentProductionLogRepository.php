@@ -4,7 +4,6 @@ namespace Kirby\Production\Repositories;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\Models\ProductionLog;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -41,7 +40,7 @@ class EloquentProductionLogRepository implements ProductionLogRepository
                 AllowedFilter::callback('net_weight', function (Builder $query, $value) {
                     // the (? + 0.0) is a hack to make this query compatible with sqlite, see:
                     //https://github.com/laravel/framework/issues/31201#issuecomment-615682788
-                    $query->whereRaw("gross_weight - tare_weight = (? + 0.0)", [$value]);
+                    $query->whereRaw('gross_weight - tare_weight = (? + 0.0)', [$value]);
                 }),
             ])
             ->allowedIncludes(['employee', 'product', 'machine', 'customer'])

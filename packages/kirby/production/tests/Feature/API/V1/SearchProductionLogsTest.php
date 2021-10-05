@@ -56,7 +56,6 @@ class SearchProductionLogsTest extends TestCase
     }
 
     /**
-     *
      * @test
      */
     public function shouldSearchByNetWeight()
