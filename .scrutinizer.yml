@@ -13,6 +13,9 @@ build:
             - zip
             - redis
             - pcov
+      project_setup:
+        override:
+          - true
     analysis:
       environment:
         php:
