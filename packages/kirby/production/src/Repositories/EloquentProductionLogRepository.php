@@ -2,6 +2,7 @@
 
 namespace Kirby\Production\Repositories;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Kirby\Production\Contracts\ProductionLogRepository;
@@ -37,6 +38,9 @@ class EloquentProductionLogRepository implements ProductionLogRepository
                 AllowedFilter::exact('employee_id'),
                 AllowedFilter::exact('product_id'),
                 AllowedFilter::exact('machine_id'),
+                AllowedFilter::callback('creation_date', function (Builder $query, $value) {
+                    $query->whereBetween('created_at', [Carbon::parse($value)->startOfDay(), Carbon::parse($value)->endOfDay()]);
+                }),
                 AllowedFilter::callback('net_weight', function (Builder $query, $value) {
                     // the (? + 0.0) is a hack to make this query compatible with sqlite, see:
                     //https://github.com/laravel/framework/issues/31201#issuecomment-615682788

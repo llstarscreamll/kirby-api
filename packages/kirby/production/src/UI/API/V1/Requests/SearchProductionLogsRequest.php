@@ -24,7 +24,11 @@ class SearchProductionLogsRequest extends FormRequest
     public function rules()
     {
         return [
-            's' => ['nullable', 'string'],
+            'creation_date' => ['nullable', 'date'],
+            'employee_id' => ['nullable', 'integer', 'min:1'],
+            'product_id' => ['nullable', 'integer', 'min:1'],
+            'machine_id' => ['nullable', 'integer', 'min:1'],
+            'net_weight' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 }

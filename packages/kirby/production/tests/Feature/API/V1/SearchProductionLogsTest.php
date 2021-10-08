@@ -48,7 +48,7 @@ class SearchProductionLogsTest extends TestCase
     /**
      * @test
      */
-    public function shouldBeCreatedSuccessfullyWhenDataIsCorrect()
+    public function shouldReturnAllItemsWhenNQueryParamsAreGiven()
     {
         $this->json($this->method, $this->endpoint)
             ->assertOk()

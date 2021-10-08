@@ -6,6 +6,7 @@ use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\UI\API\V1\Requests\CreateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest;
 use Kirby\Production\UI\API\V1\Requests\UpdateProductionLogRequest;
+use Kirby\Production\UI\API\V1\Resources\ProductionLogResource;
 
 class ProductionLogsController
 {
@@ -30,7 +31,7 @@ class ProductionLogsController
      */
     public function index(SearchProductionLogsRequest $request)
     {
-        return response()->json($this->productionLogRepository->search());
+        return ProductionLogResource::collection($this->productionLogRepository->search());
     }
 
     /**
