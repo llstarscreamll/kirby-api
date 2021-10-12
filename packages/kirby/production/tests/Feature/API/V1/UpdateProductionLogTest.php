@@ -2,6 +2,7 @@
 
 namespace Kirby\Production\Tests\Feature\API\V1;
 
+use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
 use Kirby\Production\Enums\Tag;
@@ -44,10 +45,9 @@ class updateProductionLogTest extends TestCase
             'product_id' => $productId = factory(Product::class)->create()->id,
             'machine_id' => $machineId = factory(Machine::class)->create()->id,
             'employee_id' => $employeeId = factory(Employee::class)->create()->id,
+            'customer_id' => $customerId = factory(Customer::class)->create()->id,
             'tag' => Tag::Rejected,
             'batch' => 1111,
-            // los siguientes valores deben ser omitidos
-            'customer_id' => 99999,
             'tare_weight' => 1234,
             'gross_weight' => 5678,
         ];
@@ -60,12 +60,11 @@ class updateProductionLogTest extends TestCase
             'product_id' => $productId,
             'employee_id' => $employeeId,
             'machine_id' => $machineId,
+            'customer_id' => $customerId,
             'tag' => Tag::Rejected,
             'batch' => 1111,
-            // los siguientes valores no deben ser actualizados
-            'customer_id' => $log->customer_id,
-            'tare_weight' => $log->tare_weight,
-            'gross_weight' => $log->gross_weight,
+            'tare_weight' => 1234,
+            'gross_weight' => 5678,
         ]);
     }
 
