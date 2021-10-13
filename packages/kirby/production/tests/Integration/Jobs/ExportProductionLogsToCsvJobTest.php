@@ -7,7 +7,6 @@ use Kirby\Production\Exports\ProductionLogsExport;
 use Kirby\Production\Jobs\ExportProductionLogsToCsvJob;
 use Kirby\Production\Models\ProductionLog;
 use Kirby\Production\Notifications\ProductionLogsCsvReady;
-use Kirby\Users\Models\User;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 

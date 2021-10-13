@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
 use Kirby\Production\Exports\ProductionLogsExport;
