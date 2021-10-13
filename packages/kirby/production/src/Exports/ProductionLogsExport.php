@@ -2,6 +2,7 @@
 
 namespace Kirby\Production\Exports;
 
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Kirby\Production\Models\ProductionLog;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -13,10 +14,10 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
     /**
      * @var array
      */
-    private $params;
+    public $params;
 
     /**
-     * @param  array  $params
+     * @param array $params
      */
     public function __construct(array $params)
     {
@@ -28,14 +29,25 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
      */
     public function query()
     {
-        $startDate = Arr::get($this->params, 'from', now()->subMonths(2)->startOfDay()->toISOString());
-        $endDate = Arr::get($this->params, 'to', now()->endOfDay()->toISOString());
+        $machineId = Arr::get($this->params, 'machine_id');
+        $productId = Arr::get($this->params, 'product_id');
+        $netWeight = Arr::get($this->params, 'net_weight');
+        $employeeId = Arr::get($this->params, 'employee_id');
+        $creationDate = Arr::get($this->params, 'creation_date');
+        $creationDate = empty($creationDate) ? null : Carbon::parse($creationDate);
 
-        $productionLogs = ProductionLog::whereBetween('created_at', [$startDate, $endDate]);
-
-        return $productionLogs->with([
-            'employee', 'machine', 'product', 'customer',
-        ]);
+        return ProductionLog::when($creationDate, fn($q, $creationDate) => $q->whereBetween('created_at', [
+            $creationDate->copy()->startOfDay(), $creationDate->copy()->endOfDay(),
+        ]))
+            ->when($machineId, fn($q, $machineId) => $q->where('machine_id', $machineId))
+            ->when($productId, fn($q, $productId) => $q->where('product_id', $productId))
+            ->when($employeeId, fn($q, $employeeId) => $q->where('employee_id', $employeeId))
+            // the (? + 0.0) is a hack to make this query compatible with sqlite, see:
+            //https://github.com/laravel/framework/issues/31201#issuecomment-615682788
+            ->when($netWeight, fn($q, $netWeight) => $q->whereRaw('gross_weight - tare_weight = (? + 0.0)', [$netWeight]))
+            ->with([
+                'employee', 'machine', 'product', 'customer',
+            ]);
     }
 
     /**
@@ -62,7 +74,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @param  \Kirby\Production\Models\ProductionLog  $log
+     * @param \Kirby\Production\Models\ProductionLog $log
      */
     public function map($log): array
     {

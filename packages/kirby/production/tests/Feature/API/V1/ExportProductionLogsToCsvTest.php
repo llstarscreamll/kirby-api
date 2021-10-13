@@ -59,8 +59,7 @@ class ExportProductionLogsToCsvTest extends TestCase
         Queue::fake();
 
         $dataInput = [
-            'from' => now()->subDays(5)->toISOString(),
-            'to' => now()->toISOString(),
+            'creation_date' => now()->subDays(5)->toDateString(),
         ];
 
         $this->json($this->method, $this->endpoint, $dataInput)->assertOk();

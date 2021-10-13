@@ -13,7 +13,7 @@ class SearchProductionLogsRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('production-logs.search');
+        return $this->user()->hasAnyPermission(['production-logs.search', 'production-logs.export-to-csv']);
     }
 
     /**

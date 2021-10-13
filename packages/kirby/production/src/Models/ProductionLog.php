@@ -72,7 +72,7 @@ class ProductionLog extends Model
     /**
      * @return float
      */
-    public function getNetWeightAttribute(): float
+    public function netWeight(): float
     {
         return $this->gross_weight - $this->tare_weight;
     }
