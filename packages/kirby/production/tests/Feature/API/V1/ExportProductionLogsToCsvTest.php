@@ -69,7 +69,7 @@ class ExportProductionLogsToCsvTest extends TestCase
 
         $this->json($this->method, $this->endpoint, $dataInput)->assertOk();
 
-        Queue::assertPushed(ExportProductionLogsToCsvJob::class, fn($job) => $job->params === $dataInput['filter'] && $job->user->is($this->user));
+        Queue::assertPushed(ExportProductionLogsToCsvJob::class, fn ($job) => $job->params === $dataInput['filter'] && $job->user->is($this->user));
     }
 
     /**
