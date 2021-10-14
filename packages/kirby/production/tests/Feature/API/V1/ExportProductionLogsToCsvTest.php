@@ -59,12 +59,17 @@ class ExportProductionLogsToCsvTest extends TestCase
         Queue::fake();
 
         $dataInput = [
-            'creation_date' => now()->subDays(5)->toDateString(),
+            'filter' => [
+                'creation_date' => [
+                    'start' => now()->subDays(5)->startOfDay()->toISOString(),
+                    'end' => now()->subDays(5)->endOfDay()->toISOString(),
+                ],
+            ],
         ];
 
         $this->json($this->method, $this->endpoint, $dataInput)->assertOk();
 
-        Queue::assertPushed(ExportProductionLogsToCsvJob::class, fn ($job) => $job->params === $dataInput && $job->user->is($this->user));
+        Queue::assertPushed(ExportProductionLogsToCsvJob::class, fn($job) => $job->params === $dataInput['filter'] && $job->user->is($this->user));
     }
 
     /**

@@ -100,7 +100,10 @@ class ProductionLogsExportTest extends TestCase
      */
     public function shouldExportByCreationDate()
     {
-        $export = new ProductionLogsExport(['creation_date' => now()->subDays(2)->toDateString()]);
+        $export = new ProductionLogsExport(['creation_date' => [
+            'start' => now()->subDays(2)->startOfDay()->toISOString(),
+            'end' => now()->subDays(2)->endOfDay()->toISOString(),
+        ]]);
 
         $this->assertCount($this->productionLogs->count(), $export->query()->get());
         $this->assertEqualsCanonicalizing($this->productionLogs->pluck('id'), $export->query()->pluck('id'));

@@ -17,7 +17,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
     public $params;
 
     /**
-     * @param  array  $params
+     * @param array $params
      */
     public function __construct(array $params)
     {
@@ -33,18 +33,18 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
         $productId = Arr::get($this->params, 'product_id');
         $netWeight = Arr::get($this->params, 'net_weight');
         $employeeId = Arr::get($this->params, 'employee_id');
-        $creationDate = Arr::get($this->params, 'creation_date');
-        $creationDate = empty($creationDate) ? null : Carbon::parse($creationDate);
+        $startDate = Arr::get($this->params, 'creation_date.start');
+        $endDate = Arr::get($this->params, 'creation_date.end');
+        $startDate = empty($startDate) ? null : Carbon::parse($startDate);
+        $endDate = empty($endDate) ? null : Carbon::parse($endDate);
 
-        return ProductionLog::when($creationDate, fn ($q, $creationDate) => $q->whereBetween('created_at', [
-            $creationDate->copy()->startOfDay(), $creationDate->copy()->endOfDay(),
-        ]))
+        return ProductionLog::when(array_filter([$startDate, $endDate]), fn ($q, $dateRange) => $q->whereBetween('created_at', $dateRange))
             ->when($machineId, fn ($q, $machineId) => $q->where('machine_id', $machineId))
             ->when($productId, fn ($q, $productId) => $q->where('product_id', $productId))
             ->when($employeeId, fn ($q, $employeeId) => $q->where('employee_id', $employeeId))
             // the (? + 0.0) is a hack to make this query compatible with sqlite, see:
             //https://github.com/laravel/framework/issues/31201#issuecomment-615682788
-            ->when($netWeight, fn ($q, $netWeight) => $q->whereRaw('gross_weight - tare_weight = (? + 0.0)', [$netWeight]))
+            ->when($netWeight, fn($q, $netWeight) => $q->whereRaw('gross_weight - tare_weight = (? + 0.0)', [$netWeight]))
             ->with([
                 'employee', 'machine', 'product', 'customer',
             ]);
@@ -74,7 +74,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @param  \Kirby\Production\Models\ProductionLog  $log
+     * @param \Kirby\Production\Models\ProductionLog $log
      */
     public function map($log): array
     {

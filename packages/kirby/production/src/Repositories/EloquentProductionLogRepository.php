@@ -39,7 +39,10 @@ class EloquentProductionLogRepository implements ProductionLogRepository
                 AllowedFilter::exact('product_id'),
                 AllowedFilter::exact('machine_id'),
                 AllowedFilter::callback('creation_date', function (Builder $query, $value) {
-                    $query->whereBetween('created_at', [Carbon::parse($value)->startOfDay(), Carbon::parse($value)->endOfDay()]);
+                    $start = Carbon::parse($value['start']);
+                    $end = Carbon::parse($value['end']);
+
+                    $query->whereBetween('created_at', [$start, $end]);
                 }),
                 AllowedFilter::callback('net_weight', function (Builder $query, $value) {
                     // the (? + 0.0) is a hack to make this query compatible with sqlite, see:
