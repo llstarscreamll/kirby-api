@@ -1,10 +1,13 @@
 <?php
 
+namespace kirby\Production\Tests\Integration\Exports;
+
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
 use Kirby\Production\Exports\ProductionLogsExport;
 use Kirby\Production\Models\ProductionLog;
 use Kirby\Products\Models\Product;
+use ProductionPackageSeed;
 use Tests\TestCase;
 
 class ProductionLogsExportTest extends TestCase
