@@ -47,6 +47,7 @@ class ProductionLogsExportTest extends TestCase
 
         $this->assertCount(ProductionLog::count(), $export->query()->get());
         $this->assertEqualsCanonicalizing(ProductionLog::pluck('id'), $export->query()->pluck('id'));
+        $export->map(ProductionLog::first());
     }
 
     /**
