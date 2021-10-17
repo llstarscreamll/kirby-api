@@ -19,30 +19,15 @@ class SearchMachinesTest extends TestCase
     private $method = 'GET';
 
     /**
-     * @var \Kirby\Users\Models\User
-     */
-    private $user;
-
-    /**
-     * @var \Illuminate\Support\Collection<\Kirby\Machines\Models\Machine>
-     */
-    private $machines;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->actingAsAdmin($this->user = factory(User::class)->create());
-        $this->machines = factory(Machine::class, 5)->create();
-    }
-
-    /**
      * @test
      */
-    public function shouldReturnResourcePaginatedList()
+    public function shouldReturnPaginatedMachinesList()
     {
-        $this->json($this->method, $this->endpoint)
+        $machines = factory(Machine::class, 5)->create();
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, $this->endpoint)
             ->assertOk()
-            ->assertJsonCount($this->machines->count(), 'data');
+            ->assertJsonCount($machines->count(), 'data');
     }
 }
