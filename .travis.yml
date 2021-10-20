@@ -20,7 +20,7 @@ install:
   - php artisan passport:keys
 
 script:
-  - php -d pcov.enabled=1 vendor/bin/phpunit --stop-on-error --stop-on-failure --coverage-clover coverage.xml
+  - php -d pcov.enabled=1 -d pcov.directory=packages/ -d pcov.exclude=/Test\.php/ vendor/bin/phpunit --stop-on-error --stop-on-failure --coverage-clover coverage.xml
 
 after_success:
   - curl -Os https://uploader.codecov.io/latest/linux/codecov
