@@ -19,7 +19,7 @@ install:
   - php artisan passport:keys
 
 script:
-  - php vendor/bin/phpunit --stop-on-error --stop-on-failure --coverage-clover coverage.xml
+  - php -dxdebug.mode="coverage" vendor/bin/phpunit --stop-on-error --stop-on-failure --coverage-clover coverage.xml
 
 after_success:
   - curl -Os https://uploader.codecov.io/latest/linux/codecov
