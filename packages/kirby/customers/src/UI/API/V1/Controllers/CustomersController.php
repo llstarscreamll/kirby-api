@@ -2,7 +2,6 @@
 
 namespace Kirby\Customers\UI\API\V1\Controllers;
 
-use Illuminate\Http\Request;
 use Kirby\Core\Filters\QuerySearchFilter;
 use Kirby\Customers\Models\Customer;
 use Spatie\QueryBuilder\AllowedFilter;

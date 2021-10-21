@@ -12,8 +12,6 @@ use Tests\TestCase;
  *
  * Set de pruebas de la funcionalidad de sincronizar los permisos al rol
  * administrador del sistema.
- *
- * @package Kirby\Authorization\Tests
  */
 class RefreshAdminPermissionsCommandTest extends TestCase
 {
