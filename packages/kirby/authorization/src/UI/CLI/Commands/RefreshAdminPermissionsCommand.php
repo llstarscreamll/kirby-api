@@ -26,17 +26,7 @@ class RefreshAdminPermissionsCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Refresh admin permissions';
-
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
+    protected $description = 'Refresh admin role permissions';
 
     /**
      * Execute the console command.
