@@ -5,6 +5,7 @@ namespace Kirby\Production\Tests\Feature\API\V1;
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
+use Kirby\Production\Enums\Tag;
 use Kirby\Products\Models\Product;
 use Kirby\Users\Models\User;
 use ProductionPackageSeed;
@@ -82,6 +83,7 @@ class CreateProductionLogTest extends TestCase
             'employee_id' => $this->user->employee->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
+            'tag' => Tag::InLine(), // default value when created
             'batch' => 123456,
             'tare_weight' => 10.5,
             'gross_weight' => 25.8,

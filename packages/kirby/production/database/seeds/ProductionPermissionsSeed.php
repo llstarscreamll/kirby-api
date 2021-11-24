@@ -10,6 +10,7 @@ class ProductionPermissionsSeed extends Seeder
      */
     private $permissions = [
         ['name' => 'production-logs.create'],
+        ['name' => 'production-logs.update'],
         ['name' => 'production-logs.create-on-behalf-of-another-person'],
         ['name' => 'production-logs.search'],
         ['name' => 'production-logs.export-to-csv'],

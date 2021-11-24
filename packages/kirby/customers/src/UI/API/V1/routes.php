@@ -6,5 +6,5 @@ use Kirby\Customers\UI\API\V1\Controllers\CustomersController;
 Route::prefix('api/v1')
     ->middleware(['api', 'auth:api'])
     ->group(function ($router) {
-        $router->apiResource('customers', CustomersController::class);
+        $router->apiResource('customers', CustomersController::class)->only(['index']);
     });

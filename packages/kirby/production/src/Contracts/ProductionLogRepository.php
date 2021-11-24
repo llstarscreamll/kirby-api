@@ -16,6 +16,15 @@ interface ProductionLogRepository
     public function create(array $data): ProductionLog;
 
     /**
+     * Updates a record on storage.
+     *
+     * @param  int  $id
+     * @param  array  $data
+     * @return bool Was the record updated?
+     */
+    public function update(int $id, array $data): bool;
+
+    /**
      * Searches records on storage.
      *
      * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator

@@ -48,11 +48,23 @@ class SearchProductionLogsTest extends TestCase
     /**
      * @test
      */
-    public function shouldBeCreatedSuccessfullyWhenDataIsCorrect()
+    public function shouldReturnAllItemsWhenNQueryParamsAreGiven()
     {
         $this->json($this->method, $this->endpoint)
             ->assertOk()
             ->assertJsonCount($this->productionLogs->count(), 'data');
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSearchByNetWeight()
+    {
+        ProductionLog::first()->update(['gross_weight' => 22.22, 'tare_weight' => 0]);
+
+        $this->json($this->method, $this->endpoint, ['filter' => ['net_weight' => 22.22]])
+            ->assertOk()
+            ->assertJsonCount(1, 'data');
     }
 
     /**

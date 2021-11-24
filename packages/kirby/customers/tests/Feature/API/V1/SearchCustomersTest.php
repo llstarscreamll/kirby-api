@@ -19,30 +19,15 @@ class SearchCustomersTest extends TestCase
     private $method = 'GET';
 
     /**
-     * @var \Kirby\Users\Models\User
-     */
-    private $user;
-
-    /**
-     * @var \Illuminate\Support\Collection<\Kirby\Customers\Models\Customer>
-     */
-    private $customers;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->actingAsAdmin($this->user = factory(User::class)->create());
-        $this->customers = factory(Customer::class, 5)->create();
-    }
-
-    /**
      * @test
      */
     public function shouldReturnResourcePaginatedList()
     {
-        $this->json($this->method, $this->endpoint)
+        $customers = factory(Customer::class, 5)->create();
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, $this->endpoint)
             ->assertOk()
-            ->assertJsonCount($this->customers->count(), 'data');
+            ->assertJsonCount($customers->count(), 'data');
     }
 }

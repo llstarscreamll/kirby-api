@@ -2,6 +2,9 @@
 
 namespace Kirby\Authentication\Tests\api;
 
+use AuthorizationPackageSeeder;
+use Kirby\Authorization\Models\Permission;
+use Kirby\Authorization\Models\Role;
 use Kirby\Users\Models\User;
 
 /**
@@ -16,12 +19,30 @@ class GetUserTest extends \Tests\TestCase
      */
     private $endpoint = 'api/v1/auth/user';
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(AuthorizationPackageSeeder::class);
+
+        Permission::insert([
+            ['name' => 'books.read', 'guard_name' => ''],
+            ['name' => 'books.create', 'guard_name' => ''],
+            ['name' => 'books.delete', 'guard_name' => ''],
+        ]);
+
+        Role::find(1)->permissions()->sync(Permission::all());
+    }
+
     /**
      * @test
      */
     public function whenBearerTokenIsValidExpectAcceptedWithMessage()
     {
-        $this->actingAs(factory(User::class)->create(), 'api')
+        $admin = factory(User::class)->create();
+        $admin->roles()->attach(Role::find(1));
+
+        $this->actingAs($admin, 'api')
             ->json('GET', $this->endpoint)
             ->assertOk()
             ->assertJsonHasPath('data.id')

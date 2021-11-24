@@ -23,7 +23,7 @@ class ProductionServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kirby');
+        $this->loadJsonTranslationsFrom(__DIR__.'/../resources/lang', 'production');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'kirby');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');

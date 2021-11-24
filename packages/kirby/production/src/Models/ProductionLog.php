@@ -21,6 +21,7 @@ class ProductionLog extends Model
         'customer_id',
         'batch',
         'tare_weight',
+        'tag',
         'gross_weight',
     ];
 

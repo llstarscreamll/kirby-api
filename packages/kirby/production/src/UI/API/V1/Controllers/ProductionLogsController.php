@@ -2,10 +2,11 @@
 
 namespace Kirby\Production\UI\API\V1\Controllers;
 
-use Illuminate\Http\Request;
 use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\UI\API\V1\Requests\CreateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest;
+use Kirby\Production\UI\API\V1\Requests\UpdateProductionLogRequest;
+use Kirby\Production\UI\API\V1\Resources\ProductionLogResource;
 
 class ProductionLogsController
 {
@@ -30,7 +31,7 @@ class ProductionLogsController
      */
     public function index(SearchProductionLogsRequest $request)
     {
-        return response()->json($this->productionLogRepository->search());
+        return ProductionLogResource::collection($this->productionLogRepository->search());
     }
 
     /**
@@ -73,12 +74,14 @@ class ProductionLogsController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Kirby\Production\UI\API\V1\Requests\UpdateProductionLogRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProductionLogRequest $request, $id)
     {
+        $log = $this->productionLogRepository->update($id, $request->validated());
+
         return response()->json(['data' => 'ok']);
     }
 
