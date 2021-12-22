@@ -44,10 +44,10 @@ return [
             'timeout' => null,
             'auth_mode' => null,
             'stream' => [
-            'ssl' => [
-                'allow_self_signed' => env('MAIL_SSL_ALLOW_SELF_SIGNED', true),
-                'verify_peer' => env('MAIL_SSL_VERIFY_PEER', false),
-                'verify_peer_name' => env('MAIL_SSL_VERIFY_PEER_NAME', false),
+                'ssl' => [
+                    'allow_self_signed' => env('MAIL_SSL_ALLOW_SELF_SIGNED', true),
+                    'verify_peer' => env('MAIL_SSL_VERIFY_PEER', false),
+                    'verify_peer_name' => env('MAIL_SSL_VERIFY_PEER_NAME', false),
                 ],
             ],
         ],
