@@ -122,7 +122,7 @@ php7.4 artisan migrate --force
 @task('setPermissions', ['on' => 'remote'])
 {{ logMessage("🔐  Set folders permissions...") }}
 cd {{ $currentDir }};
-sudo chown -R www-data:www-data storage/* bootstrap/cache/*
+sudo chown -R $USER:www-data storage/* bootstrap/cache/*
 sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 @endtask
 
