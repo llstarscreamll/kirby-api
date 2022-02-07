@@ -23,6 +23,7 @@ class ProductionLog extends Model
         'tare_weight',
         'tag',
         'gross_weight',
+        'tag_updated_at'
     ];
 
     /**
@@ -36,6 +37,7 @@ class ProductionLog extends Model
         'batch' => 'int',
         'tare_weight' => 'float',
         'gross_weight' => 'float',
+        'tag_updated_at' => 'datetime',
     ];
 
     /**
