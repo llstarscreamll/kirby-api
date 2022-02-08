@@ -2,7 +2,6 @@
 
 namespace Kirby\Production\Tests\Feature\API\V1;
 
-use Carbon\Carbon;
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
