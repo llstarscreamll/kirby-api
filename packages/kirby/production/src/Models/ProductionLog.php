@@ -23,7 +23,6 @@ class ProductionLog extends Model
         'tare_weight',
         'tag',
         'gross_weight',
-        'tag_updated_at'
     ];
 
     /**

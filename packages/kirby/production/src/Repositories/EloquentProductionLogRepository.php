@@ -5,8 +5,10 @@ namespace Kirby\Production\Repositories;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\Models\ProductionLog;
+use Kirby\Products\Models\Product;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -25,7 +27,21 @@ class EloquentProductionLogRepository implements ProductionLogRepository
      */
     public function update(int $id, array $data): bool
     {
-        return ProductionLog::where('id', $id)->update($data);
+        $now = now()->toDateTimeString();
+        $fieldSets = implode(
+            ', ',
+            array_map(
+                fn ($attr) => "$attr = :$attr",
+                array_intersect((new ProductionLog)->getFillable(), array_keys($data))
+            )
+        );
+
+        return DB::statement(<<<MYSQL
+            UPDATE production_logs
+            SET $fieldSets,
+            tag_updated_at = CASE WHEN tag != :tag THEN '$now' ELSE tag_updated_at END
+            WHERE id = :id;
+        MYSQL, ['id' => $id] + $data);
     }
 
     /**

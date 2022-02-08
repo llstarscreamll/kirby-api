@@ -2,6 +2,7 @@
 
 namespace Kirby\Production\Tests\Feature\API\V1;
 
+use Carbon\Carbon;
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
@@ -84,6 +85,7 @@ class CreateProductionLogTest extends TestCase
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
             'tag' => Tag::InLine(), // default value when created
+            'tag_updated_at' => now()->toDateTimeString(), // por defecto la fecha de creación del registro
             'batch' => 123456,
             'tare_weight' => 10.5,
             'gross_weight' => 25.8,
@@ -241,7 +243,7 @@ class CreateProductionLogTest extends TestCase
      *
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesNotHavePermissions()
+    public function shouldReturnForbiddenWhenUserDoesNotHavePermissions()
     {
         $this->user->permissions()->delete();
 
