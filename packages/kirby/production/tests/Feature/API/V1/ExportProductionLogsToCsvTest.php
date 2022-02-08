@@ -75,7 +75,7 @@ class ExportProductionLogsToCsvTest extends TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesNotHavePermissions()
+    public function shouldReturnForbiddenWhenUserDoesNotHavePermissions()
     {
         $this->user->permissions()->delete();
 

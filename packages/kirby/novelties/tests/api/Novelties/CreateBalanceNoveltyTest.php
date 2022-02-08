@@ -104,7 +104,7 @@ class CreateBalanceNoveltyTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->actingAsGuest()
             ->json('POST', $this->endpoint, [])

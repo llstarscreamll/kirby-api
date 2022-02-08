@@ -40,7 +40,7 @@ class GetNoveltyTypeTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->actingAsGuest()->json('GET', $this->endpoint)->assertForbidden();
     }

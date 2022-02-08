@@ -61,7 +61,7 @@ class UpdateNoveltyTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $endpoint = str_replace('{id}', 1, $this->endpoint);
 
