@@ -2,7 +2,6 @@
 
 namespace Kirby\Production\Tests\Feature\API\V1;
 
-use Carbon\Carbon;
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
@@ -120,7 +119,7 @@ class updateProductionLogTest extends TestCase
         $this->assertDatabaseHas('production_logs', [
             'id' => $log->id,
             'tag' => $log->tag,
-            'tag_updated_at' => '2001-01-01 01:01:01'
+            'tag_updated_at' => '2001-01-01 01:01:01',
         ]);
     }
 

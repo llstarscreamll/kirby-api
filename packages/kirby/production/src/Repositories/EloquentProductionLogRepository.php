@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\Models\ProductionLog;
-use Kirby\Products\Models\Product;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
