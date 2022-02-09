@@ -29,8 +29,8 @@ class SearchProductionLogsRequest extends FormRequest
             'filter.product_id' => ['nullable', 'integer', 'min:1'],
             'filter.machine_id' => ['nullable', 'integer', 'min:1'],
             'filter.net_weight' => ['nullable', 'numeric', 'min:0'],
-            'filter.creation_date.start' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.creation_date.end'],
-            'filter.creation_date.end' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.creation_date.start', 'after:filter.creation_date.start'],
+            'filter.tag_updated_at.start' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.tag_updated_at.end'],
+            'filter.tag_updated_at.end' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.tag_updated_at.start', 'after:filter.tag_updated_at.start'],
         ];
     }
 }

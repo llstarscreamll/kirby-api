@@ -60,7 +60,7 @@ class ExportProductionLogsToCsvTest extends TestCase
 
         $dataInput = [
             'filter' => [
-                'creation_date' => [
+                'tag_updated_at' => [
                     'start' => now()->subDays(5)->startOfDay()->toISOString(),
                     'end' => now()->subDays(5)->endOfDay()->toISOString(),
                 ],
