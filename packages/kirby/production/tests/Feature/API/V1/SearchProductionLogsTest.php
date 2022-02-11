@@ -172,14 +172,14 @@ class SearchProductionLogsTest extends TestCase
             ->where('id', 1)
             ->update(['machine_id' => factory(Machine::class)->create([
                 'id' => 123,
-                'sub_cost_center_id' => factory(SubCostCenter::class)->create(['id' => 123])
+                'sub_cost_center_id' => factory(SubCostCenter::class)->create(['id' => 123]),
             ])->id]);
 
         DB::table('production_logs')
             ->where('id', 2)
             ->update(['machine_id' => factory(Machine::class)->create([
                 'id' => 456,
-                'sub_cost_center_id' => factory(SubCostCenter::class)->create(['id' => 456])
+                'sub_cost_center_id' => factory(SubCostCenter::class)->create(['id' => 456]),
             ])->id]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
