@@ -25,9 +25,14 @@ class SearchProductionLogsRequest extends FormRequest
     public function rules()
     {
         return [
-            'filter.employee_id' => ['nullable', 'integer', 'min:1'],
-            'filter.product_id' => ['nullable', 'integer', 'min:1'],
-            'filter.machine_id' => ['nullable', 'integer', 'min:1'],
+            'filter.employee_ids' => ['nullable', 'array'],
+            'filter.employee_ids.*' => ['integer', 'min:1'],
+            'filter.product_ids' => ['nullable', 'array'],
+            'filter.product_ids.*' => ['integer', 'min:1'],
+            'filter.machine_ids' => ['nullable', 'array'],
+            'filter.machine_ids.*' => ['integer', 'min:1'],
+            'filter.sub_cost_center_ids' => ['nullable', 'array'],
+            'filter.sub_cost_center_ids.*' => ['integer', 'min:1'],
             'filter.net_weight' => ['nullable', 'numeric', 'min:0'],
             'filter.tag_updated_at.start' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.tag_updated_at.end'],
             'filter.tag_updated_at.end' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.tag_updated_at.start', 'after:filter.tag_updated_at.start'],
