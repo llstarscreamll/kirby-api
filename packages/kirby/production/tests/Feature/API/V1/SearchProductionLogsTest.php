@@ -1,15 +1,13 @@
 <?php
 
-namespace Kirby\Production\Tests\Feature\API\V1;
-
 use Illuminate\Support\Facades\DB;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
 use Kirby\Production\Models\ProductionLog;
+use Kirby\Production\Enums\Tag;
 use Kirby\Products\Models\Product;
 use Kirby\Users\Models\User;
-use ProductionPackageSeed;
 use Tests\TestCase;
 
 class SearchProductionLogsTest extends TestCase
@@ -87,6 +85,22 @@ class SearchProductionLogsTest extends TestCase
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', ProductionLog::first()->id);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSearchByManyTags()
+    {
+        DB::table('production_logs')->update(['tag' => Tag::Rejected]);
+        DB::table('production_logs')->where('id', 1)->update(['tag' => Tag::InLine]);
+        DB::table('production_logs')->where('id', 2)->update(['tag' => Tag::Error]);
+
+        $this->json($this->method, $this->endpoint, ['filter' => ['tags' => [Tag::InLine, Tag::Error]]])
+            ->assertOk()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.id', 2)
+            ->assertJsonPath('data.1.id', 1);
     }
 
     /**

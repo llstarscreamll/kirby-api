@@ -51,6 +51,7 @@ class EloquentProductionLogRepository implements ProductionLogRepository
         return QueryBuilder::for(ProductionLog::class)
             ->join('machines', 'production_logs.machine_id', '=', 'machines.id')
             ->allowedFilters([
+                AllowedFilter::callback('tags', fn ($q, $value) => $q->whereIn('tag', $value)),
                 AllowedFilter::callback('machine_ids', fn ($q, $value) => $q->whereIn('machine_id', $value)),
                 AllowedFilter::callback('product_ids', fn ($q, $value) => $q->whereIn('product_id', $value)),
                 AllowedFilter::callback('employee_ids', fn ($q, $value) => $q->whereIn('employee_id', $value)),
