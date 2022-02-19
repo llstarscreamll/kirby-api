@@ -52,9 +52,9 @@ class CreateManyNoveltiesActionTest extends \Tests\TestCase
      * @test
      * @dataProvider successCases
      *
-     * @param mixed $employees
-     * @param mixed $approvers
-     * @param mixed $novelties
+     * @param  mixed  $employees
+     * @param  mixed  $approvers
+     * @param  mixed  $novelties
      */
     public function testToRunAction($employees, $approvers, $novelties)
     {

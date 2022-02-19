@@ -20,10 +20,10 @@ class NoveltyTypeTest extends \Tests\TestCase
      * @test
      * @dataProvider holidayNoveltyTypes
      *
-     * @param mixed $attrs
-     * @param mixed $holidayRepoResult
-     * @param mixed $relativeDate
-     * @param mixed $expected
+     * @param  mixed  $attrs
+     * @param  mixed  $holidayRepoResult
+     * @param  mixed  $relativeDate
+     * @param  mixed  $expected
      */
     public function shouldReturnMinStartTimeSlotForHolidayNoveltyType($attrs, $holidayRepoResult, $relativeDate, $expected)
     {
@@ -39,10 +39,10 @@ class NoveltyTypeTest extends \Tests\TestCase
      * @test
      * @dataProvider workdayNoveltyTypes
      *
-     * @param mixed $attrs
-     * @param mixed $holidayRepoResult
-     * @param mixed $relativeDate
-     * @param mixed $expected
+     * @param  mixed  $attrs
+     * @param  mixed  $holidayRepoResult
+     * @param  mixed  $relativeDate
+     * @param  mixed  $expected
      */
     public function shouldReturnMinStartTimeSlotForWorkdayNoveltyType($attrs, $holidayRepoResult, $relativeDate, $expected)
     {
@@ -58,11 +58,11 @@ class NoveltyTypeTest extends \Tests\TestCase
      * @test
      * @dataProvider holidayNoveltyTypes
      *
-     * @param mixed $attrs
-     * @param mixed $holidayRepoResult
-     * @param mixed $relativeDate
-     * @param mixed $_
-     * @param mixed $expected
+     * @param  mixed  $attrs
+     * @param  mixed  $holidayRepoResult
+     * @param  mixed  $relativeDate
+     * @param  mixed  $_
+     * @param  mixed  $expected
      */
     public function shouldReturnMaxEndTimeSlotForHoliDayNoveltyType($attrs, $holidayRepoResult, $relativeDate, $_, $expected)
     {
@@ -79,11 +79,11 @@ class NoveltyTypeTest extends \Tests\TestCase
      * @test
      * @dataProvider workdayNoveltyTypes
      *
-     * @param mixed $attrs
-     * @param mixed $holidayRepoResult
-     * @param mixed $relativeDate
-     * @param mixed $_
-     * @param mixed $expected
+     * @param  mixed  $attrs
+     * @param  mixed  $holidayRepoResult
+     * @param  mixed  $relativeDate
+     * @param  mixed  $_
+     * @param  mixed  $expected
      */
     public function shouldReturnMaxEndTimeSlotForWorkDayNoveltyType($attrs, $holidayRepoResult, $relativeDate, $_, $expected)
     {

@@ -16,7 +16,7 @@ class EmployeeCriteria implements CriteriaInterface
     private $employeeIds;
 
     /**
-     * @param int[] $employeeIds
+     * @param  int[]  $employeeIds
      */
     public function __construct(array $employeeIds)
     {
@@ -26,8 +26,7 @@ class EmployeeCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
-     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)

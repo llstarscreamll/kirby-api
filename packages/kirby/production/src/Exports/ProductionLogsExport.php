@@ -70,7 +70,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @param \Kirby\Production\Models\ProductionLog $log
+     * @param  \Kirby\Production\Models\ProductionLog  $log
      */
     public function map($log): array
     {

@@ -48,7 +48,7 @@ class MatchCountInDatabase extends Constraint
     /**
      * Check if the data is found in the given table.
      *
-     * @param string $table
+     * @param  string  $table
      */
     public function matches($table): bool
     {
@@ -58,7 +58,7 @@ class MatchCountInDatabase extends Constraint
     /**
      * Get the description of the failure.
      *
-     * @param string $table
+     * @param  string  $table
      */
     public function failureDescription($table): string
     {
@@ -74,7 +74,7 @@ class MatchCountInDatabase extends Constraint
     /**
      * Get a string representation of the object.
      *
-     * @param int $options
+     * @param  int  $options
      */
     public function toString($options = 0): string
     {
@@ -84,8 +84,7 @@ class MatchCountInDatabase extends Constraint
     /**
      * Get additional info about the records found in the database table.
      *
-     * @param string $table
-     *
+     * @param  string  $table
      * @return string
      */
     protected function getAdditionalInfo($table)

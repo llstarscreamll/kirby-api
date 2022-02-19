@@ -31,7 +31,7 @@ class FormRequestAbstract extends FormRequest
      * Override method to make the route params available on request data to be
      * validated.
      *
-     * @param null $keys
+     * @param  null  $keys
      */
     public function all($keys = null): array
     {
@@ -61,7 +61,7 @@ class FormRequestAbstract extends FormRequest
      */
     private function mergeUrlParametersToRequestData(array $requestData): array
     {
-        if (isset($this->urlParameters) && !empty($this->urlParameters)) {
+        if (isset($this->urlParameters) && ! empty($this->urlParameters)) {
             foreach ($this->urlParameters as $param) {
                 $requestData[$param] = $this->route($param);
             }

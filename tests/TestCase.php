@@ -51,9 +51,8 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param User   $user
-     * @param string $driver
-     *
+     * @param  User  $user
+     * @param  string  $driver
      * @return $this
      */
     public function actingAsAdmin(User $user = null, $driver = 'api')
@@ -66,9 +65,8 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param User   $user
-     * @param string $driver
-     *
+     * @param  User  $user
+     * @param  string  $driver
      * @return $this
      */
     public function actingAsGuest(User $user = null, $driver = 'api')
@@ -79,8 +77,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param null|string $connection
-     *
+     * @param  null|string  $connection
      * @return mixed
      */
     public function assertDatabaseRecordsCount(int $count, string $table, array $data = [], $connection = null)

@@ -65,7 +65,7 @@ class RegisterTimeClockNoveltiesAction
             'workShift', 'checkInNovelty', 'checkOutNovelty', 'novelties',
         ])->find($timeClockLogId);
 
-        if (!$this->noveltiesCanBeCalculated($timeClockLog)) {
+        if (! $this->noveltiesCanBeCalculated($timeClockLog)) {
             return false;
         }
 
@@ -103,7 +103,7 @@ class RegisterTimeClockNoveltiesAction
             })
             ->filter()
             ->collapse()
-            ->filter(fn ($novelty) => !empty($novelty['total_time_in_minutes']))
+            ->filter(fn ($novelty) => ! empty($novelty['total_time_in_minutes']))
             ->map(fn ($i) => Arr::except($i, ['code', 'total_time_in_minutes']));
 
         $this->noveltyRepository->insert($novelties->all());
@@ -114,11 +114,11 @@ class RegisterTimeClockNoveltiesAction
     private function noveltiesCanBeCalculated(TimeClockLog $timeClockLog): bool
     {
         $validations = [
-            !empty($timeClockLog->checked_out_at),
+            ! empty($timeClockLog->checked_out_at),
             $timeClockLog->checked_out_at && $timeClockLog->checked_in_at->diffInMinutes($timeClockLog->checked_out_at) > 2,
         ];
 
-        return !in_array(false, $validations);
+        return ! in_array(false, $validations);
     }
 
     private function solveNoveltyTypeTime(TimeClockLog $timeClockLog, NoveltyType $noveltyType): array
@@ -137,7 +137,7 @@ class RegisterTimeClockNoveltiesAction
         $noveltySelectedInCheckOut = $timeClockLog->check_out_novelty_type_id === $noveltyType->id;
         $noveltySelectedByEmployee = $noveltySelectedInCheckIn || $noveltySelectedInCheckOut;
 
-        if (!$noveltyTypePeriods->count()) {
+        if (! $noveltyTypePeriods->count()) {
             return [];
         }
 
@@ -188,11 +188,11 @@ class RegisterTimeClockNoveltiesAction
             );
         }
 
-        if (!$noveltySelectedByEmployee && $noveltyType->isDefaultForAdditionOrSubtraction()) {
+        if (! $noveltySelectedByEmployee && $noveltyType->isDefaultForAdditionOrSubtraction()) {
             $result = $logPeriodsOutOfWorkShift->overlap($noveltyTypePeriods);
         }
 
-        if (!$noveltySelectedByEmployee && ($timeClockLog->lateCheckIn() || $timeClockLog->earlyCheckOut()) && $noveltyType->isDefaultForSubtraction()) {
+        if (! $noveltySelectedByEmployee && ($timeClockLog->lateCheckIn() || $timeClockLog->earlyCheckOut()) && $noveltyType->isDefaultForSubtraction()) {
             $missingWorkShiftTime = collect([...$logOverlapWithWorkShiftSlotsPeriods])
                 ->map(fn (Period $wp) => [...$wp->diff(...$scheduledNoveltiesPeriods)])
                 ->collapse()
@@ -202,20 +202,20 @@ class RegisterTimeClockNoveltiesAction
             $result = $noveltyTypePeriods->overlap(new PeriodCollection(...$missingWorkShiftTime));
         }
 
-        if ($noveltySelectedByEmployee && !$timeClockLog->hasWorkShift()) {
+        if ($noveltySelectedByEmployee && ! $timeClockLog->hasWorkShift()) {
             $result = $logPeriodsOutOfWorkShift->overlap($noveltyTypePeriods);
         }
 
         // remove meal time when novelty type is for working time
-        if (!$result->isEmpty() && !empty($mealPeriod) && $noveltyType->isForWorkingTime()) {
+        if (! $result->isEmpty() && ! empty($mealPeriod) && $noveltyType->isForWorkingTime()) {
             $result = $result->overlap($result[0]->diff($mealPeriod));
         }
 
-        if ($noveltySelectedByEmployee && $logOverlapWithWorkShiftSlotsPeriods->isEmpty() && !$logPeriodsOutOfWorkShift->isEmpty() && $noveltyType->isForAddition()) {
+        if ($noveltySelectedByEmployee && $logOverlapWithWorkShiftSlotsPeriods->isEmpty() && ! $logPeriodsOutOfWorkShift->isEmpty() && $noveltyType->isForAddition()) {
             $result = new PeriodCollection($logPeriod);
         }
 
-        if ($noveltySelectedByEmployee && $logOverlapWithWorkShiftSlotsPeriods->isEmpty() && !$logPeriodsOutOfWorkShift->isEmpty() && $noveltyType->isForSubtraction()) {
+        if ($noveltySelectedByEmployee && $logOverlapWithWorkShiftSlotsPeriods->isEmpty() && ! $logPeriodsOutOfWorkShift->isEmpty() && $noveltyType->isForSubtraction()) {
             $result = $workShiftPeriods;
         }
 
@@ -240,8 +240,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param mixed $novelty
-     *
+     * @param  mixed  $novelty
      * @return mixed
      */
     private function subtractTimeAlreadyTaken(PeriodCollection $noveltyTypePeriods, $novelty): PeriodCollection
@@ -307,7 +306,7 @@ class RegisterTimeClockNoveltiesAction
         $basePeriodForNovelty = collect([$this->solveBaseTimeForNovelty($timeClockLog, $noveltyType)]);
         $scheduledNoveltiesPeriods = $this->scheduledNoveltiesPeriods($timeClockLog);
 
-        if (!$scheduledNoveltiesPeriods->isEmpty()) {
+        if (! $scheduledNoveltiesPeriods->isEmpty()) {
             $basePeriodForNoveltyX = Period::make(...[...$basePeriodForNovelty[0], Precision::SECOND])
                 ->diff(...$scheduledNoveltiesPeriods);
 
@@ -329,7 +328,7 @@ class RegisterTimeClockNoveltiesAction
             ->filter();
 
         // caso en el que no hay turno ni novedades
-        if (!$timeClockLog->hasWorkShift()
+        if (! $timeClockLog->hasWorkShift()
             && (
                 $timeClockLog->check_in_novelty_type_id === $noveltyType->id
                 // fix check_in_novelty_type_id on second comparison. should be check_out_novelty_type_id
@@ -364,7 +363,7 @@ class RegisterTimeClockNoveltiesAction
 
     private function getMealPeriod(TimeClockLog $timeClockLog): ?Period
     {
-        if (!$timeClockLog->hasWorkShift()) {
+        if (! $timeClockLog->hasWorkShift()) {
             return null;
         }
 
@@ -373,7 +372,7 @@ class RegisterTimeClockNoveltiesAction
         $softCheckOut = $timeClockLog->softCheckOutAt();
         $mealMinutes = $timeClockLog->workShift->meal_time_in_minutes;
 
-        if (!$timeClockLog->workShift->canMealTimeApply($softCheckOut->diffInMinutes($softCheckIn))) {
+        if (! $timeClockLog->workShift->canMealTimeApply($softCheckOut->diffInMinutes($softCheckIn))) {
             return null;
         }
 
@@ -401,20 +400,20 @@ class RegisterTimeClockNoveltiesAction
         $noveltySelectedInCheckOut = $noveltyType->id === $timeClockLog->check_out_novelty_type_id;
         $noveltySelectedByEmployee = $noveltySelectedInCheckIn || $noveltySelectedInCheckOut;
 
-        if (!$timeClockLog->hasWorkShift()) {
+        if (! $timeClockLog->hasWorkShift()) {
             return [$timeClockLog->checked_in_at, $timeClockLog->checked_out_at];
         }
 
-        if (!$timeClockLog->onTimeCheckIn() || !$timeClockLog->onTimeCheckOut()) {
+        if (! $timeClockLog->onTimeCheckIn() || ! $timeClockLog->onTimeCheckOut()) {
             $start = $timeClockLog->checked_in_at;
             $end = $timeClockLog->checked_out_at;
         }
 
-        if ($noveltySelectedInCheckIn && !$noveltySelectedInCheckOut) {
+        if ($noveltySelectedInCheckIn && ! $noveltySelectedInCheckOut) {
             $end = $timeClockLog->expectedCheckOut();
         }
 
-        if ($noveltySelectedInCheckOut && !$noveltySelectedInCheckIn) {
+        if ($noveltySelectedInCheckOut && ! $noveltySelectedInCheckIn) {
             $start = $timeClockLog->expectedCheckIn();
         }
 
@@ -452,7 +451,7 @@ class RegisterTimeClockNoveltiesAction
         }
 
         // scheduled novelties should not exists if work shift is empty
-        if (!$timeClockLog->hasWorkShift()) {
+        if (! $timeClockLog->hasWorkShift()) {
             return $this->scheduledNovelties = collect([]);
         }
 
@@ -475,7 +474,7 @@ class RegisterTimeClockNoveltiesAction
 
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
             ->filter(
-                fn (Novelty $novelty) => !$novelty->hasTimeClockLog()
+                fn (Novelty $novelty) => ! $novelty->hasTimeClockLog()
             || $novelty->end_at->between($timeClockLog->checked_in_at->copy()->subMinutes(30), $timeClockLog->checked_out_at->copy()->addMinutes(30))
             );
 

@@ -93,8 +93,8 @@ class LogCheckIn
     }
 
     /**
-     * @param int      $workShiftId
-     * @param null|int $noveltyType
+     * @param  int  $workShiftId
+     * @param  null|int  $noveltyType
      *
      * @throws InvalidNoveltyTypeException
      * @throws TooEarlyToCheckException
@@ -125,7 +125,7 @@ class LogCheckIn
         $this->validateUnfinishedCheckIn($identification);
         $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId);
 
-        if (!$this->noveltyIsValid('start', $workShift, $noveltyType)) {
+        if (! $this->noveltyIsValid('start', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
@@ -163,23 +163,23 @@ class LogCheckIn
         $isTooLate = $shiftPunctuality > 0;
         $isTooEarly = $shiftPunctuality < 0;
 
-        if ($workShift && $isTooEarly && !$noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooEarly && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooEarlyToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($workShift && $isTooLate && !$noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooLate && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooLateToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenter) {
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenter) {
             throw new MissingSubCostCenterException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($isTooLate && !$noveltyTypeId && !$noveltyTypeIsRequired) {
+        if ($isTooLate && ! $noveltyTypeId && ! $noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForSubtraction();
         }
 
-        if ($isTooEarly && !$noveltyTypeId && !$noveltyTypeIsRequired) {
+        if ($isTooEarly && ! $noveltyTypeId && ! $noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
         }
 
