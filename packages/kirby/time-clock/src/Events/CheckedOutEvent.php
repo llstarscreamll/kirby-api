@@ -20,8 +20,6 @@ class CheckedOutEvent
 
     /**
      * Create a new event instance.
-     *
-     * @return void
      */
     public function __construct(int $timeClockLogId)
     {

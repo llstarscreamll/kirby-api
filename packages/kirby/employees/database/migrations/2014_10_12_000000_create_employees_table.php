@@ -13,8 +13,6 @@ class CreateEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -37,8 +35,6 @@ class CreateEmployeesTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

@@ -10,6 +10,8 @@ use NoveltiesPackageSeed;
  * Class NoveltiesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class NoveltiesTest extends \Tests\TestCase
 {

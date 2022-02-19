@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class GetNoveltyTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetNoveltyTest extends \Tests\TestCase
 {

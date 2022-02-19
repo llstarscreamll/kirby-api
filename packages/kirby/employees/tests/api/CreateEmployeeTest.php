@@ -11,6 +11,8 @@ use Kirby\WorkShifts\Models\WorkShift;
  * Class CreateEmployeeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateEmployeeTest extends \Tests\TestCase
 {

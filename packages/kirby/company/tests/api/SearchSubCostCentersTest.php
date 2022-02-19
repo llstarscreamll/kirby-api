@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
  * Class SearchSubCostCentersTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SearchSubCostCentersTest extends \Tests\TestCase
 {

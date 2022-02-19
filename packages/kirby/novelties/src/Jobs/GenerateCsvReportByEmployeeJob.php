@@ -20,7 +20,10 @@ use Maatwebsite\Excel\Facades\Excel;
  */
 class GenerateCsvReportByEmployeeJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var int
@@ -34,10 +37,6 @@ class GenerateCsvReportByEmployeeJob implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     * @param  int  $userId
-     * @param  array  $params
-     * @return void
      */
     public function __construct(int $userId, array $params)
     {
@@ -47,8 +46,6 @@ class GenerateCsvReportByEmployeeJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle(UserRepositoryInterface $userRepository)
     {

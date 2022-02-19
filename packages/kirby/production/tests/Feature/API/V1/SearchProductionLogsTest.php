@@ -4,12 +4,15 @@ use Illuminate\Support\Facades\DB;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
-use Kirby\Production\Models\ProductionLog;
 use Kirby\Production\Enums\Tag;
+use Kirby\Production\Models\ProductionLog;
 use Kirby\Products\Models\Product;
 use Kirby\Users\Models\User;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class SearchProductionLogsTest extends TestCase
 {
     /**

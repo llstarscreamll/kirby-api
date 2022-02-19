@@ -30,9 +30,6 @@ class HolidaysService implements HolidaysServiceInterface
      */
     private $apiKey;
 
-    /**
-     * @param  \GuzzleHttp\Client  $httpClient
-     */
     public function __construct(Client $httpClient)
     {
         $this->httpClient = $httpClient;
@@ -40,27 +37,16 @@ class HolidaysService implements HolidaysServiceInterface
         $this->apiKey = config('company.services.calendarific.key');
     }
 
-    /**
-     * @return string
-     */
     public function getApiKey(): string
     {
         return $this->apiKey;
     }
 
-    /**
-     * @return string
-     */
     public function getApiUrl(): string
     {
         return $this->apiUrl;
     }
 
-    /**
-     * @param  string  $countryCode
-     * @param  int  $year
-     * @return array
-     */
     public function get(string $countryCode, int $year): array
     {
         try {
@@ -81,7 +67,7 @@ class HolidaysService implements HolidaysServiceInterface
     }
 
     /**
-     * @param  array  $responseData
+     * @param array $responseData
      */
     private function mapApiResponse($responseData): array
     {

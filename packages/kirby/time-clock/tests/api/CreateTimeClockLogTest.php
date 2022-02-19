@@ -13,6 +13,8 @@ use TimeClockPermissionsSeeder;
  * Class CreateTimeClockLogTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateTimeClockLogTest extends \Tests\TestCase
 {

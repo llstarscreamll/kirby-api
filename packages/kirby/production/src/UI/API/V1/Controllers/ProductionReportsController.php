@@ -3,8 +3,7 @@
 namespace Kirby\Production\UI\API\V1\Controllers;
 
 use Kirby\Production\Contracts\ProductionReportRepository;
-use Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest;;
-use Kirby\Production\UI\API\V1\Resources\ProductionLogResource;
+use Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductionReportsController

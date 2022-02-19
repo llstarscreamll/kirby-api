@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class GetSettingsTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetSettingsTest extends \Tests\TestCase
 {

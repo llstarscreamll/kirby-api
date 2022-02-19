@@ -29,7 +29,6 @@ class EloquentIdentificationRepository extends EloquentRepositoryAbstract implem
     }
 
     /**
-     * @param  array  $identificationCodes
      * @return mixed
      */
     public function insert(array $identificationCodes)
@@ -38,8 +37,6 @@ class EloquentIdentificationRepository extends EloquentRepositoryAbstract implem
     }
 
     /**
-     * @param  string  $employeeId
-     * @param  array  $codes
      * @return mixed
      */
     public function deleteWhereEmployeeIdCodesNotIn(string $employeeId, array $codes)

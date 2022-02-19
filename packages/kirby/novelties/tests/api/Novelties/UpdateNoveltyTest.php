@@ -12,6 +12,8 @@ use NoveltiesPackageSeed;
  * Class UpdateNoveltyTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class UpdateNoveltyTest extends \Tests\TestCase
 {

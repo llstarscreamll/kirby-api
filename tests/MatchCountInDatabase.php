@@ -37,10 +37,6 @@ class MatchCountInDatabase extends Constraint
 
     /**
      * Create a new constraint instance.
-     *
-     * @param  \Illuminate\Database\Connection  $database
-     * @param  array  $data
-     * @return void
      */
     public function __construct(Connection $database, array $data, int $expectedCount)
     {
@@ -52,8 +48,7 @@ class MatchCountInDatabase extends Constraint
     /**
      * Check if the data is found in the given table.
      *
-     * @param  string  $table
-     * @return bool
+     * @param string $table
      */
     public function matches($table): bool
     {
@@ -63,21 +58,34 @@ class MatchCountInDatabase extends Constraint
     /**
      * Get the description of the failure.
      *
-     * @param  string  $table
-     * @return string
+     * @param string $table
      */
     public function failureDescription($table): string
     {
         return sprintf(
             "data in the table [%s] matches [%s] rows with the attributes %s.\n\n%s",
-            $table, $this->expectedCount, $this->toString(JSON_PRETTY_PRINT), $this->getAdditionalInfo($table)
+            $table,
+            $this->expectedCount,
+            $this->toString(JSON_PRETTY_PRINT),
+            $this->getAdditionalInfo($table)
         );
+    }
+
+    /**
+     * Get a string representation of the object.
+     *
+     * @param int $options
+     */
+    public function toString($options = 0): string
+    {
+        return json_encode($this->data, $options);
     }
 
     /**
      * Get additional info about the records found in the database table.
      *
-     * @param  string  $table
+     * @param string $table
+     *
      * @return string
      */
     protected function getAdditionalInfo($table)
@@ -108,16 +116,5 @@ class MatchCountInDatabase extends Constraint
         }
 
         return $description;
-    }
-
-    /**
-     * Get a string representation of the object.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toString($options = 0): string
-    {
-        return json_encode($this->data, $options);
     }
 }

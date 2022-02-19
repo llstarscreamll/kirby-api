@@ -6,6 +6,9 @@ use Kirby\Products\Models\Product;
 use Kirby\Users\Models\User;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class SearchProductsTest extends TestCase
 {
     /**

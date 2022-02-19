@@ -15,8 +15,6 @@ class AuthenticationServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -34,8 +32,6 @@ class AuthenticationServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -59,8 +55,6 @@ class AuthenticationServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

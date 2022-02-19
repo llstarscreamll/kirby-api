@@ -17,9 +17,6 @@ class QuerySearchFilter implements Filter
      */
     private $allowedFilters;
 
-    /**
-     * @param  array  $allowedFilters
-     */
     public function __construct(array $allowedFilters = [])
     {
         $this->allowedFilters = collect($allowedFilters)
@@ -31,16 +28,13 @@ class QuerySearchFilter implements Filter
     }
 
     /**
-     * @param  Builder  $query
-     * @param  mixed  $value
-     * @param  string  $property
-     * @return Builder
+     * @param mixed $value
      */
     public function __invoke(Builder $query, $value, string $property): Builder
     {
         return $query->where(function ($q) use ($value) {
             foreach ($this->allowedFilters as $key => $filter) {
-                $key === 0 ? $q->where($filter, 'like', "%$value%") : $q->orWhere($filter, 'like', "%$value%");
+                0 === $key ? $q->where($filter, 'like', "%{$value}%") : $q->orWhere($filter, 'like', "%{$value}%");
             }
         });
     }

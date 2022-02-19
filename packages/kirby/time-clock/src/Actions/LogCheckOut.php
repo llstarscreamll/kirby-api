@@ -69,16 +69,6 @@ class LogCheckOut
      */
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
-    /**
-     * @param  HolidayRepositoryInterface  $holidayRepository
-     * @param  SettingRepositoryInterface  $settingRepository
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
-     * @param  TimeClockLogRepositoryInterface  $timeClockLogRepository
-     * @param  SubCostCenterRepositoryInterface  $subCostCenterRepository
-     * @param  IdentificationRepositoryInterface  $identificationRepository
-     * @param  ValidateNoveltyTypeBasedOnWorkShiftPunctuality  $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
-     */
     public function __construct(
         HolidayRepositoryInterface $holidayRepository,
         SettingRepositoryInterface $settingRepository,
@@ -100,12 +90,9 @@ class LogCheckOut
     }
 
     /**
-     * @param  User  $registrar
-     * @param  string  $identificationCode
-     * @param  int  $subCostCenterId
-     * @param  int  $noveltyTypeId
-     * @param  int  $noveltySubCostCenterId
-     * @return TimeClockLog
+     * @param int $subCostCenterId
+     * @param int $noveltyTypeId
+     * @param int $noveltySubCostCenterId
      *
      * @throws MissingCheckInException
      * @throws TooEarlyToCheckException
@@ -131,17 +118,17 @@ class LogCheckOut
             ->with(['workShift'])
             ->lastCheckInWithOutCheckOutFromEmployeeId($identification->employee_id);
 
-        if (! $lastCheckIn) {
+        if (!$lastCheckIn) {
             throw new MissingCheckInException();
         }
 
-        if ($lastCheckIn->requireSubCostCenter(now()) && ! $subCostCenterId) {
+        if ($lastCheckIn->requireSubCostCenter(now()) && !$subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification));
         }
 
         $workShift = $lastCheckIn->workShift;
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenterId) {
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
@@ -162,23 +149,23 @@ class LogCheckOut
         $isTooEarly = $shiftPunctuality < 0;
         $isTooLate = $shiftPunctuality > 0;
 
-        if (! $this->noveltyIsValid('end', $workShift, $noveltyType)) {
+        if (!$this->noveltyIsValid('end', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $isTooEarly && ! $noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooEarly && !$noveltyType && $noveltyTypeIsRequired) {
             throw new TooEarlyToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $isTooLate && ! $noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooLate && !$noveltyType && $noveltyTypeIsRequired) {
             throw new TooLateToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if (! $noveltyTypeId && $isTooEarly && ! $noveltyTypeIsRequired) {
+        if (!$noveltyTypeId && $isTooEarly && !$noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForSubtraction();
         }
 
-        if (! $noveltyTypeId && $isTooLate && ! $noveltyTypeIsRequired) {
+        if (!$noveltyTypeId && $isTooLate && !$noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
         }
 
@@ -192,7 +179,7 @@ class LogCheckOut
             'checked_out_by_id' => $registrar->id,
             'sub_cost_center_id' => $subCostCenterId,
             'check_out_novelty_type_id' => optional($noveltyType)->id,
-            'check_out_sub_cost_center_id' => ($noveltyTypeIsRequired && $shiftPunctuality !== 0) || $shiftPunctuality === 0
+            'check_out_sub_cost_center_id' => ($noveltyTypeIsRequired && 0 !== $shiftPunctuality) || 0 === $shiftPunctuality
                 ? $noveltySubCostCenterId
                 : $subCostCenterId,
         ];

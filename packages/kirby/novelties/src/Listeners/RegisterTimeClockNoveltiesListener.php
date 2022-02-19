@@ -18,9 +18,6 @@ class RegisterTimeClockNoveltiesListener implements ShouldQueue
      */
     private $registerTimeClockNoveltiesAction;
 
-    /**
-     * @param  RegisterTimeClockNoveltiesAction  $registerTimeClockNoveltiesAction
-     */
     public function __construct(RegisterTimeClockNoveltiesAction $registerTimeClockNoveltiesAction)
     {
         $this->registerTimeClockNoveltiesAction = $registerTimeClockNoveltiesAction;
@@ -28,9 +25,6 @@ class RegisterTimeClockNoveltiesListener implements ShouldQueue
 
     /**
      * Handle the event.
-     *
-     * @param  CheckedOutEvent  $event
-     * @return void
      */
     public function handle(CheckedOutEvent $event)
     {

@@ -6,6 +6,8 @@ namespace Kirby\Authentication\Tests\api;
  * Class SignUpTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SignUpTest extends \Tests\TestCase
 {

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
  * Class UpdateWorkShiftByIdTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class UpdateWorkShiftByIdTest extends \Tests\TestCase
 {
@@ -69,10 +71,12 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
             ->assertOk()
             ->assertJsonPath('data.id', (int) $this->workShift['id']);
 
-        $this->assertDatabaseHas('work_shifts',
+        $this->assertDatabaseHas(
+            'work_shifts',
             ['time_slots' => json_encode($this->requestData['time_slots'])] +
             ['applies_on_days' => json_encode($this->requestData['applies_on_days'])] +
-            $this->requestData);
+            $this->requestData
+        );
     }
 
     /**

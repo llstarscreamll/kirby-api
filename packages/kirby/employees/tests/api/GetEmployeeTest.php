@@ -9,6 +9,8 @@ use Kirby\Employees\Models\Employee;
  * Class GetEmployeeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetEmployeeTest extends \Tests\TestCase
 {

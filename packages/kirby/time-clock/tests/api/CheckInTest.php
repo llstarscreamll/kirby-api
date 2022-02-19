@@ -22,6 +22,8 @@ use TimeClockSettingsSeeder;
  * Class CheckInTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CheckInTest extends \Tests\TestCase
 {

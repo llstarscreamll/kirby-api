@@ -20,8 +20,8 @@ $factory->define(NoveltyType::class, function (Faker $faker) {
     $randomCode = $faker->unique()->bothify('##??');
 
     return [
-        'code' => "NT-$randomCode",
-        'name' => "Novelty $randomCode",
+        'code' => "NT-{$randomCode}",
+        'name' => "Novelty {$randomCode}",
         'context_type' => null,
         'time_zone' => 'UTC',
         'apply_on_days_of_type' => $faker->randomElement(DayType::getValues()),

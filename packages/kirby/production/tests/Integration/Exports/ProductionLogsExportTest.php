@@ -10,6 +10,9 @@ use Kirby\Products\Models\Product;
 use ProductionPackageSeed;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class ProductionLogsExportTest extends TestCase
 {
     /**

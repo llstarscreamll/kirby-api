@@ -6,6 +6,9 @@ use Kirby\Machines\Models\Machine;
 use Kirby\Users\Models\User;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class SearchMachinesTest extends TestCase
 {
     /**

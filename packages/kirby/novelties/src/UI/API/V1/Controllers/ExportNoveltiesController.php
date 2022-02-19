@@ -12,9 +12,6 @@ use Kirby\Novelties\UI\API\V1\Requests\ExportNoveltiesRequest;
  */
 class ExportNoveltiesController
 {
-    /**
-     * @param  ExportNoveltiesRequest  $request
-     */
     public function __invoke(ExportNoveltiesRequest $request)
     {
         GenerateCsvReportByEmployeeJob::dispatch($request->user()->id, $request->validated());

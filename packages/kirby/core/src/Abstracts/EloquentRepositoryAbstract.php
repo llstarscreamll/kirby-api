@@ -35,7 +35,7 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
     /**
      * @var \Closure
      */
-    protected $scopeQuery = null;
+    protected $scopeQuery;
 
     /**
      * Get allowed filters.
@@ -50,7 +50,6 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
     /**
      * Search resources by url query strings on request.
      *
-     * @param  bool  $enableQuerySearchFilter
      * @return $this
      */
     public function search(bool $enableQuerySearchFilter = true)
@@ -72,8 +71,6 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $values
      * @return mixed
      */
     public function deleteWhereNotIn(string $field, array $values): int
@@ -88,10 +85,9 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
     /**
      * Save a new entity in repository.
      *
-     * @param  array  $rows
-     * @return mixed
-     *
      * @throws ValidatorException
+     *
+     * @return mixed
      */
     public function insert(array $rows)
     {
@@ -104,9 +100,9 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
     /**
      * Delete data by multiple values in one field.
      *
-     * @param  $field
-     * @param  array  $values
-     * @param  array  $columns
+     * @param       $field
+     * @param array $columns
+     *
      * @return mixed
      */
     public function deleteWhereIn($field, array $values)
@@ -119,9 +115,6 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
     }
 
     /**
-     * @param  string  $field
-     * @param  array  $values
-     * @param  array  $updates
      * @return mixed
      */
     public function updateWhereIn(string $field, array $values, array $updates)
@@ -141,9 +134,10 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
      * by applying ?limit=0 to the request, if 'repository.pagination.maxLimit'
      * is set to true.
      *
-     * @param  null  $limit
-     * @param  array  $columns
-     * @param  string  $method
+     * @param null   $limit
+     * @param array  $columns
+     * @param string $method
+     *
      * @return mixed
      */
     public function paginate($limit = null, $columns = ['*'], $method = 'paginate')
@@ -154,7 +148,7 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
         $maxPaginationLimit = Config::get('repository.pagination.maxLimit');
 
         // check, if skipping pagination is allowed and requested by the user
-        if (Config::get('repository.pagination.skip') && $limit == '0') {
+        if (Config::get('repository.pagination.skip') && '0' == $limit) {
             return parent::all($columns);
         }
 

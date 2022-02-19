@@ -28,10 +28,6 @@ class EmployeeNoveltyTypesRecordsController
      */
     private $noveltyTypeRepository;
 
-    /**
-     * @param  EmployeeRepositoryInterface  $employeeRepository
-     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
-     */
     public function __construct(
         EmployeeRepositoryInterface $employeeRepository,
         NoveltyTypeRepositoryInterface $noveltyTypeRepository
@@ -40,15 +36,12 @@ class EmployeeNoveltyTypesRecordsController
         $this->noveltyTypeRepository = $noveltyTypeRepository;
     }
 
-    /**
-     * @param  NoveltyTypesResumeByEmployeeRequest  $request
-     */
     public function __invoke(NoveltyTypesResumeByEmployeeRequest $request)
     {
         $startDate = Carbon::parse($request->start_date);
         $endDate = Carbon::parse($request->end_date);
 
-        if (! $request->user()->can('novelties.global-search')) {
+        if (!$request->user()->can('novelties.global-search')) {
             $this->employeeRepository->pushCriteria(new ByEmployeeIdsCriterion([$request->user()->id]));
         }
 
@@ -72,9 +65,8 @@ class EmployeeNoveltyTypesRecordsController
     }
 
     /**
-     * @param  Collection  $noveltyTypes
-     * @param  Employee  $employee
-     * @return Collection
+     * @param Collection $noveltyTypes
+     * @param Employee   $employee
      */
     private function mapNovelties($noveltyTypes, $employee): Collection
     {

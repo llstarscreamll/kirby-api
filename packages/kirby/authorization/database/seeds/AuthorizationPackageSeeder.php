@@ -21,8 +21,6 @@ class AuthorizationPackageSeeder extends Seeder
 
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run()
     {
@@ -33,7 +31,7 @@ class AuthorizationPackageSeeder extends Seeder
                 return Role::updateOrCreate($keys, $role);
             })
             ->first(function ($role) {
-                return $role->name === 'admin';
+                return 'admin' === $role->name;
             })
             ->syncPermissions(Permission::all());
     }

@@ -26,7 +26,10 @@ use League\Csv\Writer;
  */
 class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     public ?SearchEmployeeNoveltiesData $makeReportData = null;
 
@@ -34,9 +37,6 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     * @param  SearchEmployeeNoveltiesData  $makeReportData
-     * @return void
      */
     public function __construct(SearchEmployeeNoveltiesData $makeReportData)
     {
@@ -46,8 +46,6 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {
@@ -75,7 +73,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
         $dbHandle = $connection->getPdo();
 
         // add MySQL concat() support to SQLite
-        if ($dbHandle->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+        if ('sqlite' === $dbHandle->getAttribute(\PDO::ATTR_DRIVER_NAME)) {
             $dbHandle->sqliteCreateFunction('CONCAT', fn (...$input) => implode('', $input));
         }
 

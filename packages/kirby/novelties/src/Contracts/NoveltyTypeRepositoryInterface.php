@@ -13,12 +13,12 @@ use Kirby\Core\Contracts\BaseRepositoryInterface;
 interface NoveltyTypeRepositoryInterface extends BaseRepositoryInterface
 {
     /**
-     * @param  array  $columns
+     * @param array $columns
      */
     public function findForTimeSubtraction($columns = ['*']): Collection;
 
     /**
-     * @param  array  $columns
+     * @param array $columns
      */
     public function findForTimeAddition($columns = ['*']): Collection;
 }

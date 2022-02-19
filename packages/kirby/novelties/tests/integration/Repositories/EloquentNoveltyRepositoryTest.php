@@ -10,6 +10,8 @@ use Kirby\Novelties\Repositories\EloquentNoveltyRepository;
  * Class EloquentNoveltyRepositoryTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class EloquentNoveltyRepositoryTest extends \Tests\TestCase
 {

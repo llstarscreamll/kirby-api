@@ -72,16 +72,6 @@ class LogCheckIn
      */
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
-    /**
-     * @param  HolidayRepositoryInterface  $holidayRepository
-     * @param  SettingRepositoryInterface  $settingRepository
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
-     * @param  TimeClockLogRepositoryInterface  $timeClockLogRepository
-     * @param  SubCostCenterRepositoryInterface  $subCostCenterRepository
-     * @param  IdentificationRepositoryInterface  $identificationRepository
-     * @param  ValidateNoveltyTypeBasedOnWorkShiftPunctuality  $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
-     */
     public function __construct(
         HolidayRepositoryInterface $holidayRepository,
         SettingRepositoryInterface $settingRepository,
@@ -103,12 +93,8 @@ class LogCheckIn
     }
 
     /**
-     * @param  User  $registrar
-     * @param  string  $identificationCode
-     * @param  int  $workShiftId
-     * @param  null|int  $noveltyType
-     * @param  null|int  $subCostCenterId
-     * @return TimeClockLog
+     * @param int      $workShiftId
+     * @param null|int $noveltyType
      *
      * @throws InvalidNoveltyTypeException
      * @throws TooEarlyToCheckException
@@ -139,7 +125,7 @@ class LogCheckIn
         $this->validateUnfinishedCheckIn($identification);
         $workShift = $this->validateDeductibleWorkShift($identification, $workShiftId);
 
-        if (! $this->noveltyIsValid('start', $workShift, $noveltyType)) {
+        if (!$this->noveltyIsValid('start', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
@@ -149,7 +135,7 @@ class LogCheckIn
         $expectedEnd = Arr::get($timeSlot, 'end');
 
         // if is not on time, ask for scheduled novelties
-        if ($workShift && $shiftPunctuality !== 0) {
+        if ($workShift && 0 !== $shiftPunctuality) {
             // scheduled novelties can be discovered until 30 minutes early
             // arrival, early arrivals than 30 minutes for said novelties
             // can't be discovered
@@ -177,23 +163,23 @@ class LogCheckIn
         $isTooLate = $shiftPunctuality > 0;
         $isTooEarly = $shiftPunctuality < 0;
 
-        if ($workShift && $isTooEarly && ! $noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooEarly && !$noveltyType && $noveltyTypeIsRequired) {
             throw new TooEarlyToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($workShift && $isTooLate && ! $noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooLate && !$noveltyType && $noveltyTypeIsRequired) {
             throw new TooLateToCheckException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenter) {
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenter) {
             throw new MissingSubCostCenterException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 
-        if ($isTooLate && ! $noveltyTypeId && ! $noveltyTypeIsRequired) {
+        if ($isTooLate && !$noveltyTypeId && !$noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForSubtraction();
         }
 
-        if ($isTooEarly && ! $noveltyTypeId && ! $noveltyTypeIsRequired) {
+        if ($isTooEarly && !$noveltyTypeId && !$noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
         }
 
@@ -211,8 +197,6 @@ class LogCheckIn
     }
 
     /**
-     * @param  Identification  $identification
-     *
      * @throws AlreadyCheckedInException
      */
     private function validateUnfinishedCheckIn(Identification $identification): void
@@ -228,10 +212,6 @@ class LogCheckIn
     }
 
     /**
-     * @param  Identification  $identification
-     * @param  null|int  $workShiftId
-     * @return null|WorkShift
-     *
      * @throws CanNotDeductWorkShiftException
      */
     private function validateDeductibleWorkShift(Identification $identification, ?int $workShiftId): ?WorkShift
@@ -256,9 +236,9 @@ class LogCheckIn
 
         $employeeWorkShiftsCount = $identification->employee->workShifts->count();
 
-        $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && $deductedWorkShifts->count() === 0;
+        $hasWorkShiftsButCantBeDeducted = $employeeWorkShiftsCount > 0 && 0 === $deductedWorkShifts->count();
 
-        if (($hasWorkShiftsButCantBeDeducted || $deductedWorkShifts->count() > 1) && $workShiftId !== -1) {
+        if (($hasWorkShiftsButCantBeDeducted || $deductedWorkShifts->count() > 1) && -1 !== $workShiftId) {
             throw new CanNotDeductWorkShiftException($this->getTimeClockData('start', $identification, $workShiftId));
         }
 

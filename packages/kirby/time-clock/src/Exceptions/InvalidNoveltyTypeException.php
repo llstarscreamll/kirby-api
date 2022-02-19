@@ -12,6 +12,11 @@ use Exception;
 class InvalidNoveltyTypeException extends Exception
 {
     /**
+     * @var array
+     */
+    public $timeClockData;
+
+    /**
      * @var string
      */
     protected $message = 'Invalid or missing novelty type.';
@@ -21,14 +26,6 @@ class InvalidNoveltyTypeException extends Exception
      */
     protected $code = 1055;
 
-    /**
-     * @var array
-     */
-    public $timeClockData;
-
-    /**
-     * @param  array  $timeClockData
-     */
     public function __construct(array $timeClockData)
     {
         $this->timeClockData = $timeClockData;

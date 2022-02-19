@@ -28,11 +28,6 @@ class TimeClockLog extends Model
     use SoftDeletes;
 
     /**
-     * @var HolidayRepositoryInterface
-     */
-    private $holidayRepository;
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -81,6 +76,11 @@ class TimeClockLog extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    /**
+     * @var HolidayRepositoryInterface
+     */
+    private $holidayRepository;
 
     // ######################################################################## #
     // Relations
@@ -162,41 +162,9 @@ class TimeClockLog extends Model
     // Accessors
     // ######################################################################## #
 
-    /**
-     * @return float
-     */
     public function getClockedMinutesAttribute(): float
     {
         return $this->checked_in_at->diffInMinutes($this->checked_out_at);
-    }
-
-    // ######################################################################## #
-    // Methods
-    // ######################################################################## #
-
-    /**
-     * @todo this is here because NoveltyResource cant call TimeClockLogResource
-     * because a circular relation issue that kill the request. Check ohw to
-     * resolve that problem.
-     *
-     * @param  \DateTimeInterface  $date
-     * @return mixed
-     */
-    protected function serializeDate(\DateTimeInterface $date)
-    {
-        return $date->format(DateTime::ISO8601);
-    }
-
-    /**
-     * @return HolidayRepositoryInterface
-     */
-    private function holidayRepository(): HolidayRepositoryInterface
-    {
-        if (! $this->holidayRepository) {
-            $this->holidayRepository = App::make(HolidayRepositoryInterface::class);
-        }
-
-        return $this->holidayRepository;
     }
 
     /**
@@ -211,9 +179,6 @@ class TimeClockLog extends Model
         ]))->filter();
     }
 
-    /**
-     * @return bool
-     */
     public function hasWorkShift(): bool
     {
         return (bool) $this->work_shift_id;
@@ -229,9 +194,6 @@ class TimeClockLog extends Model
         return $holidaysCount || $this->checked_in_at->isSunday();
     }
 
-    /**
-     * @return bool
-     */
     public function checkedOutOnHoliday(): bool
     {
         $holidaysCount = $this->holidayRepository()->countWhereIn('date', [$this->checked_out_at->toDateString()]);
@@ -241,33 +203,22 @@ class TimeClockLog extends Model
 
     /**
      * Was checked_in_at or checked_out_at made on sunday?
-     *
-     * @return bool
      */
     public function hasHolidaysChecks(): bool
     {
         return $this->checkedInOnHoliday() || $this->checkedOutOnHoliday();
     }
 
-    /**
-     * @return bool
-     */
     public function checkInOnTime(): bool
     {
-        return $this->checkInPunctuality() === 0;
+        return 0 === $this->checkInPunctuality();
     }
 
-    /**
-     * @return bool
-     */
     public function checkOutOnTime(): bool
     {
-        return $this->checkOutPunctuality() === 0;
+        return 0 === $this->checkOutPunctuality();
     }
 
-    /**
-     * @return Carbon|null
-     */
     public function expectedCheckIn(): ?Carbon
     {
         $offset = null;
@@ -279,9 +230,6 @@ class TimeClockLog extends Model
         return Arr::get($expectedStartSlot, 'original_start');
     }
 
-    /**
-     * @return Carbon|null
-     */
     public function expectedCheckOut(): ?Carbon
     {
         $offset = null;
@@ -298,12 +246,10 @@ class TimeClockLog extends Model
      * any. If work shift time slots are from 7am to 4pm with 30min grace times,
      * and checkin was at 7:15am, then the returned value is 7am because checkin
      * was on time with grace times.
-     *
-     * @return \Carbon\Carbon
      */
     public function softCheckInAt(): Carbon
     {
-        return $this->checkInPunctuality() === 0
+        return 0 === $this->checkInPunctuality()
             ? $this->expectedCheckIn() ?? $this->checked_in_at
             : $this->checked_in_at;
     }
@@ -313,46 +259,41 @@ class TimeClockLog extends Model
      * if any. If work shift time slots are from 7am to 4pm with 30min grace
      * times, and checkout was at 4:15pm, then the returned value is 4pm
      * because checkout was on time with grace times.
-     *
-     * @return \Carbon\Carbon
      */
     public function softCheckOutAt(): Carbon
     {
-        return $this->checkOutPunctuality() === 0
+        return 0 === $this->checkOutPunctuality()
             ? $this->expectedCheckOut() ?? $this->checked_out_at
             : $this->checked_out_at;
     }
 
-    /**
-     * @param  DayType  $dayType
-     */
     public function getClockedTimeMinutesByDayType(DayType $dayType)
     {
         $times = [];
         $timeInMinutes = 0;
 
         // not the same day
-        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday() && ! $this->checkedOutOnHoliday()) {
+        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday() && !$this->checkedOutOnHoliday()) {
             $timeInMinutes = $this->checked_in_at->diffInSeconds($this->checked_in_at->endOfDay());
             $times = [$this->checked_in_at, $this->checked_in_at->endOfDay()];
         }
 
-        if ($dayType->is(DayType::Holiday) && ! $this->checkedInOnHoliday() && $this->checkedOutOnHoliday()) {
+        if ($dayType->is(DayType::Holiday) && !$this->checkedInOnHoliday() && $this->checkedOutOnHoliday()) {
             $timeInMinutes = $this->checked_out_at->startOfDay()->diffInSeconds($this->checked_out_at);
             $times = [$this->checked_out_at->startOfDay(), $this->checked_out_at];
         }
 
-        if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday() && ! $this->checkedOutOnHoliday()) {
+        if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday() && !$this->checkedOutOnHoliday()) {
             $timeInMinutes = $this->checked_out_at->startOfDay()->diffInSeconds($this->checked_out_at);
             $times = [$this->checked_out_at->startOfDay(), $this->checked_out_at];
         }
 
-        if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday() && $this->checkedOutOnHoliday()) {
+        if ($dayType->is(DayType::Workday) && !$this->checkedInOnHoliday() && $this->checkedOutOnHoliday()) {
             $timeInMinutes = $this->checked_in_at->diffInSeconds($this->checked_in_at->endOfDay());
             $times = [$this->checked_in_at, $this->checked_in_at->endOfDay()];
         }
 
-        if ($dayType->is(DayType::Workday) && ! $this->hasHolidaysChecks()) {
+        if ($dayType->is(DayType::Workday) && !$this->hasHolidaysChecks()) {
             $timeInMinutes = $this->clocked_minutes * 60;
             $times = [$this->checked_in_at, $this->checked_out_at];
         }
@@ -367,8 +308,6 @@ class TimeClockLog extends Model
 
     /**
      * Get related sub cost centers to this time clock log.
-     *
-     * @return array
      */
     public function relatedSubCostCenters(): array
     {
@@ -379,20 +318,14 @@ class TimeClockLog extends Model
         ]);
     }
 
-    /**
-     * @return bool
-     */
     public function requireSubCostCenter(Carbon $endTime): bool
     {
-        return ($this->check_in_novelty_type_id && ! $this->check_in_sub_cost_center_id)
-            || (! $this->sub_cost_center_id && ! $this->check_in_sub_cost_center_id && ! $this->check_out_sub_cost_center_id)
-            || ($this->work_shift_id && ! $this->sub_cost_center_id && $this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)))
+        return ($this->check_in_novelty_type_id && !$this->check_in_sub_cost_center_id)
+            || (!$this->sub_cost_center_id && !$this->check_in_sub_cost_center_id && !$this->check_out_sub_cost_center_id)
+            || ($this->work_shift_id && !$this->sub_cost_center_id && $this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)))
             || ($this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)));
     }
 
-    /**
-     * @return bool
-     */
     public function hasClockedTimeOnWorkShift(): bool
     {
         $hasClockedTimeOnWorkShift = true;
@@ -411,7 +344,7 @@ class TimeClockLog extends Model
     }
 
     /**
-     * @param  Carbon  $offSet
+     * @param Carbon $offSet
      */
     public function checkInPunctuality(Carbon $offSet = null): ?int
     {
@@ -420,61 +353,68 @@ class TimeClockLog extends Model
             : null;
     }
 
-    /**
-     * @return bool
-     */
     public function onTimeCheckIn(): bool
     {
-        return $this->checkInPunctuality() === 0;
+        return 0 === $this->checkInPunctuality();
     }
 
-    /**
-     * @return bool
-     */
     public function earlyCheckIn(): bool
     {
         return $this->checkInPunctuality() < 0;
     }
 
-    /**
-     * @return bool
-     */
     public function lateCheckIn(): bool
     {
         return $this->checkInPunctuality() > 0;
     }
 
-    /**
-     * @return bool
-     */
     public function onTimeCheckOut(): bool
     {
-        return $this->checkOutPunctuality() === 0;
+        return 0 === $this->checkOutPunctuality();
     }
 
-    /**
-     * @return bool
-     */
     public function earlyCheckOut(): bool
     {
         return $this->checkOutPunctuality() < 0;
     }
 
-    /**
-     * @return bool
-     */
     public function lateCheckOut(): bool
     {
         return $this->checkOutPunctuality() > 0;
     }
 
     /**
-     * @param  Carbon  $offSet
+     * @param Carbon $offSet
      */
     public function checkOutPunctuality(Carbon $offSet = null): ?int
     {
         return $this->hasWorkShift()
             ? $this->workShift->endPunctuality($this->checked_out_at, $offSet)
             : null;
+    }
+
+    // ######################################################################## #
+    // Methods
+    // ######################################################################## #
+
+    /**
+     * @todo this is here because NoveltyResource cant call TimeClockLogResource
+     * because a circular relation issue that kill the request. Check ohw to
+     * resolve that problem.
+     *
+     * @return mixed
+     */
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format(DateTime::ISO8601);
+    }
+
+    private function holidayRepository(): HolidayRepositoryInterface
+    {
+        if (!$this->holidayRepository) {
+            $this->holidayRepository = App::make(HolidayRepositoryInterface::class);
+        }
+
+        return $this->holidayRepository;
     }
 }

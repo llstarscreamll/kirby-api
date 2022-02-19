@@ -36,9 +36,6 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     }
 
     /**
-     * @param  int  $employeeId
-     * @param  Carbon  $start
-     * @param  Carbon  $end
      * @return mixed
      */
     public function forEmployeeAndStartDateRange(int $employeeId, Carbon $start, Carbon $end): self
@@ -51,10 +48,6 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     }
 
     /**
-     * @param  int  $employeeId
-     * @param  string  $field
-     * @param  Carbon  $start
-     * @param  Carbon  $end
      * @return mixed
      */
     public function whereScheduledForEmployee(int $employeeId, string $field, Carbon $start, Carbon $end): self
@@ -62,33 +55,25 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
         $this->model = $this->model
             ->join('novelty_types', 'novelty_types.id', 'novelties.novelty_type_id')
             ->where('employee_id', $employeeId)
-            ->where(fn ($q) => $q
-                    ->where('novelty_types.context_type', '!=', 'normal_work_shift_time')
-                    ->orWhereNull('novelty_types.context_type')
+            ->where(
+                fn ($q) => $q
+            ->where('novelty_types.context_type', '!=', 'normal_work_shift_time')
+            ->orWhereNull('novelty_types.context_type')
             )
-            ->where(fn ($q) => $q->whereBetween('start_at', [$start->timezone('UTC'), $end->timezone('UTC')])
-                    ->orWhereBetween('end_at', [$start->timezone('UTC'), $end->timezone('UTC')])
+            ->where(
+                fn ($q) => $q->whereBetween('start_at', [$start->timezone('UTC'), $end->timezone('UTC')])
+            ->orWhereBetween('end_at', [$start->timezone('UTC'), $end->timezone('UTC')])
             );
 
         return $this;
     }
 
-    /**
-     * @param  array  $noveltiesIds
-     * @param  int  $approverId
-     * @return void
-     */
     public function setApprovals(array $noveltiesIds, int $approverId): void
     {
         $novelties = $this->model->whereIn('id', $noveltiesIds)->get(['id']);
         $novelties->each->approve($approverId);
     }
 
-    /**
-     * @param  array  $noveltiesIds
-     * @param  int  $approverId
-     * @return void
-     */
     public function deleteApprovals(array $noveltiesIds, int $approverId): void
     {
         $novelties = $this->model->whereIn('id', $noveltiesIds)->get(['id']);
@@ -96,8 +81,6 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     }
 
     /**
-     * @param  string  $noveltyId
-     * @param  string  $userId
      * @return mixed
      */
     public function deleteApproval(string $noveltyId, string $userId): void
@@ -105,10 +88,6 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
         $this->find($noveltyId)->approvals()->detach($userId);
     }
 
-    /**
-     * @param  array  $approversIds
-     * @param  array  $noveltiesIds
-     */
     public function attachApproversToNovelties(array $approversIds, array $noveltiesIds): bool
     {
         $currentDate = Carbon::now()->toDateTimeString();
@@ -123,9 +102,6 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
         return DB::table('novelty_approvals')->insert(Arr::collapse($rows));
     }
 
-    /**
-     * @param  int  $employeeId
-     */
     public function findByEmployeeId(int $employeeId): self
     {
         $this->model->where('employee_id', $employeeId);

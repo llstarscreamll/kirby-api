@@ -41,8 +41,8 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param  string  $code
-     * @param  array  $columns
+     * @param array $columns
+     *
      * @return mixed
      */
     public function findByCode(string $code, $columns = ['*'])
@@ -57,8 +57,7 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param  array  $columns
-     * @return Collection
+     * @param array $columns
      */
     public function findForTimeSubtraction($columns = ['*']): Collection
     {
@@ -66,17 +65,13 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param  array  $columns
-     * @return Collection
+     * @param array $columns
      */
     public function findForTimeAddition($columns = ['*']): Collection
     {
         return $this->findWhere(['operator' => NoveltyTypeOperator::Addition], $columns);
     }
 
-    /**
-     * @param  array  $dayType
-     */
     public function whereDayType(array $dayType)
     {
         $this->model = $this->model->whereIn('apply_on_days_of_type', $dayType);
@@ -105,9 +100,9 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param  $field
-     * @param  array  $values
-     * @param  array  $columns
+     * @param       $field
+     * @param array $columns
+     *
      * @return mixed
      */
     public function findOrWhereIn($field, array $values, $columns = ['*'])

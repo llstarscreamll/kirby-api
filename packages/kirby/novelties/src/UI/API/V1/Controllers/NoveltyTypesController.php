@@ -25,7 +25,7 @@ class NoveltyTypesController
     private $noveltyTypeRepository;
 
     /**
-     * @param  \Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface  $noveltyRepository
+     * @param \Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface $noveltyRepository
      */
     public function __construct(NoveltyTypeRepositoryInterface $noveltyTypeRepository)
     {
@@ -36,6 +36,7 @@ class NoveltyTypesController
      * Display a listing of the resource.
      *
      * @param  \Kirby\Novelties\UI\API\V1\Requests\SearchNoveltyTypesRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(SearchNoveltyTypesRequest $request)
@@ -50,7 +51,6 @@ class NoveltyTypesController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CreateNoveltyTypeRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateNoveltyTypeRequest $request)
@@ -63,7 +63,8 @@ class NoveltyTypesController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(GetNoveltyTypeRequest $request, $id)
@@ -74,8 +75,8 @@ class NoveltyTypesController
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdateNoveltyTypeRequest  $request
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateNoveltyTypeRequest $request, $id)
@@ -88,8 +89,8 @@ class NoveltyTypesController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @param  DeleteNoveltyTypeRequest  $request
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(DeleteNoveltyTypeRequest $request, $id)

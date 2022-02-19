@@ -8,6 +8,8 @@ use Kirby\Company\Contracts\HolidaysServiceInterface;
  * Class SyncHolidaysCommandTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SyncHolidaysCommandTest extends \Tests\TestCase
 {

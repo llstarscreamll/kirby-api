@@ -12,6 +12,8 @@ use NoveltiesPackageSeed;
  * Class GetNoveltyTypesRecordsByEmployeeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetNoveltiesGroupedByNoveltyTypeTest extends \Tests\TestCase
 {

@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\Contracts\ProductionReportRepository;
-use Kirby\Production\Repositories\EloquentProductionLogRepository;
 use Kirby\Production\Repositories\DBProductionReportRepository;
+use Kirby\Production\Repositories\EloquentProductionLogRepository;
 
 class ProductionServiceProvider extends ServiceProvider
 {
@@ -21,8 +21,6 @@ class ProductionServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -43,8 +41,6 @@ class ProductionServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -69,8 +65,6 @@ class ProductionServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole(): void
     {

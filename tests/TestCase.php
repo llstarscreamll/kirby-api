@@ -11,10 +11,12 @@ use Kirby\Users\Models\User;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, CreateTestResponse, RefreshDatabase;
+    use CreatesApplication;
+    use CreateTestResponse;
+    use RefreshDatabase;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function json($method, $uri, array $data = [], array $headers = [])
     {
@@ -22,7 +24,7 @@ abstract class TestCase extends BaseTestCase
 
         $content = json_encode($data);
 
-        $parameters = $method === 'GET' ? $data : [];
+        $parameters = 'GET' === $method ? $data : [];
 
         $headers = array_merge([
             'CONTENT_LENGTH' => mb_strlen($content, '8bit'),
@@ -31,14 +33,16 @@ abstract class TestCase extends BaseTestCase
         ], $headers);
 
         return $this->call(
-            $method, $uri, $parameters, $this->prepareCookiesForJsonRequest(), $files, $this->transformHeadersToServerVars($headers), $content
+            $method,
+            $uri,
+            $parameters,
+            $this->prepareCookiesForJsonRequest(),
+            $files,
+            $this->transformHeadersToServerVars($headers),
+            $content
         );
     }
 
-    /**
-     * @param  string  $table
-     * @param  array  $data
-     */
     public function haveRecord(string $table, array $data)
     {
         DB::table($table)->insert($data);
@@ -47,8 +51,9 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  User  $user
-     * @param  string  $driver
+     * @param User   $user
+     * @param string $driver
+     *
      * @return $this
      */
     public function actingAsAdmin(User $user = null, $driver = 'api')
@@ -61,8 +66,9 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  User  $user
-     * @param  string  $driver
+     * @param User   $user
+     * @param string $driver
+     *
      * @return $this
      */
     public function actingAsGuest(User $user = null, $driver = 'api')
@@ -73,16 +79,15 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  int  $count
-     * @param  string  $table
-     * @param  array  $data
-     * @param  null|string  $connection
+     * @param null|string $connection
+     *
      * @return mixed
      */
     public function assertDatabaseRecordsCount(int $count, string $table, array $data = [], $connection = null)
     {
         $this->assertThat(
-            $table, new MatchCountInDatabase($this->getConnection($connection), $data, $count)
+            $table,
+            new MatchCountInDatabase($this->getConnection($connection), $data, $count)
         );
 
         return $this;

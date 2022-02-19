@@ -10,6 +10,8 @@ use NoveltiesPackageSeed;
  * Class CreateNoveltiesApprovalsByEmployeeAndDateRangeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateNoveltiesApprovalsByEmployeeAndDateRangeTest extends \Tests\TestCase
 {

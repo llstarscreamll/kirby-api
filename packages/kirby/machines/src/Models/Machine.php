@@ -17,9 +17,6 @@ class Machine extends Model
         'name',
     ];
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function costCenter(): BelongsTo
     {
         return $this->belongsTo(CostCenter::class);

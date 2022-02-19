@@ -12,6 +12,8 @@ use Kirby\Company\Services\HolidaysService;
  * Class HolidaysServiceTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class HolidaysServiceTest extends \Tests\TestCase
 {
@@ -94,9 +96,6 @@ class HolidaysServiceTest extends \Tests\TestCase
         config(['company.services.calendarific.key' => $this->apiKey]);
     }
 
-    /**
-     * @return array
-     */
     public function dataProvider(): array
     {
         return [
@@ -133,6 +132,11 @@ class HolidaysServiceTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider dataProvider
+     *
+     * @param mixed $country
+     * @param mixed $year
+     * @param mixed $apiResponse
+     * @param mixed $expected
      */
     public function shouldMakeCorrectCallToApiAndReturnMapedData($country, $year, $apiResponse, $expected)
     {

@@ -11,6 +11,8 @@ use Kirby\TimeClock\Models\TimeClockLog;
  * Class TimeClockLogTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class TimeClockLogTest extends \Tests\TestCase
 {
@@ -66,6 +68,10 @@ class TimeClockLogTest extends \Tests\TestCase
     /**
      * @dataProvider timeClockLogs
      * @test
+     *
+     * @param mixed $checkIn
+     * @param mixed $checkOut
+     * @param mixed $expected
      */
     public function getClockedTimeMinutesByDayType($checkIn, $checkOut, $expected)
     {

@@ -9,6 +9,8 @@ use Kirby\Employees\Models\Employee;
  * Class SearchEmployeesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SearchEmployeesTest extends \Tests\TestCase
 {

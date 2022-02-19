@@ -8,6 +8,8 @@ use Kirby\Users\Models\User;
  * Class LogoutTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class LogoutTest extends \Tests\TestCase
 {

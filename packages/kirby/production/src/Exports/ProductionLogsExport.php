@@ -16,9 +16,6 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
      */
     public $params;
 
-    /**
-     * @param  array  $params
-     */
     public function __construct(array $params)
     {
         $this->params = $params;
@@ -50,9 +47,6 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
             ]);
     }
 
-    /**
-     * @return array
-     */
     public function headings(): array
     {
         return [
@@ -76,7 +70,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @param  \Kirby\Production\Models\ProductionLog  $log
+     * @param \Kirby\Production\Models\ProductionLog $log
      */
     public function map($log): array
     {

@@ -13,8 +13,6 @@ class NoveltiesSettingsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
-     *
-     * @return void
      */
     public function run()
     {
@@ -26,9 +24,6 @@ class NoveltiesSettingsSeeder extends Seeder
         );
     }
 
-    /**
-     * @return array
-     */
     private function settings(): array
     {
         return [

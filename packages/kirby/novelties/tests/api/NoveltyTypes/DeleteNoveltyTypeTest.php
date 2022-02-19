@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class DeleteNoveltyTypeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class DeleteNoveltyTypeTest extends \Tests\TestCase
 {

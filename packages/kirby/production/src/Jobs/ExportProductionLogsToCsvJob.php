@@ -14,7 +14,10 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ExportProductionLogsToCsvJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * @var \Kirby\Users\Models\User
@@ -28,8 +31,6 @@ class ExportProductionLogsToCsvJob implements ShouldQueue
 
     /**
      * Create a new job instance.
-     *
-     * @return void
      */
     public function __construct(User $user, array $params)
     {
@@ -39,8 +40,6 @@ class ExportProductionLogsToCsvJob implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
     public function handle()
     {

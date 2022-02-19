@@ -18,6 +18,9 @@ use Kirby\Novelties\Notifications\ExportNoveltiesResumeByTypeReady;
 use Kirby\Users\Models\User;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class GenerateCsvEmployeeResumeByNoveltyTypeJobTest extends TestCase
 {
     private Employee $employee;

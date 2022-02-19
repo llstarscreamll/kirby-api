@@ -12,10 +12,6 @@ use Kirby\Novelties\UI\API\V1\Requests\ListNoveltiesSettingsRequest;
  */
 class NoveltiesSettingsController
 {
-    /**
-     * @param  ListNoveltiesSettingsRequest  $_
-     * @param  Novelties  $novelties
-     */
     public function __invoke(ListNoveltiesSettingsRequest $_, Novelties $novelties)
     {
         return response()->json(['data' => $novelties->settings()]);

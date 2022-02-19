@@ -12,17 +12,13 @@ class ByEmployeeIdCriterion implements CriteriaInterface
      */
     private $employeeId;
 
-    /**
-     * @param  int  $employeeId
-     */
     public function __construct(int $employeeId)
     {
         $this->employeeId = $employeeId;
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  RepositoryInterface  $repository
+     * @param \Illuminate\Database\Eloquent\Model $model
      */
     public function apply($model, RepositoryInterface $repository)
     {

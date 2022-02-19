@@ -11,6 +11,8 @@ use TimeClockPermissionsSeeder;
  * Class DeleteTimeClockLogApprovalTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class DeleteTimeClockLogApprovalTest extends \Tests\TestCase
 {

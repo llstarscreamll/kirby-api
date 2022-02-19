@@ -23,8 +23,6 @@ class WorkShiftsServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -39,8 +37,6 @@ class WorkShiftsServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -68,8 +64,6 @@ class WorkShiftsServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

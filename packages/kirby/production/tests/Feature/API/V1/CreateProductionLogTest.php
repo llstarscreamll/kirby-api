@@ -11,6 +11,9 @@ use Kirby\Users\Models\User;
 use ProductionPackageSeed;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class CreateProductionLogTest extends TestCase
 {
     /**

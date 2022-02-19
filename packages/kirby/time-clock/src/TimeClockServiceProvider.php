@@ -26,8 +26,6 @@ class TimeClockServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -43,8 +41,6 @@ class TimeClockServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -72,8 +68,6 @@ class TimeClockServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

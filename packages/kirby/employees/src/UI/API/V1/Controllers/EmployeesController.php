@@ -40,9 +40,7 @@ class EmployeesController
     private $identificationRepository;
 
     /**
-     * @param  UserRepositoryInterface  $UserRepository
-     * @param  EmployeeRepositoryInterface  $employeeRepository
-     * @param  IdentificationRepositoryInterface  $identificationRepository
+     * @param UserRepositoryInterface $UserRepository
      */
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -58,6 +56,7 @@ class EmployeesController
      * Display a listing of the resource.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\SearchEmployeesRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(SearchEmployeesRequest $request)
@@ -75,6 +74,7 @@ class EmployeesController
      * Display the specified resource.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\GetEmployeeRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(GetEmployeeRequest $request, string $id)
@@ -88,6 +88,7 @@ class EmployeesController
      * Display the specified resource.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\CreateEmployeeRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(CreateEmployeeRequest $request)
@@ -137,6 +138,7 @@ class EmployeesController
      * Store the specified resource on storage.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\UpdateEmployeeRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateEmployeeRequest $request, string $id)

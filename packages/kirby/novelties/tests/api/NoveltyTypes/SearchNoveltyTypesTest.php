@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class SearchNoveltyTypesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SearchNoveltyTypesTest extends \Tests\TestCase
 {

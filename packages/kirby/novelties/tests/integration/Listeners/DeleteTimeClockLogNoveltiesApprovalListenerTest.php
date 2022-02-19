@@ -11,6 +11,8 @@ use Mockery;
  * Class DeleteTimeClockLogNoveltiesApprovalListenerTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class DeleteTimeClockLogNoveltiesApprovalListenerTest extends \Tests\TestCase
 {

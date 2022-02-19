@@ -13,8 +13,6 @@ class CreateHolidaysTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -30,8 +28,6 @@ class CreateHolidaysTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

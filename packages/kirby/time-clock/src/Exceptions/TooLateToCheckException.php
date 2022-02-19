@@ -12,6 +12,11 @@ use Exception;
 class TooLateToCheckException extends Exception
 {
     /**
+     * @var array
+     */
+    public $timeClockData;
+
+    /**
      * @var string
      */
     protected $message = 'Too late to check.';
@@ -21,14 +26,6 @@ class TooLateToCheckException extends Exception
      */
     protected $code = 1053;
 
-    /**
-     * @var array
-     */
-    public $timeClockData;
-
-    /**
-     * @param  array  $timeClockData
-     */
     public function __construct(array $timeClockData)
     {
         $this->timeClockData = $timeClockData;

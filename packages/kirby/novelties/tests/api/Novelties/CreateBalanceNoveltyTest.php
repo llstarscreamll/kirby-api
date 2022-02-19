@@ -10,6 +10,8 @@ use NoveltiesPackageSeed;
  * Class CreateBalanceNoveltyTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateBalanceNoveltyTest extends \Tests\TestCase
 {

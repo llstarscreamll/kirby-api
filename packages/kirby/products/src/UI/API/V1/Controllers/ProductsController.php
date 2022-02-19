@@ -21,6 +21,6 @@ class ProductsController
                 ->allowedFilters(['short_name', AllowedFilter::custom('search', new QuerySearchFilter(['name', 'internal_code']))])
                 ->defaultSort('-id')
                 ->paginate()
-            );
+        );
     }
 }

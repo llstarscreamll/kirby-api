@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class CreateNoveltyApprovalTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateNoveltyApprovalTest extends \Tests\TestCase
 {

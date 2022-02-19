@@ -11,12 +11,19 @@ use Kirby\Novelties\Models\NoveltyType;
  * Class NoveltyTypeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class NoveltyTypeTest extends \Tests\TestCase
 {
     /**
      * @test
      * @dataProvider holidayNoveltyTypes
+     *
+     * @param mixed $attrs
+     * @param mixed $holidayRepoResult
+     * @param mixed $relativeDate
+     * @param mixed $expected
      */
     public function shouldReturnMinStartTimeSlotForHolidayNoveltyType($attrs, $holidayRepoResult, $relativeDate, $expected)
     {
@@ -31,6 +38,11 @@ class NoveltyTypeTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider workdayNoveltyTypes
+     *
+     * @param mixed $attrs
+     * @param mixed $holidayRepoResult
+     * @param mixed $relativeDate
+     * @param mixed $expected
      */
     public function shouldReturnMinStartTimeSlotForWorkdayNoveltyType($attrs, $holidayRepoResult, $relativeDate, $expected)
     {
@@ -45,6 +57,12 @@ class NoveltyTypeTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider holidayNoveltyTypes
+     *
+     * @param mixed $attrs
+     * @param mixed $holidayRepoResult
+     * @param mixed $relativeDate
+     * @param mixed $_
+     * @param mixed $expected
      */
     public function shouldReturnMaxEndTimeSlotForHoliDayNoveltyType($attrs, $holidayRepoResult, $relativeDate, $_, $expected)
     {
@@ -60,6 +78,12 @@ class NoveltyTypeTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider workdayNoveltyTypes
+     *
+     * @param mixed $attrs
+     * @param mixed $holidayRepoResult
+     * @param mixed $relativeDate
+     * @param mixed $_
+     * @param mixed $expected
      */
     public function shouldReturnMaxEndTimeSlotForWorkDayNoveltyType($attrs, $holidayRepoResult, $relativeDate, $_, $expected)
     {
@@ -69,16 +93,6 @@ class NoveltyTypeTest extends \Tests\TestCase
         $result = $noveltyType->maxEndTimeSlot($relativeDate);
 
         $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * @param  int  $result
-     */
-    private function setupHolidayRepositoryMock(int $result)
-    {
-        $this->mock(HolidayRepositoryInterface::class)
-            ->shouldReceive('countWhereIn')
-            ->andReturn($result);
     }
 
     public function timeSlotMapping(): array
@@ -309,5 +323,12 @@ class NoveltyTypeTest extends \Tests\TestCase
                 null,
             ],
         ];
+    }
+
+    private function setupHolidayRepositoryMock(int $result)
+    {
+        $this->mock(HolidayRepositoryInterface::class)
+            ->shouldReceive('countWhereIn')
+            ->andReturn($result);
     }
 }

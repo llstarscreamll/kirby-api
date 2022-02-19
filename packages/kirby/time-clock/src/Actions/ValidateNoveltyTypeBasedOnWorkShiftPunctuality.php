@@ -19,22 +19,16 @@ use Kirby\WorkShifts\Models\WorkShift;
  */
 class ValidateNoveltyTypeBasedOnWorkShiftPunctuality
 {
-    /**
-     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
-     */
     public function __construct(NoveltyTypeRepositoryInterface $noveltyTypeRepository)
     {
         $this->noveltyTypeRepository = $noveltyTypeRepository;
     }
 
     /**
-     * @param  string  $flag
-     * @param  null|WorkShift  $workShift
-     * @param  null|array  $noveltyType
-     * @return Novelty
-     *
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
+     *
+     * @return Novelty
      */
     public function run(string $flag, ?WorkShift $workShift, array $noveltyType = null): ?NoveltyType
     {
@@ -44,14 +38,14 @@ class ValidateNoveltyTypeBasedOnWorkShiftPunctuality
 
         $shiftPunctuality = optional($workShift)->slotPunctuality($flag, now());
 
-        $lateNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Subtraction : NoveltyTypeOperator::Addition;
-        $eagerNoveltyOperator = $flag === 'start' ? NoveltyTypeOperator::Addition : NoveltyTypeOperator::Subtraction;
+        $lateNoveltyOperator = 'start' === $flag ? NoveltyTypeOperator::Subtraction : NoveltyTypeOperator::Addition;
+        $eagerNoveltyOperator = 'start' === $flag ? NoveltyTypeOperator::Addition : NoveltyTypeOperator::Subtraction;
 
-        if ($workShift && $shiftPunctuality > 0 && $noveltyType && ! $noveltyType->operator->is($lateNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality > 0 && $noveltyType && !$noveltyType->operator->is($lateNoveltyOperator)) {
             throw new InvalidNoveltyTypeException($shiftPunctuality);
         }
 
-        if ($workShift && $shiftPunctuality < 0 && $noveltyType && ! $noveltyType->operator->is($eagerNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality < 0 && $noveltyType && !$noveltyType->operator->is($eagerNoveltyOperator)) {
             throw new InvalidNoveltyTypeException($shiftPunctuality);
         }
 

@@ -14,7 +14,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 class EloquentProductionLogRepository implements ProductionLogRepository
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function create(array $data): ProductionLog
     {
@@ -22,7 +22,7 @@ class EloquentProductionLogRepository implements ProductionLogRepository
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function update(int $id, array $data): bool
     {
@@ -30,21 +30,21 @@ class EloquentProductionLogRepository implements ProductionLogRepository
         $fieldSets = implode(
             ', ',
             array_map(
-                fn ($attr) => "$attr = :$attr",
-                array_intersect((new ProductionLog)->getFillable(), array_keys($data))
+                fn ($attr) => "{$attr} = :{$attr}",
+                array_intersect((new ProductionLog())->getFillable(), array_keys($data))
             )
         );
 
         return DB::statement(<<<MYSQL
             UPDATE production_logs
-            SET $fieldSets,
-            tag_updated_at = CASE WHEN tag != :tag THEN '$now' ELSE tag_updated_at END
+            SET {$fieldSets},
+            tag_updated_at = CASE WHEN tag != :tag THEN '{$now}' ELSE tag_updated_at END
             WHERE id = :id;
         MYSQL, ['id' => $id] + $data);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function search(): LengthAwarePaginator
     {
@@ -74,7 +74,7 @@ class EloquentProductionLogRepository implements ProductionLogRepository
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function findById(int $id, $columns = ['*'], $with = []): ?ProductionLog
     {

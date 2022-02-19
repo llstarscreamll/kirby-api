@@ -18,6 +18,8 @@ use NoveltiesPackageSeed;
  * Class GenerateCsvReportByEmployeeJobTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GenerateCsvReportByEmployeeJobTest extends \Tests\TestCase
 {
@@ -83,10 +85,10 @@ class GenerateCsvReportByEmployeeJobTest extends \Tests\TestCase
         ];
 
         $userRepositoryMock = $this->mock(UserRepositoryInterface::class)
-        ->shouldReceive('find')
-        ->with($user->id)
-        ->andReturn($user)
-        ->getMock();
+            ->shouldReceive('find')
+            ->with($user->id)
+            ->andReturn($user)
+            ->getMock();
 
         Excel::fake();
         Notification::fake();

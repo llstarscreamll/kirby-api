@@ -40,8 +40,6 @@ class CheckInRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {
@@ -50,8 +48,6 @@ class CheckInRequest extends FormRequest
 
     /**
      * Get custom attributes for validator errors.
-     *
-     * @return array
      */
     public function attributes(): array
     {

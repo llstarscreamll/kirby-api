@@ -11,6 +11,8 @@ use NoveltiesPackageSeed;
  * Class ExportNoveltiesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class ExportNoveltiesTest extends \Tests\TestCase
 {

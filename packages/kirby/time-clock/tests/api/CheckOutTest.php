@@ -21,6 +21,8 @@ use TimeClockSettingsSeeder;
  * Class CheckOutTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CheckOutTest extends \Tests\TestCase
 {

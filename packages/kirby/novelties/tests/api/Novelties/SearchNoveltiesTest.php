@@ -14,6 +14,8 @@ use NoveltiesPackageSeed;
  * Class SearchNoveltiesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SearchNoveltiesTest extends \Tests\TestCase
 {

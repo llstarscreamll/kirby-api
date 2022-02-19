@@ -9,10 +9,5 @@ namespace Kirby\Company\Contracts;
  */
 interface HolidaysServiceInterface
 {
-    /**
-     * @param  string  $countryCode
-     * @param  int  $year
-     * @return array
-     */
     public function get(string $countryCode, int $year): array;
 }

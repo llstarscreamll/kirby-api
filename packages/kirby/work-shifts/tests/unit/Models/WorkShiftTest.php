@@ -10,12 +10,11 @@ use Kirby\WorkShifts\Models\WorkShift;
  * Class WorkShiftTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class WorkShiftTest extends \Tests\TestCase
 {
-    /**
-     * @return array
-     */
     public function punctualityDataProvider(): array
     {
         return [
@@ -149,6 +148,12 @@ class WorkShiftTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider punctualityDataProvider
+     *
+     * @param mixed $slot
+     * @param mixed $workShiftData
+     * @param mixed $_
+     * @param mixed $time
+     * @param mixed $expected
      */
     public function testSlotPunctuality($slot, $workShiftData, $_, $time, $expected)
     {
@@ -159,9 +164,6 @@ class WorkShiftTest extends \Tests\TestCase
         $this->assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
     public function deadTimeDataProvider(): array
     {
         return [
@@ -231,12 +233,14 @@ class WorkShiftTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider deadTimeDataProvider
+     *
+     * @param mixed $workShiftData
+     * @param mixed $relativeToTime
+     * @param mixed $expected
      */
     public function deadTimeRanges($workShiftData, $relativeToTime, $expected)
     {
-        /*
-         * @var WorkShift
-         */
+        // @var WorkShift
         $workShift = factory(WorkShift::class)->make($workShiftData);
 
         $result = $workShift->deadTimeRanges($relativeToTime);
@@ -274,6 +278,10 @@ class WorkShiftTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider workShiftExamples
+     *
+     * @param mixed $attrs
+     * @param mixed $relativeToTime
+     * @param mixed $expected
      */
     public function mappedTimeSlots($attrs, $relativeToTime, $expected)
     {

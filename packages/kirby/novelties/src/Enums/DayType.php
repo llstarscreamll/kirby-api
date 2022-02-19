@@ -14,6 +14,6 @@ use BenSampo\Enum\Enum;
  */
 final class DayType extends Enum
 {
-    const Workday = 'workday';
-    const Holiday = 'holiday';
+    public const Workday = 'workday';
+    public const Holiday = 'holiday';
 }

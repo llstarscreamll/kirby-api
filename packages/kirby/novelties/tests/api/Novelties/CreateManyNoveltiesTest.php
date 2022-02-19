@@ -11,6 +11,8 @@ use NoveltiesPackageSeed;
  * Class CreateManyNoveltiesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateManyNoveltiesTest extends \Tests\TestCase
 {

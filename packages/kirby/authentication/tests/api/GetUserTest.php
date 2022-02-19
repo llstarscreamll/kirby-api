@@ -11,6 +11,8 @@ use Kirby\Users\Models\User;
  * Class GetUserTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetUserTest extends \Tests\TestCase
 {

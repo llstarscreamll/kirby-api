@@ -12,6 +12,8 @@ use Kirby\Users\Models\User;
  * Class NoveltiesExportTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class NoveltiesExportTest extends \Tests\TestCase
 {

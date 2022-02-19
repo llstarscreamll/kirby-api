@@ -30,9 +30,6 @@ class NoveltiesController
      */
     private $noveltyRepository;
 
-    /**
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     */
     public function __construct(NoveltyRepositoryInterface $noveltyRepository)
     {
         $this->noveltyRepository = $noveltyRepository;
@@ -41,18 +38,17 @@ class NoveltiesController
     /**
      * Display a listing of the resource.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function index(SearchNoveltiesRequest $request)
     {
-        if ($request->user()->can('novelties.global-search') && ! empty($request->employees)) {
+        if ($request->user()->can('novelties.global-search') && !empty($request->employees)) {
             $this->noveltyRepository->pushCriteria(new ByEmployeeIdsCriterion(data_get($request->employees, '*.id')));
         }
 
         // si el empleado no tiene permisos para hacer búsquedas globales,
         // entonces nada más podrá ver datos de sí mismo
-        if (! $request->user()->can('novelties.global-search')) {
+        if (!$request->user()->can('novelties.global-search')) {
             $this->noveltyRepository->pushCriteria(new ByEmployeeIdsCriterion([$request->user()->id]));
         }
 
@@ -77,7 +73,7 @@ class NoveltiesController
             ));
         }
 
-        if (! $request->user()->can('novelties.employee-search') && $request->employees) {
+        if (!$request->user()->can('novelties.employee-search') && $request->employees) {
             $novelties->pushCriteria(new EmployeeCriteria(data_get($request->employees, '*.id')));
         }
 
@@ -95,19 +91,17 @@ class NoveltiesController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest  $request
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(GetNoveltyRequest $request, $id)
@@ -122,8 +116,8 @@ class NoveltiesController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest  $request
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateNoveltyRequest $request, $id)
@@ -141,7 +135,8 @@ class NoveltiesController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(DeleteNoveltyRequest $request, $id)

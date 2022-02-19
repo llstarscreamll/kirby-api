@@ -11,7 +11,7 @@ use BenSampo\Enum\Enum;
  */
 final class Tag extends Enum
 {
-    const InLine = 'InLine';
-    const Error = 'Error';
-    const Rejected = 'Rejected';
+    public const InLine = 'InLine';
+    public const Error = 'Error';
+    public const Rejected = 'Rejected';
 }

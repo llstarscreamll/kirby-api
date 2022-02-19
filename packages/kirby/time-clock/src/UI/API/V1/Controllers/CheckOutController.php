@@ -21,10 +21,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CheckOutController
 {
-    /**
-     * @param  CheckOutRequest  $request
-     * @param  LogCheckOut  $logCheckOutAction
-     */
     public function __invoke(
         CheckOutRequest $request,
         LogCheckOut $logCheckOutAction

@@ -15,10 +15,6 @@ use Kirby\Novelties\UI\API\V1\Resources\NoveltyResource;
  */
 class CreateBalanceNoveltyController
 {
-    /**
-     * @param  CreateBalanceNoveltyRequest  $request
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     */
     public function __invoke(CreateBalanceNoveltyRequest $request, NoveltyRepositoryInterface $noveltyRepository)
     {
         $hours = floatval($request->time);

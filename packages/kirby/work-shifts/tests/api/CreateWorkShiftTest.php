@@ -6,6 +6,8 @@ namespace Kirby\WorkShifts\Tests\api;
  * Class CreateWorkShiftTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateWorkShiftTest extends \Tests\TestCase
 {

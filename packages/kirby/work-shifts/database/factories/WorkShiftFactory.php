@@ -18,7 +18,7 @@ $factory->define(WorkShift::class, function (Faker $faker) {
     $randomCode = $faker->bothify('##??');
 
     return [
-        'name' => "Work shift $randomCode",
+        'name' => "Work shift {$randomCode}",
         'grace_minutes_before_start_times' => 10,
         'grace_minutes_after_start_times' => 10,
         'grace_minutes_before_end_times' => 10,

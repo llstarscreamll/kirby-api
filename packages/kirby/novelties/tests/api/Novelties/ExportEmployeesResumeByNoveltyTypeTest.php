@@ -12,6 +12,8 @@ use Tests\TestCase;
  * Class ExportEmployeesResumeByNoveltyTypeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class ExportEmployeesResumeByNoveltyTypeTest extends TestCase
 {
@@ -52,9 +54,9 @@ class ExportEmployeesResumeByNoveltyTypeTest extends TestCase
 
         Queue::assertPushed(
             GenerateCsvEmployeeResumeByNoveltyTypeJob::class,
-            fn ($job) => $job->makeReportData->employeeId === $employee->id &&
-                $job->makeReportData->startDate == now()->startOfMonth() &&
-                $job->makeReportData->endDate == now()->endOfMonth()
+            fn ($job) => $job->makeReportData->employeeId === $employee->id
+                && $job->makeReportData->startDate == now()->startOfMonth()
+                && $job->makeReportData->endDate == now()->endOfMonth()
         );
     }
 

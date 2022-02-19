@@ -12,6 +12,8 @@ use Tests\TestCase;
  *
  * Set de pruebas de la funcionalidad de sincronizar los permisos al rol
  * administrador del sistema.
+ *
+ * @internal
  */
 class RefreshAdminPermissionsCommandTest extends TestCase
 {

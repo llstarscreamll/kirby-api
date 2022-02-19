@@ -13,8 +13,6 @@ class CreateSubCostCentersTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -32,8 +30,6 @@ class CreateSubCostCentersTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

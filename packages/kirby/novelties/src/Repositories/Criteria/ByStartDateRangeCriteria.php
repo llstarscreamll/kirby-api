@@ -21,10 +21,6 @@ class ByStartDateRangeCriteria implements CriteriaInterface
      */
     private $end;
 
-    /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     */
     public function __construct(Carbon $start, Carbon $end)
     {
         $this->start = $start;
@@ -34,8 +30,8 @@ class ByStartDateRangeCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository.
      *
-     * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  RepositoryInterface  $repository
+     * @param \Illuminate\Database\Eloquent\Model $model
+     *
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)

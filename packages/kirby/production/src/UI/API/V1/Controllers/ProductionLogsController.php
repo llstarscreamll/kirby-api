@@ -15,9 +15,6 @@ class ProductionLogsController
      */
     private $productionLogRepository;
 
-    /**
-     * @param  \Kirby\Production\Contracts\ProductionLogRepository  $productionLogRepository
-     */
     public function __construct(ProductionLogRepository $productionLogRepository)
     {
         $this->productionLogRepository = $productionLogRepository;
@@ -26,7 +23,6 @@ class ProductionLogsController
     /**
      * Display a listing of the resource.
      *
-     * @param  \Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function index(SearchProductionLogsRequest $request)
@@ -37,7 +33,6 @@ class ProductionLogsController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Kirby\Production\UI\API\V1\Requests\CreateProductionLogRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateProductionLogRequest $request)
@@ -57,7 +52,8 @@ class ProductionLogsController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -74,8 +70,8 @@ class ProductionLogsController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Kirby\Production\UI\API\V1\Requests\UpdateProductionLogRequest  $request
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateProductionLogRequest $request, $id)
@@ -88,7 +84,8 @@ class ProductionLogsController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

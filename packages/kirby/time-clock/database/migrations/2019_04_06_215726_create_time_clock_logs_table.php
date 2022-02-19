@@ -13,8 +13,6 @@ class CreateTimeClockLogsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -50,8 +48,6 @@ class CreateTimeClockLogsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

@@ -9,8 +9,6 @@ class ProductsServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -31,8 +29,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -56,8 +52,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole(): void
     {
