@@ -1,11 +1,13 @@
 <?php
 
-namespace kirby\Production;
+namespace Kirby\Production;
 
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Production\Contracts\ProductionLogRepository;
+use Kirby\Production\Contracts\ProductionReportRepository;
 use Kirby\Production\Repositories\EloquentProductionLogRepository;
+use Kirby\Production\Repositories\DBProductionReportRepository;
 
 class ProductionServiceProvider extends ServiceProvider
 {
@@ -14,6 +16,7 @@ class ProductionServiceProvider extends ServiceProvider
      */
     private $binds = [
         ProductionLogRepository::class => EloquentProductionLogRepository::class,
+        ProductionReportRepository::class => DBProductionReportRepository::class,
     ];
 
     /**

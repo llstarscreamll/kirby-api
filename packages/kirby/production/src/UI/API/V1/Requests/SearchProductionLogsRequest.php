@@ -15,7 +15,7 @@ class SearchProductionLogsRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasAnyPermission(['production-logs.search', 'production-logs.export-to-csv']);
+        return $this->user()->hasAnyPermission(['production-logs.search', 'production-logs.export-to-csv', 'production.reports']);
     }
 
     /**
