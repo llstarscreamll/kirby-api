@@ -117,6 +117,8 @@ php7.4 artisan backup:run
 {{ logMessage("🙈  Migrating database...") }}
 cd {{ $newReleaseDir }}
 php7.4 artisan migrate --force
+php7.4 artisan db:seed --class=ProductionPackageSeed
+php7.4 artisan authorization:refresh-admin-permissions
 @endtask
 
 @task('setPermissions', ['on' => 'remote'])
@@ -131,6 +133,7 @@ sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 cd {{ $newReleaseDir }}
 php7.4 artisan authorization:refresh-admin-permissions
 php7.4 artisan optimize
+php7.4 artisan cache:clear
 php7.4 artisan storage:link
 php7.4 artisan queue:restart
 sudo php7.4 artisan horizon:terminate
