@@ -41,8 +41,7 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param array $columns
-     *
+     * @param  array  $columns
      * @return mixed
      */
     public function findByCode(string $code, $columns = ['*'])
@@ -57,7 +56,7 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param array $columns
+     * @param  array  $columns
      */
     public function findForTimeSubtraction($columns = ['*']): Collection
     {
@@ -65,7 +64,7 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param array $columns
+     * @param  array  $columns
      */
     public function findForTimeAddition($columns = ['*']): Collection
     {
@@ -100,9 +99,8 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
     }
 
     /**
-     * @param       $field
-     * @param array $columns
-     *
+     * @param  $field
+     * @param  array  $columns
      * @return mixed
      */
     public function findOrWhereIn($field, array $values, $columns = ['*'])

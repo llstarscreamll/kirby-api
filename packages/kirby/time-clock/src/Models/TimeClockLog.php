@@ -273,27 +273,27 @@ class TimeClockLog extends Model
         $timeInMinutes = 0;
 
         // not the same day
-        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday() && !$this->checkedOutOnHoliday()) {
+        if ($dayType->is(DayType::Holiday) && $this->checkedInOnHoliday() && ! $this->checkedOutOnHoliday()) {
             $timeInMinutes = $this->checked_in_at->diffInSeconds($this->checked_in_at->endOfDay());
             $times = [$this->checked_in_at, $this->checked_in_at->endOfDay()];
         }
 
-        if ($dayType->is(DayType::Holiday) && !$this->checkedInOnHoliday() && $this->checkedOutOnHoliday()) {
+        if ($dayType->is(DayType::Holiday) && ! $this->checkedInOnHoliday() && $this->checkedOutOnHoliday()) {
             $timeInMinutes = $this->checked_out_at->startOfDay()->diffInSeconds($this->checked_out_at);
             $times = [$this->checked_out_at->startOfDay(), $this->checked_out_at];
         }
 
-        if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday() && !$this->checkedOutOnHoliday()) {
+        if ($dayType->is(DayType::Workday) && $this->checkedInOnHoliday() && ! $this->checkedOutOnHoliday()) {
             $timeInMinutes = $this->checked_out_at->startOfDay()->diffInSeconds($this->checked_out_at);
             $times = [$this->checked_out_at->startOfDay(), $this->checked_out_at];
         }
 
-        if ($dayType->is(DayType::Workday) && !$this->checkedInOnHoliday() && $this->checkedOutOnHoliday()) {
+        if ($dayType->is(DayType::Workday) && ! $this->checkedInOnHoliday() && $this->checkedOutOnHoliday()) {
             $timeInMinutes = $this->checked_in_at->diffInSeconds($this->checked_in_at->endOfDay());
             $times = [$this->checked_in_at, $this->checked_in_at->endOfDay()];
         }
 
-        if ($dayType->is(DayType::Workday) && !$this->hasHolidaysChecks()) {
+        if ($dayType->is(DayType::Workday) && ! $this->hasHolidaysChecks()) {
             $timeInMinutes = $this->clocked_minutes * 60;
             $times = [$this->checked_in_at, $this->checked_out_at];
         }
@@ -320,9 +320,9 @@ class TimeClockLog extends Model
 
     public function requireSubCostCenter(Carbon $endTime): bool
     {
-        return ($this->check_in_novelty_type_id && !$this->check_in_sub_cost_center_id)
-            || (!$this->sub_cost_center_id && !$this->check_in_sub_cost_center_id && !$this->check_out_sub_cost_center_id)
-            || ($this->work_shift_id && !$this->sub_cost_center_id && $this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)))
+        return ($this->check_in_novelty_type_id && ! $this->check_in_sub_cost_center_id)
+            || (! $this->sub_cost_center_id && ! $this->check_in_sub_cost_center_id && ! $this->check_out_sub_cost_center_id)
+            || ($this->work_shift_id && ! $this->sub_cost_center_id && $this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)))
             || ($this->workShift && $endTime->greaterThan($this->workShift->minStartTimeSlot($endTime)));
     }
 
@@ -344,7 +344,7 @@ class TimeClockLog extends Model
     }
 
     /**
-     * @param Carbon $offSet
+     * @param  Carbon  $offSet
      */
     public function checkInPunctuality(Carbon $offSet = null): ?int
     {
@@ -384,7 +384,7 @@ class TimeClockLog extends Model
     }
 
     /**
-     * @param Carbon $offSet
+     * @param  Carbon  $offSet
      */
     public function checkOutPunctuality(Carbon $offSet = null): ?int
     {
@@ -411,7 +411,7 @@ class TimeClockLog extends Model
 
     private function holidayRepository(): HolidayRepositoryInterface
     {
-        if (!$this->holidayRepository) {
+        if (! $this->holidayRepository) {
             $this->holidayRepository = App::make(HolidayRepositoryInterface::class);
         }
 

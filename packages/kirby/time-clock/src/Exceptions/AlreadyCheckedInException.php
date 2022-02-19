@@ -28,7 +28,7 @@ class AlreadyCheckedInException extends Exception
     protected $code = 1050;
 
     /**
-     * @param string $message
+     * @param  string  $message
      */
     public function __construct(Carbon $checkedInAt)
     {

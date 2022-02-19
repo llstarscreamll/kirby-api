@@ -30,8 +30,7 @@ class HasTimeClockLogCheckOutBetweenCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
-     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)

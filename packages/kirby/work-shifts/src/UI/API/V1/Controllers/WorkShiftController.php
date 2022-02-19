@@ -49,7 +49,7 @@ class WorkShiftController
     }
 
     /**
-     * @param int $workShiftId
+     * @param  int  $workShiftId
      */
     public function show(ShowWorkShiftRequest $request, $workShiftId)
     {
@@ -59,7 +59,7 @@ class WorkShiftController
     }
 
     /**
-     * @param int $workShiftId
+     * @param  int  $workShiftId
      */
     public function update(UpdateWorkShiftRequest $request, $workShiftId)
     {

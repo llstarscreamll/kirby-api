@@ -16,7 +16,7 @@ class CostCentersCriteria implements CriteriaInterface
     private $costCenterIds;
 
     /**
-     * @param int[] $costCenterIds
+     * @param  int[]  $costCenterIds
      */
     public function __construct(array $costCenterIds)
     {
@@ -26,8 +26,7 @@ class CostCentersCriteria implements CriteriaInterface
     /**
      * Apply criteria in query repository.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
-     *
+     * @param  \Illuminate\Database\Eloquent\Model  $model
      * @return mixed
      */
     public function apply($model, RepositoryInterface $repository)

@@ -133,10 +133,10 @@ class HolidaysServiceTest extends \Tests\TestCase
      * @test
      * @dataProvider dataProvider
      *
-     * @param mixed $country
-     * @param mixed $year
-     * @param mixed $apiResponse
-     * @param mixed $expected
+     * @param  mixed  $country
+     * @param  mixed  $year
+     * @param  mixed  $apiResponse
+     * @param  mixed  $expected
      */
     public function shouldMakeCorrectCallToApiAndReturnMapedData($country, $year, $apiResponse, $expected)
     {

@@ -27,8 +27,8 @@ interface ProductionLogRepository
     /**
      * Find a record by the given $id.
      *
-     * @param mixed $columns
-     * @param mixed $with
+     * @param  mixed  $columns
+     * @param  mixed  $with
      */
     public function findById(int $id, $columns = ['*'], $with = []): ?ProductionLog;
 }

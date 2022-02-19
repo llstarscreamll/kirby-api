@@ -85,9 +85,9 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
     /**
      * Save a new entity in repository.
      *
-     * @throws ValidatorException
-     *
      * @return mixed
+     *
+     * @throws ValidatorException
      */
     public function insert(array $rows)
     {
@@ -100,9 +100,8 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
     /**
      * Delete data by multiple values in one field.
      *
-     * @param       $field
-     * @param array $columns
-     *
+     * @param  $field
+     * @param  array  $columns
      * @return mixed
      */
     public function deleteWhereIn($field, array $values)
@@ -134,10 +133,9 @@ abstract class EloquentRepositoryAbstract extends BaseRepository
      * by applying ?limit=0 to the request, if 'repository.pagination.maxLimit'
      * is set to true.
      *
-     * @param null   $limit
-     * @param array  $columns
-     * @param string $method
-     *
+     * @param  null  $limit
+     * @param  array  $columns
+     * @param  string  $method
      * @return mixed
      */
     public function paginate($limit = null, $columns = ['*'], $method = 'paginate')

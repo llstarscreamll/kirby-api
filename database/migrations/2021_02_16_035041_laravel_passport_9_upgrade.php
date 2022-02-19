@@ -13,7 +13,7 @@ class LaravelPassport9Upgrade extends Migration
     {
         Schema::table('oauth_clients', function (Blueprint $table) {
             $table->string('secret', 100)->nullable()->change();
-            if (!Schema::hasColumn('oauth_clients', 'provider')) {
+            if (! Schema::hasColumn('oauth_clients', 'provider')) {
                 $table->string('provider')->after('secret')->nullable();
             }
         });

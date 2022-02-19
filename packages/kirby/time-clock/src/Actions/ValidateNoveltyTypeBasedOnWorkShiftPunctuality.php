@@ -25,10 +25,10 @@ class ValidateNoveltyTypeBasedOnWorkShiftPunctuality
     }
 
     /**
+     * @return Novelty
+     *
      * @throws TooEarlyToCheckException
      * @throws TooLateToCheckException
-     *
-     * @return Novelty
      */
     public function run(string $flag, ?WorkShift $workShift, array $noveltyType = null): ?NoveltyType
     {
@@ -41,11 +41,11 @@ class ValidateNoveltyTypeBasedOnWorkShiftPunctuality
         $lateNoveltyOperator = 'start' === $flag ? NoveltyTypeOperator::Subtraction : NoveltyTypeOperator::Addition;
         $eagerNoveltyOperator = 'start' === $flag ? NoveltyTypeOperator::Addition : NoveltyTypeOperator::Subtraction;
 
-        if ($workShift && $shiftPunctuality > 0 && $noveltyType && !$noveltyType->operator->is($lateNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality > 0 && $noveltyType && ! $noveltyType->operator->is($lateNoveltyOperator)) {
             throw new InvalidNoveltyTypeException($shiftPunctuality);
         }
 
-        if ($workShift && $shiftPunctuality < 0 && $noveltyType && !$noveltyType->operator->is($eagerNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality < 0 && $noveltyType && ! $noveltyType->operator->is($eagerNoveltyOperator)) {
             throw new InvalidNoveltyTypeException($shiftPunctuality);
         }
 

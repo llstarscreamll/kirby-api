@@ -17,7 +17,7 @@ use Kirby\WorkShifts\Models\WorkShift;
 trait CheckInOut
 {
     /**
-     * @param int $workShiftId
+     * @param  int  $workShiftId
      */
     protected function getApplicableWorkShifts(Identification $identification, ?int $workShiftId): Collection
     {
@@ -36,8 +36,7 @@ trait CheckInOut
     }
 
     /**
-     * @param WorkShift $workShift
-     *
+     * @param  WorkShift  $workShift
      * @return mixed
      */
     protected function noveltyIsValid(string $flag, ?WorkShift $workShift, ?NoveltyType $noveltyType = null): bool
@@ -48,11 +47,11 @@ trait CheckInOut
         $lateNoveltyOperator = 'start' === $flag ? NoveltyTypeOperator::Subtraction : NoveltyTypeOperator::Addition;
         $eagerNoveltyOperator = 'start' === $flag ? NoveltyTypeOperator::Addition : NoveltyTypeOperator::Subtraction;
 
-        if ($workShift && $shiftPunctuality > 0 && $noveltyType && !$noveltyType->operator->is($lateNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality > 0 && $noveltyType && ! $noveltyType->operator->is($lateNoveltyOperator)) {
             $isValid = false;
         }
 
-        if ($workShift && $shiftPunctuality < 0 && $noveltyType && !$noveltyType->operator->is($eagerNoveltyOperator)) {
+        if ($workShift && $shiftPunctuality < 0 && $noveltyType && ! $noveltyType->operator->is($eagerNoveltyOperator)) {
             $isValid = false;
         }
 
@@ -60,7 +59,7 @@ trait CheckInOut
     }
 
     /**
-     * @param int $workShiftId
+     * @param  int  $workShiftId
      */
     protected function getTimeClockData(string $flag, Identification $identification, ?int $workShiftId = null): array
     {
@@ -83,7 +82,7 @@ trait CheckInOut
         $noveltyTypes = new Collection([]);
         $noveltyIsRequired = $this->noveltyTypeIsRequiredForNonPunctualChecks();
 
-        if (!$isOnTime && $noveltyIsRequired) {
+        if (! $isOnTime && $noveltyIsRequired) {
             if (1 === $applicableWorkShifts->count()) {
                 // return novelty types based  punctuality and action
                 $noveltyTypes = ($punctuality > 0 && 'start' === $flag) || ($punctuality < 0 && 'end' === $flag)

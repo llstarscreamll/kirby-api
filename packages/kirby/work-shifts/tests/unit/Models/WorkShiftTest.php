@@ -149,11 +149,11 @@ class WorkShiftTest extends \Tests\TestCase
      * @test
      * @dataProvider punctualityDataProvider
      *
-     * @param mixed $slot
-     * @param mixed $workShiftData
-     * @param mixed $_
-     * @param mixed $time
-     * @param mixed $expected
+     * @param  mixed  $slot
+     * @param  mixed  $workShiftData
+     * @param  mixed  $_
+     * @param  mixed  $time
+     * @param  mixed  $expected
      */
     public function testSlotPunctuality($slot, $workShiftData, $_, $time, $expected)
     {
@@ -234,9 +234,9 @@ class WorkShiftTest extends \Tests\TestCase
      * @test
      * @dataProvider deadTimeDataProvider
      *
-     * @param mixed $workShiftData
-     * @param mixed $relativeToTime
-     * @param mixed $expected
+     * @param  mixed  $workShiftData
+     * @param  mixed  $relativeToTime
+     * @param  mixed  $expected
      */
     public function deadTimeRanges($workShiftData, $relativeToTime, $expected)
     {
@@ -279,9 +279,9 @@ class WorkShiftTest extends \Tests\TestCase
      * @test
      * @dataProvider workShiftExamples
      *
-     * @param mixed $attrs
-     * @param mixed $relativeToTime
-     * @param mixed $expected
+     * @param  mixed  $attrs
+     * @param  mixed  $relativeToTime
+     * @param  mixed  $expected
      */
     public function mappedTimeSlots($attrs, $relativeToTime, $expected)
     {

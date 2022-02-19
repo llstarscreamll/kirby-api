@@ -66,7 +66,7 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @param Novelty $novelty
+     * @param  Novelty  $novelty
      */
     public function map($novelty): array
     {

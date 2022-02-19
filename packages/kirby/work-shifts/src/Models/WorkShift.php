@@ -97,7 +97,7 @@ class WorkShift extends Model
 
     public function canMealTimeApply(int $timeInMinutes): bool
     {
-        return !empty($this->min_minutes_required_to_discount_meal_time)
+        return ! empty($this->min_minutes_required_to_discount_meal_time)
         && $timeInMinutes >= $this->min_minutes_required_to_discount_meal_time;
     }
 
@@ -127,9 +127,8 @@ class WorkShift extends Model
     }
 
     /**
-     * @param string $flag   'start'|'end'
-     * @param Carbon $offset
-     *
+     * @param  string  $flag  'start'|'end'
+     * @param  Carbon  $offset
      * @return null|int -1 early, zero on time, 1 late
      */
     public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false): ?int
@@ -167,7 +166,7 @@ class WorkShift extends Model
     }
 
     /**
-     * @param Carbon $offSet
+     * @param  Carbon  $offSet
      */
     public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
     {
@@ -177,8 +176,8 @@ class WorkShift extends Model
     }
 
     /**
-     * @param Carbon $relativeToTime
-     * @param bool   $beGraceTimeAware
+     * @param  Carbon  $relativeToTime
+     * @param  bool  $beGraceTimeAware
      */
     public function minStartTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false): ?Carbon
     {
@@ -193,8 +192,8 @@ class WorkShift extends Model
     }
 
     /**
-     * @param Carbon $relativeToTime
-     * @param null   $beGraceTimeAware
+     * @param  Carbon  $relativeToTime
+     * @param  null  $beGraceTimeAware
      */
     public function isMinStartTimeSlotInRage(Carbon $start, Carbon $end, Carbon $relativeToTime = null, $beGraceTimeAware = false): bool
     {
@@ -202,8 +201,8 @@ class WorkShift extends Model
     }
 
     /**
-     * @param bool $beGraceTimeAware
-     * @param bool $relativeToEnd
+     * @param  bool  $beGraceTimeAware
+     * @param  bool  $relativeToEnd
      */
     public function maxEndTimeSlot(?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): ?Carbon
     {
@@ -218,9 +217,9 @@ class WorkShift extends Model
     }
 
     /**
-     * @param Carbon $relativeToTime
-     * @param null   $beGraceTimeAware
-     * @param false  $relativeToEnd
+     * @param  Carbon  $relativeToTime
+     * @param  null  $beGraceTimeAware
+     * @param  false  $relativeToEnd
      */
     public function isMaxEndTimeSlotInRange(Carbon $start, Carbon $end, ?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): bool
     {
@@ -238,7 +237,7 @@ class WorkShift extends Model
 
         $deadSlots = [];
 
-        for ($i = 0; $i < $slotsCount; ++$i) {
+        for ($i = 0; $i < $slotsCount; $i++) {
             if (0 === $i) {
                 $deadSlots[] = $this->time_slots[$i]['end'];
 
@@ -290,8 +289,8 @@ class WorkShift extends Model
     }
 
     /**
-     * @param Carbon $date
-     * @param Carbon $offSet
+     * @param  Carbon  $date
+     * @param  Carbon  $offSet
      */
     private function mapTimeSlot(array $timeSlot, Carbon $date = null, bool $beGraceTimeAware = true, bool $relativeToEnd = false, Carbon $offSet = null): array
     {
@@ -304,7 +303,7 @@ class WorkShift extends Model
         [$hour, $seconds] = explode(':', $timeSlot['end']);
         $end = $originalEnd = $date->copy()->setTime($hour, $seconds);
 
-        if ($originalStart->greaterThan($originalEnd) && !$relativeToEnd) {
+        if ($originalStart->greaterThan($originalEnd) && ! $relativeToEnd) {
             $originalEnd = $originalEnd->addDay();
         }
 

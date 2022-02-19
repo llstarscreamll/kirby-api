@@ -42,13 +42,13 @@ class NoveltiesController
      */
     public function index(SearchNoveltiesRequest $request)
     {
-        if ($request->user()->can('novelties.global-search') && !empty($request->employees)) {
+        if ($request->user()->can('novelties.global-search') && ! empty($request->employees)) {
             $this->noveltyRepository->pushCriteria(new ByEmployeeIdsCriterion(data_get($request->employees, '*.id')));
         }
 
         // si el empleado no tiene permisos para hacer búsquedas globales,
         // entonces nada más podrá ver datos de sí mismo
-        if (!$request->user()->can('novelties.global-search')) {
+        if (! $request->user()->can('novelties.global-search')) {
             $this->noveltyRepository->pushCriteria(new ByEmployeeIdsCriterion([$request->user()->id]));
         }
 
@@ -73,7 +73,7 @@ class NoveltiesController
             ));
         }
 
-        if (!$request->user()->can('novelties.employee-search') && $request->employees) {
+        if (! $request->user()->can('novelties.employee-search') && $request->employees) {
             $novelties->pushCriteria(new EmployeeCriteria(data_get($request->employees, '*.id')));
         }
 
@@ -100,8 +100,7 @@ class NoveltiesController
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show(GetNoveltyRequest $request, $id)
@@ -116,8 +115,7 @@ class NoveltiesController
     /**
      * Update the specified resource in storage.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateNoveltyRequest $request, $id)
@@ -135,8 +133,7 @@ class NoveltiesController
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(DeleteNoveltyRequest $request, $id)

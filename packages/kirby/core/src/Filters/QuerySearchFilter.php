@@ -28,7 +28,7 @@ class QuerySearchFilter implements Filter
     }
 
     /**
-     * @param mixed $value
+     * @param  mixed  $value
      */
     public function __invoke(Builder $query, $value, string $property): Builder
     {

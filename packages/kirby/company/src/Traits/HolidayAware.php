@@ -35,7 +35,7 @@ trait HolidayAware
 
     private function holidayRepository(): HolidayRepositoryInterface
     {
-        if (!$this->holidayRepository) {
+        if (! $this->holidayRepository) {
             $this->holidayRepository = App::make(HolidayRepositoryInterface::class);
         }
 

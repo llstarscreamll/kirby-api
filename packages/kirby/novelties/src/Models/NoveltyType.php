@@ -162,7 +162,7 @@ class NoveltyType extends Model
                 $end = $timeSlot['end'];
                 $fixTried = false;
 
-                if (!$relativeToTime->between($start, $end) /*&& ! $start->isSameDay($end)*/) {
+                if (! $relativeToTime->between($start, $end) /*&& ! $start->isSameDay($end)*/) {
                     $start->addDay();
                     $end->addDay();
                     $fixTried = true;
@@ -172,7 +172,7 @@ class NoveltyType extends Model
                 $startIsHoliday = $this->isHoliday($start);
                 $endIsHoliday = $this->isHoliday($end);
 
-                if ($fixTried && !$relativeToTime->between($start, $end)) {
+                if ($fixTried && ! $relativeToTime->between($start, $end)) {
                     return;
                 }
 
@@ -180,19 +180,19 @@ class NoveltyType extends Model
                     return;
                 }
 
-                if ($this->canApplyOnDayType(DayType::Holiday()) && !$startIsHoliday && !$endIsHoliday) {
+                if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && ! $endIsHoliday) {
                     return;
                 }
 
-                if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && !$endIsHoliday) {
+                if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && ! $endIsHoliday) {
                     $result = $end->startOfDay();
                 }
 
-                if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && !$this->isHoliday($relativeToTime->copy()->setTimezone($this->time_zone))) {
+                if ($this->canApplyOnDayType(DayType::Workday()) && $startIsHoliday && ! $this->isHoliday($relativeToTime->copy()->setTimezone($this->time_zone))) {
                     $result = $relativeToTime->copy()->startOfDay();
                 }
 
-                if ($this->canApplyOnDayType(DayType::Holiday()) && !$startIsHoliday && $endIsHoliday) {
+                if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && $endIsHoliday) {
                     $result = $start->addDay()->startOfDay();
                 }
 
@@ -201,7 +201,7 @@ class NoveltyType extends Model
     }
 
     /**
-     * @param Carbon $relativeToTime
+     * @param  Carbon  $relativeToTime
      */
     public function maxEndTimeSlot(Carbon $relativeToTime = null): ?Carbon
     {
@@ -217,13 +217,13 @@ class NoveltyType extends Model
                 $result = $end;
                 $fixTried = false;
 
-                if (!$relativeToTime->between($start, $end)) {
+                if (! $relativeToTime->between($start, $end)) {
                     $start->addDay();
                     $end->addDay();
                     $fixTried = true;
                 }
 
-                if ($fixTried && !$relativeToTime->between($start, $end)) {
+                if ($fixTried && ! $relativeToTime->between($start, $end)) {
                     return;
                 }
 
@@ -235,7 +235,7 @@ class NoveltyType extends Model
                 }
 
                 // remove holiday time if this novelty cant be applied on holidays
-                if (!$this->canApplyOnDayType(DayType::Holiday()) && $endIsHoliday) {
+                if (! $this->canApplyOnDayType(DayType::Holiday()) && $endIsHoliday) {
                     $newEnd = $end->copy()->startOfDay()->subSecond();
 
                     $result = $this->isHoliday($newEnd)
@@ -243,11 +243,11 @@ class NoveltyType extends Model
                         : ($newEnd->between($start, $end) ? $newEnd : $this->maxEndTimeSlot($newEnd));
                 }
 
-                if ($this->canApplyOnDayType(DayType::Holiday()) && $startIsHoliday && !$endIsHoliday) {
+                if ($this->canApplyOnDayType(DayType::Holiday()) && $startIsHoliday && ! $endIsHoliday) {
                     $result = $start->endOfDay()->setMilliseconds(0);
                 }
 
-                if ($this->canApplyOnDayType(DayType::Holiday()) && !$startIsHoliday && !$endIsHoliday) {
+                if ($this->canApplyOnDayType(DayType::Holiday()) && ! $startIsHoliday && ! $endIsHoliday) {
                     return;
                 }
 
@@ -272,8 +272,8 @@ class NoveltyType extends Model
 
         $applicableMinutes = $startTime->diffInMinutes($endTime);
 
-        if (!$checkedInAt->between($this->minStartTimeSlot($checkedInAt), $this->maxEndTimeSlot($checkedInAt), false)
-            && !$checkedOutAt->between($this->minStartTimeSlot($checkedOutAt), $this->maxEndTimeSlot($checkedOutAt), false)) {
+        if (! $checkedInAt->between($this->minStartTimeSlot($checkedInAt), $this->maxEndTimeSlot($checkedInAt), false)
+            && ! $checkedOutAt->between($this->minStartTimeSlot($checkedOutAt), $this->maxEndTimeSlot($checkedOutAt), false)) {
             $applicableMinutes = 0;
         }
 
@@ -297,15 +297,15 @@ class NoveltyType extends Model
             return collect([[$start->setTimezone('UTC'), $end->setTimezone('UTC')]]);
         }
 
-        if (!$this->canApplyOnDayType(DayType::Holiday()) && $this->isHoliday($start) && $this->isHoliday($end)) {
+        if (! $this->canApplyOnDayType(DayType::Holiday()) && $this->isHoliday($start) && $this->isHoliday($end)) {
             return collect([]);
         }
 
-        if ($this->canApplyOnDayType(DayType::Holiday()) && !$this->hasAnyHoliday([$start, $end])) {
+        if ($this->canApplyOnDayType(DayType::Holiday()) && ! $this->hasAnyHoliday([$start, $end])) {
             return collect([]);
         }
 
-        if (!$start->isSameDay($end)) {
+        if (! $start->isSameDay($end)) {
             return collect([
                 [$this->minStartTimeSlot($start), $this->maxEndTimeSlot($start)],
                 [$this->minStartTimeSlot($end), $this->maxEndTimeSlot($end)],
@@ -326,7 +326,7 @@ class NoveltyType extends Model
             $posibilites = array_reduce($posibilites, function (array $acc, array $possibility) {
                 $valueExists = count(array_filter($acc, fn ($acc) => $acc[0]->equalTo($possibility[0]) && $acc[1]->equalTo($possibility[1]))) > 0;
 
-                if (!$valueExists) {
+                if (! $valueExists) {
                     $acc[] = $possibility;
                 }
 
@@ -340,7 +340,7 @@ class NoveltyType extends Model
     }
 
     /**
-     * @param Carbon $date
+     * @param  Carbon  $date
      */
     private function mapTimeSlot(array $timeSlot, Carbon $relativeDate = null): array
     {

@@ -126,7 +126,7 @@ class Novelty extends Model
 
     public function hasTimeClockLog(): bool
     {
-        return !empty($this->time_clock_log_id);
+        return ! empty($this->time_clock_log_id);
     }
 
     public function hasTimeClockLogCheckInBetween(Carbon $start, Carbon $end): bool

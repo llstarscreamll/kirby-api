@@ -67,7 +67,7 @@ class HolidaysService implements HolidaysServiceInterface
     }
 
     /**
-     * @param array $responseData
+     * @param  array  $responseData
      */
     private function mapApiResponse($responseData): array
     {

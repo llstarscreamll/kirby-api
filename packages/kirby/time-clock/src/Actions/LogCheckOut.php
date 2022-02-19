@@ -90,9 +90,9 @@ class LogCheckOut
     }
 
     /**
-     * @param int $subCostCenterId
-     * @param int $noveltyTypeId
-     * @param int $noveltySubCostCenterId
+     * @param  int  $subCostCenterId
+     * @param  int  $noveltyTypeId
+     * @param  int  $noveltySubCostCenterId
      *
      * @throws MissingCheckInException
      * @throws TooEarlyToCheckException
@@ -118,17 +118,17 @@ class LogCheckOut
             ->with(['workShift'])
             ->lastCheckInWithOutCheckOutFromEmployeeId($identification->employee_id);
 
-        if (!$lastCheckIn) {
+        if (! $lastCheckIn) {
             throw new MissingCheckInException();
         }
 
-        if ($lastCheckIn->requireSubCostCenter(now()) && !$subCostCenterId) {
+        if ($lastCheckIn->requireSubCostCenter(now()) && ! $subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification));
         }
 
         $workShift = $lastCheckIn->workShift;
 
-        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && !$subCostCenterId) {
+        if ($noveltyType && $noveltyType->operator->is(NoveltyTypeOperator::Addition) && ! $subCostCenterId) {
             throw new MissingSubCostCenterException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
@@ -149,23 +149,23 @@ class LogCheckOut
         $isTooEarly = $shiftPunctuality < 0;
         $isTooLate = $shiftPunctuality > 0;
 
-        if (!$this->noveltyIsValid('end', $workShift, $noveltyType)) {
+        if (! $this->noveltyIsValid('end', $workShift, $noveltyType)) {
             throw new InvalidNoveltyTypeException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $isTooEarly && !$noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooEarly && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooEarlyToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if ($workShift && $isTooLate && !$noveltyType && $noveltyTypeIsRequired) {
+        if ($workShift && $isTooLate && ! $noveltyType && $noveltyTypeIsRequired) {
             throw new TooLateToCheckException($this->getTimeClockData('end', $identification, $workShift->id));
         }
 
-        if (!$noveltyTypeId && $isTooEarly && !$noveltyTypeIsRequired) {
+        if (! $noveltyTypeId && $isTooEarly && ! $noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForSubtraction();
         }
 
-        if (!$noveltyTypeId && $isTooLate && !$noveltyTypeIsRequired) {
+        if (! $noveltyTypeId && $isTooLate && ! $noveltyTypeIsRequired) {
             $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
         }
 
