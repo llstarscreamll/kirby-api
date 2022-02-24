@@ -189,18 +189,18 @@ class SearchProductionLogsTest extends TestCase
             ->where('id', 1)
             ->update(['machine_id' => factory(Machine::class)->create([
                 'id' => 123,
-                'sub_cost_center_id' => factory(SubCostCenter::class)->create(['id' => 123]),
+                'sub_cost_center_id' => $subCostCenter1 = factory(SubCostCenter::class)->create(['id' => 123]),
             ])->id]);
 
         DB::table('production_logs')
             ->where('id', 2)
             ->update(['machine_id' => factory(Machine::class)->create([
                 'id' => 456,
-                'sub_cost_center_id' => factory(SubCostCenter::class)->create(['id' => 456]),
+                'sub_cost_center_id' => $subCostCenter2 = factory(SubCostCenter::class)->create(['id' => 456]),
             ])->id]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
-            'sub_cost_center_ids' => [123, 456],
+            'cost_center_ids' => [$subCostCenter1->cost_center_id, $subCostCenter2->cost_center_id],
         ]])
             ->assertOk()
             ->assertJsonCount(2, 'data')

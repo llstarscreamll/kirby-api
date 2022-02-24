@@ -4,7 +4,7 @@ namespace Kirby\Machines\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Kirby\Company\Models\CostCenter;
+use Kirby\Company\Models\SubCostCenter;
 
 class Machine extends Model
 {
@@ -12,13 +12,13 @@ class Machine extends Model
      * @var array
      */
     protected $fillable = [
-        'cost_center_id',
+        'sub_cost_center_id',
         'code',
         'name',
     ];
 
-    public function costCenter(): BelongsTo
+    public function subCostCenter(): BelongsTo
     {
-        return $this->belongsTo(CostCenter::class);
+        return $this->belongsTo(SubCostCenter::class);
     }
 }

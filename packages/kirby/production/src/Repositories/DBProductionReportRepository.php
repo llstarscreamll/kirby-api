@@ -25,10 +25,11 @@ class DBProductionReportRepository implements ProductionReportRepository
             ->when(Arr::get($query, 'filter.product_ids'), fn ($query, $value) => $query->whereIn('product_id', $value))
             ->when(Arr::get($query, 'filter.machine_ids'), fn ($query, $value) => $query->whereIn('machine_id', $value))
             ->when(
-                Arr::get($query, 'filter.sub_cost_center_ids'),
+                Arr::get($query, 'filter.cost_center_ids'),
                 fn ($query, $value) => $query
                     ->join('machines', 'production_logs.machine_id', '=', 'machines.id')
-                    ->whereIn('machines.sub_cost_center_id', $value)
+                    ->join('sub_cost_centers', 'machines.sub_cost_center_id', '=', 'sub_cost_centers.id')
+                    ->whereIn('sub_cost_centers.cost_center_id', $value)
             )
             ->groupBy('products.id')
             ->orderByRaw('SUM(production_logs.gross_weight - production_logs.tare_weight) desc')

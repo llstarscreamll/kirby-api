@@ -167,17 +167,17 @@ class ProductionReportsTest extends TestCase
     }
 
     /**
-     * Debe devolver lo producido de uno o varios subcentros de costo.
+     * Debe devolver lo producido de uno o varios centros de costo.
      *
      * @test
      */
-    public function shouldReturnDataByManySubCostCenters()
+    public function shouldReturnDataByManyCostCenters()
     {
         DB::table('production_logs')->update(['tag_updated_at' => now()->subDays(2)]);
         $logs = factory(ProductionLog::class, 2)->create(['tag_updated_at' => now()->subDay()]);
-        $subCostCenterIDs = $logs->map->machine->pluck('sub_cost_center_id');
+        $costCenterIDs = $logs->map->machine->map->subCostCenter->pluck('cost_center_id');
 
-        $this->json($this->method, $this->endpoint, ['filter' => ['sub_cost_center_ids' => $subCostCenterIDs]])
+        $this->json($this->method, $this->endpoint, ['filter' => ['cost_center_ids' => $costCenterIDs]])
             ->assertOk()
             ->assertJsonCount(2, 'data')
             ->assertJsonFragment(['id' => (string) $logs->first()->product_id])

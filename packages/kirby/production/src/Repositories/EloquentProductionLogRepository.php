@@ -50,12 +50,13 @@ class EloquentProductionLogRepository implements ProductionLogRepository
     {
         return QueryBuilder::for(ProductionLog::class)
             ->join('machines', 'production_logs.machine_id', '=', 'machines.id')
+            ->join('sub_cost_centers', 'machines.sub_cost_center_id', '=', 'sub_cost_centers.id')
             ->allowedFilters([
                 AllowedFilter::callback('tags', fn ($q, $value) => $q->whereIn('tag', $value)),
                 AllowedFilter::callback('machine_ids', fn ($q, $value) => $q->whereIn('machine_id', $value)),
                 AllowedFilter::callback('product_ids', fn ($q, $value) => $q->whereIn('product_id', $value)),
                 AllowedFilter::callback('employee_ids', fn ($q, $value) => $q->whereIn('employee_id', $value)),
-                AllowedFilter::callback('sub_cost_center_ids', fn ($q, $value) => $q->whereIn('machines.sub_cost_center_id', $value)),
+                AllowedFilter::callback('cost_center_ids', fn ($q, $value) => $q->whereIn('sub_cost_centers.cost_center_id', $value)),
                 AllowedFilter::callback('tag_updated_at', function (Builder $query, $value) {
                     $start = Carbon::parse($value['start']);
                     $end = Carbon::parse($value['end']);
