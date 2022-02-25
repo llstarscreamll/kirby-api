@@ -2,8 +2,8 @@
 
 namespace Kirby\Machines\UI\API\V1\Controllers;
 
-use Kirby\Core\Filters\QuerySearchFilter;
 use Kirby\Machines\Models\Machine;
+use Kirby\Machines\UI\API\V1\Requests\SearchMachinesRequest;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -14,11 +14,15 @@ class MachinesController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(SearchMachinesRequest $request)
     {
         return response()->json(QueryBuilder::for(Machine::query())
-            ->allowedFilters(['short_name', AllowedFilter::custom('search', new QuerySearchFilter(['name', 'code']))])
-            ->defaultSort('-id')
-            ->paginate());
+            ->join('sub_cost_centers', 'machines.sub_cost_center_id', '=', 'sub_cost_centers.id')
+            ->allowedFilters([
+                'short_name',
+                AllowedFilter::callback('cost_center_ids', fn ($q, $value) => $q->whereIn('sub_cost_centers.cost_center_id', $value)),
+            ])
+            ->defaultSort('-machines.id')
+            ->paginate(null, ['machines.*']));
     }
 }
