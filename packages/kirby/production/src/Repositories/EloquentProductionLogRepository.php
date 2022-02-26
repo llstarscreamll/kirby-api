@@ -26,7 +26,7 @@ class EloquentProductionLogRepository implements ProductionLogRepository
      */
     public function update(int $id, array $data): bool
     {
-        logger("query data", $data);
+        logger('query data', $data);
 
         $now = now()->toDateTimeString();
         $fieldSets = implode(
