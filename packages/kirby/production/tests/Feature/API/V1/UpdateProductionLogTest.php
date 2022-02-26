@@ -113,6 +113,7 @@ class updateProductionLogTest extends TestCase
             'employee_id' => $log->employee_id,
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
+            'tag' => $log->tag->value,
         ];
 
         $this->json($this->method, str_replace('id', $log->id, $this->endpoint), $payload)
