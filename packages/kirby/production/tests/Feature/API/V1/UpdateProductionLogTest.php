@@ -79,7 +79,7 @@ class updateProductionLogTest extends TestCase
      */
     public function shouldUpdateTagUpdatedAtAttributeWhenTagIsChanged()
     {
-        $log = factory(ProductionLog::class)->create(['tag_updated_at' => '2002-02-02 02:02:02']);
+        $log = factory(ProductionLog::class)->create(['tag' => Tag::InLine, 'tag_updated_at' => '2002-02-02 02:02:02']);
 
         $payload = [
             'employee_id' => $log->employee_id,

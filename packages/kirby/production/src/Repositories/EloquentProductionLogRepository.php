@@ -26,9 +26,6 @@ class EloquentProductionLogRepository implements ProductionLogRepository
      */
     public function update(int $id, array $data): bool
     {
-        logger("query data", $data);
-
-        $now = now()->toDateTimeString();
         $fieldSets = implode(
             ', ',
             array_map(
@@ -39,10 +36,10 @@ class EloquentProductionLogRepository implements ProductionLogRepository
 
         return DB::statement(<<<MYSQL
             UPDATE production_logs
-            SET {$fieldSets},
-            tag_updated_at = CASE WHEN tag != :comopareTag THEN '{$now}' ELSE tag_updated_at END
+            SET tag_updated_at = CASE WHEN tag != :compareTag THEN :now ELSE tag_updated_at END,
+            {$fieldSets}
             WHERE id = :id;
-        MYSQL, ['id' => $id, 'comopareTag' => $data['tag']] + $data);
+        MYSQL, ['id' => $id, 'compareTag' => $data['tag'], 'now' => now()->toDateTimeString()] + $data);
     }
 
     /**
