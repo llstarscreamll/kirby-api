@@ -14,7 +14,7 @@ class DBProductionReportRepository implements ProductionReportRepository
      */
     public function getKilogramsAcummulatedByProduct($query = [])
     {
-        $start = Carbon::parse(Arr::get($query, 'filter.tag_updated_at.start', now()->subDays(15)));
+        $start = Carbon::parse(Arr::get($query, 'filter.tag_updated_at.start', now()->startOfDay()->subDays(15)));
         $end = Carbon::parse(Arr::get($query, 'filter.tag_updated_at.end', now()->endOfDay()));
 
         return DB::table('production_logs')
