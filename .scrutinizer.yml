@@ -9,19 +9,13 @@ build:
   project_setup:
     override:
       - true
-  cache:
-    directories:
-      - vendor/
-      - ~/.composer/cache/
   nodes:
-    tests-and-coverage:
-      services:
-        mysql: 5.7
+    services:
+      mysql: 5.7
     analysis:
       tests:
         override:
           - php-scrutinizer-run
-
   tests:
     before:
       - sudo mysql -u root -e "CREATE DATABASE test"
@@ -34,3 +28,7 @@ build:
         coverage:
           file: coverage.xml
           format: clover
+  cache:
+  directories:
+    - vendor/
+    - ~/.composer/cache/
