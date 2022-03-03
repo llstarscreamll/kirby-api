@@ -1,16 +1,24 @@
 build:
+  environment:
+    php:
+      version: 7.4
+      pecl_extensions:
+        - zip
+        - redis
+        - pcov
   nodes:
     automated-tests:
-      environment:
-        php:
-          version: 7.4
-          pecl_extensions:
-            - zip
-            - redis
-            - pcov
       services:
-        mysql: 5.7
+        # For available tags, see https://hub.docker.com/_/mysql/
+        mysql:
+          image: "mysql:8"
+          command: --default-authentication-plugin=mysql_native_password
+          env:
+            MYSQL_DATABASE: test
+            MYSQL_ALLOW_EMPTY_PASSWORD: true
+            MYSQL_ROOT_PASSWORD: ''
       commands:
+        - checkout-code ~/build
         - mysql --version
         - php -v
         - sudo mysql -u root -e "CREATE DATABASE test"
