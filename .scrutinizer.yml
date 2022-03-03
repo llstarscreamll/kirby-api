@@ -8,11 +8,12 @@ build:
         - pcov
   nodes:
     automated-tests:
-      root_path: './'
       services:
         mysql:
           image: "mysql:8"
           command: --default-authentication-plugin=mysql_native_password
+          ports:
+            - 12345
           env:
             MYSQL_DATABASE: test
             MYSQL_ALLOW_EMPTY_PASSWORD: true
@@ -21,9 +22,10 @@ build:
         - pwd
         - checkout-code ~/build
         - pwd
+        - cd ~/build
+        - pwd
         - mysql --version
         - php -v
-        - sudo mysql -u root -e "CREATE DATABASE test"
         - export DB_USERNAME=root
         - chmod -R 777 storage
         - chmod -R 777 bootstrap/cache
