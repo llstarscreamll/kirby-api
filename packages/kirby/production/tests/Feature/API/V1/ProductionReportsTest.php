@@ -50,7 +50,7 @@ class ProductionReportsTest extends TestCase
         // sería: (5.5 - 1.5) * 2 = 8
         DB::table('production_logs')->take(2)->update([
             'product_id' => $this->productionLogs->first()->product_id,
-            'tag_updated_at' => now()->subDays(2)
+            'tag_updated_at' => now()->subDays(2),
         ]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
