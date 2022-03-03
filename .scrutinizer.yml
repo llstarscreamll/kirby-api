@@ -2,7 +2,7 @@ build:
   environment:
     php:
       version: 7.4
-      compile_options: '--enable-cli --with-openssl --with-imap-ssl --enable-bcmath --enable-mbstring --with-zlib --with-curl --enable-pcntl --enable-gd --with-xsl --with-sodium --with-zlib --without-pear'
+      compile_options: "--enable-cli --with-openssl --with-imap-ssl --enable-bcmath --enable-mbstring --with-zlib --with-curl --enable-pcntl --enable-gd --with-xsl --with-sodium --with-zlib --without-pear"
       pecl_extensions:
         - zip
         - redis
@@ -17,11 +17,16 @@ build:
   nodes:
     analysis:
       tests:
+        services:
+          mysql: 5.7
         override:
           - php-scrutinizer-run
 
   tests:
     before:
+      - 'mysql -u root -e "CREATE DATABASE forge"'
+      - export DB_DATABASE=forge
+      - export DB_USERNAME=scrutinizer
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
       - php artisan passport:keys
