@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
@@ -51,8 +52,9 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  User  $user
-     * @param  string  $driver
+     * @param User   $user
+     * @param string $driver
+     *
      * @return $this
      */
     public function actingAsAdmin(User $user = null, $driver = 'api')
@@ -65,8 +67,9 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  User  $user
-     * @param  string  $driver
+     * @param User   $user
+     * @param string $driver
+     *
      * @return $this
      */
     public function actingAsGuest(User $user = null, $driver = 'api')
@@ -77,7 +80,8 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  null|string  $connection
+     * @param null|string $connection
+     *
      * @return mixed
      */
     public function assertDatabaseRecordsCount(int $count, string $table, array $data = [], $connection = null)
@@ -88,5 +92,27 @@ abstract class TestCase extends BaseTestCase
         );
 
         return $this;
+    }
+
+    /**
+     * Cast a JSON string to a database compatible type. Éste método es tomado
+     * de la versión 8 de Laravel:
+     * https://github.com/laravel/framework/blob/8.x/src/Illuminate/Foundation/Testing/Concerns/InteractsWithDatabase.php#L192.
+     *
+     * @param array|string $value
+     *
+     * @return \Illuminate\Database\Query\Expression
+     */
+    public function castAsJson($value)
+    {
+        if ($value instanceof Jsonable) {
+            $value = $value->toJson();
+        } elseif (is_array($value) || is_object($value)) {
+            $value = json_encode($value);
+        }
+
+        $value = DB::connection()->getPdo()->quote($value);
+
+        return DB::raw("CAST({$value} AS JSON)");
     }
 }

@@ -77,7 +77,9 @@ class SearchProductionLogsTest extends TestCase
      */
     public function shouldSearchByTagUpdatedAtDateRange()
     {
-        DB::table('production_logs')->where('id', 1)->update(['tag_updated_at' => now()]);
+        DB::table('production_logs')
+            ->where('id', $this->productionLogs->first()->id)
+            ->update(['tag_updated_at' => now()]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
             'tag_updated_at' => [
@@ -96,14 +98,14 @@ class SearchProductionLogsTest extends TestCase
     public function shouldSearchByManyTags()
     {
         DB::table('production_logs')->update(['tag' => Tag::Rejected]);
-        DB::table('production_logs')->where('id', 1)->update(['tag' => Tag::InLine]);
-        DB::table('production_logs')->where('id', 2)->update(['tag' => Tag::Error]);
+        $this->productionLogs->get(1)->update(['tag' => Tag::InLine]);
+        $this->productionLogs->get(2)->update(['tag' => Tag::Error]);
 
         $this->json($this->method, $this->endpoint, ['filter' => ['tags' => [Tag::InLine, Tag::Error]]])
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonPath('data.0.id', 2)
-            ->assertJsonPath('data.1.id', 1);
+            ->assertJsonPath('data.0.id', $this->productionLogs->get(2)->id)
+            ->assertJsonPath('data.1.id', $this->productionLogs->get(1)->id);
     }
 
     /**
@@ -113,13 +115,8 @@ class SearchProductionLogsTest extends TestCase
      */
     public function shouldSearchByManyEmployeeIDs()
     {
-        DB::table('production_logs')
-            ->where('id', 1)
-            ->update(['employee_id' => $employeeID1 = factory(Employee::class)->create()->id]);
-
-        DB::table('production_logs')
-            ->where('id', 2)
-            ->update(['employee_id' => $employeeID2 = factory(Employee::class)->create()->id]);
+        factory(ProductionLog::class)->create(['employee_id' => $employeeID1 = factory(Employee::class)->create()->id]);
+        factory(ProductionLog::class)->create(['employee_id' => $employeeID2 = factory(Employee::class)->create()->id]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
             'employee_ids' => [$employeeID1, $employeeID2],
@@ -137,13 +134,8 @@ class SearchProductionLogsTest extends TestCase
      */
     public function shouldSearchByManyProductIDs()
     {
-        DB::table('production_logs')
-            ->where('id', 1)
-            ->update(['product_id' => $productID1 = factory(Product::class)->create()->id]);
-
-        DB::table('production_logs')
-            ->where('id', 2)
-            ->update(['product_id' => $productID2 = factory(Product::class)->create()->id]);
+        factory(ProductionLog::class)->create(['product_id' => $productID1 = factory(Product::class)->create()->id]);
+        factory(ProductionLog::class)->create(['product_id' => $productID2 = factory(Product::class)->create()->id]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
             'product_ids' => [$productID1, $productID2],
@@ -161,13 +153,8 @@ class SearchProductionLogsTest extends TestCase
      */
     public function shouldSearchByManyMachineIDs()
     {
-        DB::table('production_logs')
-            ->where('id', 1)
-            ->update(['machine_id' => $machineID1 = factory(Machine::class)->create()->id]);
-
-        DB::table('production_logs')
-            ->where('id', 2)
-            ->update(['machine_id' => $machineID2 = factory(Machine::class)->create()->id]);
+        factory(ProductionLog::class)->create(['machine_id' => $machineID1 = factory(Machine::class)->create()->id]);
+        factory(ProductionLog::class)->create(['machine_id' => $machineID2 = factory(Machine::class)->create()->id]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
             'machine_ids' => [$machineID1, $machineID2],
@@ -185,19 +172,15 @@ class SearchProductionLogsTest extends TestCase
      */
     public function shouldSearchByManyCostCenterIDs()
     {
-        DB::table('production_logs')
-            ->where('id', 1)
-            ->update(['machine_id' => factory(Machine::class)->create([
-                'id' => 123,
-                'sub_cost_center_id' => $subCostCenter1 = factory(SubCostCenter::class)->create(['id' => 123]),
-            ])->id]);
+        factory(ProductionLog::class)->create(['machine_id' => factory(Machine::class)->create([
+            'id' => 123,
+            'sub_cost_center_id' => $subCostCenter1 = factory(SubCostCenter::class)->create(['id' => 123]),
+        ])->id]);
 
-        DB::table('production_logs')
-            ->where('id', 2)
-            ->update(['machine_id' => factory(Machine::class)->create([
-                'id' => 456,
-                'sub_cost_center_id' => $subCostCenter2 = factory(SubCostCenter::class)->create(['id' => 456]),
-            ])->id]);
+        factory(ProductionLog::class)->create(['machine_id' => factory(Machine::class)->create([
+            'id' => 456,
+            'sub_cost_center_id' => $subCostCenter2 = factory(SubCostCenter::class)->create(['id' => 456]),
+        ])->id]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
             'cost_center_ids' => [$subCostCenter1->cost_center_id, $subCostCenter2->cost_center_id],

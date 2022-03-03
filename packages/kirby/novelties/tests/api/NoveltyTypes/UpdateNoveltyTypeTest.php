@@ -52,7 +52,7 @@ class UpdateNoveltyTypeTest extends \Tests\TestCase
             'context_type' => $expectedData['context_type'],
             'time_zone' => $expectedData['time_zone'],
             'apply_on_days_of_type' => $expectedData['apply_on_days_of_type'],
-            'apply_on_time_slots' => json_encode($expectedData['apply_on_time_slots']),
+            'apply_on_time_slots' => $this->castAsJson($expectedData['apply_on_time_slots']),
             'operator' => $expectedData['operator'],
             'requires_comment' => $expectedData['requires_comment'],
             'keep_in_report' => $expectedData['keep_in_report'],

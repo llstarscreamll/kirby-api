@@ -57,8 +57,8 @@ class CreateWorkShiftTest extends \Tests\TestCase
             'meal_time_in_minutes' => 90,
             'min_minutes_required_to_discount_meal_time' => 60 * 6,
             'time_zone' => 'America/Bogota',
-            'time_slots' => json_encode($requestBody['time_slots']),
-            'applies_on_days' => json_encode($requestBody['applies_on_days']),
+            'time_slots' => $this->castAsJson($requestBody['time_slots']),
+            'applies_on_days' => $this->castAsJson($requestBody['applies_on_days']),
         ]);
     }
 

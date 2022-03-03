@@ -5,6 +5,7 @@ namespace Kirby\Novelties\Tests;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Novelties\Novelties;
 use NoveltiesPackageSeed;
+use Tests\TestCase;
 
 /**
  * Class NoveltiesTest.
@@ -13,7 +14,7 @@ use NoveltiesPackageSeed;
  *
  * @internal
  */
-class NoveltiesTest extends \Tests\TestCase
+class NoveltiesTest extends TestCase
 {
     /**
      * @test
@@ -23,13 +24,13 @@ class NoveltiesTest extends \Tests\TestCase
         $this->artisan('db:seed', ['--class' => NoveltiesPackageSeed::class]);
         $novelties = NoveltyType::all();
 
-        $result = app(Novelties::class)->rawSettings();
+        $result = app(Novelties::class)->rawSettings()->pluck('key');
 
         $this->assertCount(4, $result, 'default returned settings count is 4');
-        $this->assertEquals('novelties.default-addition-novelty-type', $result[0]->key);
-        $this->assertEquals('novelties.default-subtraction-novelty-type', $result[1]->key);
-        $this->assertEquals('novelties.default-addition-balance-novelty-type', $result[2]->key);
-        $this->assertEquals('novelties.default-subtraction-balance-novelty-type', $result[3]->key);
+        $this->assertContains('novelties.default-addition-novelty-type', $result);
+        $this->assertContains('novelties.default-subtraction-novelty-type', $result);
+        $this->assertContains('novelties.default-addition-balance-novelty-type', $result);
+        $this->assertContains('novelties.default-subtraction-balance-novelty-type', $result);
     }
 
     /**
@@ -40,11 +41,11 @@ class NoveltiesTest extends \Tests\TestCase
         $this->artisan('db:seed', ['--class' => NoveltiesPackageSeed::class]);
         $novelties = NoveltyType::all();
 
-        $result = app(Novelties::class)->settings();
+        $result = data_get(app(Novelties::class)->settings(), '*.value.id');
 
-        $this->assertEquals($novelties->firstWhere('code', 'HADI')->id, $result['0']['value']['id']);
-        $this->assertEquals($novelties->firstWhere('code', 'PP')->id, $result['1']['value']['id']);
-        $this->assertEquals($novelties->firstWhere('code', 'B+')->id, $result['2']['value']['id']);
-        $this->assertEquals($novelties->firstWhere('code', 'B-')->id, $result['3']['value']['id']);
+        $this->assertContains($novelties->firstWhere('code', 'HADI')->id, $result);
+        $this->assertContains($novelties->firstWhere('code', 'PP')->id, $result);
+        $this->assertContains($novelties->firstWhere('code', 'B+')->id, $result);
+        $this->assertContains($novelties->firstWhere('code', 'B-')->id, $result);
     }
 }

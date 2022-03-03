@@ -162,7 +162,10 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
             ],
         ]));
 
-        $this->subCostCenters = factory(SubCostCenter::class, 2)->create();
+        $this->subCostCenters = collect([
+            factory(SubCostCenter::class)->create(['id' => 1]),
+            factory(SubCostCenter::class)->create(['id' => 2]),
+        ]);
     }
 
     public function successCases()
@@ -1265,11 +1268,11 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
      * @test
      * @dataProvider successCases
      *
-     * @param  mixed  $_
-     * @param  mixed  $timeClockLogData
-     * @param  mixed  $expectedOutPut
-     * @param  mixed  $scheduledNovelties
-     * @param  mixed  $createdNovelties
+     * @param mixed $_
+     * @param mixed $timeClockLogData
+     * @param mixed $expectedOutPut
+     * @param mixed $scheduledNovelties
+     * @param mixed $createdNovelties
      */
     public function testToRunAction($_, $timeClockLogData, $expectedOutPut, $scheduledNovelties, $createdNovelties)
     {

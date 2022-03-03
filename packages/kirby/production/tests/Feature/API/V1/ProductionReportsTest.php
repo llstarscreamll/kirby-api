@@ -48,16 +48,19 @@ class ProductionReportsTest extends TestCase
     {
         // dos registros de producción del mismo producto, entonces el acumulado
         // sería: (5.5 - 1.5) * 2 = 8
-        DB::table('production_logs')->take(2)->update(['product_id' => 1, 'tag_updated_at' => now()->subDays(2)]);
+        DB::table('production_logs')->take(2)->update([
+            'product_id' => $this->productionLogs->first()->product_id,
+            'tag_updated_at' => now()->subDays(2)
+        ]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
             'tag_updated_at' => ['start' => now()->subDays(5)->toISOString(), 'end' => now()->toISOString()],
         ]])
             ->assertOk()
             ->assertJsonStructure(['data' => [['id', 'short_name', 'kgs']]])
-            ->assertJsonPath('data.0.id', '1') // ID del producto producido
+            ->assertJsonPath('data.0.id', $this->productionLogs->first()->product_id) // ID del producto producido
             ->assertJsonPath('data.0.short_name', Product::first()->name) // nombre corto de producto producido
-            ->assertJsonPath('data.0.kgs', '8.0'); // producido acumulado en Kgs del producto
+            ->assertJsonPath('data.0.kgs', '8.00'); // producido acumulado en Kgs del producto
     }
 
     /**
@@ -70,12 +73,14 @@ class ProductionReportsTest extends TestCase
     {
         // el servicio solamente debe devolver este producido pues es el único
         // dentro del rango de tiempo especificado
-        DB::table('production_logs')->where('id', 1)->update(['tag_updated_at' => now()->subDays(15)->endOfDay()]);
+        DB::table('production_logs')
+            ->where('id', $this->productionLogs->first()->id)
+            ->update(['tag_updated_at' => now()->subDays(15)->endOfDay()]);
 
         $this->json($this->method, $this->endpoint)
             ->assertOk()
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.id', '1');
+            ->assertJsonPath('data.0.id', $this->productionLogs->first()->product_id);
     }
 
     /**
@@ -87,14 +92,16 @@ class ProductionReportsTest extends TestCase
     {
         // el servicio solamente debe devolver este producido pues es el único
         // dentro del rango de tiempo especificado
-        DB::table('production_logs')->where('id', 1)->update(['tag_updated_at' => now()->subDays(2)]);
+        DB::table('production_logs')
+            ->where('id', $this->productionLogs->first()->id)
+            ->update(['tag_updated_at' => now()->subDays(2)]);
 
         $this->json($this->method, $this->endpoint, ['filter' => [
             'tag_updated_at' => ['start' => now()->subDays(5)->toISOString(), 'end' => now()->toISOString()],
         ]])
             ->assertOk()
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.id', '1');
+            ->assertJsonPath('data.0.id', $this->productionLogs->first()->product_id);
     }
 
     /**
@@ -105,14 +112,14 @@ class ProductionReportsTest extends TestCase
     public function shouldReturnDataByManyTags()
     {
         DB::table('production_logs')->update(['tag' => Tag::Rejected, 'tag_updated_at' => now()->subDays(2)]);
-        DB::table('production_logs')->where('id', 1)->update(['tag' => Tag::InLine]);
-        DB::table('production_logs')->where('id', 2)->update(['tag' => Tag::Error]);
+        DB::table('production_logs')->where('id', $this->productionLogs->first()->id)->update(['tag' => Tag::InLine]);
+        DB::table('production_logs')->where('id', $this->productionLogs->get(1)->id)->update(['tag' => Tag::Error]);
 
         $this->json($this->method, $this->endpoint, ['filter' => ['tags' => [Tag::Error, Tag::InLine]]])
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonFragment(['id' => '1'])
-            ->assertJsonFragment(['id' => '2']);
+            ->assertJsonFragment(['id' => $this->productionLogs->first()->product_id])
+            ->assertJsonFragment(['id' => $this->productionLogs->get(1)->product_id]);
     }
 
     /**
@@ -128,8 +135,8 @@ class ProductionReportsTest extends TestCase
         $this->json($this->method, $this->endpoint, ['filter' => ['employee_ids' => $logs->pluck('employee_id')]])
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonFragment(['id' => (string) $logs->first()->product_id])
-            ->assertJsonFragment(['id' => (string) $logs->last()->product_id]);
+            ->assertJsonFragment(['id' => $logs->first()->product_id])
+            ->assertJsonFragment(['id' => $logs->last()->product_id]);
     }
 
     /**
@@ -145,8 +152,8 @@ class ProductionReportsTest extends TestCase
         $this->json($this->method, $this->endpoint, ['filter' => ['product_ids' => $logs->pluck('product_id')]])
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonFragment(['id' => (string) $logs->first()->product_id])
-            ->assertJsonFragment(['id' => (string) $logs->last()->product_id]);
+            ->assertJsonFragment(['id' => $logs->first()->product_id])
+            ->assertJsonFragment(['id' => $logs->last()->product_id]);
     }
 
     /**
@@ -162,8 +169,8 @@ class ProductionReportsTest extends TestCase
         $this->json($this->method, $this->endpoint, ['filter' => ['machine_ids' => $logs->pluck('machine_id')]])
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonFragment(['id' => (string) $logs->first()->product_id])
-            ->assertJsonFragment(['id' => (string) $logs->last()->product_id]);
+            ->assertJsonFragment(['id' => $logs->first()->product_id])
+            ->assertJsonFragment(['id' => $logs->last()->product_id]);
     }
 
     /**
@@ -180,8 +187,8 @@ class ProductionReportsTest extends TestCase
         $this->json($this->method, $this->endpoint, ['filter' => ['cost_center_ids' => $costCenterIDs]])
             ->assertOk()
             ->assertJsonCount(2, 'data')
-            ->assertJsonFragment(['id' => (string) $logs->first()->product_id])
-            ->assertJsonFragment(['id' => (string) $logs->last()->product_id]);
+            ->assertJsonFragment(['id' => $logs->first()->product_id])
+            ->assertJsonFragment(['id' => $logs->last()->product_id]);
     }
 
     /**

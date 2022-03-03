@@ -86,7 +86,7 @@ class CreateProductionLogTest extends TestCase
             'employee_id' => $this->user->employee->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
-            'tag' => Tag::InLine(), // default value when created
+            'tag' => Tag::InLine, // default value when created
             'tag_updated_at' => now()->toDateTimeString(), // por defecto la fecha de creación del registro
             'batch' => 123456,
             'tare_weight' => 10.5,
