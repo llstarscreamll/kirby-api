@@ -1,44 +1,23 @@
 build:
-  environment:
-    php:
-      version: 7.4
-      pecl_extensions:
-        - zip
-        - redis
-        - pcov
-  project_setup:
-    override:
-      - true
-  cache:
-    directories:
-      - vendor/
-      - ~/.composer/cache/
-  nodes:
-    mysql:
-      services:
-        # For available tags, see https://hub.docker.com/_/mysql/
-        mysql:
-          image: "mysql:8"
-          command: --default-authentication-plugin=mysql_native_password
-          env:
-            MYSQL_DATABASE: test
-            MYSQL_ALLOW_EMPTY_PASSWORD: true
-            MYSQL_ROOT_PASSWORD: ''
-    analysis:
-      tests:
-        override:
-          - php-scrutinizer-run
-
-  tests:
-    before:
+  automated-tests:
+    environment:
+      php:
+        version: 7.4
+        pecl_extensions:
+          - zip
+          - redis
+          - pcov
+    services:
+      mysql: 5.7
+    commands:
       - mysql --version
+      - php -v
       - sudo mysql -u root -e "CREATE DATABASE test"
       - export DB_USERNAME=root
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
       - php artisan passport:keys
-    override:
-      - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml --stop-on-error --stop-on-failure
-        coverage:
+      - php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml --stop-on-error --stop-on-failure
+      coverage:
           file: coverage.xml
           format: clover
