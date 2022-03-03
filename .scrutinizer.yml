@@ -22,8 +22,8 @@ build:
           command: --default-authentication-plugin=mysql_native_password
           env:
             MYSQL_DATABASE: test
-            MYSQL_USER: root
             MYSQL_ALLOW_EMPTY_PASSWORD: true
+            MYSQL_ROOT_PASSWORD: ''
     analysis:
       tests:
         override:
@@ -32,7 +32,7 @@ build:
   tests:
     before:
       - sudo mysql -u root -e "CREATE DATABASE test"
-      - export DB_USERNAME=scrutinizer
+      - export DB_USERNAME=root
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
       - php artisan passport:keys
