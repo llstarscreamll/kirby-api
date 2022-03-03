@@ -25,7 +25,7 @@ build:
 
   tests:
     before:
-      - 'mysql -u root -e "CREATE DATABASE test"'
+      - sudo mysql -u root -e "CREATE DATABASE test"
       - export DB_USERNAME=scrutinizer
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
