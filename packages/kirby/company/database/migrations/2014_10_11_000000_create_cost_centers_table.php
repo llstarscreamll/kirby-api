@@ -18,7 +18,7 @@ class CreateCostCentersTable extends Migration
     {
         Schema::create('cost_centers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code')->unique();
+            $table->string('code', 100)->unique();
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();
