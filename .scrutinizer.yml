@@ -2,12 +2,11 @@ build:
   environment:
     php:
       version: 7.4
-      compile_options: "--enable-cli --with-openssl --with-imap-ssl --enable-bcmath --enable-mbstring --with-zlib --with-curl --enable-pcntl --enable-gd --with-xsl --with-sodium --with-zlib --without-pear"
+      compile_options: "--enable-cli --with-openssl --with-imap-ssl --enable-bcmath --enable-mbstring --with-zlib --with-curl --enable-pcntl --enable-gd --with-xsl --with-sodium --with-zlib --without-pear --with-mysql"
       pecl_extensions:
         - zip
         - redis
         - pcov
-        - mysql
   project_setup:
     override:
       - true
