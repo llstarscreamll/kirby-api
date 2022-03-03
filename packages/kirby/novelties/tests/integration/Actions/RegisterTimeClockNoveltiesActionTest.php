@@ -1268,11 +1268,11 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
      * @test
      * @dataProvider successCases
      *
-     * @param mixed $_
-     * @param mixed $timeClockLogData
-     * @param mixed $expectedOutPut
-     * @param mixed $scheduledNovelties
-     * @param mixed $createdNovelties
+     * @param  mixed  $_
+     * @param  mixed  $timeClockLogData
+     * @param  mixed  $expectedOutPut
+     * @param  mixed  $scheduledNovelties
+     * @param  mixed  $createdNovelties
      */
     public function testToRunAction($_, $timeClockLogData, $expectedOutPut, $scheduledNovelties, $createdNovelties)
     {

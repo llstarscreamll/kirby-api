@@ -52,9 +52,8 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param User   $user
-     * @param string $driver
-     *
+     * @param  User  $user
+     * @param  string  $driver
      * @return $this
      */
     public function actingAsAdmin(User $user = null, $driver = 'api')
@@ -67,9 +66,8 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param User   $user
-     * @param string $driver
-     *
+     * @param  User  $user
+     * @param  string  $driver
      * @return $this
      */
     public function actingAsGuest(User $user = null, $driver = 'api')
@@ -80,8 +78,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param null|string $connection
-     *
+     * @param  null|string  $connection
      * @return mixed
      */
     public function assertDatabaseRecordsCount(int $count, string $table, array $data = [], $connection = null)
@@ -99,8 +96,7 @@ abstract class TestCase extends BaseTestCase
      * de la versión 8 de Laravel:
      * https://github.com/laravel/framework/blob/8.x/src/Illuminate/Foundation/Testing/Concerns/InteractsWithDatabase.php#L192.
      *
-     * @param array|string $value
-     *
+     * @param  array|string  $value
      * @return \Illuminate\Database\Query\Expression
      */
     public function castAsJson($value)
