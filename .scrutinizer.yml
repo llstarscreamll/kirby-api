@@ -7,6 +7,7 @@ build:
         - zip
         - redis
         - pcov
+        - mysql
   project_setup:
     override:
       - true
