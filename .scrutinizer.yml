@@ -31,7 +31,7 @@ build:
       - chmod -R 777 bootstrap/cache
       - php artisan passport:keys
     override:
-      - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml
+      - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml --stop-on-error --stop-on-failure
         coverage:
           file: coverage.xml
           format: clover
