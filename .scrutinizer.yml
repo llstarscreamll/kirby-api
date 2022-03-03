@@ -14,14 +14,14 @@ build:
       - vendor/
       - ~/.composer/cache/
   nodes:
+    services:
+      mysql: 5.7
     analysis:
       tests:
         override:
           - php-scrutinizer-run
 
   tests:
-    services:
-        mysql: 5.7
     before:
       - sudo mysql -u root -e "CREATE DATABASE test"
       - export DB_USERNAME=scrutinizer
