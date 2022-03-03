@@ -15,17 +15,17 @@ build:
       - vendor/
       - ~/.composer/cache/
   nodes:
+    tests-and-coverage:
+      services:
+        mysql: 5.7
     analysis:
       tests:
-        services:
-          mysql: 5.7
         override:
           - php-scrutinizer-run
 
   tests:
     before:
-      - 'mysql -u root -e "CREATE DATABASE forge"'
-      - export DB_DATABASE=forge
+      - 'mysql -u root -e "CREATE DATABASE test"'
       - export DB_USERNAME=scrutinizer
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
