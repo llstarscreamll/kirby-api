@@ -1,23 +1,24 @@
 build:
-  automated-tests:
-    environment:
-      php:
-        version: 7.4
-        pecl_extensions:
-          - zip
-          - redis
-          - pcov
-    services:
-      mysql: 5.7
-    commands:
-      - mysql --version
-      - php -v
-      - sudo mysql -u root -e "CREATE DATABASE test"
-      - export DB_USERNAME=root
-      - chmod -R 777 storage
-      - chmod -R 777 bootstrap/cache
-      - php artisan passport:keys
-      - php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml --stop-on-error --stop-on-failure
-        coverage:
-            file: coverage.xml
-            format: clover
+  nodes:
+    automated-tests:
+      environment:
+        php:
+          version: 7.4
+          pecl_extensions:
+            - zip
+            - redis
+            - pcov
+      services:
+        mysql: 5.7
+      commands:
+        - mysql --version
+        - php -v
+        - sudo mysql -u root -e "CREATE DATABASE test"
+        - export DB_USERNAME=root
+        - chmod -R 777 storage
+        - chmod -R 777 bootstrap/cache
+        - php artisan passport:keys
+        - php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml --stop-on-error --stop-on-failure
+          coverage:
+              file: coverage.xml
+              format: clover
