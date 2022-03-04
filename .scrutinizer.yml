@@ -5,7 +5,6 @@ build:
       version: 7.4
       pecl_extensions:
         - zip
-        - redis
         - pcov
   nodes:
     automated-tests:
@@ -25,7 +24,7 @@ build:
         - pwd
         - cd ~/build
         - pwd
-        - mysql --version
+        - yes | pecl install redis
         - php -v
         - export DB_USERNAME=root
         - chmod -R 777 storage
