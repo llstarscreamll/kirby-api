@@ -20,14 +20,11 @@ build:
             MYSQL_ALLOW_EMPTY_PASSWORD: true
             MYSQL_ROOT_PASSWORD: ''
       commands:
-        - pwd
-        - checkout-code ~/build
-        - pwd
-        - cd ~/build
-        - pwd
         - yes 'no' | pecl install redis
-        - php -v
+        - checkout-code ~/build
+        - cd ~/build
         - export DB_USERNAME=root
+        - composer install
         - chmod -R 777 storage
         - chmod -R 777 bootstrap/cache
         - php artisan passport:keys
