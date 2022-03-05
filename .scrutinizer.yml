@@ -1,34 +1,35 @@
 build:
-  image: default-bionic
   environment:
     php:
       version: 7.4
-      compile_options: "--enable-cli --with-openssl --with-imap-ssl --enable-bcmath --enable-mbstring --with-zlib --with-curl --enable-pcntl --enable-gd --with-xsl --with-sodium --with-zlib --without-pear"
+      compile_options: '--enable-cli --with-openssl --with-imap-ssl --enable-bcmath --enable-mbstring --with-zlib --with-curl --enable-pcntl --enable-gd --with-xsl --with-sodium --with-zlib --without-pear'
       pecl_extensions:
         - zip
+        - redis
         - pcov
-  nodes:
-    automated-tests:
-      services:
-        mysql:
-          image: "mysql:8"
-          command: --default-authentication-plugin=mysql_native_password
-          ports:
-            - 3306
-          env:
-            MYSQL_DATABASE: test
-            MYSQL_ALLOW_EMPTY_PASSWORD: true
-            MYSQL_ROOT_PASSWORD: ''
-      commands:
-        - yes 'no' | pecl install redis
-        - checkout-code ~/build
-        - cd ~/build
-        - export DB_USERNAME=root
-        - composer install
-        - chmod -R 777 storage
-        - chmod -R 777 bootstrap/cache
-        - php artisan passport:keys
-        - php -dpcov.enabled=1 -dpcov.exclude="~vendor~" vendor/bin/phpunit --coverage-clover coverage.xml
-          coverage:
-              file: coverage.xml
-              format: clover
+  services:
+    mysql:
+      image: "mysql:8"
+      command: --default-authentication-plugin=mysql_native_password
+      ports:
+        - 3306
+      env:
+        MYSQL_DATABASE: test
+        MYSQL_ALLOW_EMPTY_PASSWORD: true
+        MYSQL_ROOT_PASSWORD: ''
+  cache:
+    directories:
+      - vendor/
+      - ~/.composer/cache/
+
+  tests:
+    before:
+      - export DB_USERNAME=root
+      - chmod -R 777 storage
+      - chmod -R 777 bootstrap/cache
+      - php artisan passport:keys
+    override:
+      - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml
+        coverage:
+          file: coverage.xml
+          format: clover
