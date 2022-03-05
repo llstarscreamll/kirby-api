@@ -27,7 +27,7 @@ build:
     override:
       - command: phpcs-run
         use_website_config: true
-      - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml
+      - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --stop-on-error --stop-on-failure --coverage-clover coverage.xml
         coverage:
           file: coverage.xml
           format: clover
