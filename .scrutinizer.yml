@@ -17,19 +17,22 @@ build:
         MYSQL_DATABASE: test
         MYSQL_ALLOW_EMPTY_PASSWORD: true
         MYSQL_ROOT_PASSWORD: ''
-  cache:
-    directories:
-      - vendor/
-      - ~/.composer/cache/
-
-  tests:
-    before:
+  project_setup:
+    override:
       - export DB_USERNAME=root
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
       - php artisan passport:keys
+  tests:
     override:
+      - command: phpcs-run
+        use_website_config: true
       - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml
         coverage:
           file: coverage.xml
           format: clover
+  cache:
+    directories:
+      - node_modules/
+      - vendor/
+      - ~/.composer/cache/
