@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
-use League\OAuth2\Server\Exception\OAuthServerException;
+use Laravel\Passport\Exceptions\OAuthServerException;
 use PDOException;
 use Throwable;
 
@@ -42,7 +42,7 @@ class Handler extends ExceptionHandler
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Exception  $exception
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Illuminate\Http\JsonResponse
      */
     public function render($request, Throwable $exception)
     {
