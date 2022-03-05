@@ -38,9 +38,7 @@ class AuthenticationServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/authentication.php', 'authentication');
 
         // register the service the package provides
-        $this->app->singleton('authentication', function ($app) {
-            return new Authentication();
-        });
+        $this->app->singleton('authentication', fn () => new Authentication());
     }
 
     /**

@@ -43,9 +43,7 @@ class WorkShiftsServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/work-shifts.php', 'work-shifts');
 
         // register the service the package provides
-        $this->app->singleton('workShifts', function ($app) {
-            return new WorkShifts();
-        });
+        $this->app->singleton('workShifts', fn () => new WorkShifts());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);

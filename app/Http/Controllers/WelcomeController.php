@@ -2,21 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
+
 class WelcomeController extends Controller
 {
     /**
-     * Create a new controller instance.
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         return view('welcome');
     }

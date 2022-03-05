@@ -46,9 +46,7 @@ class EmployeesServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/employees.php', 'employees');
 
         // register the service the package provides
-        $this->app->singleton('employees', function ($app) {
-            return new Employees();
-        });
+        $this->app->singleton('employees', fn () => new Employees());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);

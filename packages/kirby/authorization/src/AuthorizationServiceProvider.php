@@ -33,9 +33,7 @@ class AuthorizationServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/authorization.php', 'authorization');
 
         // register the service the package provides
-        $this->app->singleton('authorization', function ($app) {
-            return new Authorization();
-        });
+        $this->app->singleton('authorization', fn () => new Authorization());
     }
 
     /**

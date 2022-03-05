@@ -35,7 +35,7 @@ return [
         'params' => [
             'include' => 'include',
         ],
-        'serializer' => League\Fractal\Serializer\DataArraySerializer::class,
+        'serializer' => \League\Fractal\Serializer\DataArraySerializer::class,
     ],
 
     /*
@@ -226,9 +226,9 @@ return [
     |
     */
     'generator' => [
-        'basePath' => app()->path(),
+        'basePath' => base_path(),
         'rootNamespace' => 'App\\',
-        'stubsOverridePath' => app()->path(),
+        'stubsOverridePath' => base_path(),
         'paths' => [
             'models' => 'Entities',
             'repositories' => 'Repositories',

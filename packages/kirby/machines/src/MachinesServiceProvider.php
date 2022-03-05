@@ -35,9 +35,7 @@ class MachinesServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/machines.php', 'machines');
 
         // Register the service the package provides.
-        $this->app->singleton('machines', function ($app) {
-            return new Machines();
-        });
+        $this->app->singleton('machines', fn () => new Machines());
     }
 
     /**

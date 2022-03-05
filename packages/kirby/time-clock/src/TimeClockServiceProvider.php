@@ -47,9 +47,7 @@ class TimeClockServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/time-clock.php', 'time-clock');
 
         // register the service the package provides
-        $this->app->singleton('TimeClock', function ($app) {
-            return new TimeClock();
-        });
+        $this->app->singleton('TimeClock', fn () => new TimeClock());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);

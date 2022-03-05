@@ -35,9 +35,7 @@ class CustomersServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/customers.php', 'customers');
 
         // Register the service the package provides.
-        $this->app->singleton('customers', function ($app) {
-            return new Customers();
-        });
+        $this->app->singleton('customers', fn () => new Customers());
     }
 
     /**

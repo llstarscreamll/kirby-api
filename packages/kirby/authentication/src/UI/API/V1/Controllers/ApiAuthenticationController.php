@@ -115,9 +115,9 @@ class ApiAuthenticationController
     }
 
     /**
-     * @return \Illuminate\Http\Response
+     * Returns the authenticated user.
      */
-    public function getAuthUser(Request $request)
+    public function getAuthUser(Request $request): UserResource
     {
         $user = $request->user()->load([
             'roles:id,name',

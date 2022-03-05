@@ -31,9 +31,7 @@ class CoreServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/core.php', 'core');
 
         // register the service the package provides
-        $this->app->singleton('core', function ($app) {
-            return new Core();
-        });
+        $this->app->singleton('core', fn () => new Core());
     }
 
     /**

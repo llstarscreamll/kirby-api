@@ -48,9 +48,7 @@ class ProductionServiceProvider extends ServiceProvider
         array_walk($this->binds, fn ($concrete, $abstract) => $this->app->bind($abstract, $concrete));
 
         // Register the service the package provides.
-        $this->app->singleton('production', function ($app) {
-            return new Production();
-        });
+        $this->app->singleton('production', fn () => new Production());
     }
 
     /**

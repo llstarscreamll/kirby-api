@@ -53,9 +53,7 @@ class CompanyServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/company.php', 'company');
 
         // register the service the package provides
-        $this->app->singleton('company', function ($app) {
-            return new Company();
-        });
+        $this->app->singleton('company', fn () => new Company());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);
