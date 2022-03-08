@@ -6,6 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Kirby\Core\Filters\QuerySearchFilter;
 use Kirby\Products\Models\Product;
 use Kirby\Products\UI\API\V1\Requests\CreateProductRequest;
+use Kirby\Products\UI\API\V1\Requests\GetProductRequest;
 use Kirby\Products\UI\API\V1\Requests\UpdateProductRequest;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -34,6 +35,11 @@ class ProductsController
     public function store(CreateProductRequest $request): JsonResponse
     {
         return response()->json(['data' => Product::create($request->validated())], Response::HTTP_CREATED);
+    }
+
+    public function show(GetProductRequest $request, int $productID): JsonResponse
+    {
+        return response()->json(['data' => Product::findOrFail($productID)], Response::HTTP_OK);
     }
 
     public function update(UpdateProductRequest $request, int $productID): JsonResponse

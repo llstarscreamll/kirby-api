@@ -11,6 +11,7 @@ class ProductsPackageSeed extends Seeder
 {
     private array $permissions = [
         ['name' => 'products.create'],
+        ['name' => 'products.details'],
         ['name' => 'products.search'],
         ['name' => 'products.update'],
     ];
