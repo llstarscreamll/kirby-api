@@ -10,6 +10,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            ProductsPackageSeed::class,
             EmployeesPackageSeed::class,
             WorkShiftsPackageSeeder::class,
             TimeClockPackageSeeder::class,

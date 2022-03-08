@@ -14,6 +14,7 @@ class Product extends Model
         'customer_code',
         'short_name',
         'name',
-        'diameter_in_mm',
+        'wire_gauge_in_bwg',
+        'wire_gauge_in_mm',
     ];
 }
