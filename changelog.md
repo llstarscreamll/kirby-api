@@ -1,5 +1,23 @@
 # Release notes
 
+## [2.2.0 (2022-03-09)](https://github.com/llstarscreamll/kirby-api/compare/2.2.0..2.1.0)
+
+### Added
+
+- new endpoint to get product by id
+- new endpoint to update product
+- new endpoint to create product
+- new "tag date" attribute on production logs to control when a tag is changed
+- new ability to search machines by cost centers
+- new endpoint for querying production reporting data about accumulated Kgs from product
+- add "tag date" field to production logs search and remove filter by "created at" field
+- add "tag date" field to export production logs to csv
+
+### Changed
+
+- filter logs and report by cost centers instead of sub cost centers
+- search production logs improvements, search by many employees, many machines, many products and many sub cost centers
+
 ## [2.1.0 (2021-11-24)](https://github.com/llstarscreamll/kirby-api/compare/2.1.0..2.0.0)
 
 ### Added
