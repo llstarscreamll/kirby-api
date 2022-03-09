@@ -1,10 +1,12 @@
 <?php
 
-namespace kirby\Production;
+namespace Kirby\Production;
 
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 use Kirby\Production\Contracts\ProductionLogRepository;
+use Kirby\Production\Contracts\ProductionReportRepository;
+use Kirby\Production\Repositories\DBProductionReportRepository;
 use Kirby\Production\Repositories\EloquentProductionLogRepository;
 
 class ProductionServiceProvider extends ServiceProvider
@@ -14,12 +16,11 @@ class ProductionServiceProvider extends ServiceProvider
      */
     private $binds = [
         ProductionLogRepository::class => EloquentProductionLogRepository::class,
+        ProductionReportRepository::class => DBProductionReportRepository::class,
     ];
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -40,8 +41,6 @@ class ProductionServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register(): void
     {
@@ -49,9 +48,7 @@ class ProductionServiceProvider extends ServiceProvider
         array_walk($this->binds, fn ($concrete, $abstract) => $this->app->bind($abstract, $concrete));
 
         // Register the service the package provides.
-        $this->app->singleton('production', function ($app) {
-            return new Production();
-        });
+        $this->app->singleton('production', fn () => new Production());
     }
 
     /**
@@ -66,8 +63,6 @@ class ProductionServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole(): void
     {

@@ -18,7 +18,7 @@ class ProductionLogsCsvReady extends Notification
     /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param  mixed  $filePath
      */
     public function __construct($filePath)
     {
@@ -47,7 +47,7 @@ class ProductionLogsCsvReady extends Notification
         return (new MailMessage())
             ->greeting("Hola {$notifiable->first_name},")
             ->line('La exportación de datos de registros de producción está lista!!')
-            ->action('Descargar', asset("storage/$this->filePath"));
+            ->action('Descargar', asset("storage/{$this->filePath}"));
     }
 
     /**
@@ -59,7 +59,6 @@ class ProductionLogsCsvReady extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
         ];
     }
 }

@@ -23,9 +23,6 @@ class EloquentSettingRepository extends EloquentRepositoryAbstract implements Se
      */
     protected $allowedIncludes = [];
 
-    /**
-     * @return string
-     */
     public function model(): string
     {
         return Setting::class;

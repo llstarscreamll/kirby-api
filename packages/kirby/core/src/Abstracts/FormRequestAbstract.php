@@ -32,38 +32,17 @@ class FormRequestAbstract extends FormRequest
      * validated.
      *
      * @param  null  $keys
-     * @return array
      */
     public function all($keys = null): array
     {
         $requestData = parent::all($keys);
-        $requestData = $this->mergeUrlParametersToRequestData($requestData);
 
-        return $requestData;
-    }
-
-    /**
-     * Merge route params into $requestData.
-     *
-     * @param  array  $requestData
-     * @return array
-     */
-    private function mergeUrlParametersToRequestData(array $requestData): array
-    {
-        if (isset($this->urlParameters) && ! empty($this->urlParameters)) {
-            foreach ($this->urlParameters as $param) {
-                $requestData[$param] = $this->route($param);
-            }
-        }
-
-        return $requestData;
+        return $this->mergeUrlParametersToRequestData($requestData);
     }
 
     /**
      * Check if user has ANY roles OR permissions indicated in $this->access
      * property.
-     *
-     * @return bool
      */
     protected function hasAccess(): bool
     {
@@ -75,5 +54,19 @@ class FormRequestAbstract extends FormRequest
         }
 
         return false;
+    }
+
+    /**
+     * Merge route params into $requestData.
+     */
+    private function mergeUrlParametersToRequestData(array $requestData): array
+    {
+        if (isset($this->urlParameters) && ! empty($this->urlParameters)) {
+            foreach ($this->urlParameters as $param) {
+                $requestData[$param] = $this->route($param);
+            }
+        }
+
+        return $requestData;
     }
 }

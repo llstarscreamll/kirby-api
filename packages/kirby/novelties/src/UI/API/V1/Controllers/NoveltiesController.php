@@ -30,9 +30,6 @@ class NoveltiesController
      */
     private $noveltyRepository;
 
-    /**
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     */
     public function __construct(NoveltyRepositoryInterface $noveltyRepository)
     {
         $this->noveltyRepository = $noveltyRepository;
@@ -41,7 +38,6 @@ class NoveltiesController
     /**
      * Display a listing of the resource.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\SearchNoveltiesRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function index(SearchNoveltiesRequest $request)
@@ -95,18 +91,15 @@ class NoveltiesController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\GetNoveltyRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -122,7 +115,6 @@ class NoveltiesController
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Kirby\Novelties\UI\API\V1\Requests\UpdateNoveltyRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */

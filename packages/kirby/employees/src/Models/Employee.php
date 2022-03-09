@@ -155,17 +155,11 @@ class Employee extends Model
     // Accessors
     // ######################################################################## #
 
-    /**
-     * @return string|null
-     */
     public function getFirstNameAttribute(): ?string
     {
         return $this->user->first_name;
     }
 
-    /**
-     * @return string|null
-     */
     public function getLastNameAttribute(): ?string
     {
         return $this->user->last_name;
@@ -176,25 +170,16 @@ class Employee extends Model
         return "{$this->user->first_name} {$this->user->last_name}";
     }
 
-    /**
-     * @return string|null
-     */
     public function getPhoneAttribute(): ?string
     {
         return $this->user->phone_number;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPhonePrefixAttribute(): ?string
     {
         return $this->user->phone_prefix;
     }
 
-    /**
-     * @return string|null
-     */
     public function getEmailAttribute(): ?string
     {
         return $this->user->email;
@@ -205,7 +190,6 @@ class Employee extends Model
     // ######################################################################## #
 
     /**
-     * @param  Carbon  $time
      * @return WorkShift
      */
     public function getWorkShiftsThatMatchesTime(Carbon $time): ?Collection
@@ -230,15 +214,15 @@ class Employee extends Model
                             $slotEndTo = $slotEndTo->addDay();
                         }
 
-                        return $time->between($slotStartFrom, $slotEndTo) && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0);
+                        return $time->between($slotStartFrom, $slotEndTo) && (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || 0 === count($workShift->applies_on_days));
                     });
 
                 return $matchedTimeSlots->count();
             });
 
-        if ($workShiftsMatchedBySlotTimesAndDays->count() === 0) {
+        if (0 === $workShiftsMatchedBySlotTimesAndDays->count()) {
             $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function ($workShift) use ($time) {
-                return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || count($workShift->applies_on_days) === 0) && ! $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
+                return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || 0 === count($workShift->applies_on_days)) && ! $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
             });
         }
 

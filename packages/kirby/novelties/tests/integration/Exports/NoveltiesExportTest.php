@@ -12,6 +12,8 @@ use Kirby\Users\Models\User;
  * Class NoveltiesExportTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class NoveltiesExportTest extends \Tests\TestCase
 {
@@ -62,14 +64,11 @@ class NoveltiesExportTest extends \Tests\TestCase
      */
     public function shouldHaveCertainDataMap()
     {
-        $novelty = factory(Novelty::class)->create([
+        $novelty = tap(factory(Novelty::class)->create([
             'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
             'start_at' => now()->startOfMonth(),
             'end_at' => now()->startOfMonth()->addHours(2),
-        ]);
-        $approvers = factory(User::class, 1)->create(['first_name' => 'Tony', 'last_name' => 'Stark']);
-        $approvers = $approvers->push(factory(User::class, 1)->create(['first_name' => 'Steve', 'last_name' => 'Rogers']));
-        $novelty->approvals()->sync($approvers);
+        ]), fn ($novelty) => $novelty->approvals()->sync(factory(User::class, 2)->create()));
 
         $params = $params = [
             'employee_id' => $novelty->employee_id,

@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class SearchNoveltyTypesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SearchNoveltyTypesTest extends \Tests\TestCase
 {
@@ -43,7 +45,7 @@ class SearchNoveltyTypesTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

@@ -11,6 +11,8 @@ use NoveltiesPackageSeed;
  * Class CreateManyNoveltiesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateManyNoveltiesTest extends \Tests\TestCase
 {
@@ -67,7 +69,7 @@ class CreateManyNoveltiesTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->actingAsGuest()
             ->json('POST', $this->endpoint, [])

@@ -10,6 +10,8 @@ use Mockery;
  * Class RegisterTimeClockNoveltiesListenerTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class RegisterTimeClockNoveltiesListenerTest extends \Tests\TestCase
 {

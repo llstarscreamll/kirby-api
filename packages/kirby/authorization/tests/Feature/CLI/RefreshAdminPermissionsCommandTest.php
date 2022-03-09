@@ -12,6 +12,8 @@ use Tests\TestCase;
  *
  * Set de pruebas de la funcionalidad de sincronizar los permisos al rol
  * administrador del sistema.
+ *
+ * @internal
  */
 class RefreshAdminPermissionsCommandTest extends TestCase
 {
@@ -35,10 +37,10 @@ class RefreshAdminPermissionsCommandTest extends TestCase
             ['name' => 'books.delete', 'guard_name' => ''],
         ]);
 
-        $this->assertEmpty(Role::find(1)->permissions);
+        $this->assertEmpty(Role::first()->permissions);
 
         $this->artisan('authorization:refresh-admin-permissions')->assertExitCode(0);
 
-        $this->assertCount(3, Role::find(1)->permissions);
+        $this->assertCount(3, Role::first()->permissions);
     }
 }

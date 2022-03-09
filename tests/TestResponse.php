@@ -14,7 +14,6 @@ use Illuminate\Testing\TestResponse as BaseTestResponse;
 class TestResponse extends BaseTestResponse
 {
     /**
-     * @param  string  $path
      * @return $this
      */
     public function assertJsonHasPath(string $path)
@@ -25,7 +24,6 @@ class TestResponse extends BaseTestResponse
     }
 
     /**
-     * @param  string  $path
      * @return $this
      */
     public function assertJsonMissingPath(string $path)

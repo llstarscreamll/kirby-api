@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class GetSettingsTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetSettingsTest extends \Tests\TestCase
 {
@@ -42,7 +44,7 @@ class GetSettingsTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $endpoint = str_replace('{id}', 1, $this->endpoint);
 

@@ -103,9 +103,6 @@ class Novelty extends Model
     // Accessors
     // ######################################################################## #
 
-    /**
-     * @return float
-     */
     public function getTotalTimeInHoursAttribute(): float
     {
         $operator = $this->noveltyType->operator->is(NoveltyTypeOperator::Subtraction) ? -1 : 1;
@@ -117,35 +114,21 @@ class Novelty extends Model
     // Methods
     // ######################################################################## #
 
-    /**
-     * @param  int  $approverId
-     * @return void
-     */
     public function approve(int $approverId)
     {
         $this->approvals()->sync($approverId, false);
     }
 
-    /**
-     * @param  int  $approverId
-     * @return void
-     */
     public function deleteApprove(int $approverId)
     {
         $this->approvals()->detach($approverId);
     }
 
-    /**
-     * @return bool
-     */
     public function hasTimeClockLog(): bool
     {
         return ! empty($this->time_clock_log_id);
     }
 
-    /**
-     * @return bool
-     */
     public function hasTimeClockLogCheckInBetween(Carbon $start, Carbon $end): bool
     {
         return $this->hasTimeClockLog() && $this->timeClockLog

@@ -6,14 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    /**
-     * @var array
-     */
     protected $fillable = [
         'internal_code',
         'customer_code',
         'short_name',
         'name',
-        'diameter_in_mm',
+        'wire_gauge_in_bwg',
+        'wire_gauge_in_mm',
+    ];
+
+    protected $casts = [
+        'id' => 'int',
+        'wire_gauge_in_mm' => 'float',
     ];
 }

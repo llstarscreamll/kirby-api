@@ -14,6 +14,8 @@ use NoveltiesPackageSeed;
  * Class SearchNoveltiesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SearchNoveltiesTest extends \Tests\TestCase
 {
@@ -27,7 +29,7 @@ class SearchNoveltiesTest extends \Tests\TestCase
         parent::setUp();
 
         $this->seed(NoveltiesPackageSeed::class);
-        $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
+        $this->actingAsAdmin($this->user = factory(Employee::class)->create()->user);
         // user with permission to make global search by default
         $this->user->syncPermissions(Permission::where('name', 'novelties.global-search')->get());
     }
@@ -206,7 +208,7 @@ class SearchNoveltiesTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

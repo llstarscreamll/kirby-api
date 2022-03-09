@@ -12,6 +12,8 @@ use NoveltiesPackageSeed;
  * Class GetNoveltyTypesRecordsByEmployeeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetNoveltiesGroupedByNoveltyTypeTest extends \Tests\TestCase
 {
@@ -175,7 +177,7 @@ class GetNoveltiesGroupedByNoveltyTypeTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->actingAsGuest()
             ->json('GET', $this->endpoint)

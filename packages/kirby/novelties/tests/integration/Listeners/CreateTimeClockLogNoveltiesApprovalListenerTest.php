@@ -11,6 +11,8 @@ use Mockery;
  * Class CreateTimeClockLogNoveltiesApprovalListenerTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateTimeClockLogNoveltiesApprovalListenerTest extends \Tests\TestCase
 {

@@ -10,6 +10,9 @@ use Kirby\Products\Models\Product;
 use ProductionPackageSeed;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class ProductionLogsExportTest extends TestCase
 {
     /**
@@ -25,12 +28,14 @@ class ProductionLogsExportTest extends TestCase
         $this->employee = factory(Employee::class)->create();
         $this->productionLogs = factory(ProductionLog::class, 5)->create([
             'employee_id' => $this->employee,
+            'tag_updated_at' => now()->subDays(2),
             'created_at' => now()->subDays(2),
             'updated_at' => now()->subDays(2),
         ]);
 
         // registros de producción muy antiguos
         factory(ProductionLog::class, 5)->create([
+            'tag_updated_at' => now()->subDays(45),
             'created_at' => now()->subDays(45),
             'updated_at' => now()->subDays(45),
         ]);
@@ -104,7 +109,7 @@ class ProductionLogsExportTest extends TestCase
      */
     public function shouldExportByCreationDate()
     {
-        $export = new ProductionLogsExport(['creation_date' => [
+        $export = new ProductionLogsExport(['tag_updated_at' => [
             'start' => now()->subDays(2)->startOfDay()->toISOString(),
             'end' => now()->subDays(2)->endOfDay()->toISOString(),
         ]]);

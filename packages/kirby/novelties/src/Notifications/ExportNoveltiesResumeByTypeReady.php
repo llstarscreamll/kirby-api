@@ -22,8 +22,6 @@ class ExportNoveltiesResumeByTypeReady extends Notification
 
     /**
      * Created a new notification instance.
-     *
-     * @param  string  $fileUrl
      */
     public function __construct(string $fileUrl)
     {

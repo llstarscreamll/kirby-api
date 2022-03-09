@@ -12,6 +12,11 @@ use Exception;
 class CanNotDeductWorkShiftException extends Exception
 {
     /**
+     * @var \Illuminate\Support\Collection
+     */
+    public $timeClockData;
+
+    /**
      * @var string
      */
     protected $message = 'Can not deduct work shift, you must provide which to use.';
@@ -21,14 +26,6 @@ class CanNotDeductWorkShiftException extends Exception
      */
     protected $code = 1051;
 
-    /**
-     * @var \Illuminate\Support\Collection
-     */
-    public $timeClockData;
-
-    /**
-     * @param  array  $timeClockData
-     */
     public function __construct(array $timeClockData)
     {
         $this->timeClockData = $timeClockData;

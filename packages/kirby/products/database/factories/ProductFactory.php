@@ -16,11 +16,11 @@ use Kirby\Products\Models\Product;
 
 $factory->define(Product::class, function (Faker $faker) {
     return [
-        'internal_code' => $faker->unique()->word(),
-        'customer_code' => $faker->unique()->word(),
         'name' => $name = $faker->numerify('PROD-##'),
         'short_name' => $name,
-        'wire_gauge_in_bwg' => $faker->numberBetween(1, 100),
-        'wire_gauge_in_mm' => $faker->numberBetween(1, 100),
+        'internal_code' => $faker->unique()->numerify('internal-code-###'),
+        'customer_code' => $faker->unique()->numerify('customer-code-###'),
+        'wire_gauge_in_bwg' => $faker->bothify('### ???'),
+        'wire_gauge_in_mm' => $faker->randomFloat(2, 1, 1000),
     ];
 });

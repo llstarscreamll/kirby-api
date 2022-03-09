@@ -18,17 +18,11 @@ class CreateManyNoveltiesAction
      */
     private $noveltyRepository;
 
-    /**
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     */
     public function __construct(NoveltyRepositoryInterface $noveltyRepository)
     {
         $this->noveltyRepository = $noveltyRepository;
     }
 
-    /**
-     * @param  array  $data
-     */
     public function run(array $data): bool
     {
         $currentDate = Carbon::now();

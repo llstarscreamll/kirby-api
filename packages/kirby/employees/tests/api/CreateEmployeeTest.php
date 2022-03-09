@@ -11,6 +11,8 @@ use Kirby\WorkShifts\Models\WorkShift;
  * Class CreateEmployeeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateEmployeeTest extends \Tests\TestCase
 {
@@ -95,7 +97,7 @@ class CreateEmployeeTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->actingAsGuest()->json('POST', $this->endpoint, [])
             ->assertForbidden();

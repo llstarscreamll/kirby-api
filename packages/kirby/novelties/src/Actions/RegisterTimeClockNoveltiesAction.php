@@ -48,11 +48,6 @@ class RegisterTimeClockNoveltiesAction
      */
     private $takenPeriods = [];
 
-    /**
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
-     * @param  TimeClockLogRepositoryInterface  $timeClockLogRepository
-     */
     public function __construct(
         NoveltyRepositoryInterface $noveltyRepository,
         NoveltyTypeRepositoryInterface $noveltyTypeRepository,
@@ -63,10 +58,6 @@ class RegisterTimeClockNoveltiesAction
         $this->timeClockLogRepository = $timeClockLogRepository;
     }
 
-    /**
-     * @param  int  $timeClockLogId
-     * @return bool
-     */
     public function run(int $timeClockLogId): bool
     {
         $currentDate = now();
@@ -120,10 +111,6 @@ class RegisterTimeClockNoveltiesAction
         return true;
     }
 
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @return bool
-     */
     private function noveltiesCanBeCalculated(TimeClockLog $timeClockLog): bool
     {
         $validations = [
@@ -134,11 +121,6 @@ class RegisterTimeClockNoveltiesAction
         return ! in_array(false, $validations);
     }
 
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @param  NoveltyType  $noveltyType
-     * @return array
-     */
     private function solveNoveltyTypeTime(TimeClockLog $timeClockLog, NoveltyType $noveltyType): array
     {
         $this->novelType = $noveltyType;
@@ -247,8 +229,6 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  Period  $timeClockPeriod
-     * @param  PeriodCollection  $workShiftPeriods
      * @return mixed
      */
     private function getLogPeriodWithoutWorkShiftTime(Period $timeClockPeriod, PeriodCollection $workShiftPeriods): PeriodCollection
@@ -260,7 +240,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param  PeriodCollection  $noveltyTypePeriods
+     * @param  mixed  $novelty
      * @return mixed
      */
     private function subtractTimeAlreadyTaken(PeriodCollection $noveltyTypePeriods, $novelty): PeriodCollection
@@ -271,7 +251,7 @@ class RegisterTimeClockNoveltiesAction
 
         $takenOverlaps = collect($this->takenPeriods)
             ->filter()
-            ->filter(fn ($periods) => array_filter($periods, fn ($period) => $period[0]->getTimestamp() - $period[1]->getTimestamp() !== 0))
+            ->filter(fn ($periods) => array_filter($periods, fn ($period) => 0 !== $period[0]->getTimestamp() - $period[1]->getTimestamp()))
             ->map(fn ($periods) => array_map(fn ($period) => [...$period, Precision::SECOND], $periods))
             ->map(fn ($periods) => array_map(fn ($period) => new Period(...$period), $periods))
             ->collapse()
@@ -297,10 +277,6 @@ class RegisterTimeClockNoveltiesAction
         return $noveltyTypePeriods;
     }
 
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @return PeriodCollection
-     */
     private function getWorkShiftPeriods(TimeClockLog $timeClockLog): PeriodCollection
     {
         $shiftTimeSlots = $timeClockLog->hasWorkShift()
@@ -352,11 +328,11 @@ class RegisterTimeClockNoveltiesAction
             ->filter();
 
         // caso en el que no hay turno ni novedades
-        if (! $timeClockLog->hasWorkShift() &&
-            (
-                $timeClockLog->check_in_novelty_type_id === $noveltyType->id ||
+        if (! $timeClockLog->hasWorkShift()
+            && (
+                $timeClockLog->check_in_novelty_type_id === $noveltyType->id
                 // fix check_in_novelty_type_id on second comparison. should be check_out_novelty_type_id
-                (empty($timeClockLog->check_in_novelty_type_id) && $noveltyType->isDefaultForAddition())
+                || (empty($timeClockLog->check_in_novelty_type_id) && $noveltyType->isDefaultForAddition())
             )
         ) {
             $noveltyTypePeriods = collect([...$basePeriodForNovelty]);
@@ -385,10 +361,6 @@ class RegisterTimeClockNoveltiesAction
         return new PeriodCollection(...array_filter([$scheduledEndNoveltyPeriod, $scheduledStartNoveltyPeriod]));
     }
 
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @return Period|null
-     */
     private function getMealPeriod(TimeClockLog $timeClockLog): ?Period
     {
         if (! $timeClockLog->hasWorkShift()) {
@@ -420,11 +392,6 @@ class RegisterTimeClockNoveltiesAction
         );
     }
 
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @param  NoveltyType  $noveltyType
-     * @return array
-     */
     private function solveBaseTimeForNovelty(TimeClockLog $timeClockLog, NoveltyType $noveltyType): array
     {
         $start = $timeClockLog->expectedCheckIn();
@@ -462,10 +429,6 @@ class RegisterTimeClockNoveltiesAction
         return [$start->setTimezone('UTC'), $end->setTimezone('UTC')];
     }
 
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @return int
-     */
     private function attachScheduledNovelties(TimeClockLog $timeClockLog): int
     {
         $scheduledNoveltiesIds = $this->scheduledNovelties($timeClockLog)
@@ -481,10 +444,6 @@ class RegisterTimeClockNoveltiesAction
         ]);
     }
 
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @return Collection
-     */
     private function scheduledNovelties(TimeClockLog $timeClockLog): Collection
     {
         if ($this->scheduledNovelties) {
@@ -507,21 +466,17 @@ class RegisterTimeClockNoveltiesAction
         return $this->scheduledNovelties;
     }
 
-    /**
-     * @param  TimeClockLog  $timeClockLog
-     * @return null|Period
-     */
     private function getTimeFlagOffSetBasedOnScheduledNovelty(string $flag, TimeClockLog $timeClockLog): ?Period
     {
-        $logAction = $flag === 'start' ? 'checked_in_at' : 'checked_out_at';
-        $comparison = $flag === 'start' ? 'lessThanOrEqualTo' : 'greaterThanOrEqualTo';
-        $comparisonFlag = $flag === 'start' ? 'end_at' : 'start_at';
+        $logAction = 'start' === $flag ? 'checked_in_at' : 'checked_out_at';
+        $comparison = 'start' === $flag ? 'lessThanOrEqualTo' : 'greaterThanOrEqualTo';
+        $comparisonFlag = 'start' === $flag ? 'end_at' : 'start_at';
 
         $scheduledNovelties = $this->scheduledNovelties($timeClockLog)
-        ->filter(
-            fn (Novelty $novelty) => ! $novelty->hasTimeClockLog() ||
-            $novelty->end_at->between($timeClockLog->checked_in_at->copy()->subMinutes(30), $timeClockLog->checked_out_at->copy()->addMinutes(30))
-        );
+            ->filter(
+                fn (Novelty $novelty) => ! $novelty->hasTimeClockLog()
+            || $novelty->end_at->between($timeClockLog->checked_in_at->copy()->subMinutes(30), $timeClockLog->checked_out_at->copy()->addMinutes(30))
+            );
 
         $closestScheduledNovelty = $scheduledNovelties
             ->filter(fn (Novelty $novelty) => $novelty->{$comparisonFlag}->{$comparison}($timeClockLog->{$logAction}))

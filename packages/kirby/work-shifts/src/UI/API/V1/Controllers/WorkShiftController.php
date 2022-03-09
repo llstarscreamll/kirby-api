@@ -22,9 +22,6 @@ class WorkShiftController
      */
     private $workShiftRepository;
 
-    /**
-     * @param  \Kirby\WorkShifts\Contracts\WorkShiftRepositoryInterface  $workShiftRepository
-     */
     public function __construct(WorkShiftRepositoryInterface $workShiftRepository)
     {
         $this->workShiftRepository = $workShiftRepository;
@@ -41,7 +38,6 @@ class WorkShiftController
     }
 
     /**
-     * @param  \Kirby\WorkShifts\UI\API\V1\Requests\CreateWorkShiftRequest  $request
      * @return Illuminate\Http\Response
      */
     public function store(CreateWorkShiftRequest $request)
@@ -53,7 +49,6 @@ class WorkShiftController
     }
 
     /**
-     * @param  \Kirby\WorkShifts\UI\API\V1\Requests\ShowWorkShiftRequest  $request
      * @param  int  $workShiftId
      */
     public function show(ShowWorkShiftRequest $request, $workShiftId)
@@ -64,7 +59,6 @@ class WorkShiftController
     }
 
     /**
-     * @param  \Kirby\WorkShifts\UI\API\V1\Requests\UpdateWorkShiftRequest  $request
      * @param  int  $workShiftId
      */
     public function update(UpdateWorkShiftRequest $request, $workShiftId)

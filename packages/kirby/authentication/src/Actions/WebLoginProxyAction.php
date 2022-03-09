@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\App;
  */
 class WebLoginProxyAction
 {
-    const AUTH_ROUTE = '/oauth/token';
+    public const AUTH_ROUTE = '/oauth/token';
 
     /**
      * @var array
@@ -27,10 +27,6 @@ class WebLoginProxyAction
         ];
     }
 
-    /**
-     * @param  string  $email
-     * @param  string  $password
-     */
     public function run(string $email, string $password): array
     {
         $requestPayload = $this->baseData + [

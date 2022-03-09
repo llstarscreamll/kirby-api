@@ -23,6 +23,8 @@ use NoveltiesPackageSeed;
  * Class RegisterTimeClockNoveltiesActionTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
 {
@@ -160,7 +162,10 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
             ],
         ]));
 
-        $this->subCostCenters = factory(SubCostCenter::class, 2)->create();
+        $this->subCostCenters = collect([
+            factory(SubCostCenter::class)->create(['id' => 1]),
+            factory(SubCostCenter::class)->create(['id' => 2]),
+        ]);
     }
 
     public function successCases()
@@ -1262,6 +1267,12 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider successCases
+     *
+     * @param  mixed  $_
+     * @param  mixed  $timeClockLogData
+     * @param  mixed  $expectedOutPut
+     * @param  mixed  $scheduledNovelties
+     * @param  mixed  $createdNovelties
      */
     public function testToRunAction($_, $timeClockLogData, $expectedOutPut, $scheduledNovelties, $createdNovelties)
     {
@@ -1303,38 +1314,6 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
                 'sub_cost_center_id' => $novelty['sub_cost_center_id'] ?? null,
             ]);
         }
-    }
-
-    /**
-     * Map time clock provider data to be used on Laravel factory.
-     *
-     * @param  array  $timeClock
-     * @return array
-     */
-    private function mapTimeClockData(array $timeClock): array
-    {
-        $keysToRemove = [
-            'check_in_novelty_type_code',
-            'check_out_novelty_type_code',
-            'work_shift_name',
-        ];
-
-        if (isset($timeClock['check_in_novelty_type_code'])) {
-            $checkInNoveltyType = $this->noveltyTypes->firstWhere('code', $timeClock['check_in_novelty_type_code']);
-            $timeClock['check_in_novelty_type_id'] = optional($checkInNoveltyType)->id;
-        }
-
-        if (isset($timeClock['check_out_novelty_type_code'])) {
-            $checkInNoveltyType = $this->noveltyTypes->firstWhere('code', $timeClock['check_out_novelty_type_code']);
-            $timeClock['check_out_novelty_type_id'] = optional($checkInNoveltyType)->id;
-        }
-
-        if (isset($timeClock['work_shift_name'])) {
-            $workShift = $this->workShifts->firstWhere('name', $timeClock['work_shift_name']);
-            $timeClock['work_shift_id'] = optional($workShift)->id;
-        }
-
-        return Arr::except($timeClock, $keysToRemove);
     }
 
     /**
@@ -1814,5 +1793,34 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
             'start_at' => '2020-11-03 19:35:00',
             'end_at' => '2020-11-03 19:43:59',
         ]);
+    }
+
+    /**
+     * Map time clock provider data to be used on Laravel factory.
+     */
+    private function mapTimeClockData(array $timeClock): array
+    {
+        $keysToRemove = [
+            'check_in_novelty_type_code',
+            'check_out_novelty_type_code',
+            'work_shift_name',
+        ];
+
+        if (isset($timeClock['check_in_novelty_type_code'])) {
+            $checkInNoveltyType = $this->noveltyTypes->firstWhere('code', $timeClock['check_in_novelty_type_code']);
+            $timeClock['check_in_novelty_type_id'] = optional($checkInNoveltyType)->id;
+        }
+
+        if (isset($timeClock['check_out_novelty_type_code'])) {
+            $checkInNoveltyType = $this->noveltyTypes->firstWhere('code', $timeClock['check_out_novelty_type_code']);
+            $timeClock['check_out_novelty_type_id'] = optional($checkInNoveltyType)->id;
+        }
+
+        if (isset($timeClock['work_shift_name'])) {
+            $workShift = $this->workShifts->firstWhere('name', $timeClock['work_shift_name']);
+            $timeClock['work_shift_id'] = optional($workShift)->id;
+        }
+
+        return Arr::except($timeClock, $keysToRemove);
     }
 }

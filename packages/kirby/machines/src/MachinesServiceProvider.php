@@ -9,8 +9,6 @@ class MachinesServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -31,17 +29,13 @@ class MachinesServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/machines.php', 'machines');
 
         // Register the service the package provides.
-        $this->app->singleton('machines', function ($app) {
-            return new Machines();
-        });
+        $this->app->singleton('machines', fn () => new Machines());
     }
 
     /**
@@ -56,8 +50,6 @@ class MachinesServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole(): void
     {

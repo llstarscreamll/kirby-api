@@ -15,10 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class CreateManyNoveltiesController
 {
-    /**
-     * @param  CreateManyNoveltiesRequest  $request
-     * @param  CreateManyNoveltiesAction  $action
-     */
     public function __invoke(CreateManyNoveltiesRequest $request, CreateManyNoveltiesAction $action)
     {
         try {

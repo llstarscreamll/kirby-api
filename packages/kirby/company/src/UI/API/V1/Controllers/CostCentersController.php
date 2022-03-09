@@ -14,9 +14,6 @@ use Prettus\Repository\Criteria\RequestCriteria;
  */
 class CostCentersController
 {
-    /**
-     * @param  Request  $request
-     */
     public function index(Request $request, CostCenterRepositoryInterface $costCenterRepository)
     {
         $paginatedSubCostCenters = $costCenterRepository

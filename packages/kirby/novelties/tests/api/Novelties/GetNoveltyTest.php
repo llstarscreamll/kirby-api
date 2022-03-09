@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class GetNoveltyTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetNoveltyTest extends \Tests\TestCase
 {
@@ -47,7 +49,7 @@ class GetNoveltyTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

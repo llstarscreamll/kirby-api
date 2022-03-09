@@ -95,49 +95,30 @@ class WorkShift extends Model
     // Methods
     // ######################################################################## #
 
-    /**
-     * @param  int  $timeInMinutes
-     * @return bool
-     */
     public function canMealTimeApply(int $timeInMinutes): bool
     {
-        return ! empty($this->min_minutes_required_to_discount_meal_time) &&
-        $timeInMinutes >= $this->min_minutes_required_to_discount_meal_time;
+        return ! empty($this->min_minutes_required_to_discount_meal_time)
+        && $timeInMinutes >= $this->min_minutes_required_to_discount_meal_time;
     }
 
-    /**
-     * @param  Carbon|null  $time
-     * @return int
-     */
     public function startPunctuality(?Carbon $time = null, Carbon $offSet = null): int
     {
         return $this->slotPunctuality('start', $time ?? now(), $offSet, false);
     }
 
-    /**
-     * @param  Carbon|null  $time
-     * @return int
-     */
     public function endPunctuality(?Carbon $time = null, Carbon $offSet = null): int
     {
         return $this->slotPunctuality('end', $time ?? now(), $offSet);
     }
 
-    /**
-     * @param  string  $flag
-     * @param  Carbon  $time
-     * @param  Carbon|null  $offSet
-     * @param  bool  $beGraceTimeAware
-     * @return array|null
-     */
     public function matchingTimeSlot(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false): ?array
     {
         return collect($this->time_slots)
             ->map(function ($timeSlot) use ($time, $flag, $offSet, $beGraceTimeAware) {
-                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware, $flag === 'end', $offSet);
+                return $this->mapTimeSlot($timeSlot, $time, $beGraceTimeAware, 'end' === $flag, $offSet);
             })
             ->sortBy(function (array $timeSlot) use ($time, $flag) {
-                if ($flag === 'end' && $time->diffInMinutes($timeSlot[$flag === 'end' ? 'start' : 'end']) < 60) {
+                if ('end' === $flag && $time->diffInMinutes($timeSlot['end' === $flag ? 'start' : 'end']) < 60) {
                     return 100 * 100;
                 }
 
@@ -147,24 +128,23 @@ class WorkShift extends Model
 
     /**
      * @param  string  $flag  'start'|'end'
-     * @param  Carbon  $time
      * @param  Carbon  $offset
-     * @return int|null -1 early, zero on time, 1 late
+     * @return null|int -1 early, zero on time, 1 late
      */
     public function slotPunctuality(string $flag, Carbon $time, ?Carbon $offSet = null, bool $beGraceTimeAware = false): ?int
     {
         $timeSlot = $this->matchingTimeSlot($flag, $time, $offSet, true);
         [$end, $start] = array_values($timeSlot);
-        $targetTime = $flag == 'start' ? $start : $end;
+        $targetTime = 'start' == $flag ? $start : $end;
 
         $flagGraceStart = $targetTime->copy();
         $flagGraceEnd = $targetTime->copy()->addSecond(); // second to fix end offsets
 
-        if ($flag == 'start') {
+        if ('start' == $flag) {
             $flagGraceEnd = $flagGraceEnd->addMinutes($this->{"grace_minutes_before_{$flag}_times"} + $this->{"grace_minutes_after_{$flag}_times"});
         }
 
-        if ($flag == 'end') {
+        if ('end' == $flag) {
             $flagGraceStart = $flagGraceStart->subMinutes($this->{"grace_minutes_before_{$flag}_times"} + $this->{"grace_minutes_after_{$flag}_times"});
         }
 
@@ -175,9 +155,6 @@ class WorkShift extends Model
         return $time->lessThan($flagGraceStart) ? -1 : 1;
     }
 
-    /**
-     * @param  Carbon  $date
-     */
     public function mappedTimeSlots(Carbon $date)
     {
         $beGraceTimeAware = false;
@@ -189,12 +166,131 @@ class WorkShift extends Model
     }
 
     /**
-     * @param  array  $timeSlot
-     * @param  Carbon  $date
+     * @param  Carbon  $offSet
+     */
+    public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
+    {
+        $timeSlot = $this->matchingTimeSlot($flag, $time, $offSet, $beGraceTimeAware = true);
+
+        return $offSet ?? $timeSlot["original_{$flag}"] ?? null;
+    }
+
+    /**
+     * @param  Carbon  $relativeToTime
+     * @param  bool  $beGraceTimeAware
+     */
+    public function minStartTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false): ?Carbon
+    {
+        $relativeToTime = $relativeToTime ?? now();
+
+        return collect($this->time_slots)
+            ->map(function (array $timeSlot) use ($relativeToTime, $beGraceTimeAware) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, $beGraceTimeAware);
+
+                return $timeSlot['start'];
+            })->sort()->first();
+    }
+
+    /**
+     * @param  Carbon  $relativeToTime
+     * @param  null  $beGraceTimeAware
+     */
+    public function isMinStartTimeSlotInRage(Carbon $start, Carbon $end, Carbon $relativeToTime = null, $beGraceTimeAware = false): bool
+    {
+        return $this->minStartTimeSlot($relativeToTime, $beGraceTimeAware)->between($start, $end);
+    }
+
+    /**
      * @param  bool  $beGraceTimeAware
      * @param  bool  $relativeToEnd
+     */
+    public function maxEndTimeSlot(?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): ?Carbon
+    {
+        $relativeToTime = $relativeToTime ?? now();
+
+        return collect($this->time_slots)
+            ->map(function (array $timeSlot) use ($relativeToTime, $beGraceTimeAware, $relativeToEnd) {
+                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, $beGraceTimeAware, $relativeToEnd);
+
+                return $timeSlot['end'];
+            })->sort()->last();
+    }
+
+    /**
+     * @param  Carbon  $relativeToTime
+     * @param  null  $beGraceTimeAware
+     * @param  false  $relativeToEnd
+     */
+    public function isMaxEndTimeSlotInRange(Carbon $start, Carbon $end, ?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): bool
+    {
+        return $this->maxEndTimeSlot($relativeToTime, $beGraceTimeAware, $relativeToEnd)->between($start, $end);
+    }
+
+    public function deadTimeRanges(?Carbon $relativeToTime = null): Collection
+    {
+        $relativeToTime = $relativeToTime ?? now();
+        $slotsCount = count($this->time_slots ?? []);
+
+        if ($slotsCount <= 1) {
+            return collect([]);
+        }
+
+        $deadSlots = [];
+
+        for ($i = 0; $i < $slotsCount; $i++) {
+            if (0 === $i) {
+                $deadSlots[] = $this->time_slots[$i]['end'];
+
+                continue;
+            }
+
+            if ($slotsCount === ($i + 1)) {
+                $deadSlots[] = $this->time_slots[$i]['start'];
+
+                continue;
+            }
+
+            $deadSlots[] = $this->time_slots[$i]['start'];
+            $deadSlots[] = $this->time_slots[$i]['end'];
+        }
+
+        return collect($deadSlots)
+            ->chunk(2)
+            ->mapSpread(function ($even, $odd) use ($relativeToTime) {
+                return $this->mapTimeSlot(
+                    ['start' => $even, 'end' => $odd],
+                    $relativeToTime,
+                    false
+                );
+            });
+    }
+
+    public function hasDeadTimes(?Carbon $relativeToTime = null): bool
+    {
+        return $this->deadTimeRanges($relativeToTime)->count() > 0;
+    }
+
+    public function deadTimesSlotsFromTimeRange(Carbon $start, Carbon $end): Collection
+    {
+        return $this->deadTimeRanges($start)
+            ->filter(function ($deadTimeSlot) use ($start, $end) {
+                return $deadTimeSlot['start']->between($start, $end)
+                && $deadTimeSlot['end']->between($start, $end);
+            });
+    }
+
+    public function deadTimeInMinutesFromTimeRange(Carbon $start, Carbon $end): int
+    {
+        return $this->deadTimesSlotsFromTimeRange($start, $end)
+            ->map(function ($deadTimeSlot) {
+                return $deadTimeSlot['start']->diffInMinutes($deadTimeSlot['end']);
+            })
+            ->sum();
+    }
+
+    /**
+     * @param  Carbon  $date
      * @param  Carbon  $offSet
-     * @return array
      */
     private function mapTimeSlot(array $timeSlot, Carbon $date = null, bool $beGraceTimeAware = true, bool $relativeToEnd = false, Carbon $offSet = null): array
     {
@@ -222,156 +318,5 @@ class WorkShift extends Model
         }
 
         return ['end' => $end->setTimezone('UTC'), 'start' => $start->setTimezone('UTC'), 'original_start' => $originalStart->setTimezone('UTC'), 'original_end' => $originalEnd->setTimezone('UTC')];
-    }
-
-    /**
-     * @param  string  $flag
-     * @param  Carbon  $time
-     * @param  Carbon  $offSet
-     * @return Carbon|null
-     */
-    public function getClosestSlotFlagTime(string $flag, Carbon $time, Carbon $offSet = null): ?Carbon
-    {
-        $timeSlot = $this->matchingTimeSlot($flag, $time, $offSet, $beGraceTimeAware = true);
-
-        return $offSet ?? $timeSlot["original_{$flag}"] ?? null;
-    }
-
-    /**
-     * @param  Carbon  $relativeToTime
-     * @param  bool  $beGraceTimeAware
-     * @return Carbon|null
-     */
-    public function minStartTimeSlot(Carbon $relativeToTime = null, $beGraceTimeAware = false): ?Carbon
-    {
-        $relativeToTime = $relativeToTime ?? now();
-
-        return collect($this->time_slots)
-            ->map(function (array $timeSlot) use ($relativeToTime, $beGraceTimeAware) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, $beGraceTimeAware);
-
-                return $timeSlot['start'];
-            })->sort()->first();
-    }
-
-    /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Carbon  $relativeToTime
-     * @param  null  $beGraceTimeAware
-     * @return bool
-     */
-    public function isMinStartTimeSlotInRage(Carbon $start, Carbon $end, Carbon $relativeToTime = null, $beGraceTimeAware = false): bool
-    {
-        return $this->minStartTimeSlot($relativeToTime, $beGraceTimeAware)->between($start, $end);
-    }
-
-    /**
-     * @param  Carbon|null  $relativeToTime
-     * @param  bool  $beGraceTimeAware
-     * @param  bool  $relativeToEnd
-     * @return Carbon|null
-     */
-    public function maxEndTimeSlot(?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): ?Carbon
-    {
-        $relativeToTime = $relativeToTime ?? now();
-
-        return collect($this->time_slots)
-            ->map(function (array $timeSlot) use ($relativeToTime, $beGraceTimeAware, $relativeToEnd) {
-                $timeSlot = $this->mapTimeSlot($timeSlot, $relativeToTime, $beGraceTimeAware, $relativeToEnd);
-
-                return $timeSlot['end'];
-            })->sort()->last();
-    }
-
-    /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @param  Carbon  $relativeToTime
-     * @param  null  $beGraceTimeAware
-     * @param  false  $relativeToEnd
-     * @return bool
-     */
-    public function isMaxEndTimeSlotInRange(Carbon $start, Carbon $end, ?Carbon $relativeToTime = null, $beGraceTimeAware = false, $relativeToEnd = true): bool
-    {
-        return $this->maxEndTimeSlot($relativeToTime, $beGraceTimeAware, $relativeToEnd)->between($start, $end);
-    }
-
-    /**
-     * @param  Carbon|null  $relativeToTime
-     * @return Collection
-     */
-    public function deadTimeRanges(?Carbon $relativeToTime = null): Collection
-    {
-        $relativeToTime = $relativeToTime ?? now();
-        $slotsCount = count($this->time_slots ?? []);
-
-        if ($slotsCount <= 1) {
-            return collect([]);
-        }
-
-        $deadSlots = [];
-
-        for ($i = 0; $i < $slotsCount; $i++) {
-            if ($i === 0) {
-                $deadSlots[] = $this->time_slots[$i]['end'];
-                continue;
-            }
-
-            if ($slotsCount === ($i + 1)) {
-                $deadSlots[] = $this->time_slots[$i]['start'];
-                continue;
-            }
-
-            $deadSlots[] = $this->time_slots[$i]['start'];
-            $deadSlots[] = $this->time_slots[$i]['end'];
-        }
-
-        return collect($deadSlots)
-            ->chunk(2)
-            ->mapSpread(function ($even, $odd) use ($relativeToTime) {
-                return $this->mapTimeSlot(
-                    ['start' => $even, 'end' => $odd],
-                    $relativeToTime,
-                    false
-                );
-            });
-    }
-
-    /**
-     * @param  Carbon|null  $relativeToTime
-     * @return bool
-     */
-    public function hasDeadTimes(?Carbon $relativeToTime = null): bool
-    {
-        return $this->deadTimeRanges($relativeToTime)->count() > 0;
-    }
-
-    /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @return Collection
-     */
-    public function deadTimesSlotsFromTimeRange(Carbon $start, Carbon $end): Collection
-    {
-        return $this->deadTimeRanges($start)
-            ->filter(function ($deadTimeSlot) use ($start, $end) {
-                return $deadTimeSlot['start']->between($start, $end)
-                && $deadTimeSlot['end']->between($start, $end);
-            });
-    }
-
-    /**
-     * @param  Carbon  $start
-     * @param  Carbon  $end
-     * @return int
-     */
-    public function deadTimeInMinutesFromTimeRange(Carbon $start, Carbon $end): int
-    {
-        return $this->deadTimesSlotsFromTimeRange($start, $end)
-            ->map(function ($deadTimeSlot) {
-                return $deadTimeSlot['start']->diffInMinutes($deadTimeSlot['end']);
-            })
-            ->sum();
     }
 }

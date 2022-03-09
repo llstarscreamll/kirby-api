@@ -18,9 +18,6 @@ class NoveltyApprovalsController
      */
     private $noveltyRepository;
 
-    /**
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     */
     public function __construct(NoveltyRepositoryInterface $noveltyRepository)
     {
         $this->noveltyRepository = $noveltyRepository;
@@ -29,8 +26,6 @@ class NoveltyApprovalsController
     /**
      * Display a listing of the resource.
      *
-     * @param  CreateNoveltyApprovalRequest  $request
-     * @param  string  $noveltyId
      * @return \Illuminate\Http\Response
      */
     public function store(CreateNoveltyApprovalRequest $request, string $noveltyId)
@@ -43,8 +38,6 @@ class NoveltyApprovalsController
     /**
      * Display a listing of the resource.
      *
-     * @param  DeleteNoveltyApprovalRequest  $request
-     * @param  string  $noveltyId
      * @return \Illuminate\Http\Response
      */
     public function destroy(DeleteNoveltyApprovalRequest $request, string $noveltyId)

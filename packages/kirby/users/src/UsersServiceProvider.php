@@ -23,8 +23,6 @@ class UsersServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -38,17 +36,13 @@ class UsersServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/users.php', 'users');
 
         // register the service the package provides
-        $this->app->singleton('users', function ($app) {
-            return new Users();
-        });
+        $this->app->singleton('users', fn () => new Users());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);
@@ -67,8 +61,6 @@ class UsersServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

@@ -21,15 +21,13 @@ use Lcobucci\JWT\Parser;
 class ApiAuthenticationController
 {
     /**
-     * @param  \Kirby\Authentication\UI\API\V1\Requests\LoginRequest  $request
-     * @param  \Kirby\Authentication\Actions\WebLoginProxyAction  $action
      * @return \Illuminate\Http\Response
      */
     public function login(LoginRequest $request, WebLoginProxyAction $action)
     {
         $oAuthResponse = $action->run($request->email, $request->password);
 
-        if ($oAuthResponse['statusCode'] != '200') {
+        if ('200' != $oAuthResponse['statusCode']) {
             return response($oAuthResponse['content'], $oAuthResponse['statusCode']);
         }
 
@@ -59,7 +57,6 @@ class ApiAuthenticationController
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function logout(Request $request)
@@ -81,8 +78,6 @@ class ApiAuthenticationController
     /**
      * @todo El código de este controlador está repetido, se debe abstraer
      *
-     * @param  \Kirby\Authentication\UI\API\V1\Requests\SignUpRequest  $request
-     * @param  \Kirby\Authentication\Actions\WebLoginProxyAction  $action
      * @return \Illuminate\Http\Response
      */
     public function signUp(SignUpRequest $request, WebLoginProxyAction $action)
@@ -98,7 +93,7 @@ class ApiAuthenticationController
 
         $oAuthResponse = $action->run($request->email, $request->password);
 
-        if ($oAuthResponse['statusCode'] != '200') {
+        if ('200' != $oAuthResponse['statusCode']) {
             return response($oAuthResponse['content'], $oAuthResponse['statusCode']);
         }
 
@@ -120,10 +115,9 @@ class ApiAuthenticationController
     }
 
     /**
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Returns the authenticated user.
      */
-    public function getAuthUser(Request $request)
+    public function getAuthUser(Request $request): UserResource
     {
         $user = $request->user()->load([
             'roles:id,name',

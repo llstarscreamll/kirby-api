@@ -13,9 +13,6 @@ use Kirby\Novelties\UI\API\V1\Requests\ExportEmployeeResumeByNoveltyTypesRequest
  */
 class ExportEmployeeResumeByNoveltyTypesController
 {
-    /**
-     * @param  ExportEmployeeResumeByNoveltyTypesRequest  $request
-     */
     public function __invoke(ExportEmployeeResumeByNoveltyTypesRequest $request)
     {
         GenerateCsvEmployeeResumeByNoveltyTypeJob::dispatch(SearchEmployeeNoveltiesData::fromRequest($request));

@@ -16,9 +16,6 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
      */
     public $params;
 
-    /**
-     * @param  array  $params
-     */
     public function __construct(array $params)
     {
         $this->params = $params;
@@ -33,26 +30,23 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
         $productId = Arr::get($this->params, 'product_id');
         $netWeight = Arr::get($this->params, 'net_weight');
         $employeeId = Arr::get($this->params, 'employee_id');
-        $startDate = Arr::get($this->params, 'creation_date.start');
-        $endDate = Arr::get($this->params, 'creation_date.end');
+        $startDate = Arr::get($this->params, 'tag_updated_at.start');
+        $endDate = Arr::get($this->params, 'tag_updated_at.end');
         $startDate = empty($startDate) ? null : Carbon::parse($startDate);
         $endDate = empty($endDate) ? null : Carbon::parse($endDate);
 
-        return ProductionLog::when(array_filter([$startDate, $endDate]), fn ($q, $dateRange) => $q->whereBetween('created_at', $dateRange))
+        return ProductionLog::when(array_filter([$startDate, $endDate]), fn ($q, $dateRange) => $q->whereBetween('tag_updated_at', $dateRange))
             ->when($machineId, fn ($q, $machineId) => $q->where('machine_id', $machineId))
             ->when($productId, fn ($q, $productId) => $q->where('product_id', $productId))
             ->when($employeeId, fn ($q, $employeeId) => $q->where('employee_id', $employeeId))
-        // the (? + 0.0) is a hack to make this query compatible with sqlite, see:
-        //https://github.com/laravel/framework/issues/31201#issuecomment-615682788
+            // the (? + 0.0) is a hack to make this query compatible with sqlite, see:
+            //https://github.com/laravel/framework/issues/31201#issuecomment-615682788
             ->when($netWeight, fn ($q, $netWeight) => $q->whereRaw('gross_weight - tare_weight = (? + 0.0)', [$netWeight]))
             ->with([
                 'employee', 'machine', 'product', 'customer',
             ]);
     }
 
-    /**
-     * @return array
-     */
     public function headings(): array
     {
         return [
@@ -70,7 +64,8 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
             'Peso Bruto (kg)',
             'Peso Neto (kg)',
             'Etiqueta',
-            'Fecha',
+            'Fecha de actualización de etiqueta',
+            'Fecha de creación',
         ];
     }
 
@@ -94,6 +89,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
             $log->gross_weight,
             $log->netWeight(),
             trans($log->tag),
+            $log->tag_updated_at,
             $log->created_at->toIsoString(),
         ];
     }

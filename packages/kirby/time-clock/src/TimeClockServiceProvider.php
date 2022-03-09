@@ -26,8 +26,6 @@ class TimeClockServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -43,17 +41,13 @@ class TimeClockServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/time-clock.php', 'time-clock');
 
         // register the service the package provides
-        $this->app->singleton('TimeClock', function ($app) {
-            return new TimeClock();
-        });
+        $this->app->singleton('TimeClock', fn () => new TimeClock());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);
@@ -72,8 +66,6 @@ class TimeClockServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

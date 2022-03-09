@@ -26,8 +26,6 @@ class EmployeesServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -42,17 +40,13 @@ class EmployeesServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/employees.php', 'employees');
 
         // register the service the package provides
-        $this->app->singleton('employees', function ($app) {
-            return new Employees();
-        });
+        $this->app->singleton('employees', fn () => new Employees());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);
@@ -71,8 +65,6 @@ class EmployeesServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

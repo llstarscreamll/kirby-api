@@ -9,6 +9,8 @@ use Kirby\Users\Models\User;
  * Class LoginTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class LoginTest extends \Tests\TestCase
 {

@@ -5,6 +5,7 @@ namespace Kirby\Production\Repositories;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\Models\ProductionLog;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -13,7 +14,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 class EloquentProductionLogRepository implements ProductionLogRepository
 {
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function create(array $data): ProductionLog
     {
@@ -21,28 +22,45 @@ class EloquentProductionLogRepository implements ProductionLogRepository
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function update(int $id, array $data): bool
     {
-        return ProductionLog::where('id', $id)->update($data);
+        $fieldSets = implode(
+            ', ',
+            array_map(
+                fn ($attr) => "{$attr} = :{$attr}",
+                array_intersect((new ProductionLog())->getFillable(), array_keys($data))
+            )
+        );
+
+        return DB::statement(<<<MYSQL
+            UPDATE production_logs
+            SET tag_updated_at = CASE WHEN tag != :compareTag THEN :now ELSE tag_updated_at END,
+            {$fieldSets}
+            WHERE id = :id;
+        MYSQL, ['id' => $id, 'compareTag' => $data['tag'], 'now' => now()->toDateTimeString()] + $data);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function search(): LengthAwarePaginator
     {
         return QueryBuilder::for(ProductionLog::class)
+            ->join('machines', 'production_logs.machine_id', '=', 'machines.id')
+            ->join('sub_cost_centers', 'machines.sub_cost_center_id', '=', 'sub_cost_centers.id')
             ->allowedFilters([
-                AllowedFilter::exact('employee_id'),
-                AllowedFilter::exact('product_id'),
-                AllowedFilter::exact('machine_id'),
-                AllowedFilter::callback('creation_date', function (Builder $query, $value) {
+                AllowedFilter::callback('tags', fn ($q, $value) => $q->whereIn('tag', $value)),
+                AllowedFilter::callback('machine_ids', fn ($q, $value) => $q->whereIn('machine_id', $value)),
+                AllowedFilter::callback('product_ids', fn ($q, $value) => $q->whereIn('product_id', $value)),
+                AllowedFilter::callback('employee_ids', fn ($q, $value) => $q->whereIn('employee_id', $value)),
+                AllowedFilter::callback('cost_center_ids', fn ($q, $value) => $q->whereIn('sub_cost_centers.cost_center_id', $value)),
+                AllowedFilter::callback('tag_updated_at', function (Builder $query, $value) {
                     $start = Carbon::parse($value['start']);
                     $end = Carbon::parse($value['end']);
 
-                    $query->whereBetween('created_at', [$start, $end]);
+                    $query->whereBetween('tag_updated_at', [$start, $end]);
                 }),
                 AllowedFilter::callback('net_weight', function (Builder $query, $value) {
                     // the (? + 0.0) is a hack to make this query compatible with sqlite, see:
@@ -51,12 +69,12 @@ class EloquentProductionLogRepository implements ProductionLogRepository
                 }),
             ])
             ->allowedIncludes(['employee', 'product', 'machine', 'customer'])
-            ->defaultSort('-id')
-            ->paginate();
+            ->defaultSort('-production_logs.id')
+            ->paginate(null, ['production_logs.*']);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function findById(int $id, $columns = ['*'], $with = []): ?ProductionLog
     {

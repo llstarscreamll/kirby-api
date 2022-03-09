@@ -33,8 +33,6 @@ class CompanyServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -49,17 +47,13 @@ class CompanyServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/company.php', 'company');
 
         // register the service the package provides
-        $this->app->singleton('company', function ($app) {
-            return new Company();
-        });
+        $this->app->singleton('company', fn () => new Company());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);
@@ -78,8 +72,6 @@ class CompanyServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

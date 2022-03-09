@@ -6,12 +6,11 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     *
-     * @return void
      */
     public function run()
     {
         $this->call([
+            ProductsPackageSeed::class,
             EmployeesPackageSeed::class,
             WorkShiftsPackageSeeder::class,
             TimeClockPackageSeeder::class,

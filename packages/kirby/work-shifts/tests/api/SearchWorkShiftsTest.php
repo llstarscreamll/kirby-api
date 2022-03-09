@@ -6,6 +6,8 @@ namespace Kirby\WorkShifts\Tests\api;
  * Class SearchWorkShiftsTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SearchWorkShiftsTest extends \Tests\TestCase
 {

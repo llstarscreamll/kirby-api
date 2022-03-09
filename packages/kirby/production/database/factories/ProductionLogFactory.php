@@ -21,7 +21,7 @@ use Kirby\Products\Models\Product;
 
 $factory->define(ProductionLog::class, function (Faker $faker) {
     return [
-        'product_id' => fn () =>  factory(Product::class)->create()->id,
+        'product_id' => fn () => factory(Product::class)->create()->id,
         'machine_id' => fn () => factory(Machine::class)->create()->id,
         'employee_id' => fn () => factory(Employee::class)->create()->id,
         'customer_id' => fn () => factory(Customer::class)->create()->id,

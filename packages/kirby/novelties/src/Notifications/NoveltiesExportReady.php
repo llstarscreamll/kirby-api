@@ -22,8 +22,6 @@ class NoveltiesExportReady extends Notification
 
     /**
      * Created a new notification instance.
-     *
-     * @param  string  $exportFilePath
      */
     public function __construct(string $exportFilePath)
     {
@@ -52,6 +50,6 @@ class NoveltiesExportReady extends Notification
         return (new MailMessage())
             ->greeting("Hola {$notifiable->first_name},")
             ->line('La exportación de datos de novedades está lista!!')
-            ->action('Descargar', asset("storage/$this->exportFilePath"));
+            ->action('Descargar', asset("storage/{$this->exportFilePath}"));
     }
 }

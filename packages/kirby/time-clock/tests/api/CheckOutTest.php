@@ -3,6 +3,7 @@
 namespace Kirby\TimeClock\Tests\api;
 
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Event;
 use Kirby\Company\Models\SubCostCenter;
@@ -14,6 +15,8 @@ use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\Models\Setting;
 use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Users\Models\User;
+use Kirby\WorkShifts\Models\WorkShift;
 use TimeClockPermissionsSeeder;
 use TimeClockSettingsSeeder;
 
@@ -21,28 +24,22 @@ use TimeClockSettingsSeeder;
  * Class CheckOutTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CheckOutTest extends \Tests\TestCase
 {
-    /**
-     * @var string
-     */
-    private $endpoint = 'api/v1/time-clock/check-out';
+    private string $endpoint = 'api/v1/time-clock/check-out';
 
-    /**
-     * @var \Kirby\Users\Models\User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var \Kirby\Company\Models\SubCostCenter
-     */
-    private $firstSubCostCenter;
+    private SubCostCenter $firstSubCostCenter;
 
-    /**
-     * @var \Kirby\Company\Models\SubCostCenter
-     */
-    private $secondSubCostCenter;
+    private SubCostCenter $secondSubCostCenter;
+
+    private Collection $noveltyTypes;
+
+    private Collection $workShifts;
 
     public function setUp(): void
     {
@@ -51,25 +48,32 @@ class CheckOutTest extends \Tests\TestCase
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
         $this->firstSubCostCenter = factory(SubCostCenter::class)->create();
         $this->secondSubCostCenter = factory(SubCostCenter::class)->create();
+        $this->workShifts = factory(WorkShift::class, 1)->create([
+            'name' => '7 to 6',
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [['start' => '07:00', 'end' => '18:00']],
+        ]);
 
         // novelty types
-        factory(NoveltyType::class, 2)->create([
+        $this->noveltyTypes = factory(NoveltyType::class, 2)->create([
             'operator' => NoveltyTypeOperator::Subtraction,
             'apply_on_days_of_type' => null,
             'context_type' => 'elegible_by_user',
         ]);
 
-        factory(NoveltyType::class)->create([
+        $this->noveltyTypes->push(factory(NoveltyType::class)->create([
             'code' => 'HADI',
             'operator' => NoveltyTypeOperator::Addition,
             'apply_on_days_of_type' => null,
             'context_type' => 'elegible_by_user',
-        ]);
+        ]));
 
         $this->ppNoveltyType = factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP',
             'apply_on_days_of_type' => null,
         ]);
+
+        $this->noveltyTypes->push($this->ppNoveltyType);
     }
 
     /**
@@ -85,7 +89,7 @@ class CheckOutTest extends \Tests\TestCase
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [
                 'work_shift_id' => null, // empty shift
-                'check_in_novelty_type_id' => 3, // empty shift must specify addition novelty type
+                'check_in_novelty_type_id' => $this->noveltyTypes->get(2)->id, // empty shift must specify addition novelty type
                 'check_in_sub_cost_center_id' => $this->secondSubCostCenter->id, // addition novelty type must provide related sub cost center
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
@@ -109,7 +113,7 @@ class CheckOutTest extends \Tests\TestCase
             'employee_id' => $employee->id,
             'work_shift_id' => null,
             'sub_cost_center_id' => null,
-            'check_in_novelty_type_id' => 3,
+            'check_in_novelty_type_id' => $this->noveltyTypes->get(2)->id,
             'check_in_sub_cost_center_id' => $this->secondSubCostCenter->id,
             'checked_in_at' => $checkedInTime->toDateTimeString(),
             'checked_out_at' => now()->toDateTimeString(),
@@ -132,7 +136,7 @@ class CheckOutTest extends \Tests\TestCase
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [ // check in with novelty type but without sub cost center
                 'work_shift_id' => null, // empty shift
-                'check_in_novelty_type_id' => 3, // some novelty type setted
+                'check_in_novelty_type_id' => $this->noveltyTypes->get(2)->id, // some novelty type setted
                 'check_in_sub_cost_center_id' => null, // empty sub cost center
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
@@ -162,7 +166,7 @@ class CheckOutTest extends \Tests\TestCase
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             ->with('timeClockLogs', [ // check in with novelty type but without sub cost center
                 'work_shift_id' => null, // empty shift
-                'check_in_novelty_type_id' => 3, // some novelty type setted
+                'check_in_novelty_type_id' => $this->noveltyTypes->get(2)->id, // some novelty type setted
                 'check_in_sub_cost_center_id' => null, // empty sub cost center
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
@@ -206,18 +210,15 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         $requestData = [
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
@@ -275,18 +276,15 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         $requestData = [
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
@@ -322,18 +320,15 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early
         $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
@@ -353,7 +348,7 @@ class CheckOutTest extends \Tests\TestCase
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'checked_out_at' => now()->toDateTimeString(),
             'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
-            'check_out_novelty_type_id' => 4,
+            'check_out_novelty_type_id' => $this->noveltyTypes->get(3)->id,
         ]);
     }
 
@@ -368,18 +363,15 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early
         $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
@@ -399,7 +391,7 @@ class CheckOutTest extends \Tests\TestCase
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'checked_out_at' => now()->toDateTimeString(),
             'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
-            'check_out_novelty_type_id' => 3,
+            'check_out_novelty_type_id' => $this->noveltyTypes->get(2)->id,
         ]);
     }
 
@@ -414,15 +406,10 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime, // one hour early check in
-                'check_in_novelty_type_id' => 3,
+                'check_in_novelty_type_id' => $this->noveltyTypes->get(2)->id,
                 'check_in_sub_cost_center_id' => $this->firstSubCostCenter->id,
                 'checked_out_at' => null,
                 'check_out_novelty_type_id' => null,
@@ -430,9 +417,11 @@ class CheckOutTest extends \Tests\TestCase
             ])
             ->create();
 
+        $employee->workShifts()->attach($this->workShifts->first());
+
         $requestData = [
             // sub cost center is not required because no work shift time will be registered
-            'novelty_type_id' => 1, // subtract novelty type, because missing work shift time
+            'novelty_type_id' => $this->noveltyTypes->get(0)->id, // subtract novelty type, because missing work shift time
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -444,7 +433,7 @@ class CheckOutTest extends \Tests\TestCase
             'employee_id' => $employee->id,
             'sub_cost_center_id' => null,
             'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
-            'check_out_novelty_type_id' => 1,
+            'check_out_novelty_type_id' => $this->noveltyTypes->get(0)->id,
             'check_out_sub_cost_center_id' => null,
         ]);
     }
@@ -460,18 +449,15 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         NoveltyType::whereNotNull('id')->delete();
 
@@ -539,22 +525,19 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
-                'check_in_novelty_type_id' => 1, // with check in novelty type
+                'check_in_novelty_type_id' => $this->noveltyTypes->get(0), // with check in novelty type
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
 
+        $employee->workShifts()->attach($this->workShifts->first());
+
         $requestData = [
-            'novelty_type_id' => 3, // addition novelty type
+            'novelty_type_id' => $this->noveltyTypes->get(2)->id, // addition novelty type
             'novelty_sub_cost_center_id' => $this->secondSubCostCenter->id, // sub cost center because novelty type
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
@@ -568,7 +551,7 @@ class CheckOutTest extends \Tests\TestCase
             'employee_id' => $employee->id,
             'expected_check_out_at' => now()->setTime(18, 00)->toDateTimeString(),
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
-            'check_out_novelty_type_id' => 3,
+            'check_out_novelty_type_id' => $this->noveltyTypes->get(2)->id,
             'check_out_sub_cost_center_id' => $this->secondSubCostCenter->id,
         ]);
     }
@@ -584,22 +567,19 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
-                'check_in_novelty_type_id' => 1, // with check in novelty type
+                'check_in_novelty_type_id' => $this->noveltyTypes->get(0), // with check in novelty type
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
 
+        $employee->workShifts()->attach($this->workShifts->first());
+
         $requestData = [
-            'novelty_type_id' => 1, // wrong subtraction novelty type
+            'novelty_type_id' => $this->noveltyTypes->get(0)->id, // wrong subtraction novelty type
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
@@ -617,7 +597,7 @@ class CheckOutTest extends \Tests\TestCase
             ->assertJsonHasPath('errors.0.meta.work_shifts')
             ->assertJsonHasPath('errors.0.meta.novelty_types')
             ->assertJsonHasPath('errors.0.meta.sub_cost_centers')
-            ->assertJsonPath('errors.0.meta.novelty_types.0.id', 3) // should return addition novelty types
+            ->assertJsonPath('errors.0.meta.novelty_types.0.id', $this->noveltyTypes->get(2)->id) // should return addition novelty types
             ->assertJsonMissingPath('errors.0.meta.novelty_types.1.id')
             ->assertJsonMissingPath('errors.0.meta.novelty_types.2.id');
     }
@@ -665,19 +645,16 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime, // on time
                 'checked_out_at' => null,
                 'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         $requestData = [
             'identification_code' => $employee->identifications->first()->code,
@@ -715,19 +692,16 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
         // 5pm, he's on time to check out, so the default novelty type for check
@@ -769,19 +743,16 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
@@ -812,7 +783,7 @@ class CheckOutTest extends \Tests\TestCase
             'employee_id' => $employee->id,
             'expected_check_out_at' => now()->setTime(17, 00)->toDateTimeString(),
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
-            'check_out_novelty_type_id' => 4,
+            'check_out_novelty_type_id' => $this->noveltyTypes->get(3)->id,
             'check_out_sub_cost_center_id' => $this->firstSubCostCenter->id,
         ]);
     }
@@ -828,19 +799,16 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
@@ -914,19 +882,16 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
@@ -1000,19 +965,20 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '22 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '22:00', 'end' => '06:00']],
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $workShift = factory(WorkShift::class)->create([
+                    'name' => '22 to 6',
+                    'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                    'time_slots' => [['start' => '22:00', 'end' => '06:00']],
+                ]),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($workShift);
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
@@ -1091,19 +1057,16 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
@@ -1167,17 +1130,18 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '12 to 19',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '12:00', 'end' => '19:00']], // should check out at 6pm
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $workShift = factory(WorkShift::class)->create([
+                    'name' => '12 to 19',
+                    'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+                    'time_slots' => [['start' => '12:00', 'end' => '19:00']], // should check out at 6pm
+                ]),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => now()->setTime(12, 29),
             ])
             ->create();
+
+        $employee->workShifts()->attach($workShift);
 
         $novelty = factory(Novelty::class)->create([
             'employee_id' => $employee->id,
@@ -1187,7 +1151,7 @@ class CheckOutTest extends \Tests\TestCase
         ]);
 
         $lastTimeClockLog = factory(TimeClockLog::class)->create([
-            'work_shift_id' => 1,
+            'work_shift_id' => $workShift,
             'employee_id' => $employee->id,
             'checked_in_at' => now()->setTime(12, 41),
             'checked_out_at' => null,
@@ -1239,19 +1203,16 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 6',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check out at 6pm
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $this->workShifts->first(),
                 'checked_in_at' => $checkedInTime,
                 'checked_out_at' => null,
                 'check_in_novelty_type_id' => null,
                 'checked_in_by_id' => $this->user->id,
             ])
             ->create();
+
+        $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
@@ -1276,7 +1237,7 @@ class CheckOutTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

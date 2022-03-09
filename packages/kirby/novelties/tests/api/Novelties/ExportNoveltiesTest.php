@@ -11,6 +11,8 @@ use NoveltiesPackageSeed;
  * Class ExportNoveltiesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class ExportNoveltiesTest extends \Tests\TestCase
 {
@@ -58,7 +60,7 @@ class ExportNoveltiesTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

@@ -9,6 +9,9 @@ use Kirby\Production\Notifications\ProductionLogsCsvReady;
 use Maatwebsite\Excel\Facades\Excel;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class ExportProductionLogsToCsvJobTest extends TestCase
 {
     /**

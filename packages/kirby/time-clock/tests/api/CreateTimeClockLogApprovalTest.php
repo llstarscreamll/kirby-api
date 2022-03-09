@@ -11,6 +11,8 @@ use TimeClockPermissionsSeeder;
  * Class CreateTimeClockLogApprovalTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateTimeClockLogApprovalTest extends \Tests\TestCase
 {
@@ -59,7 +61,7 @@ class CreateTimeClockLogApprovalTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

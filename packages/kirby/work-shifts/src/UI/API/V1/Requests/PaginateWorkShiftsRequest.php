@@ -17,14 +17,12 @@ class PaginateWorkShiftsRequest extends FormRequestAbstract
      * @var array
      */
     protected $access = [
-        'roles'       => [],
+        'roles' => [],
         'permissions' => ['work-shift.search'],
     ];
 
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -33,8 +31,6 @@ class PaginateWorkShiftsRequest extends FormRequestAbstract
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {

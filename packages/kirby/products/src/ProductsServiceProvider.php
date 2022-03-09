@@ -9,8 +9,6 @@ class ProductsServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -31,17 +29,13 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/products.php', 'products');
 
         // Register the service the package provides.
-        $this->app->singleton('products', function ($app) {
-            return new Products();
-        });
+        $this->app->singleton('products', fn () => new Products());
     }
 
     /**
@@ -56,8 +50,6 @@ class ProductsServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole(): void
     {

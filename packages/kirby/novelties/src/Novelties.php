@@ -13,9 +13,6 @@ use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
  */
 class Novelties
 {
-    /**
-     * @return Collection
-     */
     public function rawSettings(): Collection
     {
         return app(SettingRepositoryInterface::class)
@@ -23,9 +20,6 @@ class Novelties
             ->get();
     }
 
-    /**
-     * @return Collection
-     */
     public function settings(): Collection
     {
         $settings = $this->rawSettings();
@@ -38,17 +32,11 @@ class Novelties
         });
     }
 
-    /**
-     * @return int
-     */
     public function defaultSubTractNoveltyTypeId(): int
     {
         return $this->rawSettings()->firstWhere('key', 'novelties.default-subtraction-balance-novelty-type')->value;
     }
 
-    /**
-     * @return int
-     */
     public function defaultAdditionNoveltyTypeId(): int
     {
         return $this->rawSettings()->firstWhere('key', 'novelties.default-addition-balance-novelty-type')->value;

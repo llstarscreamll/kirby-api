@@ -13,15 +13,13 @@ class CreateSubCostCentersTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::create('sub_cost_centers', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('cost_center_id');
-            $table->string('code')->unique();
+            $table->string('code', 100)->unique();
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();
@@ -32,8 +30,6 @@ class CreateSubCostCentersTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

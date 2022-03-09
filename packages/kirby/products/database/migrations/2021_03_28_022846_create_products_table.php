@@ -8,18 +8,16 @@ class CreateProductsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('internal_code')->unique();
-            $table->string('customer_code')->unique();
             $table->string('name');
             $table->string('short_name');
-            $table->string('wire_gauge_in_bwg')->default('')->comment('wire gauge in BGW');
+            $table->string('internal_code')->unique();
+            $table->string('customer_code')->unique();
+            $table->string('wire_gauge_in_bwg', 100)->default('')->comment('wire gauge in BGW');
             $table->unsignedDecimal('wire_gauge_in_mm', 5, 2)->comment('wire gauge in millimeters');
             $table->timestamps();
         });
@@ -27,8 +25,6 @@ class CreateProductsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

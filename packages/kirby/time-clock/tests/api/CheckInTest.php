@@ -4,6 +4,7 @@ namespace Kirby\TimeClock\Tests\api;
 
 use DefaultNoveltyTypesSeed;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
@@ -14,6 +15,7 @@ use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Events\CheckedInEvent;
 use Kirby\TimeClock\Models\Setting;
 use Kirby\TimeClock\Models\TimeClockLog;
+use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
 use TimeClockPermissionsSeeder;
 use TimeClockSettingsSeeder;
@@ -22,6 +24,8 @@ use TimeClockSettingsSeeder;
  * Class CheckInTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CheckInTest extends \Tests\TestCase
 {
@@ -30,45 +34,36 @@ class CheckInTest extends \Tests\TestCase
      */
     private $endpoint = 'api/v1/time-clock/check-in';
 
-    /**
-     * @var \Kirby\Users\Models\User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var \Kirby\Company\Models\SubCostCenter
-     */
-    private $subCostCenter;
+    private SubCostCenter $subCostCenter;
 
-    /**
-     * @var \Kirby\Novelties\Models\NoveltyType
-     */
-    private $subtractTimeNovelty;
+    private NoveltyType $subtractTimeNovelty;
 
-    /**
-     * @var \Kirby\Novelties\Models\NoveltyType
-     */
-    private $additionalTimeNovelty;
+    private NoveltyType $additionalTimeNovelty;
+
+    private Collection $noveltyTypes;
 
     public function setUp(): void
     {
         parent::setUp();
+
         Artisan::call('db:seed', ['--class' => TimeClockPermissionsSeeder::class]);
         $this->actingAsAdmin($this->user = factory(\Kirby\Users\Models\User::class)->create());
         $this->subCostCenter = factory(SubCostCenter::class)->create();
 
         // novelty types
-        factory(NoveltyType::class, 2)->create([
+        $this->noveltyTypes = factory(NoveltyType::class, 2)->create([
             'operator' => NoveltyTypeOperator::Subtraction,
             'apply_on_days_of_type' => null,
             'context_type' => 'elegible_by_user',
         ]);
 
-        factory(NoveltyType::class)->create([
+        $this->noveltyTypes->push(factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Addition,
             'apply_on_days_of_type' => null,
             'context_type' => 'elegible_by_user',
-        ]);
+        ]));
 
         $this->subtractTimeNovelty = factory(NoveltyType::class)->create([
             'operator' => NoveltyTypeOperator::Subtraction, 'code' => 'PP',
@@ -79,6 +74,10 @@ class CheckInTest extends \Tests\TestCase
             'operator' => NoveltyTypeOperator::Addition, 'code' => 'HADI',
             'apply_on_days_of_type' => null,
         ]);
+
+        $this->noveltyTypes
+            ->push($this->subtractTimeNovelty)
+            ->push($this->additionalTimeNovelty);
     }
 
     /**
@@ -535,6 +534,7 @@ class CheckInTest extends \Tests\TestCase
         // fake current date time
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 07, 00)); // monday, workday
 
+        $noveltyTypes = NoveltyType::all();
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
             // work shifts with same start time
@@ -566,9 +566,9 @@ class CheckInTest extends \Tests\TestCase
             ->assertJsonHasPath('errors.0.meta.punctuality')
             ->assertJsonHasPath('errors.0.meta.work_shifts')
             ->assertJsonHasPath('errors.0.meta.novelty_types')
-            ->assertJsonPath('errors.0.meta.novelty_types.0.id', 1)
-            ->assertJsonPath('errors.0.meta.novelty_types.1.id', 2)
-            ->assertJsonPath('errors.0.meta.novelty_types.2.id', 3)
+            ->assertJsonPath('errors.0.meta.novelty_types.0.id', $noveltyTypes->get(0)->id)
+            ->assertJsonPath('errors.0.meta.novelty_types.1.id', $noveltyTypes->get(1)->id)
+            ->assertJsonPath('errors.0.meta.novelty_types.2.id', $noveltyTypes->get(2)->id)
             ->assertJsonHasPath('errors.0.meta.sub_cost_centers');
     }
 
@@ -592,7 +592,7 @@ class CheckInTest extends \Tests\TestCase
         // novelty sub cost center is send on `sub_cost_center_id` field
         $requestData = [
             'work_shift_id' => -1, // without specific work shift
-            'novelty_type_id' => 3, // addition novelty type registered must be provided
+            'novelty_type_id' => $this->noveltyTypes->get(2)->id, // addition novelty type registered must be provided
             'sub_cost_center_id' => $this->subCostCenter->id, // sub cost center id because of novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
@@ -606,7 +606,7 @@ class CheckInTest extends \Tests\TestCase
             'work_shift_id' => null, // empty work shift
             'expected_check_in_at' => null,
             'checked_in_at' => now()->toDateTimeString(),
-            'check_in_novelty_type_id' => 3,
+            'check_in_novelty_type_id' => $this->noveltyTypes->get(2)->id,
             'check_in_sub_cost_center_id' => $this->subCostCenter->id,
         ]);
     }
@@ -640,8 +640,8 @@ class CheckInTest extends \Tests\TestCase
             ->assertJsonHasPath('errors.0.detail')
             ->assertJsonHasPath('errors.0.meta.novelty_types.0.id') // should return novelties that subtract time
             ->assertJsonHasPath('errors.0.meta.novelty_types.1.id')
-            ->assertJsonPath('errors.0.meta.novelty_types.0.id', 1)
-            ->assertJsonPath('errors.0.meta.novelty_types.1.id', 2)
+            ->assertJsonPath('errors.0.meta.novelty_types.0.id', $this->noveltyTypes->get(0)->id)
+            ->assertJsonPath('errors.0.meta.novelty_types.1.id', $this->noveltyTypes->get(1)->id)
             ->assertJsonMissingPath('errors.0.meta.novelty_types.2.id')
             ->assertJsonHasPath('errors.0.code')
             ->assertJsonHasPath('errors.0.title')
@@ -709,7 +709,7 @@ class CheckInTest extends \Tests\TestCase
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
 
         $requestData = [
-            'novelty_type_id' => 1, // subtraction novelty type
+            'novelty_type_id' => $this->noveltyTypes->get(0)->id, // subtraction novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -719,7 +719,7 @@ class CheckInTest extends \Tests\TestCase
 
         $this->assertDatabaseHas('time_clock_logs', [
             'employee_id' => $employee->id,
-            'check_in_novelty_type_id' => 1, // subtraction novelty type
+            'check_in_novelty_type_id' => $this->noveltyTypes->get(0)->id, // subtraction novelty type
         ]);
     }
 
@@ -741,7 +741,7 @@ class CheckInTest extends \Tests\TestCase
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
 
         $requestData = [
-            'novelty_type_id' => 3, // wrong addition novelty type
+            'novelty_type_id' => $this->noveltyTypes->get(2)->id, // wrong addition novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -762,8 +762,8 @@ class CheckInTest extends \Tests\TestCase
             ->assertJsonHasPath('errors.0.meta.novelty_types.0.id')
             ->assertJsonHasPath('errors.0.meta.novelty_types.1.id')
             ->assertJsonMissingPath('errors.0.meta.novelty_types.2.id')
-            ->assertJsonPath('errors.0.meta.novelty_types.0.id', 1)
-            ->assertJsonPath('errors.0.meta.novelty_types.1.id', 2);
+            ->assertJsonPath('errors.0.meta.novelty_types.0.id', $this->noveltyTypes->get(0)->id)
+            ->assertJsonPath('errors.0.meta.novelty_types.1.id', $this->noveltyTypes->get(1)->id);
     }
 
     /**
@@ -804,7 +804,7 @@ class CheckInTest extends \Tests\TestCase
             ->assertJsonHasPath('errors.0.meta.novelty_types')
             ->assertJsonMissingPath('errors.0.meta.novelty_types.1')
             ->assertJsonMissingPath('errors.0.meta.novelty_types.2')
-            ->assertJsonPath('errors.0.meta.novelty_types.0.id', 3)
+            ->assertJsonPath('errors.0.meta.novelty_types.0.id', $this->noveltyTypes->get(2)->id)
             ->assertJsonHasPath('errors.0.meta.sub_cost_centers')
             ->assertJsonMissingPath('errors.0.meta.work_shifts.0'); // empty work shifts
     }
@@ -847,7 +847,7 @@ class CheckInTest extends \Tests\TestCase
             ->assertJsonHasPath('errors.0.meta.novelty_types.0.id') // should return addition novelty types
             ->assertJsonMissingPath('errors.0.meta.novelty_types.1.id')
             ->assertJsonMissingPath('errors.0.meta.novelty_types.2.id')
-            ->assertJsonPath('errors.0.meta.novelty_types.0.id', 3);
+            ->assertJsonPath('errors.0.meta.novelty_types.0.id', $this->noveltyTypes->get(2)->id);
     }
 
     /**
@@ -868,8 +868,8 @@ class CheckInTest extends \Tests\TestCase
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
 
         $requestData = [
-            'work_shift_id' => 1,
-            'novelty_type_id' => 3, // addition novelty type
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'novelty_type_id' => $this->noveltyTypes->get(2)->id, // addition novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -907,8 +907,8 @@ class CheckInTest extends \Tests\TestCase
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
 
         $requestData = [
-            'work_shift_id' => 1,
-            'novelty_type_id' => 3, // addition novelty type
+            'work_shift_id' => $employee->workShifts->first()->id,
+            'novelty_type_id' => $this->noveltyTypes->get(2)->id, // addition novelty type
             'sub_cost_center_id' => $this->subCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
         ];
@@ -916,11 +916,12 @@ class CheckInTest extends \Tests\TestCase
         $this->json('POST', $this->endpoint, $requestData)
             ->assertCreated()
             ->assertJsonHasPath('data.id');
+
         $this->assertDatabaseHas('time_clock_logs', [
             'employee_id' => $employee->id,
-            'work_shift_id' => 1,
+            'work_shift_id' => $employee->workShifts->first()->id,
             'expected_check_in_at' => now()->setTime(07, 00)->toDateTimeString(),
-            'check_in_novelty_type_id' => 3, // addition novelty type
+            'check_in_novelty_type_id' => $this->noveltyTypes->get(2)->id, // addition novelty type
         ]);
     }
 
@@ -945,7 +946,7 @@ class CheckInTest extends \Tests\TestCase
             // when checking is too early, there is no way to know the work shift,
             // so the work shift id should be provided
             'work_shift_id' => $employee->workShifts->first()->id,
-            'novelty_type_id' => 1, // wrong subtraction novelty type
+            'novelty_type_id' => $this->noveltyTypes->get(0)->id, // wrong subtraction novelty type
             'identification_code' => $employee->identifications->first()->code,
         ];
 
@@ -965,7 +966,7 @@ class CheckInTest extends \Tests\TestCase
             ->assertJsonHasPath('errors.0.meta.novelty_types.0.id') // should return addition novelty types
             ->assertJsonMissingPath('errors.0.meta.novelty_types.1.id')
             ->assertJsonMissingPath('errors.0.meta.novelty_types.2.id')
-            ->assertJsonPath('errors.0.meta.novelty_types.0.id', 3);
+            ->assertJsonPath('errors.0.meta.novelty_types.0.id', $this->noveltyTypes->get(2)->id);
     }
 
     // ######################################################################## #
@@ -1326,20 +1327,24 @@ class CheckInTest extends \Tests\TestCase
     {
         // fake current date time, monday at 12m, on time because of scheduled novelty
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 12, 00));
+        $workShift = factory(WorkShift::class)->create([
+            'name' => '7 to 18',
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+        ]);
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 18',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'id' => 5678,
+                'work_shift_id' => $workShift,
                 'checked_in_at' => now()->setTime(07, 00),
                 'checked_out_at' => now()->setTime(10, 00),
                 'checked_in_by_id' => $this->user->id,
-            ])->create();
+            ])
+            ->create();
+
+        $employee->workShifts()->attach($workShift);
 
         // set setting to NOT require novelty type when check in is too late,
         // this make to set a default novelty type id for the late check in
@@ -1351,7 +1356,7 @@ class CheckInTest extends \Tests\TestCase
         // finish the remaining work shift time
         $noveltyData = [
             'employee_id' => $employee->id,
-            'time_clock_log_id' => 1,
+            'time_clock_log_id' => 5678,
             'start_at' => now()->setTime(10, 00), // 10am
             'end_at' => now()->setTime(12, 00), // 12m
         ];
@@ -1381,19 +1386,23 @@ class CheckInTest extends \Tests\TestCase
      */
     public function shouldFixScheduledNoveltyEndTimeWhenArrivesToEarlyToSaisNoveltyAndHasMorningCheckIn()
     {
+        $workShift = factory(WorkShift::class)->create([
+            'name' => '7 to 18',
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
+        ]);
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '7 to 18',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '07:00', 'end' => '18:00']], // should check in at 7am
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'id' => 123,
+                'work_shift_id' => $workShift,
                 'checked_in_at' => now()->setTime(07, 00),
                 'checked_out_at' => now()->setTime(10, 00),
                 'checked_in_by_id' => $this->user->id,
-            ])->create();
+            ])
+            ->create();
+
+        $employee->workShifts()->attach($workShift);
 
         // set setting to NOT require novelty type when check in is too late and
         // set a default novelty type for the early/late check in/outs
@@ -1408,7 +1417,7 @@ class CheckInTest extends \Tests\TestCase
         // because scheduled novelty end is until 12m
         $noveltyData = [
             'employee_id' => $employee->id,
-            'time_clock_log_id' => 1,
+            'time_clock_log_id' => 123,
             'start_at' => now()->setTime(10, 00), // 10am
             'end_at' => now()->setTime(12, 00), // 12m
         ];
@@ -1455,19 +1464,25 @@ class CheckInTest extends \Tests\TestCase
         // fake current date time, monday at 6pm
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 12, 15));
 
+        // set setting to NOT require novelty type when check out is too early
+        // or too late, and set automatic adjustment to scheduled novelties
+        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => true]);
+
+        $workShift = factory(WorkShift::class)->create([
+            'name' => '10 to 18',
+            'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
+            'time_slots' => [['start' => '10:00', 'end' => '18:00']], // should check out at 6pm
+        ]);
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
-            ->with('workShifts', [
-                'name' => '10 to 18',
-                'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-                'time_slots' => [['start' => '10:00', 'end' => '18:00']], // should check out at 6pm
-            ])
             ->with('timeClockLogs', [
-                'work_shift_id' => 1,
+                'work_shift_id' => $workShift->id,
                 'checked_in_at' => now()->setTime(11, 48),
                 'checked_out_at' => now()->setTime(11, 57),
             ])
             ->create();
+        $employee->workShifts()->sync($workShift);
 
         // is important to note that scheduled novelty is created before the
         // first time clock novelties
@@ -1494,11 +1509,6 @@ class CheckInTest extends \Tests\TestCase
             'start_at' => now()->setTime(11, 57),
             'end_at' => now()->setTime(18, 00),
         ]);
-
-        // set setting to NOT require novelty type when check out is too early
-        // or too late, and set automatic adjustment to scheduled novelties
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
-        Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => true]);
 
         $requestData = [
             'sub_cost_center_id' => factory(SubCostCenter::class)->create()->id,
@@ -1701,7 +1711,7 @@ class CheckInTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

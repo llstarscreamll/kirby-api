@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class GetNoveltyTypeTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetNoveltyTypeTest extends \Tests\TestCase
 {
@@ -40,7 +42,7 @@ class GetNoveltyTypeTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->actingAsGuest()->json('GET', $this->endpoint)->assertForbidden();
     }

@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
  * Class DeleteWorkShiftByIdTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class DeleteWorkShiftByIdTest extends \Tests\TestCase
 {

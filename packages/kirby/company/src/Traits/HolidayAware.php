@@ -14,22 +14,7 @@ trait HolidayAware
     private $holidayRepository;
 
     /**
-     * @return \Kirby\Company\Contracts\HolidayRepositoryInterface
-     */
-    private function holidayRepository(): HolidayRepositoryInterface
-    {
-        if (! $this->holidayRepository) {
-            $this->holidayRepository = App::make(HolidayRepositoryInterface::class);
-        }
-
-        return $this->holidayRepository;
-    }
-
-    /**
      * Check if $date is holiday.
-     *
-     * @param  Carbon  $date
-     * @return bool
      */
     public function isHoliday(Carbon $date): bool
     {
@@ -40,14 +25,20 @@ trait HolidayAware
 
     /**
      * Check if any of the $dates are holidays.
-     *
-     * @param  array  $dates
-     * @return bool
      */
     public function hasAnyHoliday(array $dates): bool
     {
         $areHolidays = array_map(fn (Carbon $date) => $this->isHoliday($date), $dates);
 
         return count(array_filter($areHolidays)) > 0;
+    }
+
+    private function holidayRepository(): HolidayRepositoryInterface
+    {
+        if (! $this->holidayRepository) {
+            $this->holidayRepository = App::make(HolidayRepositoryInterface::class);
+        }
+
+        return $this->holidayRepository;
     }
 }

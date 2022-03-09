@@ -2,31 +2,38 @@ build:
   environment:
     php:
       version: 7.4
-      compile_options: '--enable-cli --with-openssl --with-imap-ssl --enable-bcmath --enable-mbstring --with-zlib --with-curl --enable-pcntl --enable-gd --with-xsl --with-sodium --with-zlib --without-pear'
+      compile_options: '--enable-cli --with-pdo-mysql --with-openssl --with-imap-ssl --enable-bcmath --enable-mbstring --with-zlib --with-curl --enable-pcntl --enable-gd --with-xsl --with-sodium --with-zlib --without-pear'
       pecl_extensions:
         - zip
         - redis
         - pcov
+  services:
+    mysql:
+      image: "mysql:8"
+      command: --default-authentication-plugin=mysql_native_password
+      ports:
+        - 3306
+      env:
+        MYSQL_DATABASE: test
+        MYSQL_ALLOW_EMPTY_PASSWORD: true
+        MYSQL_ROOT_PASSWORD: ''
   project_setup:
     override:
-      - true
-  cache:
-    directories:
-      - vendor/
-      - ~/.composer/cache/
-  nodes:
-    analysis:
-      tests:
-        override:
-          - php-scrutinizer-run
-
-  tests:
-    before:
+      - export DB_USERNAME=root
       - chmod -R 777 storage
       - chmod -R 777 bootstrap/cache
       - php artisan passport:keys
+  tests:
     override:
-      - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --coverage-clover coverage.xml
+      - command: php-scrutinizer-run
+      - command: phpcs-run
+        use_website_config: true
+      - command: php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude="~vendor~" ./vendor/bin/phpunit --stop-on-error --stop-on-failure --coverage-clover coverage.xml
         coverage:
           file: coverage.xml
           format: clover
+  cache:
+    directories:
+      - node_modules/
+      - vendor/
+      - ~/.composer/cache/

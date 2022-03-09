@@ -15,8 +15,6 @@ class AuthenticationServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -34,17 +32,13 @@ class AuthenticationServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/authentication.php', 'authentication');
 
         // register the service the package provides
-        $this->app->singleton('authentication', function ($app) {
-            return new Authentication();
-        });
+        $this->app->singleton('authentication', fn () => new Authentication());
     }
 
     /**
@@ -59,8 +53,6 @@ class AuthenticationServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

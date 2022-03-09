@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
  * Class GetWorkShiftByIdTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class GetWorkShiftByIdTest extends \Tests\TestCase
 {

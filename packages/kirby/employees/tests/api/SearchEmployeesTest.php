@@ -9,6 +9,8 @@ use Kirby\Employees\Models\Employee;
  * Class SearchEmployeesTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class SearchEmployeesTest extends \Tests\TestCase
 {
@@ -44,7 +46,7 @@ class SearchEmployeesTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->user->roles()->delete();
         $this->user->permissions()->delete();

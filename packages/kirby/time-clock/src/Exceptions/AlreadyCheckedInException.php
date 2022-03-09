@@ -13,6 +13,11 @@ use Exception;
 class AlreadyCheckedInException extends Exception
 {
     /**
+     * @var \Carbon\Carbon
+     */
+    public $checkedInAt;
+
+    /**
      * @var string
      */
     protected $message = 'Already checked in, can\'t check again.';
@@ -23,13 +28,7 @@ class AlreadyCheckedInException extends Exception
     protected $code = 1050;
 
     /**
-     * @var \Carbon\Carbon
-     */
-    public $checkedInAt;
-
-    /**
      * @param  string  $message
-     * @param  Carbon  $checkedInAt
      */
     public function __construct(Carbon $checkedInAt)
     {

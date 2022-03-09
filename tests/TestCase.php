@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\DB;
@@ -11,10 +12,12 @@ use Kirby\Users\Models\User;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, CreateTestResponse, RefreshDatabase;
+    use CreatesApplication;
+    use CreateTestResponse;
+    use RefreshDatabase;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function json($method, $uri, array $data = [], array $headers = [])
     {
@@ -22,7 +25,7 @@ abstract class TestCase extends BaseTestCase
 
         $content = json_encode($data);
 
-        $parameters = $method === 'GET' ? $data : [];
+        $parameters = 'GET' === $method ? $data : [];
 
         $headers = array_merge([
             'CONTENT_LENGTH' => mb_strlen($content, '8bit'),
@@ -31,14 +34,16 @@ abstract class TestCase extends BaseTestCase
         ], $headers);
 
         return $this->call(
-            $method, $uri, $parameters, $this->prepareCookiesForJsonRequest(), $files, $this->transformHeadersToServerVars($headers), $content
+            $method,
+            $uri,
+            $parameters,
+            $this->prepareCookiesForJsonRequest(),
+            $files,
+            $this->transformHeadersToServerVars($headers),
+            $content
         );
     }
 
-    /**
-     * @param  string  $table
-     * @param  array  $data
-     */
     public function haveRecord(string $table, array $data)
     {
         DB::table($table)->insert($data);
@@ -73,18 +78,37 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param  int  $count
-     * @param  string  $table
-     * @param  array  $data
      * @param  null|string  $connection
      * @return mixed
      */
     public function assertDatabaseRecordsCount(int $count, string $table, array $data = [], $connection = null)
     {
         $this->assertThat(
-            $table, new MatchCountInDatabase($this->getConnection($connection), $data, $count)
+            $table,
+            new MatchCountInDatabase($this->getConnection($connection), $data, $count)
         );
 
         return $this;
+    }
+
+    /**
+     * Cast a JSON string to a database compatible type. Éste método es tomado
+     * de la versión 8 de Laravel:
+     * https://github.com/laravel/framework/blob/8.x/src/Illuminate/Foundation/Testing/Concerns/InteractsWithDatabase.php#L192.
+     *
+     * @param  array|string  $value
+     * @return \Illuminate\Database\Query\Expression
+     */
+    public function castAsJson($value)
+    {
+        if ($value instanceof Jsonable) {
+            $value = $value->toJson();
+        } elseif (is_array($value) || is_object($value)) {
+            $value = json_encode($value);
+        }
+
+        $value = DB::connection()->getPdo()->quote($value);
+
+        return DB::raw("CAST({$value} AS JSON)");
     }
 }

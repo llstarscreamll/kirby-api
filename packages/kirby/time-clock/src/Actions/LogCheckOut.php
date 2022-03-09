@@ -69,16 +69,6 @@ class LogCheckOut
      */
     private $validateNoveltyTypeBasedOnWorkShiftPunctualityAction;
 
-    /**
-     * @param  HolidayRepositoryInterface  $holidayRepository
-     * @param  SettingRepositoryInterface  $settingRepository
-     * @param  NoveltyRepositoryInterface  $noveltyRepository
-     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
-     * @param  TimeClockLogRepositoryInterface  $timeClockLogRepository
-     * @param  SubCostCenterRepositoryInterface  $subCostCenterRepository
-     * @param  IdentificationRepositoryInterface  $identificationRepository
-     * @param  ValidateNoveltyTypeBasedOnWorkShiftPunctuality  $validateNoveltyTypeBasedOnWorkShiftPunctualityAction
-     */
     public function __construct(
         HolidayRepositoryInterface $holidayRepository,
         SettingRepositoryInterface $settingRepository,
@@ -100,12 +90,9 @@ class LogCheckOut
     }
 
     /**
-     * @param  User  $registrar
-     * @param  string  $identificationCode
      * @param  int  $subCostCenterId
      * @param  int  $noveltyTypeId
      * @param  int  $noveltySubCostCenterId
-     * @return TimeClockLog
      *
      * @throws MissingCheckInException
      * @throws TooEarlyToCheckException
@@ -192,7 +179,7 @@ class LogCheckOut
             'checked_out_by_id' => $registrar->id,
             'sub_cost_center_id' => $subCostCenterId,
             'check_out_novelty_type_id' => optional($noveltyType)->id,
-            'check_out_sub_cost_center_id' => ($noveltyTypeIsRequired && $shiftPunctuality !== 0) || $shiftPunctuality === 0
+            'check_out_sub_cost_center_id' => ($noveltyTypeIsRequired && 0 !== $shiftPunctuality) || 0 === $shiftPunctuality
                 ? $noveltySubCostCenterId
                 : $subCostCenterId,
         ];

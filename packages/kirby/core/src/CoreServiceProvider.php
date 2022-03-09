@@ -13,8 +13,6 @@ class CoreServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -27,17 +25,13 @@ class CoreServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/core.php', 'core');
 
         // register the service the package provides
-        $this->app->singleton('core', function ($app) {
-            return new Core();
-        });
+        $this->app->singleton('core', fn () => new Core());
     }
 
     /**
@@ -52,8 +46,6 @@ class CoreServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

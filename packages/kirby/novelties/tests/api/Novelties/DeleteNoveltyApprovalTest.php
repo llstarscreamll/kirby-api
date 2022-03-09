@@ -9,6 +9,8 @@ use NoveltiesPackageSeed;
  * Class DeleteNoveltyApprovalTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class DeleteNoveltyApprovalTest extends \Tests\TestCase
 {
@@ -68,7 +70,7 @@ class DeleteNoveltyApprovalTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $endpoint = str_replace(['{novelty-id}', '{approval-id}'], [1, 2], $this->endpoint);
 

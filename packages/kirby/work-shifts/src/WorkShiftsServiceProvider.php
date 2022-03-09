@@ -23,8 +23,6 @@ class WorkShiftsServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -39,17 +37,13 @@ class WorkShiftsServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
         $this->mergeConfigFrom(__DIR__.'/../config/work-shifts.php', 'work-shifts');
 
         // register the service the package provides
-        $this->app->singleton('workShifts', function ($app) {
-            return new WorkShifts();
-        });
+        $this->app->singleton('workShifts', fn () => new WorkShifts());
 
         foreach ($this->binds as $abstract => $concrete) {
             $this->app->bind($abstract, $concrete);
@@ -68,8 +62,6 @@ class WorkShiftsServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {

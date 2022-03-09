@@ -10,6 +10,9 @@ use Kirby\Users\Models\User;
 use ProductionPackageSeed;
 use Tests\TestCase;
 
+/**
+ * @internal
+ */
 class ExportProductionLogsToCsvTest extends TestCase
 {
     /**
@@ -60,7 +63,7 @@ class ExportProductionLogsToCsvTest extends TestCase
 
         $dataInput = [
             'filter' => [
-                'creation_date' => [
+                'tag_updated_at' => [
                     'start' => now()->subDays(5)->startOfDay()->toISOString(),
                     'end' => now()->subDays(5)->endOfDay()->toISOString(),
                 ],
@@ -75,7 +78,7 @@ class ExportProductionLogsToCsvTest extends TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesNotHavePermissions()
+    public function shouldReturnForbiddenWhenUserDoesNotHavePermissions()
     {
         $this->user->permissions()->delete();
 

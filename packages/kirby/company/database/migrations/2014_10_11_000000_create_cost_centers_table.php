@@ -13,14 +13,12 @@ class CreateCostCentersTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
         Schema::create('cost_centers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('code')->unique();
+            $table->string('code', 100)->unique();
             $table->string('name');
             $table->timestamps();
             $table->softDeletes();
@@ -29,8 +27,6 @@ class CreateCostCentersTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

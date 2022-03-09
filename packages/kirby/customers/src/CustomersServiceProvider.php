@@ -9,8 +9,6 @@ class CustomersServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot(): void
     {
@@ -31,17 +29,13 @@ class CustomersServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register(): void
     {
         $this->mergeConfigFrom(__DIR__.'/../config/customers.php', 'customers');
 
         // Register the service the package provides.
-        $this->app->singleton('customers', function ($app) {
-            return new Customers();
-        });
+        $this->app->singleton('customers', fn () => new Customers());
     }
 
     /**
@@ -56,8 +50,6 @@ class CustomersServiceProvider extends ServiceProvider
 
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole(): void
     {

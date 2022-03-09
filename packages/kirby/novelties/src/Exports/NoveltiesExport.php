@@ -20,9 +20,6 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
      */
     private $params;
 
-    /**
-     * @param  array  $params
-     */
     public function __construct(array $params)
     {
         $this->params = $params;
@@ -49,9 +46,6 @@ class NoveltiesExport implements FromQuery, WithMapping, WithHeadings
         ]);
     }
 
-    /**
-     * @return array
-     */
     public function headings(): array
     {
         return [

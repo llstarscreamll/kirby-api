@@ -22,6 +22,6 @@ class NoveltyResume
 
     public function elapsedTimeInHours(): float
     {
-        return round($this->startAt->diffInSeconds($this->endAt) / 60 / 60, 2) * ($this->noveltyTypeOperator === NoveltyTypeOperator::Subtraction ? -1 : 1);
+        return round($this->startAt->diffInSeconds($this->endAt) / 60 / 60, 2) * (NoveltyTypeOperator::Subtraction === $this->noveltyTypeOperator ? -1 : 1);
     }
 }

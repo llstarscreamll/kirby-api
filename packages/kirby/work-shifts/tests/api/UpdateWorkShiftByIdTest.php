@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
  * Class UpdateWorkShiftByIdTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class UpdateWorkShiftByIdTest extends \Tests\TestCase
 {
@@ -34,7 +36,7 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
         'min_minutes_required_to_discount_meal_time' => 30 * 2,
         'time_zone' => 'America/Bogota',
         'applies_on_days' => [1, 2, 3, 4, 5], // monday to friday
-        'time_slots' => [['start' => '07:00', 'end' => '12:30']],
+        'time_slots' => [['end' => '12:30', 'start' => '07:00']],
     ];
 
     public function setUp(): void
@@ -69,10 +71,13 @@ class UpdateWorkShiftByIdTest extends \Tests\TestCase
             ->assertOk()
             ->assertJsonPath('data.id', (int) $this->workShift['id']);
 
-        $this->assertDatabaseHas('work_shifts',
-            ['time_slots' => json_encode($this->requestData['time_slots'])] +
-            ['applies_on_days' => json_encode($this->requestData['applies_on_days'])] +
-            $this->requestData);
+        $this->assertDatabaseHas(
+            'work_shifts',
+            ['id' => $this->workShift['id']] +
+            ['time_slots' => $this->castAsJson($this->requestData['time_slots'])] +
+            ['applies_on_days' => $this->castAsJson($this->requestData['applies_on_days'])] +
+            $this->requestData
+        );
     }
 
     /**

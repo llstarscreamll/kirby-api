@@ -50,7 +50,6 @@ class NoveltyTypesController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  CreateNoveltyTypeRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(CreateNoveltyTypeRequest $request)
@@ -74,7 +73,6 @@ class NoveltyTypesController
     /**
      * Update the specified resource in storage.
      *
-     * @param  UpdateNoveltyTypeRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -89,7 +87,6 @@ class NoveltyTypesController
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @param  DeleteNoveltyTypeRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function destroy(DeleteNoveltyTypeRequest $request, $id)

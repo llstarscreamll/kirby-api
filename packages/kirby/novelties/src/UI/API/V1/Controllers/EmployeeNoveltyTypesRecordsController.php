@@ -28,10 +28,6 @@ class EmployeeNoveltyTypesRecordsController
      */
     private $noveltyTypeRepository;
 
-    /**
-     * @param  EmployeeRepositoryInterface  $employeeRepository
-     * @param  NoveltyTypeRepositoryInterface  $noveltyTypeRepository
-     */
     public function __construct(
         EmployeeRepositoryInterface $employeeRepository,
         NoveltyTypeRepositoryInterface $noveltyTypeRepository
@@ -40,9 +36,6 @@ class EmployeeNoveltyTypesRecordsController
         $this->noveltyTypeRepository = $noveltyTypeRepository;
     }
 
-    /**
-     * @param  NoveltyTypesResumeByEmployeeRequest  $request
-     */
     public function __invoke(NoveltyTypesResumeByEmployeeRequest $request)
     {
         $startDate = Carbon::parse($request->start_date);
@@ -74,7 +67,6 @@ class EmployeeNoveltyTypesRecordsController
     /**
      * @param  Collection  $noveltyTypes
      * @param  Employee  $employee
-     * @return Collection
      */
     private function mapNovelties($noveltyTypes, $employee): Collection
     {

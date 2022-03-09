@@ -22,7 +22,6 @@ class ByEmployeeIdsCriterion implements CriteriaInterface
 
     /**
      * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  RepositoryInterface  $repository
      */
     public function apply($model, RepositoryInterface $repository)
     {

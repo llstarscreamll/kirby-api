@@ -17,7 +17,7 @@ class ShowWorkShiftRequest extends FormRequestAbstract
      * @var array
      */
     protected $access = [
-        'roles'       => [],
+        'roles' => [],
         'permissions' => ['work-shift.view'],
     ];
 
@@ -28,8 +28,6 @@ class ShowWorkShiftRequest extends FormRequestAbstract
 
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {
@@ -38,8 +36,6 @@ class ShowWorkShiftRequest extends FormRequestAbstract
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array
      */
     public function rules(): array
     {

@@ -10,6 +10,8 @@ use NoveltiesPackageSeed;
  * Class CreateBalanceNoveltyTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateBalanceNoveltyTest extends \Tests\TestCase
 {
@@ -104,7 +106,7 @@ class CreateBalanceNoveltyTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function shouldReturnForbidenWhenUserDoesntHaveRequiredPermissions()
+    public function shouldReturnForbiddenWhenUserDoesntHaveRequiredPermissions()
     {
         $this->actingAsGuest()
             ->json('POST', $this->endpoint, [])

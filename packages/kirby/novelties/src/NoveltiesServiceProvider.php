@@ -48,8 +48,6 @@ class NoveltiesServiceProvider extends ServiceProvider
 
     /**
      * Perform post-registration booting of services.
-     *
-     * @return void
      */
     public function boot()
     {
@@ -66,8 +64,6 @@ class NoveltiesServiceProvider extends ServiceProvider
 
     /**
      * Register any package services.
-     *
-     * @return void
      */
     public function register()
     {
@@ -84,17 +80,8 @@ class NoveltiesServiceProvider extends ServiceProvider
         return ['novelties'];
     }
 
-    private function loadServiceProviders()
-    {
-        foreach ($this->serviceProviders as $provider) {
-            $this->app->register($provider);
-        }
-    }
-
     /**
      * Console-specific booting.
-     *
-     * @return void
      */
     protected function bootForConsole()
     {
@@ -104,5 +91,12 @@ class NoveltiesServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/novelties.php' => config_path('novelties.php'),
         ], 'novelties.config');
+    }
+
+    private function loadServiceProviders()
+    {
+        foreach ($this->serviceProviders as $provider) {
+            $this->app->register($provider);
+        }
     }
 }

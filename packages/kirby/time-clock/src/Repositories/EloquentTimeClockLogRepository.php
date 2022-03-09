@@ -35,19 +35,11 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
      */
     protected $allowedIncludes = [];
 
-    /**
-     * @return string
-     */
     public function model(): string
     {
         return TimeClockLog::class;
     }
 
-    /**
-     * @param  int  $userId
-     * @param  array  $columns
-     * @return TimeClockLog|null
-     */
     public function lastCheckInWithOutCheckOutFromEmployeeId(int $userId, array $columns = ['*']): ?TimeClockLog
     {
         $this->applyCriteria();
@@ -65,12 +57,6 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
         return $result;
     }
 
-    /**
-     * @param  int  $employeeId
-     * @param  int  $rows
-     * @param  array  $columns
-     * @return \Illuminate\Support\Collection
-     */
     public function lastEmployeeLogs(int $employeeId, int $rows = 5, array $columns = ['*']): Collection
     {
         $this->applyCriteria();
@@ -89,8 +75,6 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
     }
 
     /**
-     * @param  string  $timeClockLogId
-     * @param  string  $userId
      * @return mixed
      */
     public function deleteApproval(string $timeClockLogId, string $userId)
@@ -98,9 +82,6 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
         return $this->find($timeClockLogId)->approvals()->detach($userId);
     }
 
-    /**
-     * @param  int  $employeeId
-     */
     public function findByEmployeeId(int $employeeId): TimeClockLogRepositoryInterface
     {
         $this->model->where('employee_id', $employeeId);

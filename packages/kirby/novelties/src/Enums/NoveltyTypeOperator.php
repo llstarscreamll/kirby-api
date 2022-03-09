@@ -15,7 +15,7 @@ use BenSampo\Enum\Enum;
  */
 final class NoveltyTypeOperator extends Enum
 {
-    const None = 'none';
-    const Addition = 'addition';
-    const Subtraction = 'subtraction';
+    public const None = 'none';
+    public const Addition = 'addition';
+    public const Subtraction = 'subtraction';
 }

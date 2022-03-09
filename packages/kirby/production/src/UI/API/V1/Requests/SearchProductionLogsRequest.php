@@ -4,6 +4,7 @@ namespace Kirby\Production\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Kirby\Core\Rules\IsoDateTimeRule;
+use Kirby\Production\Enums\Tag;
 
 class SearchProductionLogsRequest extends FormRequest
 {
@@ -14,7 +15,7 @@ class SearchProductionLogsRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->hasAnyPermission(['production-logs.search', 'production-logs.export-to-csv']);
+        return $this->user()->hasAnyPermission(['production-logs.search', 'production-logs.export-to-csv', 'production.reports']);
     }
 
     /**
@@ -25,12 +26,19 @@ class SearchProductionLogsRequest extends FormRequest
     public function rules()
     {
         return [
-            'filter.employee_id' => ['nullable', 'integer', 'min:1'],
-            'filter.product_id' => ['nullable', 'integer', 'min:1'],
-            'filter.machine_id' => ['nullable', 'integer', 'min:1'],
+            'filter.employee_ids' => ['nullable', 'array'],
+            'filter.employee_ids.*' => ['integer', 'min:1'],
+            'filter.product_ids' => ['nullable', 'array'],
+            'filter.product_ids.*' => ['integer', 'min:1'],
+            'filter.machine_ids' => ['nullable', 'array'],
+            'filter.machine_ids.*' => ['integer', 'min:1'],
+            'filter.cost_center_ids' => ['nullable', 'array'],
+            'filter.cost_center_ids.*' => ['integer', 'min:1'],
             'filter.net_weight' => ['nullable', 'numeric', 'min:0'],
-            'filter.creation_date.start' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.creation_date.end'],
-            'filter.creation_date.end' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.creation_date.start', 'after:filter.creation_date.start'],
+            'filter.tags' => ['nullable', 'array'],
+            'filter.tags.*' => ['string', 'in:'.implode(',', Tag::getValues())],
+            'filter.tag_updated_at.start' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.tag_updated_at.end'],
+            'filter.tag_updated_at.end' => ['nullable', new IsoDateTimeRule(), 'required_with:filter.tag_updated_at.start', 'after:filter.tag_updated_at.start'],
         ];
     }
 }

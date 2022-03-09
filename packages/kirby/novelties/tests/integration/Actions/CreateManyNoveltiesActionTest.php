@@ -12,6 +12,8 @@ use Kirby\Users\Models\User;
  * Class CreateManyNoveltiesActionTest.
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
+ *
+ * @internal
  */
 class CreateManyNoveltiesActionTest extends \Tests\TestCase
 {
@@ -49,6 +51,10 @@ class CreateManyNoveltiesActionTest extends \Tests\TestCase
     /**
      * @test
      * @dataProvider successCases
+     *
+     * @param  mixed  $employees
+     * @param  mixed  $approvers
+     * @param  mixed  $novelties
      */
     public function testToRunAction($employees, $approvers, $novelties)
     {
