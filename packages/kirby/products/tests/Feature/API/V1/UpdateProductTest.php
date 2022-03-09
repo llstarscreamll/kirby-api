@@ -2,7 +2,6 @@
 
 namespace Kirby\Products\Tests\Feature\API\V1;
 
-use Illuminate\Support\Collection;
 use Kirby\Products\Models\Product;
 use Kirby\Users\Models\User;
 use ProductsPackageSeed;
