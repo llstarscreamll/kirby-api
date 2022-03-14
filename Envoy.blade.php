@@ -117,8 +117,8 @@ php7.4 artisan backup:run
 {{ logMessage("🙈  Migrating database...") }}
 cd {{ $newReleaseDir }}
 php7.4 artisan migrate --force
-php7.4 artisan db:seed --class=ProductionPackageSeed
-php7.4 artisan db:seed --class=ProductsPackageSeed
+php7.4 artisan db:seed --class=ProductionPackageSeed --force
+php7.4 artisan db:seed --class=ProductsPackageSeed --force
 php7.4 artisan authorization:refresh-admin-permissions
 @endtask
 
