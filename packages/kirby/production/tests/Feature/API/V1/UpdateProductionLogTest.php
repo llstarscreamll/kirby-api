@@ -5,6 +5,7 @@ namespace Kirby\Production\Tests\Feature\API\V1;
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
+use Kirby\Production\Enums\Purpose;
 use Kirby\Production\Enums\Tag;
 use Kirby\Production\Models\ProductionLog;
 use Kirby\Products\Models\Product;
@@ -49,6 +50,7 @@ class updateProductionLogTest extends TestCase
             'machine_id' => $machineId = factory(Machine::class)->create()->id,
             'employee_id' => $employeeId = factory(Employee::class)->create()->id,
             'customer_id' => $customerId = factory(Customer::class)->create()->id,
+            'purpose' => Purpose::Sales,
             'tag' => Tag::Rejected,
             'batch' => 1111,
             'tare_weight' => 1234,
@@ -64,6 +66,7 @@ class updateProductionLogTest extends TestCase
             'employee_id' => $employeeId,
             'machine_id' => $machineId,
             'customer_id' => $customerId,
+            'purpose' => Purpose::Sales,
             'tag' => Tag::Rejected,
             'batch' => 1111,
             'tare_weight' => 1234,
@@ -85,6 +88,7 @@ class updateProductionLogTest extends TestCase
             'employee_id' => $log->employee_id,
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
+            'purpose' => Purpose::Sales,
             'tag' => Tag::Rejected,
         ];
 
@@ -113,6 +117,7 @@ class updateProductionLogTest extends TestCase
             'employee_id' => $log->employee_id,
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
+            'purpose' => Purpose::Sales,
             'tag' => $log->tag->value,
         ];
 

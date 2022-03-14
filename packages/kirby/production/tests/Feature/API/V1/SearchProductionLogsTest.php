@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\DB;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
+use Kirby\Production\Enums\Purpose;
 use Kirby\Production\Enums\Tag;
 use Kirby\Production\Models\ProductionLog;
 use Kirby\Products\Models\Product;
@@ -75,7 +76,7 @@ class SearchProductionLogsTest extends TestCase
     /**
      * @test
      */
-    public function shouldSearchByTagUpdatedAtDateRange()
+    public function shouldSearchByTagDateRange()
     {
         DB::table('production_logs')
             ->where('id', $this->productionLogs->first()->id)
@@ -106,6 +107,19 @@ class SearchProductionLogsTest extends TestCase
             ->assertJsonCount(2, 'data')
             ->assertJsonPath('data.0.id', $this->productionLogs->get(2)->id)
             ->assertJsonPath('data.1.id', $this->productionLogs->get(1)->id);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldSearchByCertainPurpose()
+    {
+        $this->productionLogs->get(1)->update(['purpose' => Purpose::Sales]);
+
+        $this->json($this->method, $this->endpoint, ['filter' => ['purposes' => [Purpose::Sales]]])
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $this->productionLogs->get(1)->id);
     }
 
     /**
