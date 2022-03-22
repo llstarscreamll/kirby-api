@@ -19,7 +19,7 @@ build:
         MYSQL_ROOT_PASSWORD: ''
   dependencies:
     override:
-      - true
+      - composer install
   project_setup:
     override:
       - export DB_USERNAME=root
