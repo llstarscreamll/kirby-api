@@ -17,6 +17,9 @@ build:
         MYSQL_DATABASE: test
         MYSQL_ALLOW_EMPTY_PASSWORD: true
         MYSQL_ROOT_PASSWORD: ''
+  dependencies:
+    override:
+      - true
   project_setup:
     override:
       - export DB_USERNAME=root
