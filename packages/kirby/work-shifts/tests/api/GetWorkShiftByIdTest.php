@@ -39,7 +39,7 @@ class GetWorkShiftByIdTest extends \Tests\TestCase
         ];
 
         $this->haveRecord('work_shifts', $this->workShift);
-        $this->workShift['id'] = DB::table('work_shifts')->where('name', 'work shift A', )->first()->id;
+        $this->workShift['id'] = DB::table('work_shifts')->where('name', 'work shift A')->first()->id;
 
         $this->actingAsAdmin();
     }
