@@ -1492,16 +1492,16 @@
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "1.8.3",
+            "version": "1.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "1afdd860a2566ed3c2b0b4a3de6e23434a79ec85"
+                "reference": "337e3ad8e5716c15f9657bd214d16cc5e69df268"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/1afdd860a2566ed3c2b0b4a3de6e23434a79ec85",
-                "reference": "1afdd860a2566ed3c2b0b4a3de6e23434a79ec85",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/337e3ad8e5716c15f9657bd214d16cc5e69df268",
+                "reference": "337e3ad8e5716c15f9657bd214d16cc5e69df268",
                 "shasum": ""
             },
             "require": {
@@ -1582,7 +1582,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/psr7/issues",
-                "source": "https://github.com/guzzle/psr7/tree/1.8.3"
+                "source": "https://github.com/guzzle/psr7/tree/1.8.5"
             },
             "funding": [
                 {
@@ -1598,7 +1598,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-10-05T13:56:00+00:00"
+            "time": "2022-03-20T21:51:18+00:00"
         },
         {
             "name": "hanneskod/classtools",
@@ -1651,7 +1651,7 @@
         },
         {
             "name": "kirby/authentication",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/authentication",
@@ -1710,7 +1710,7 @@
         },
         {
             "name": "kirby/authorization",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/authorization",
@@ -1772,7 +1772,7 @@
         },
         {
             "name": "kirby/company",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/company",
@@ -1831,7 +1831,7 @@
         },
         {
             "name": "kirby/core",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/core",
@@ -1888,7 +1888,7 @@
         },
         {
             "name": "kirby/customers",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/customers",
@@ -1944,7 +1944,7 @@
         },
         {
             "name": "kirby/employees",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/employees",
@@ -2006,7 +2006,7 @@
         },
         {
             "name": "kirby/machines",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/machines",
@@ -2062,7 +2062,7 @@
         },
         {
             "name": "kirby/novelties",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/novelties",
@@ -2124,7 +2124,7 @@
         },
         {
             "name": "kirby/production",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/production",
@@ -2183,7 +2183,7 @@
         },
         {
             "name": "kirby/products",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/products",
@@ -2242,7 +2242,7 @@
         },
         {
             "name": "kirby/time-clock",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/time-clock",
@@ -2304,7 +2304,7 @@
         },
         {
             "name": "kirby/users",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/users",
@@ -2361,7 +2361,7 @@
         },
         {
             "name": "kirby/work-shifts",
-            "version": "dev-develop",
+            "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/work-shifts",
