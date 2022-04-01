@@ -64,6 +64,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
             'Peso Bruto (kg)',
             'Peso Neto (kg)',
             'Etiqueta',
+            'Destino',
             'Fecha de actualización de etiqueta',
             'Fecha de creación',
         ];
@@ -89,6 +90,7 @@ class ProductionLogsExport implements FromQuery, WithMapping, WithHeadings
             $log->gross_weight,
             $log->netWeight(),
             trans($log->tag),
+            trans($log->purpose),
             $log->tag_updated_at,
             $log->created_at->toIsoString(),
         ];
