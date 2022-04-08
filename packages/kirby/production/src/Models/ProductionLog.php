@@ -19,6 +19,7 @@ class ProductionLog extends Model
         'machine_id',
         'employee_id',
         'customer_id',
+        'purpose',
         'batch',
         'tare_weight',
         'tag',

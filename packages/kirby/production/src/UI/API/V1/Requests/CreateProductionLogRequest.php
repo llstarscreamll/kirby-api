@@ -3,6 +3,7 @@
 namespace Kirby\Production\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Kirby\Production\Enums\Purpose;
 
 class CreateProductionLogRequest extends FormRequest
 {
@@ -28,6 +29,7 @@ class CreateProductionLogRequest extends FormRequest
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'machine_id' => ['required', 'integer', 'exists:machines,id'],
             'customer_id' => ['nullable', 'integer', 'exists:customers,id'],
+            'purpose' => ['required', 'in:'.implode(',', Purpose::getValues())],
             'batch' => ['nullable', 'integer'],
             'tare_weight' => ['required', 'numeric'],
             'gross_weight' => ['required', 'numeric', 'gt:tare_weight'],

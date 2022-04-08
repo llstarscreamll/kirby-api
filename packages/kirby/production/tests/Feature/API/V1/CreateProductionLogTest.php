@@ -5,6 +5,7 @@ namespace Kirby\Production\Tests\Feature\API\V1;
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Machines\Models\Machine;
+use Kirby\Production\Enums\Purpose;
 use Kirby\Production\Enums\Tag;
 use Kirby\Products\Models\Product;
 use Kirby\Users\Models\User;
@@ -74,6 +75,7 @@ class CreateProductionLogTest extends TestCase
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
+            'purpose' => Purpose::Sales,
             'batch' => 123456,
             'tare_weight' => 10.5,
             'gross_weight' => 25.8,
@@ -86,6 +88,7 @@ class CreateProductionLogTest extends TestCase
             'employee_id' => $this->user->employee->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
+            'purpose' => Purpose::Sales,
             'tag' => Tag::InLine, // default value when created
             'tag_updated_at' => now()->toDateTimeString(), // por defecto la fecha de creación del registro
             'batch' => 123456,
@@ -107,6 +110,7 @@ class CreateProductionLogTest extends TestCase
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
+            'purpose' => Purpose::Sales,
             'batch' => 123456,
             'tare_weight' => 10.5,
             'gross_weight' => 25.8,
@@ -138,6 +142,7 @@ class CreateProductionLogTest extends TestCase
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
+            'purpose' => Purpose::Sales,
             'batch' => 123456,
             'tare_weight' => 10.5,
             'gross_weight' => 25.8,
@@ -164,6 +169,7 @@ class CreateProductionLogTest extends TestCase
         $payload = [
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
+            'purpose' => Purpose::Sales,
             'tare_weight' => 10.5,
             'gross_weight' => 25.8,
         ];
@@ -193,6 +199,7 @@ class CreateProductionLogTest extends TestCase
             'employee_id' => 999,
             'product_id' => 999,
             'machine_id' => 999,
+            'purpose' => Purpose::Sales,
             'tare_weight' => 10.5,
             'gross_weight' => 25.8,
         ];
@@ -238,6 +245,24 @@ class CreateProductionLogTest extends TestCase
 
         $this->json($this->method, $this->endpoint, $payload)
             ->assertJsonValidationErrors(['gross_weight']);
+    }
+
+    /**
+     * Debe validar que el destino sea un campo obligatorio.
+     *
+     * @test
+     */
+    public function shouldValidateThatPurposeFieldIsRequired()
+    {
+        $payload = [
+            'product_id' => $this->product->id,
+            'machine_id' => $this->machine->id,
+            'tare_weight' => 5,
+            'gross_weight' => 10.5,
+        ];
+
+        $this->json($this->method, $this->endpoint, $payload)
+            ->assertJsonValidationErrors(['purpose']);
     }
 
     /**

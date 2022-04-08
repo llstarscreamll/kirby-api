@@ -51,6 +51,7 @@ class EloquentProductionLogRepository implements ProductionLogRepository
             ->join('machines', 'production_logs.machine_id', '=', 'machines.id')
             ->join('sub_cost_centers', 'machines.sub_cost_center_id', '=', 'sub_cost_centers.id')
             ->allowedFilters([
+                AllowedFilter::callback('purposes', fn ($q, $value) => $q->whereIn('purpose', $value)),
                 AllowedFilter::callback('tags', fn ($q, $value) => $q->whereIn('tag', $value)),
                 AllowedFilter::callback('machine_ids', fn ($q, $value) => $q->whereIn('machine_id', $value)),
                 AllowedFilter::callback('product_ids', fn ($q, $value) => $q->whereIn('product_id', $value)),
