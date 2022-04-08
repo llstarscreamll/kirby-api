@@ -1,5 +1,11 @@
 # Release notes
 
+## [2.3.0 (2022-04-08)](https://github.com/llstarscreamll/kirby-api/compare/2.3.0..2.2.0)
+
+## Added
+
+- new "purpose" attribute to instruct if a production log purpose is for sales or consumption, the field is searchable and is added to csv export data
+
 ## [2.2.0 (2022-03-09)](https://github.com/llstarscreamll/kirby-api/compare/2.2.0..2.1.0)
 
 ### Added
