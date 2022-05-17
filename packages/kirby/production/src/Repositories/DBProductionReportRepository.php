@@ -21,6 +21,7 @@ class DBProductionReportRepository implements ProductionReportRepository
             ->join('products', 'production_logs.product_id', '=', 'products.id')
             ->whereBetween('production_logs.tag_updated_at', [$start, $end])
             ->when(Arr::get($query, 'filter.tags'), fn ($query, $value) => $query->whereIn('tag', $value))
+            ->when(Arr::get($query, 'filter.purposes'), fn ($query, $value) => $query->whereIn('purpose', $value))
             ->when(Arr::get($query, 'filter.employee_ids'), fn ($query, $value) => $query->whereIn('employee_id', $value))
             ->when(Arr::get($query, 'filter.product_ids'), fn ($query, $value) => $query->whereIn('product_id', $value))
             ->when(Arr::get($query, 'filter.machine_ids'), fn ($query, $value) => $query->whereIn('machine_id', $value))
