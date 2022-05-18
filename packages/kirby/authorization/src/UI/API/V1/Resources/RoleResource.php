@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Authorization\UI\API\Resources;
+namespace Kirby\Authorization\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
