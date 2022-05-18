@@ -40,6 +40,7 @@ class EmployeeResource extends JsonResource
             'cost_center' => new CostCenterResource($this->whenLoaded('costCenter')),
             'work_shifts' => WorkShiftResource::collection($this->whenLoaded('workShifts')),
             'identifications' => IdentificationResource::collection($this->whenLoaded('identifications')),
+            'novelty_types' => NoveltyTypeResource::collection($this->whenLoaded('noveltyTypes')),
             'created_at' => optional($this->created_at)->toIso8601String(),
             'updated_at' => optional($this->updated_at)->toIso8601String(),
             'deleted_at' => optional($this->deleted_at)->toIso8601String(),
