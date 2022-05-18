@@ -121,7 +121,7 @@ class ApiAuthenticationController
     {
         $user = $request->user()->load([
             'roles:id,name',
-            'roles.permissions:name',
+            'roles.permissions:id,name',
             'permissions:id,name',
         ]);
 
