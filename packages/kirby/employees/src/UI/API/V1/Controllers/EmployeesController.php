@@ -5,6 +5,7 @@ namespace Kirby\Employees\UI\API\V1\Controllers;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
 use Kirby\Employees\UI\API\V1\Requests\CreateEmployeeRequest;
@@ -103,7 +104,7 @@ class EmployeesController
                 'phone_prefix' => $request->phone_prefix,
                 'phone_number' => $request->phone,
                 'email' => $request->email,
-                'password' => $request->password,
+                'password' => Hash::make($request->password),
             ]);
 
             $user->roles()->sync(data_get($requestData, 'roles.*.id'));
@@ -150,6 +151,10 @@ class EmployeesController
         $employeeData['cost_center_id'] = Arr::get($employeeData, 'cost_center.id');
         $userData = Arr::only($employeeData, ['first_name', 'last_name', 'phone_prefix', 'email']) + ['phone_number' => $request->phone];
         $employeeData = Arr::except($employeeData, ['phone_prefix', 'phone']);
+
+        if (!empty($request->password)) {
+            $userData['password'] = Hash::make($request->password);
+        }
 
         try {
             DB::beginTransaction();

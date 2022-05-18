@@ -4,6 +4,7 @@ namespace Kirby\Employees\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Unique;
 
 /**
  * Class UpdateEmployeeRequest.
@@ -32,8 +33,8 @@ class UpdateEmployeeRequest extends FormRequest
         return [
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string', 'min:8', 'max:100'],
+            'email' => ['required', 'string', 'email', (new Unique('users', 'email'))->ignore($this->route('employee'))],
+            'password' => ['nullable', 'string', 'min:8', 'max:100'],
             'roles' => ['nullable', 'array'],
             'roles.*.id' => ['nullable', 'int', 'min:1'],
             'code' => ['required', 'string'],

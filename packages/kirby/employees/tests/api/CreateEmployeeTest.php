@@ -87,7 +87,7 @@ class CreateEmployeeTest extends \Tests\TestCase
         ]);
 
         $user = User::where('email', 'bruce@avengers.com')->first();
-        Hash::check('someP4ssw0rdH3r3!', $user->password);
+        $this->assertTrue(Hash::check('someP4ssw0rdH3r3!', $user->password));
         $this->assertTrue($user->hasRole('admin'), 'Admin role assigned');
         $this->assertTrue($user->hasRole('reader'), 'Reader role assigned');
 
@@ -103,6 +103,49 @@ class CreateEmployeeTest extends \Tests\TestCase
 
         $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $pinIdentification);
         $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $eCardIdentification);
+    }
+
+    /** @test */
+    public function shouldReturnUnprocessableEntityWhenEmailIsAlreadyTaken()
+    {
+        factory(User::class)->create(['email' => 'bruce@avengers.com']);
+        $costCenter = factory(CostCenter::class)->create();
+        $morningWorkShift = factory(WorkShift::class)->create();
+        $pinIdentification = ['name' => 'PIN', 'code' => '123'];
+
+        $requestPayload = [
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => 'someP4ssw0rdH3r3!',
+            'roles' => [Role::create(['name' => 'admin']), Role::create(['name' => 'reader'])],
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone_prefix' => '+57',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center' => $costCenter->toArray(),
+            'work_shifts' => [$morningWorkShift->toArray()],
+            'identifications' => [$pinIdentification],
+        ];
+
+        $this
+            ->json('POST', $this->endpoint, $requestPayload)
+            ->assertJsonValidationErrors('email');
+
+        $this->assertDatabaseMissing('employees', [
+            'code' => '987',
+            'identification_number' => '654',
+        ]);
+
+        $this->assertDatabaseMissing('users', [
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+        ]);
     }
 
     /**
