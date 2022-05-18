@@ -162,13 +162,14 @@ git checkout $branch
 git pull origin $branch
 
 COMPOSER=$(which composer)
-php7.4 $COMPOSER --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile install
+php7.4 $COMPOSER --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile -q install
 
 sudo chown -R www-data:www-data storage/* bootstrap/cache/*
 sudo chmod -R ug+rwx storage/* bootstrap/cache/*
 
 php7.4 artisan optimize
 php7.4 artisan storage:link
+php7.4 artisan cache:clear
 php7.4 artisan queue:restart
 sudo php7.4 artisan horizon:terminate
 sudo service php7.4-fpm restart
