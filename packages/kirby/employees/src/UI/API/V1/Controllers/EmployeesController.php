@@ -148,14 +148,15 @@ class EmployeesController
         $workShiftIds = data_get($employeeData, 'work_shifts.*.id', []);
         $identifications = Arr::get($employeeData, 'identifications', []);
         $employeeData['cost_center_id'] = Arr::get($employeeData, 'cost_center.id');
-        $userData = Arr::only($employeeData, ['first_name', 'last_name', 'phone_prefix']) + ['phone_number' => $request->phone];
+        $userData = Arr::only($employeeData, ['first_name', 'last_name', 'phone_prefix', 'email']) + ['phone_number' => $request->phone];
         $employeeData = Arr::except($employeeData, ['phone_prefix', 'phone']);
 
         try {
             DB::beginTransaction();
 
             $employee = $this->employeeRepository->update($employeeData, $id);
-            $this->userRepository->update($userData, $id);
+            $user = $this->userRepository->update($userData, $id);
+            $user->roles()->sync(data_get($employeeData, 'roles.*.id'));
             $this->employeeRepository->sync($id, 'workShifts', $workShiftIds);
 
             $identificationCodes = collect($identifications)
