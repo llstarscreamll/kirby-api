@@ -5,7 +5,6 @@ namespace Kirby\Employees\UI\API\V1\Controllers;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
 use Kirby\Employees\UI\API\V1\Requests\CreateEmployeeRequest;
@@ -40,7 +39,7 @@ class EmployeesController
     private $identificationRepository;
 
     /**
-     * @param  UserRepositoryInterface  $UserRepository
+     * @param UserRepositoryInterface $UserRepository
      */
     public function __construct(
         UserRepositoryInterface $userRepository,
@@ -56,6 +55,7 @@ class EmployeesController
      * Display a listing of the resource.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\SearchEmployeesRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function index(SearchEmployeesRequest $request)
@@ -73,6 +73,7 @@ class EmployeesController
      * Display the specified resource.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\GetEmployeeRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(GetEmployeeRequest $request, string $id)
@@ -86,6 +87,7 @@ class EmployeesController
      * Display the specified resource.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\CreateEmployeeRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(CreateEmployeeRequest $request)
@@ -100,9 +102,11 @@ class EmployeesController
                 'last_name' => $request->last_name,
                 'phone_prefix' => $request->phone_prefix,
                 'phone_number' => $request->phone,
-                'email' => "{$request->code}@domain.com",
-                'password' => Hash::make("{$request->code}@domain.com_".now()->toDateString()),
+                'email' => $request->email,
+                'password' => $request->password,
             ]);
+
+            $user->roles()->sync(data_get($requestData, 'roles.*.id'));
 
             $employee = $this->employeeRepository->create(
                 Arr::except($requestData, ['phone']) + [
@@ -135,6 +139,7 @@ class EmployeesController
      * Store the specified resource on storage.
      *
      * @param  \Kirby\Employees\UI\API\V1\Requests\UpdateEmployeeRequest
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateEmployeeRequest $request, string $id)

@@ -3,8 +3,11 @@
 namespace Kirby\Employees\Tests\api;
 
 use EmployeesPackageSeed;
+use Illuminate\Support\Facades\Hash;
+use Kirby\Authorization\Models\Role;
 use Kirby\Company\Models\CostCenter;
 use Kirby\Employees\Models\Employee;
+use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
 
 /**
@@ -43,6 +46,9 @@ class CreateEmployeeTest extends \Tests\TestCase
         $requestPayload = [
             'first_name' => 'Bruce',
             'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => 'someP4ssw0rdH3r3!',
+            'roles' => [Role::create(['name' => 'admin']), Role::create(['name' => 'reader'])],
             'code' => '987',
             'identification_number' => '654',
             'location' => 'Medellín',
@@ -77,8 +83,13 @@ class CreateEmployeeTest extends \Tests\TestCase
             'last_name' => 'Banner',
             'phone_prefix' => '+57',
             'phone_number' => '3219876543',
-            'email' => '987@domain.com',
+            'email' => 'bruce@avengers.com',
         ]);
+
+        $user = User::where('email', 'bruce@avengers.com')->first();
+        Hash::check('someP4ssw0rdH3r3!', $user->password);
+        $this->assertTrue($user->hasRole('admin'), 'Admin role assigned');
+        $this->assertTrue($user->hasRole('reader'), 'Reader role assigned');
 
         $this->assertDatabaseHas('employee_work_shift', [
             'employee_id' => $employee->id,
