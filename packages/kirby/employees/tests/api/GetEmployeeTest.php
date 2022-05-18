@@ -55,8 +55,7 @@ class GetEmployeeTest extends \Tests\TestCase
             ->assertJsonPath('data.identifications', $employee->identifications->toArray())
             ->assertJsonPath('data.created_at', $employee->created_at->toIso8601String())
             ->assertJsonPath('data.updated_at', $employee->updated_at->toIso8601String())
-            ->assertJsonPath('data.deleted_at', $employee->deleted_at)
-            ;
+            ->assertJsonPath('data.deleted_at', $employee->deleted_at);
     }
 
     /**
