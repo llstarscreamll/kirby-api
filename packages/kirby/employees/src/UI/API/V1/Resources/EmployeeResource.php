@@ -27,6 +27,7 @@ class EmployeeResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'email' => $this->email,
+            'roles' => $this->user->roles,
             'cost_center_id' => $this->cost_center_id,
             'code' => $this->code,
             'identification_number' => $this->identification_number,
@@ -39,10 +40,9 @@ class EmployeeResource extends JsonResource
             'cost_center' => new CostCenterResource($this->whenLoaded('costCenter')),
             'work_shifts' => WorkShiftResource::collection($this->whenLoaded('workShifts')),
             'identifications' => IdentificationResource::collection($this->whenLoaded('identifications')),
-            'novelty_types' => NoveltyTypeResource::collection($this->whenLoaded('noveltyTypes')),
             'created_at' => optional($this->created_at)->toIso8601String(),
             'updated_at' => optional($this->updated_at)->toIso8601String(),
-            'deleted_at' => optional($this->updated_at)->toIso8601String(),
+            'deleted_at' => optional($this->deleted_at)->toIso8601String(),
         ];
     }
 }

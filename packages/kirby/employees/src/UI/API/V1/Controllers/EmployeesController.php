@@ -62,7 +62,7 @@ class EmployeesController
     {
         $employees = $this->employeeRepository
             ->pushCriteria(app(RequestCriteria::class))
-            ->with('user')
+            ->with(['user.roles'])
             ->orderBy('id', 'DESC')
             ->paginate();
 
