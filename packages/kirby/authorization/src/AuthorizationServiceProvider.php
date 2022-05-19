@@ -18,6 +18,7 @@ class AuthorizationServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {

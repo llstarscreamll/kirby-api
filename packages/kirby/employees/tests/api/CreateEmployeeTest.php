@@ -3,8 +3,11 @@
 namespace Kirby\Employees\Tests\api;
 
 use EmployeesPackageSeed;
+use Illuminate\Support\Facades\Hash;
+use Kirby\Authorization\Models\Role;
 use Kirby\Company\Models\CostCenter;
 use Kirby\Employees\Models\Employee;
+use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
 
 /**
@@ -43,6 +46,9 @@ class CreateEmployeeTest extends \Tests\TestCase
         $requestPayload = [
             'first_name' => 'Bruce',
             'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => 'someP4ssw0rdH3r3!',
+            'roles' => [Role::create(['name' => 'admin']), Role::create(['name' => 'reader'])],
             'code' => '987',
             'identification_number' => '654',
             'location' => 'Medellín',
@@ -77,8 +83,13 @@ class CreateEmployeeTest extends \Tests\TestCase
             'last_name' => 'Banner',
             'phone_prefix' => '+57',
             'phone_number' => '3219876543',
-            'email' => '987@domain.com',
+            'email' => 'bruce@avengers.com',
         ]);
+
+        $user = User::where('email', 'bruce@avengers.com')->first();
+        $this->assertTrue(Hash::check('someP4ssw0rdH3r3!', $user->password));
+        $this->assertTrue($user->hasRole('admin'), 'Admin role assigned');
+        $this->assertTrue($user->hasRole('reader'), 'Reader role assigned');
 
         $this->assertDatabaseHas('employee_work_shift', [
             'employee_id' => $employee->id,
@@ -92,6 +103,49 @@ class CreateEmployeeTest extends \Tests\TestCase
 
         $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $pinIdentification);
         $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $eCardIdentification);
+    }
+
+    /** @test */
+    public function shouldReturnUnprocessableEntityWhenEmailIsAlreadyTaken()
+    {
+        factory(User::class)->create(['email' => 'bruce@avengers.com']);
+        $costCenter = factory(CostCenter::class)->create();
+        $morningWorkShift = factory(WorkShift::class)->create();
+        $pinIdentification = ['name' => 'PIN', 'code' => '123'];
+
+        $requestPayload = [
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => 'someP4ssw0rdH3r3!',
+            'roles' => [Role::create(['name' => 'admin']), Role::create(['name' => 'reader'])],
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone_prefix' => '+57',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center' => $costCenter->toArray(),
+            'work_shifts' => [$morningWorkShift->toArray()],
+            'identifications' => [$pinIdentification],
+        ];
+
+        $this
+            ->json('POST', $this->endpoint, $requestPayload)
+            ->assertJsonValidationErrors('email');
+
+        $this->assertDatabaseMissing('employees', [
+            'code' => '987',
+            'identification_number' => '654',
+        ]);
+
+        $this->assertDatabaseMissing('users', [
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+        ]);
     }
 
     /**

@@ -3,8 +3,11 @@
 namespace Kirby\Employees\Tests\api;
 
 use EmployeesPackageSeed;
+use Illuminate\Support\Facades\Hash;
+use Kirby\Authorization\Models\Role;
 use Kirby\Company\Models\CostCenter;
 use Kirby\Employees\Models\Employee;
+use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
 
 /**
@@ -31,9 +34,10 @@ class UpdateEmployeeTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function getSuccessfully()
+    public function shouldUpdateEmployeeSuccessfullyWhenInputIsCorrect()
     {
         $employee = factory(Employee::class)->create();
+        $employee->user->update(['email' => 'bruce@avengers.com']);
         $costCenter = factory(CostCenter::class)->create();
         $morningWorkShift = factory(WorkShift::class)->create();
         $afternoonWorkShift = factory(WorkShift::class)->create();
@@ -43,6 +47,9 @@ class UpdateEmployeeTest extends \Tests\TestCase
         $requestPayload = [
             'first_name' => 'Bruce',
             'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => 'someP4ssw0rdH3r3!',
+            'roles' => [Role::create(['name' => 'admin']), Role::create(['name' => 'reader'])],
             'code' => '987',
             'identification_number' => '654',
             'location' => 'Medellín',
@@ -72,11 +79,17 @@ class UpdateEmployeeTest extends \Tests\TestCase
         ]);
 
         $this->assertDatabaseHas('users', [
+            'email' => 'bruce@avengers.com',
             'first_name' => 'Bruce',
             'last_name' => 'Banner',
             'phone_prefix' => '+57',
             'phone_number' => '3219876543',
         ]);
+
+        $user = User::where('email', 'bruce@avengers.com')->first();
+        $this->assertTrue(Hash::check('someP4ssw0rdH3r3!', $user->password));
+        $this->assertTrue($user->hasRole('admin'), 'Admin role assigned');
+        $this->assertTrue($user->hasRole('reader'), 'Reader role assigned');
 
         $this->assertDatabaseHas('employee_work_shift', [
             'employee_id' => $employee->id,
@@ -95,11 +108,92 @@ class UpdateEmployeeTest extends \Tests\TestCase
     /**
      * @test
      */
+    public function shouldNotUpdatePasswordWhenPasswordIsEmpty()
+    {
+        $employee = factory(Employee::class)->create();
+        $costCenter = factory(CostCenter::class)->create();
+        $morningWorkShift = factory(WorkShift::class)->create();
+        $afternoonWorkShift = factory(WorkShift::class)->create();
+        $pinIdentification = ['name' => 'PIN', 'code' => '123'];
+        $eCardIdentification = ['name' => 'E-card', 'code' => 'Code-3'];
+
+        $requestPayload = [
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => '',
+            'roles' => [Role::create(['name' => 'admin']), Role::create(['name' => 'reader'])],
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone_prefix' => '+57',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center' => $costCenter->toArray(),
+            'work_shifts' => [$morningWorkShift->toArray(), $afternoonWorkShift->toArray()],
+            'identifications' => [$pinIdentification, $eCardIdentification],
+        ];
+
+        $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
+            ->assertOk()
+            ->assertJsonHasPath('data.id');
+
+        $user = User::where('email', 'bruce@avengers.com')->first();
+        Hash::check('secret', $user->password); // secret is the default password on User factory
+    }
+
+    /**
+     * @test
+     */
+    public function shouldReturnUnprocessableEntityWhenEmailIsAlreadyTaken()
+    {
+        factory(User::class)->create(['email' => 'bruce@avengers.com']);
+        $employee = factory(Employee::class)->create();
+        $costCenter = factory(CostCenter::class)->create();
+        $morningWorkShift = factory(WorkShift::class)->create();
+        $pinIdentification = ['name' => 'PIN', 'code' => '123'];
+
+        $requestPayload = [
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => 'someP4ssw0rdH3r3!',
+            'roles' => [],
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone_prefix' => '+57',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center' => $costCenter->toArray(),
+            'work_shifts' => [$morningWorkShift->toArray()],
+            'identifications' => [$pinIdentification],
+        ];
+
+        $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
+            ->assertJsonValidationErrors('email');
+
+        $this->assertDatabaseMissing('users', [
+            'id' => $employee->id,
+            'email' => 'bruce@avengers.com',
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function shouldReturnNotFoundIfEmployeeDoesNotExists()
     {
         $requestPayload = [
             'first_name' => 'Bruce',
             'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => 'someP4ssw0rdH3r3!',
+            'roles' => [],
             'code' => '987',
             'identification_number' => '654',
             'location' => 'Medellín',

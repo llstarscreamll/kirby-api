@@ -3,8 +3,8 @@
 namespace Kirby\Users\UI\API\V1\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Kirby\Authorization\UI\API\Resources\PermissionResource;
-use Kirby\Authorization\UI\API\Resources\RoleResource;
+use Kirby\Authorization\UI\API\V1\Resources\PermissionResource;
+use Kirby\Authorization\UI\API\V1\Resources\RoleResource;
 
 /**
  * Class UserResource.

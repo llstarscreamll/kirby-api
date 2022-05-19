@@ -70,7 +70,7 @@ class Employee extends Model
         'location' => 'string',
         'address' => 'string',
         'phone' => 'string',
-        'salary' => 'double',
+        'salary' => 'float',
     ];
 
     /**
