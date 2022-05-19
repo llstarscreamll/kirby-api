@@ -3,6 +3,7 @@
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Kirby\Employees\Models\Employee;
+use Kirby\Production\Enums\Purpose;
 use Kirby\Production\Enums\Tag;
 use Kirby\Production\Models\ProductionLog;
 use Kirby\Products\Models\Product;
@@ -120,6 +121,22 @@ class ProductionReportsTest extends TestCase
             ->assertJsonCount(2, 'data')
             ->assertJsonFragment(['id' => $this->productionLogs->first()->product_id])
             ->assertJsonFragment(['id' => $this->productionLogs->get(1)->product_id]);
+    }
+
+    /**
+     * Debe devolver lo producido por destinos.
+     *
+     * @test
+     */
+    public function shouldReturnDataByPurpose()
+    {
+        DB::table('production_logs')->update(['tag' => Tag::Rejected, 'tag_updated_at' => now()->subDays(2)]);
+        DB::table('production_logs')->where('id', $this->productionLogs->first()->id)->update(['purpose' => Purpose::Sales]);
+
+        $this->json($this->method, $this->endpoint, ['filter' => ['purposes' => [Purpose::Sales]]])
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonFragment(['id' => $this->productionLogs->first()->product_id]);
     }
 
     /**
