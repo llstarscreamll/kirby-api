@@ -44,7 +44,7 @@ class ProductionLogsController
             : $currentUserId;
 
         $productionLog = $this->productionLogRepository
-            ->create(['employee_id' => $employeeId] + $request->validated());
+            ->create(['employee_id' => $employeeId, 'tag_updated_at' => now()] + $request->validated());
 
         return response()->json(['data' => $productionLog->load(['machine', 'product', 'customer', 'employee'])]);
     }
