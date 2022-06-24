@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Kirby\TimeClock\UI\API\V1\Controllers\CheckInController;
 use Kirby\TimeClock\UI\API\V1\Controllers\CheckOutController;
+use Kirby\TimeClock\UI\API\V1\Controllers\StatisticsController;
 use Kirby\TimeClock\UI\API\V1\Controllers\TimeClockLogApprovalsController;
 use Kirby\TimeClock\UI\API\V1\Controllers\TimeClockLogsController;
 
@@ -22,6 +23,7 @@ Route::prefix('api/v1/')
     ->group(function ($route) {
         $route->post('time-clock/check-in', CheckInController::class);
         $route->post('time-clock/check-out', CheckOutController::class);
+        $route->get('time-clock/statistics', StatisticsController::class);
         $route->apiResource('time-clock-logs', TimeClockLogsController::class);
         $route->resource('time-clock-logs.approvals', TimeClockLogApprovalsController::class)->only(['store', 'destroy']);
     });
