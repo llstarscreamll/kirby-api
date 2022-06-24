@@ -43,7 +43,7 @@ class TimeClockLogsController
     {
         $user = $request->user();
 
-        if ($user->can('time-clock-logs.employee-search')) {
+        if (! $user->can('time-clock-logs.global-search')) {
             $this->timeClockLogRepository->pushCriteria(new ByEmployeeIdCriterion($user->id));
         }
 
