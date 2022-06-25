@@ -29,6 +29,10 @@ class SearchTimeClockLogsRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            'checkedInStart' => ['nullable', 'date'],
+            'checkedInStart' => ['nullable', 'date'],
+            'peopleInsideOnly' => ['nullable', 'boolean'],
+        ];
     }
 }

@@ -9,7 +9,9 @@ use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\TimeClock\Actions\LogCheckIn;
 use Kirby\TimeClock\Actions\LogCheckOut;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
+use Kirby\TimeClock\Criteria\ByCheckInDateRangeCriterion;
 use Kirby\TimeClock\Criteria\ByEmployeeIdCriterion;
+use Kirby\TimeClock\Criteria\ByPeopleInsideCriterion;
 use Kirby\TimeClock\Events\CheckedOutEvent;
 use Kirby\TimeClock\UI\API\V1\Requests\CreateTimeClockLogRequest;
 use Kirby\TimeClock\UI\API\V1\Requests\SearchTimeClockLogsRequest;
@@ -45,6 +47,16 @@ class TimeClockLogsController
 
         if (! $user->can('time-clock-logs.global-search')) {
             $this->timeClockLogRepository->pushCriteria(new ByEmployeeIdCriterion($user->id));
+        }
+
+        if (! empty($request->checkedInStart) && ! empty($request->checkedInEnd)) {
+            $this->timeClockLogRepository->pushCriteria(
+                new ByCheckInDateRangeCriterion(Carbon::parse($request->checkedInStart), Carbon::parse($request->checkedInEnd))
+            );
+        }
+
+        if (intval($request->peopleInsideOnly) === 1) {
+            $this->timeClockLogRepository->pushCriteria(new ByPeopleInsideCriterion());
         }
 
         $timeClockLogs = $this->timeClockLogRepository

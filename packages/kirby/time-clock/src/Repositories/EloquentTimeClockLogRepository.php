@@ -23,6 +23,7 @@ class EloquentTimeClockLogRepository extends EloquentRepositoryAbstract implemen
         'employee.user.email' => 'like',
         'employee.code' => 'like',
         'employee.identification_number' => 'like',
+        'employee_id' => 'in',
     ];
 
     /**
