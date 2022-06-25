@@ -3,7 +3,6 @@
 namespace Kirby\TimeClock\Tests\api;
 
 use Illuminate\Support\Facades\Artisan;
-use Kirby\Authorization\Models\Permission;
 use Kirby\TimeClock\Models\TimeClockLog;
 use TimeClockPermissionsSeeder;
 
