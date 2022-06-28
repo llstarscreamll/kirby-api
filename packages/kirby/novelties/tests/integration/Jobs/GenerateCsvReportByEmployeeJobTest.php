@@ -2,6 +2,7 @@
 
 namespace Kirby\Novelties\Tests\Jobs;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Notification;
 use Kirby\Company\Models\SubCostCenter;
 use Kirby\Employees\Models\Employee;
@@ -90,6 +91,7 @@ class GenerateCsvReportByEmployeeJobTest extends \Tests\TestCase
             ->andReturn($user)
             ->getMock();
 
+        Carbon::setTestNow('2022-06-24 10:10:10');
         Excel::fake();
         Notification::fake();
 
@@ -97,7 +99,7 @@ class GenerateCsvReportByEmployeeJobTest extends \Tests\TestCase
         $result = $job->handle($userRepositoryMock);
 
         $this->assertTrue($result);
-        $expectedFile = "novelties/exports/novelties_{$startDate->toDateTimeString()}_{$endDate->toDateTimeString()}.csv";
+        $expectedFile = sprintf('novelties/exports/novelties_%s.csv', str_replace([' ', ':'], ['_', ''], now()->toDateTimeString()));
         $expectedFile = str_replace([' ', ':'], ['_', '-'], $expectedFile);
         Excel::assertStored($expectedFile, 'public', function (NoveltiesExport $export) use ($oldestNovelties, $latestNovelties) {
             $this->assertCount($oldestNovelties->count() + $latestNovelties->count(), $export->query()->get());
