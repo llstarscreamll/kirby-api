@@ -1,5 +1,15 @@
 # Release notes
 
+## [2.5.0 (2022-06-28)](https://github.com/llstarscreamll/kirby-api/compare/2.5.0..2.4.0)
+
+### Added
+
+- time-clock: new ability to filter logs by employees and check in date range and those who are inside the company
+- time-clock: new endpoint statistics that count people inside
+- time-clock: let admis see time clock logs if they have all permisions
+- increments default api rate limit to 200 request per second
+- other security apudates
+
 ## [2.4.0 (2022-05-19)](https://github.com/llstarscreamll/kirby-api/compare/2.4.0..2.3.0)
 
 ## Added

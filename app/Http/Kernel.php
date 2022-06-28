@@ -41,7 +41,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             \App\Http\Middleware\EncryptCookies::class,
-            'throttle:100,1',
+            'throttle:200,1',
             'bindings',
         ],
     ];
