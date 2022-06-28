@@ -49,9 +49,7 @@ class GenerateCsvReportByEmployeeJob implements ShouldQueue
      */
     public function handle(UserRepositoryInterface $userRepository)
     {
-        $startDate = Carbon::parse($this->params['time_clock_log_check_out_start_date'])->format('Y-m-d_H-i-s');
-        $endDate = Carbon::parse($this->params['time_clock_log_check_out_end_date'])->format('Y-m-d_H-i-s');
-        $filePath = "novelties/exports/novelties_{$startDate}_{$endDate}.csv";
+        $filePath = sprintf('novelties/exports/novelties_%s.csv', str_replace([' ', ':'], ['_', ''], now()->toDateTimeString()));
 
         Excel::store(new NoveltiesExport($this->params), $filePath, 'public');
 
