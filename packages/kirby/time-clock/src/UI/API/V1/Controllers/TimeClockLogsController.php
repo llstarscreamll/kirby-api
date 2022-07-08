@@ -45,11 +45,11 @@ class TimeClockLogsController
     {
         $user = $request->user();
 
-        if (!$user->can('time-clock-logs.global-search')) {
+        if (! $user->can('time-clock-logs.global-search')) {
             $this->timeClockLogRepository->pushCriteria(new ByEmployeeIdCriterion($user->id));
         }
 
-        if (!empty($request->checkedInStart) && !empty($request->checkedInEnd)) {
+        if (! empty($request->checkedInStart) && ! empty($request->checkedInEnd)) {
             $this->timeClockLogRepository->pushCriteria(
                 new ByCheckInDateRangeCriterion(Carbon::parse($request->checkedInStart), Carbon::parse($request->checkedInEnd))
             );
@@ -126,8 +126,7 @@ class TimeClockLogsController
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -137,8 +136,7 @@ class TimeClockLogsController
     /**
      * Update the specified resource in storage.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -148,8 +146,7 @@ class TimeClockLogsController
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

@@ -14,7 +14,7 @@ class ExportLogsController
 {
     public function __invoke(SearchTimeClockLogsRequest $request)
     {
-        if (!$request->user()->can('time-clock-logs.global-search')) {
+        if (! $request->user()->can('time-clock-logs.global-search')) {
             return abort(403);
         }
 
