@@ -31,7 +31,7 @@ class ExportTimeClockLogsJob implements ShouldQueue
      *
      * @var int
      */
-    public $timeout = (60 * 9) + 30;
+    public $timeout = (60 * 19) + 30;
 
     /** @var array */
     public $params;
