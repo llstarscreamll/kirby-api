@@ -1,5 +1,10 @@
 # Release notes
 
+## [2.6.0 (2022-07-09)](https://github.com/llstarscreamll/kirby-api/compare/2.6.0..2.5.0)
+
+- time-clock: new endpoint to export time clock logs to csv format and send the file to authenticated user email
+- time-clock: search endpoint can now filter by check in date ranges
+
 ## [2.5.0 (2022-06-28)](https://github.com/llstarscreamll/kirby-api/compare/2.5.0..2.4.0)
 
 ### Added
