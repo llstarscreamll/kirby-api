@@ -55,7 +55,7 @@ class TimeClockLogsController
             );
         }
 
-        if (intval($request->peopleInsideOnly) === 1) {
+        if (1 === intval($request->peopleInsideOnly)) {
             $this->timeClockLogRepository->pushCriteria(new ByPeopleInsideCriterion());
         }
 
