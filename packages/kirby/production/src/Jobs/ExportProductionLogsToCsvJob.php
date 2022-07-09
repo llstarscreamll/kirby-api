@@ -20,6 +20,13 @@ class ExportProductionLogsToCsvJob implements ShouldQueue
     use SerializesModels;
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 1;
+
+    /**
      * @var \Kirby\Users\Models\User
      */
     public $user;
