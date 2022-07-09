@@ -146,7 +146,6 @@ return [
                 'processes' => 5,
                 'tries' => 3,
                 'nice' => 10,
-                'timeout' => (60 * 4) + 30,
             ],
         ],
 
