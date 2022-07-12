@@ -3,7 +3,6 @@
 namespace Kirby\TimeClock\UI\API\V1\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Kirby\TimeClock\Jobs\ExportTimeClockLogsJob;
 use Kirby\TimeClock\UI\API\V1\Requests\ExportTimeClockLogsRequest;
@@ -24,9 +23,7 @@ class ExportLogsController
             throw ValidationException::withMessages(['checkedInEnd' => 'No se permite exportar más de 180 días de datos.']);
         }
 
-        DB::enableQueryLog();
         ExportTimeClockLogsJob::dispatch($request->user()->id, $request->validated());
-        logger("queries", DB::getQueryLog());
 
         return response()->json(['data' => 'ok']);
     }
