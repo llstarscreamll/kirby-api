@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Queue;
 use Kirby\Authorization\Models\Permission;
 use Kirby\TimeClock\Jobs\ExportTimeClockLogsJob;
 use Kirby\TimeClock\Models\TimeClockLog;
+use Symfony\Component\HttpFoundation\Response;
 use TimeClockPermissionsSeeder;
 
 /**
@@ -44,7 +45,7 @@ class ExportTimeClockLogsToCsvTest extends \Tests\TestCase
     {
         $this->user->syncPermissions(Permission::where('name', 'time-clock-logs.global-search')->get());
 
-        $this->json('GET', $this->endpoint)
+        $this->json('GET', $this->endpoint, ['checkedInStart' => now()->subMonth()->toIsoString(), 'checkedInEnd' => now()->toIsoString()])
             ->assertOk()
             ->assertJsonPath('data', 'ok');
     }
@@ -66,6 +67,36 @@ class ExportTimeClockLogsToCsvTest extends \Tests\TestCase
             ->assertOk();
 
         Queue::assertPushed(fn (ExportTimeClockLogsJob $job) => $job->userID = $this->user->id && $job->params === $payload);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldRequireCheckInDateRange()
+    {
+        $payload = [
+            'checkedInStart' => null,
+            'checkedInEnd' => null,
+        ];
+
+        $this->json('GET', $this->endpoint, $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['checkedInStart', 'checkedInEnd']);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldNotAllowExportsGreaterThanSixMonths()
+    {
+        $payload = [
+            'checkedInStart' => now()->subMonths(8)->toIsoString(),
+            'checkedInEnd' => now()->toIsoString(),
+        ];
+
+        $this->json('GET', $this->endpoint, $payload)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['checkedInEnd']);
     }
 
     /**

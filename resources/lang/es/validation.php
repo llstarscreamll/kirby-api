@@ -178,5 +178,7 @@ return [
         'time' => 'hora',
         'subject' => 'asunto',
         'message' => 'mensaje',
+        'checkedInStart' => 'fecha de entrada inicio',
+        'checkedInEnd' => 'fecha de entrada fin',
     ],
 ];

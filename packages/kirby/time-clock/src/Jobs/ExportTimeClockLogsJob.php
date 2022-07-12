@@ -19,6 +19,20 @@ class ExportTimeClockLogsJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 1;
+
+    /**
+     * 9.5 seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = (60 * 19) + 30;
+
     /** @var array */
     public $params;
 

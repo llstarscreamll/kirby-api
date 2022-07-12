@@ -20,6 +20,20 @@ class ExportProductionLogsToCsvJob implements ShouldQueue
     use SerializesModels;
 
     /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 1;
+
+    /**
+     * 9.5 seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout = (60 * 9) + 30;
+
+    /**
      * @var \Kirby\Users\Models\User
      */
     public $user;
