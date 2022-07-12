@@ -2,8 +2,10 @@
 
 namespace Kirby\TimeClock\UI\API\V1\Controllers;
 
+use Carbon\Carbon;
+use Illuminate\Validation\ValidationException;
 use Kirby\TimeClock\Jobs\ExportTimeClockLogsJob;
-use Kirby\TimeClock\UI\API\V1\Requests\SearchTimeClockLogsRequest;
+use Kirby\TimeClock\UI\API\V1\Requests\ExportTimeClockLogsRequest;
 
 /**
  * Class ExportLogsController.
@@ -12,10 +14,13 @@ use Kirby\TimeClock\UI\API\V1\Requests\SearchTimeClockLogsRequest;
  */
 class ExportLogsController
 {
-    public function __invoke(SearchTimeClockLogsRequest $request)
+    public function __invoke(ExportTimeClockLogsRequest $request)
     {
-        if (! $request->user()->can('time-clock-logs.global-search')) {
-            return abort(403);
+        $checkedInStart = Carbon::parse($request->checkedInStart);
+        $checkedInEnd = Carbon::parse($request->checkedInEnd);
+
+        if ($checkedInStart->diffInMonths($checkedInEnd) > 6) {
+            throw ValidationException::withMessages(['checkedInEnd' => 'No se permite exportar más de 6 meses de datos.']);
         }
 
         ExportTimeClockLogsJob::dispatch($request->user()->id, $request->validated());
