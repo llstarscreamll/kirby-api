@@ -26,7 +26,7 @@ class ExportLogsController
 
         DB::enableQueryLog();
         ExportTimeClockLogsJob::dispatch($request->user()->id, $request->validated());
-        logger("queries", DB::getQueryLog());
+        logger('queries', DB::getQueryLog());
 
         return response()->json(['data' => 'ok']);
     }
