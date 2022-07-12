@@ -27,6 +27,8 @@ class TimeClockLogsExport implements FromQuery, WithHeadings, WithMapping
             ? explode(',', explode(':', head(array_filter(explode(';', $this->params['search']), fn ($str) => Str::contains($str, 'employee_id'))))[1])
             : [];
 
+        logger('employee IDs:', $employeeIDs);
+
         return DB::table('time_clock_logs')
             ->join('employees', 'time_clock_logs.employee_id', 'employees.id')
             ->join('users', 'users.id', 'employees.id')
@@ -40,7 +42,7 @@ class TimeClockLogsExport implements FromQuery, WithHeadings, WithMapping
                 isset($this->params['checkedInStart'], $this->params['checkedInEnd']),
                 fn ($q) => $q->whereBetween('checked_in_at', [Carbon::parse($this->params['checkedInStart']), Carbon::parse($this->params['checkedInEnd'])])
             )
-            ->when($employeeIDs, fn ($q) => $q->whereIn('time_clock_logs.employee_id', $employeeIDs))
+            ->when(array_filter($employeeIDs), fn ($q) => $q->whereIn('time_clock_logs.employee_id', $employeeIDs))
             ->select([
                 'employees.code AS employeeCode',
                 'employees.identification_number AS employeeIdentificationNumber',
