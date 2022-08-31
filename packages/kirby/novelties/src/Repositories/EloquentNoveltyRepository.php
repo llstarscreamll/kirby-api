@@ -42,7 +42,7 @@ class EloquentNoveltyRepository extends EloquentRepositoryAbstract implements No
     {
         $this->model = $this->model
             ->where('employee_id', $employeeId)
-            ->whereBetween('start_at', [$start->timezone('UTC'), $end->timezone('UTC')]);
+            ->whereBetween('end_at', [$start->timezone('UTC'), $end->timezone('UTC')]);
 
         return $this;
     }
