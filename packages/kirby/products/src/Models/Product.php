@@ -13,10 +13,12 @@ class Product extends Model
         'name',
         'wire_gauge_in_bwg',
         'wire_gauge_in_mm',
+        'active',
     ];
 
     protected $casts = [
         'id' => 'int',
         'wire_gauge_in_mm' => 'float',
+        'active' => 'bool',
     ];
 }

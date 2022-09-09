@@ -22,5 +22,6 @@ $factory->define(Product::class, function (Faker $faker) {
         'customer_code' => $faker->unique()->numerify('customer-code-###'),
         'wire_gauge_in_bwg' => $faker->bothify('### ???'),
         'wire_gauge_in_mm' => $faker->randomFloat(2, 1, 1000),
+        'active' => true,
     ];
 });

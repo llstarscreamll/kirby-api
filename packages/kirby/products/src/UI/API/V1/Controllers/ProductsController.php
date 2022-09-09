@@ -28,6 +28,7 @@ class ProductsController
                     AllowedFilter::custom('search', new QuerySearchFilter(['name', 'internal_code'])),
                 ])
                 ->defaultSort('-id')
+                ->where(['active' => true])
                 ->paginate()
         );
     }

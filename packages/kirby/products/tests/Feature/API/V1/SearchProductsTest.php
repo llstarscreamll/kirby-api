@@ -29,14 +29,15 @@ class SearchProductsTest extends TestCase
     /**
      * @var \Illuminate\Support\Collection<\Kirby\Products\Models\Product>
      */
-    private $products;
+    private $activeProducts;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->actingAsAdmin($this->user = factory(User::class)->create());
-        $this->products = factory(Product::class, 5)->create();
+        factory(Product::class, 3)->create(['active' => false]);
+        $this->activeProducts = factory(Product::class, 5)->create();
     }
 
     /**
@@ -46,6 +47,8 @@ class SearchProductsTest extends TestCase
     {
         $this->json($this->method, $this->endpoint)
             ->assertOk()
-            ->assertJsonCount($this->products->count(), 'data');
+            ->assertJsonCount($this->activeProducts->count(), 'data')
+            ->assertJsonPath('data.0.id', $this->activeProducts->last()->id)
+            ->assertJsonPath('data.4.id', $this->activeProducts->first()->id);
     }
 }
