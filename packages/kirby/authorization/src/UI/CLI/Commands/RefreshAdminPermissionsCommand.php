@@ -35,9 +35,11 @@ class RefreshAdminPermissionsCommand extends Command
      */
     public function handle()
     {
-        $permissions = Permission::all();
-        Role::whereName('admin')->first()->permissions()->sync($permissions);
-        Cache::clear();
+        if ($adminRole = Role::whereName('admin')->first()) {
+            $permissions = Permission::all();
+            $adminRole->permissions()->sync($permissions);
+            Cache::clear();
+        }
 
         return 0;
     }
