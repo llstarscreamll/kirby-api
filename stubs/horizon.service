@@ -1,0 +1,19 @@
+# :site: Laravel Horizon using systemd
+# ----------------------------------
+#
+# /lib/systemd/system/:site:-horizon.service
+#
+# run this command to enable service:
+# systemctl enable :site:-horizon.service
+
+[Unit]
+Description=:site: Laravel Horizon
+
+[Service]
+User=nginx
+Group=nginx
+Restart=always
+ExecStart=/usr/bin/php74 /var/www/:site:/current/artisan horizon
+
+[Install]
+WantedBy=multi-user.target
