@@ -101,7 +101,7 @@
 @task('backup', ['on' => 'remote'])
     {{ logMessage("📀  Backing up database") }}
     cd /var/www/{{ $site }}/current
-    php74 artisan backup:run
+    sudo php74 artisan backup:run
 @endtask
 
 @task('migrateDatabase', ['on' => 'remote'])
@@ -124,7 +124,7 @@
     sudo php74 artisan storage:link
     sudo php74 artisan optimize
 
-    sudo chown -R $USER:nginx /var/www/{{ $site }}
+    sudo chown -R nginx:nginx /var/www/{{ $site }}
     sudo chcon -R -t httpd_sys_content_t /var/www/{{ $site }}/releases/{{ $newReleaseName }}
     sudo chcon -R -t httpd_sys_rw_content_t /var/www/{{ $site }}/persistent/storage
 
@@ -221,5 +221,11 @@
 
 @task('checkPortsConfig', ['on' => 'remote'])
     {{ logMessage("Get ports configuration") }}
+    ip link show
+    sudo firewall-cmd --get-active-zones
+    sudo firewall-cmd --get-default-zone
+    sudo firewall-cmd --list-all
+    sudo iptables -L
+    sudo semanage port -l | grep http_port_t
     sudo ss -tulpn | grep LISTEN
 @endtask
