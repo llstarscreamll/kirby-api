@@ -17,7 +17,7 @@ class Identification extends Model
      * @var array
      */
     protected $fillable = [
-        'employee_id', 'type', 'name', 'code', 'expiration_date'
+        'employee_id', 'type', 'name', 'code', 'expiration_date',
     ];
 
     /**
