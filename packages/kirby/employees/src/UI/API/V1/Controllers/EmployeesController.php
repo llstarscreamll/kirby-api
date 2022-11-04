@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Kirby\Employees\Contracts\EmployeeRepositoryInterface;
 use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
 use Kirby\Employees\UI\API\V1\Requests\CreateEmployeeRequest;
@@ -116,12 +117,28 @@ class EmployeesController
             $this->employeeRepository->sync($employee->id, 'workShifts', data_get($requestData, 'work_shifts.*.id', []));
 
             data_set($requestData['identifications'], '*.employee_id', $employee->id, true);
+            data_set($requestData['identifications'], '*.type', 'code', true);
+            data_set($requestData['identifications'], '*.expiration_date', now(), true);
             data_set($requestData['identifications'], '*.created_at', now(), true);
             data_set($requestData['identifications'], '*.updated_at', now(), true);
+
+            if ($request->generate_token) {
+                $requestData['identifications'][] = [
+                    'employee_id' => $employee->id,
+                    'type' => 'uuid',
+                    'name' => 'Random Token',
+                    'code' => (string) Str::uuid(),
+                    'expiration_date' => now()->addDays(str_replace('d', '', $request->generate_token)),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
             $this->identificationRepository->insert($requestData['identifications']);
 
             DB::commit();
         } catch (\Throwable $th) {
+            dd($th);
             return response()->json([
                 'errors' => [
                     'title' => 'Error inesperado',
@@ -159,6 +176,20 @@ class EmployeesController
             $user = $this->userRepository->update($userData, $id);
             $user->roles()->sync(data_get($employeeData, 'roles.*.id'));
             $this->employeeRepository->sync($id, 'workShifts', $workShiftIds);
+
+            data_set($identifications, '*.type', 'code', true);
+            data_set($identifications, '*.expiration_date', now()->toDateTimeString(), true);
+
+            if ($request->generate_token && $employee->identifications()->where('type', 'uuid')->count() === 0) {
+                $identifications[] = [
+                    'type' => 'uuid',
+                    'name' => 'Random Token',
+                    'code' => (string) Str::uuid(),
+                    'expiration_date' => now()->addDays(str_replace('d', '', $request->generate_token))->toDateTimeString(),
+                    'created_at' => now()->toDateTimeString(),
+                    'updated_at' => now()->toDateTimeString(),
+                ];
+            }
 
             $identificationCodes = collect($identifications)
                 ->map(function (array $identification) use ($id) {

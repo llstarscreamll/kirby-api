@@ -2,6 +2,7 @@
 
 namespace Kirby\Employees\Tests\api;
 
+use Carbon\Carbon;
 use EmployeesPackageSeed;
 use Illuminate\Support\Facades\Hash;
 use Kirby\Authorization\Models\Role;
@@ -59,9 +60,12 @@ class UpdateEmployeeTest extends \Tests\TestCase
             'position' => 'designer',
             'salary' => 5000000,
             'cost_center' => $costCenter->toArray(),
+            'generate_token' => '15d',
             'work_shifts' => [$morningWorkShift->toArray(), $afternoonWorkShift->toArray()],
             'identifications' => [$pinIdentification, $eCardIdentification],
         ];
+
+        Carbon::setTestNow('2022-06-24 10:10:10');
 
         $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
             ->assertOk()
@@ -101,8 +105,23 @@ class UpdateEmployeeTest extends \Tests\TestCase
             'work_shift_id' => $afternoonWorkShift->id,
         ]);
 
-        $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $pinIdentification);
-        $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $eCardIdentification);
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'code',
+            'expiration_date' => now()->toDateTimeString(),
+        ] + $pinIdentification);
+
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'code',
+            'expiration_date' => now()->toDateTimeString(),
+        ] + $eCardIdentification);
+
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'uuid',
+            'expiration_date' => now()->addDays(15)->toDateTimeString(),
+        ]);
     }
 
     /**

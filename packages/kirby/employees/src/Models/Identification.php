@@ -17,7 +17,7 @@ class Identification extends Model
      * @var array
      */
     protected $fillable = [
-        'employee_id', 'name', 'code',
+        'employee_id', 'type', 'name', 'code', 'expiration_date'
     ];
 
     /**
@@ -26,6 +26,7 @@ class Identification extends Model
      * @var array
      */
     protected $dates = [
+        'expiration_date',
         'created_at',
         'updated_at',
         'deleted_at',

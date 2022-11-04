@@ -43,6 +43,7 @@ class CreateEmployeeRequest extends FormRequest
             'phone' => ['required', 'regex:/\d{10}$/', 'unique:users,phone_number'],
             'position' => ['required', 'string'],
             'salary' => ['required', 'numeric'],
+            'generate_token' => ['nullable', 'in:15d,30d,120d,180d'],
             'cost_center.id' => ['required', 'numeric'],
             'work_shifts.*.id' => ['required', 'numeric'],
             'identifications.*.name' => ['required', 'string', 'max: 255'],
