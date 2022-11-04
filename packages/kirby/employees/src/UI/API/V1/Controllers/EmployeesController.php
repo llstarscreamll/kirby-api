@@ -181,7 +181,7 @@ class EmployeesController
             data_set($identifications, '*.type', 'code', true);
             data_set($identifications, '*.expiration_date', now()->toDateTimeString(), true);
 
-            if ($request->generate_token && $employee->identifications()->where('type', 'uuid')->count() === 0) {
+            if ($request->generate_token) {
                 $identifications[] = [
                     'type' => 'uuid',
                     'name' => 'Random Token',
