@@ -78,7 +78,10 @@ class EmployeesController
      */
     public function show(GetEmployeeRequest $request, string $id)
     {
-        $employee = $this->employeeRepository->with(['user', 'costCenter', 'workShifts', 'identifications'])->find($id);
+        $employee = $this->employeeRepository->with([
+            'user', 'costCenter', 'workShifts', 'token',
+            'identifications' => fn ($q) => $q->where('type', 'code')
+        ])->find($id);
 
         return new EmployeeResource($employee);
     }

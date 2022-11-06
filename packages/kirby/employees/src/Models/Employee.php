@@ -14,17 +14,17 @@ use Kirby\WorkShifts\Models\WorkShift;
 /**
  * Class Employee.
  *
- * @param  int  $cost_center_id
- * @param  string  $code
- * @param  string  $identification_number
- * @param  string  $first_name
- * @param  string  $last_name
- * @param  string  $full_name
- * @param  string  $position
- * @param  string  $location
- * @param  string  $address
- * @param  string  $phone
- * @param  float  $salary
+ * @param int    $cost_center_id
+ * @param string $code
+ * @param string $identification_number
+ * @param string $first_name
+ * @param string $last_name
+ * @param string $full_name
+ * @param string $position
+ * @param string $location
+ * @param string $address
+ * @param string $phone
+ * @param float  $salary
  *
  * @author Johan Alvarez <llstarscreamll@hotmail.com>
  */
@@ -132,6 +132,16 @@ class Employee extends Model
     }
 
     /**
+     * Employee identification token.
+     *
+     * @return mixed
+     */
+    public function token()
+    {
+        return $this->hasOne(Identification::class)->where('type', 'uuid');
+    }
+
+    /**
      * Related work shifts.
      *
      * @return mixed
@@ -222,7 +232,7 @@ class Employee extends Model
 
         if (0 === $workShiftsMatchedBySlotTimesAndDays->count()) {
             $workShiftsMatchedBySlotTimesAndDays = $this->workShifts->filter(function ($workShift) use ($time) {
-                return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || 0 === count($workShift->applies_on_days)) && ! $time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
+                return (in_array($time->dayOfWeekIso, $workShift->applies_on_days) || 0 === count($workShift->applies_on_days)) && !$time->greaterThan($workShift->getClosestSlotFlagTime('end', $time));
             });
         }
 
