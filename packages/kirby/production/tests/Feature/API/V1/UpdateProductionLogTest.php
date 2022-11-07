@@ -3,7 +3,7 @@
 namespace Kirby\Production\Tests\Feature\API\V1;
 
 use Kirby\Customers\Models\Customer;
-use Kirby\Employees\Models\Employee;
+use Kirby\Employees\Models\Identification;
 use Kirby\Machines\Models\Machine;
 use Kirby\Production\Enums\Purpose;
 use Kirby\Production\Enums\Tag;
@@ -48,7 +48,7 @@ class updateProductionLogTest extends TestCase
         $payload = [
             'product_id' => $productId = factory(Product::class)->create()->id,
             'machine_id' => $machineId = factory(Machine::class)->create()->id,
-            'employee_id' => $employeeId = factory(Employee::class)->create()->id,
+            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // another employee
             'customer_id' => $customerId = factory(Customer::class)->create()->id,
             'purpose' => Purpose::Sales,
             'tag' => Tag::Rejected,
@@ -63,7 +63,7 @@ class updateProductionLogTest extends TestCase
 
         $this->assertDatabaseHas('production_logs', [
             'product_id' => $productId,
-            'employee_id' => $employeeId,
+            'employee_id' => $identification->employee_id,
             'machine_id' => $machineId,
             'customer_id' => $customerId,
             'purpose' => Purpose::Sales,
@@ -85,7 +85,6 @@ class updateProductionLogTest extends TestCase
         $log = factory(ProductionLog::class)->create(['tag' => Tag::InLine, 'tag_updated_at' => '2002-02-02 02:02:02']);
 
         $payload = [
-            'employee_id' => $log->employee_id,
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
             'purpose' => Purpose::Sales,
@@ -114,7 +113,6 @@ class updateProductionLogTest extends TestCase
         $log = factory(ProductionLog::class)->create(['tag_updated_at' => '2001-01-01 01:01:01']);
 
         $payload = [
-            'employee_id' => $log->employee_id,
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
             'purpose' => Purpose::Sales,
@@ -130,6 +128,27 @@ class updateProductionLogTest extends TestCase
             'tag' => $log->tag,
             'tag_updated_at' => '2001-01-01 01:01:01',
         ]);
+    }
+
+    /**
+     * Debe validar que los códigos/IDs de las entidades existan.
+     *
+     * @test
+     */
+    public function shouldValidateThatEntitiesIDsAndCodeExist()
+    {
+        $payload = [
+            'employee_code' => 999,
+            'product_id' => 999,
+            'machine_id' => 999,
+            'purpose' => Purpose::Sales,
+            'tare_weight' => 10.5,
+            'gross_weight' => 25.8,
+        ];
+
+        $this->json($this->method, $this->endpoint, $payload)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['employee_code', 'product_id', 'machine_id']);
     }
 
     /**

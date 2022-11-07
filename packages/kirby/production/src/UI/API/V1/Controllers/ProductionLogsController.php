@@ -77,7 +77,15 @@ class ProductionLogsController
      */
     public function update(UpdateProductionLogRequest $request, $id)
     {
-        $log = $this->productionLogRepository->update($id, $request->validated());
+        $data = $request->validated();
+
+        if (!empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+            $data['employee_id'] = Identification::where('code', $request->get('employee_code'))->firstOrFail()->employee_id;
+        }
+
+        unset($data['employee_code']);
+
+        $this->productionLogRepository->update($id, $data);
 
         return response()->json(['data' => 'ok']);
     }
