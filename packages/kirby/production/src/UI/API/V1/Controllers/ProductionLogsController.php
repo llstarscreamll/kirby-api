@@ -2,6 +2,7 @@
 
 namespace Kirby\Production\UI\API\V1\Controllers;
 
+use Kirby\Employees\Models\Identification;
 use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\UI\API\V1\Requests\CreateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest;
@@ -37,11 +38,11 @@ class ProductionLogsController
      */
     public function store(CreateProductionLogRequest $request)
     {
-        $currentUserId = $request->user()->id;
+        $employeeId = $request->user()->id;
 
-        $employeeId = $request->user()->can('production-logs.create-on-behalf-of-another-person')
-            ? $request->get('employee_id', $currentUserId)
-            : $currentUserId;
+        if (!empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+            $employeeId = Identification::where('code', $request->get('employee_code'))->firstOrFail()->employee_id;
+        }
 
         $productionLog = $this->productionLogRepository
             ->create(['employee_id' => $employeeId, 'tag_updated_at' => now()] + $request->validated());
@@ -52,7 +53,8 @@ class ProductionLogsController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -69,7 +71,8 @@ class ProductionLogsController
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateProductionLogRequest $request, $id)
@@ -82,7 +85,8 @@ class ProductionLogsController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

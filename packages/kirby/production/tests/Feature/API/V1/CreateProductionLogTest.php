@@ -4,6 +4,7 @@ namespace Kirby\Production\Tests\Feature\API\V1;
 
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
+use Kirby\Employees\Models\Identification;
 use Kirby\Machines\Models\Machine;
 use Kirby\Production\Enums\Purpose;
 use Kirby\Production\Enums\Tag;
@@ -103,10 +104,10 @@ class CreateProductionLogTest extends TestCase
      *
      * @test
      */
-    public function shouldCreatedSuccesfulyWhenDoesNotHaveCreateOnBehalfOfAnotherPersonPermission()
+    public function shouldCreatedSuccessfullyWhenDoesNotHaveCreateOnBehalfOfAnotherPersonPermission()
     {
         $payload = [
-            'employee_id' => factory(Employee::class)->create()->id, // another employee
+            'employee_code' => factory(Identification::class)->create(['type' => 'uuid'])->code, // another employee
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
@@ -135,10 +136,10 @@ class CreateProductionLogTest extends TestCase
      *
      * @test
      */
-    public function shouldCreatedSuccesfulyWhenHasCreateOnBehalfOfAnotherPersonPermission()
+    public function shouldCreatedSuccessfullyWhenHasCreateOnBehalfOfAnotherPersonPermission()
     {
         $payload = [
-            'employee_id' => ($expectedEmployee = factory(Employee::class)->create())->id, // another employee
+            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // another employee
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
@@ -150,11 +151,9 @@ class CreateProductionLogTest extends TestCase
 
         $this->json($this->method, $this->endpoint, $payload)->assertOk();
 
-        // as user does not have permission employee_id should be equals to
-        // current user employee id
         $this->assertDatabaseHas('production_logs', [
             'product_id' => $this->product->id,
-            'employee_id' => $expectedEmployee->id,
+            'employee_id' => $identification->employee_id,
         ]);
     }
 
@@ -196,7 +195,7 @@ class CreateProductionLogTest extends TestCase
     public function shouldValidateThatProductMachineAndEmployeeExist()
     {
         $payload = [
-            'employee_id' => 999,
+            'employee_code' => 999,
             'product_id' => 999,
             'machine_id' => 999,
             'purpose' => Purpose::Sales,
@@ -206,7 +205,7 @@ class CreateProductionLogTest extends TestCase
 
         $this->json($this->method, $this->endpoint, $payload)
             ->assertStatus(422)
-            ->assertJsonValidationErrors(['employee_id', 'product_id', 'machine_id']);
+            ->assertJsonValidationErrors(['employee_code', 'product_id', 'machine_id']);
     }
 
     /**
