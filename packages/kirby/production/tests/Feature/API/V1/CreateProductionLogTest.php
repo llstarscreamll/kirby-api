@@ -187,12 +187,11 @@ class CreateProductionLogTest extends TestCase
     }
 
     /**
-     * Debe validar que los ids otorgados de empleado, producto y máquina
-     * existan en la base de datos.
+     * Debe validar que los códigos/IDs otorgados de las entidades existan.
      *
      * @test
      */
-    public function shouldValidateThatProductMachineAndEmployeeExist()
+    public function shouldValidateThatEntitiesIDsAndCodeExist()
     {
         $payload = [
             'employee_code' => 999,
