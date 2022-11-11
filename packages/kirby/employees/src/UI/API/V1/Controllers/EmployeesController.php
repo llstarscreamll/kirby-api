@@ -80,7 +80,7 @@ class EmployeesController
     {
         $employee = $this->employeeRepository->with([
             'user', 'costCenter', 'workShifts', 'token',
-            'identifications' => fn ($q) => $q->where('type', 'code')
+            'identifications' => fn ($q) => $q->where('type', 'code'),
         ])->find($id);
 
         return new EmployeeResource($employee);

@@ -40,7 +40,7 @@ class ProductionLogsController
     {
         $employeeId = $request->user()->id;
 
-        if (!empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+        if (! empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
             $employeeId = Identification::where('code', $request->get('employee_code'))->firstOrFail()->employee_id;
         }
 
@@ -53,8 +53,7 @@ class ProductionLogsController
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -71,15 +70,14 @@ class ProductionLogsController
     /**
      * Update the specified resource in storage.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateProductionLogRequest $request, $id)
     {
         $data = $request->validated();
 
-        if (!empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+        if (! empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
             $data['employee_id'] = Identification::where('code', $request->get('employee_code'))->firstOrFail()->employee_id;
         }
 
@@ -93,8 +91,7 @@ class ProductionLogsController
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
