@@ -87,6 +87,7 @@ class updateProductionLogTest extends TestCase
         $payload = [
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
+            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // another employee
             'purpose' => Purpose::Sales,
             'tag' => Tag::Rejected,
         ];
@@ -115,6 +116,7 @@ class updateProductionLogTest extends TestCase
         $payload = [
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
+            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // another employee
             'purpose' => Purpose::Sales,
             'tag' => $log->tag->value,
         ];
