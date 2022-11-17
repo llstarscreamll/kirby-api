@@ -12,5 +12,6 @@ use Kirby\Core\Contracts\BaseRepositoryInterface;
 interface IdentificationRepositoryInterface extends BaseRepositoryInterface
 {
     public function deleteWhereEmployeeIdCodesNotIn(int $employeeId, array $codes, string $codeType);
+
     public function deleteEmployeeUuids(int $employeeId);
 }

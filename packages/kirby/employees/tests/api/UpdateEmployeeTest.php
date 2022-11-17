@@ -4,7 +4,6 @@ namespace Kirby\Employees\Tests\api;
 
 use Carbon\Carbon;
 use EmployeesPackageSeed;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Kirby\Authorization\Models\Role;
 use Kirby\Company\Models\CostCenter;
