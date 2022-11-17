@@ -185,14 +185,16 @@ class EmployeesController
             data_set($identifications, '*.expiration_date', now()->toDateTimeString(), true);
 
             if ($request->generate_token) {
-                $identifications[] = [
+                $this->identificationRepository->deleteEmployeeUuids($id);
+                $this->identificationRepository->insert([
+                    'employee_id' => $id,
                     'type' => 'uuid',
                     'name' => 'Random Token',
                     'code' => (string) Str::uuid(),
                     'expiration_date' => now()->addDays(str_replace('d', '', $request->generate_token))->toDateTimeString(),
                     'created_at' => now()->toDateTimeString(),
                     'updated_at' => now()->toDateTimeString(),
-                ];
+                ]);
             }
 
             $identificationCodes = collect($identifications)
@@ -205,18 +207,11 @@ class EmployeesController
                 ->pluck('code')
                 ->toArray();
 
-            $this->identificationRepository->deleteWhereEmployeeIdCodesNotIn($id, $identificationCodes);
+            $this->identificationRepository->deleteWhereEmployeeIdCodesNotIn($id, $identificationCodes, 'code');
 
             DB::commit();
         } catch (ModelNotFoundException $th) {
             throw $th;
-        } catch (\Throwable $th) {
-            return response()->json([
-                'errors' => [
-                    'title' => 'Error inesperado',
-                    'detail' => 'Un error inesperado ha ocurrido',
-                ],
-            ], Response::HTTP_EXPECTATION_FAILED);
         }
 
         return new EmployeeResource($employee);
