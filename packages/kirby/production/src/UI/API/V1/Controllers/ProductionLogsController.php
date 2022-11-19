@@ -42,6 +42,13 @@ class ProductionLogsController
     {
         $employeeId = $request->user()->id;
 
+        if ($request->user()->can('production-logs.create-on-behalf-of-another-person') && empty($request->employee_code)) {
+            return response()->json([
+                'message' => 'Datos incorrectos',
+                'errors' => ['employee_code' => ['El campo token de empleado es requerido.']],
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
             $identification = Identification::where('code', $request->get('employee_code'))->firstOrFail();
 
@@ -99,7 +106,7 @@ class ProductionLogsController
         if ($request->user()->can('production-logs.create-on-behalf-of-another-person') && empty($request->employee_code)) {
             return response()->json([
                 'message' => 'Datos incorrectos',
-                'errors' => ['employee_code' => ['El campo token de empleado es requerido']],
+                'errors' => ['employee_code' => ['El campo token de empleado es requerido.']],
             ], Response::HTTP_BAD_REQUEST);
         }
 

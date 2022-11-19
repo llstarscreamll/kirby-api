@@ -84,6 +84,40 @@ class CreateProductionLogTest extends TestCase
     }
 
     /**
+     * Debe retornar error si tiene permisos para crear registros en nombre de
+     * otros empleados pero no se ha otorgado un token/código de empleado.
+     *
+     * @test
+     */
+    public function shouldReturnErrorWhenUserHasCreateOnBehalfOfAnotherEmployeePermissionButEmployeeCodeIsMissing()
+    {
+        $payload = [
+            'employee_code' => '', // empty employee code
+            'product_id' => $this->product->id,
+            'machine_id' => $this->machine->id,
+            'customer_id' => $this->customer->id,
+            'purpose' => Purpose::Sales,
+            'batch' => 123456,
+            'tare_weight' => 10.5,
+            'gross_weight' => 25.8,
+        ];
+
+        $this->json($this->method, $this->endpoint, $payload)
+            ->assertStatus(400)
+            ->assertJsonValidationErrors(['employee_code'])
+            ->assertJsonPath('errors.employee_code.0', 'El campo token de empleado es requerido.');
+
+        $this->assertDatabaseMissing('production_logs', [
+            'product_id' => $this->product->id,
+            'machine_id' => $this->machine->id,
+            'customer_id' => $this->customer->id,
+            'batch' => 123456,
+            'tare_weight' => 10.5,
+            'gross_weight' => 25.8,
+        ]);
+    }
+
+    /**
      * Debe persistir los datos correctamente cuando los datos están correctos.
      * El usuario autenticado tiene todos los permisos.
      *
