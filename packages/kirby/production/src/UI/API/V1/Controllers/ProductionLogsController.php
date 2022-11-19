@@ -42,8 +42,22 @@ class ProductionLogsController
     {
         $employeeId = $request->user()->id;
 
-        if (!empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
-            $employeeId = Identification::where('code', $request->get('employee_code'))->firstOrFail()->employee_id;
+        if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+            $identification = Identification::where('code', $request->get('employee_code'))->firstOrFail();
+
+            if (!User::findOrFail($identification->employee_id)->can('production-logs.update')) {
+                return response()->json([
+                    'message' => 'Datos incorrectos',
+                    'errors' => [
+                        [
+                            'title' => 'Permisos insuficientes.',
+                            'detail' => 'El dueño del token no tiene los suficientes permisos para realizar esta acción.',
+                        ],
+                    ],
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            $employeeId = $identification->employee_id;
         }
 
         $productionLog = $this->productionLogRepository

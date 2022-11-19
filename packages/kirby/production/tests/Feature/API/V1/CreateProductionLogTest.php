@@ -2,6 +2,7 @@
 
 namespace Kirby\Production\Tests\Feature\API\V1;
 
+use Kirby\Authorization\Models\Permission;
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Employees\Models\Identification;
@@ -28,38 +29,20 @@ class CreateProductionLogTest extends TestCase
      */
     private $method = 'POST';
 
-    /**
-     * @var \Kirby\Users\Models\User
-     */
-    private $user;
-
-    /**
-     * @var \Kirby\Employees\Models\Employee
-     */
-    private $employee;
-
-    /**
-     * @var \Kirby\Machines\Models\Machine
-     */
-    private $machine;
-
-    /**
-     * @var \Kirby\Products\Models\Product
-     */
-    private $product;
-
-    /**
-     * @var \Kirby\Customers\Models\Customer
-     */
-    private $customer;
+    private User $user;
+    private Employee $employee;
+    private Machine $machine;
+    private Product $product;
+    private Customer $customer;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->seed(ProductionPackageSeed::class);
-        $this->actingAsAdmin($this->user = factory(User::class)->create());
-        $this->employee = factory(Employee::class)->create(['id' => $this->user->id]);
+        $this->actingAsAdmin($this->user = factory(Employee::class)->create()->user);
+        $this->employee = factory(Employee::class)->create();
+        $this->employee->user->permissions()->sync(Permission::all());
         $this->machine = factory(Machine::class)->create();
         $this->product = factory(Product::class)->create();
         $this->customer = factory(Customer::class)->create();
@@ -67,12 +50,14 @@ class CreateProductionLogTest extends TestCase
 
     /**
      * Debe persistir los datos correctamente cuando los datos están correctos.
+     * El usuario autenticado tiene todos los permisos.
      *
      * @test
      */
-    public function shouldBeCreatedSuccessfullyWhenDataIsCorrect()
+    public function shouldBeCreatedSuccessfullyWhenDataIsCorrectAndUserHasCreateOnBehalfOfAnotherEmployeePermission()
     {
         $payload = [
+            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid', 'employee_id' => $this->employee]))->code, // another employee
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
@@ -86,7 +71,7 @@ class CreateProductionLogTest extends TestCase
 
         $this->assertDatabaseHas('production_logs', [
             'product_id' => $this->product->id,
-            'employee_id' => $this->user->employee->id,
+            'employee_id' => $identification->employee_id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
             'purpose' => Purpose::Sales,
@@ -99,15 +84,44 @@ class CreateProductionLogTest extends TestCase
     }
 
     /**
+     * Debe persistir los datos correctamente cuando los datos están correctos.
+     * El usuario autenticado tiene todos los permisos.
+     *
+     * @test
+     */
+    public function shouldReturnErrorWhenDataIsCorrectButTokenOwnerDoesNotHaveCreateProductionLogPermission()
+    {
+        $payload = [
+            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // employee without permissions
+            'product_id' => $this->product->id,
+            'machine_id' => $this->machine->id,
+            'customer_id' => $this->customer->id,
+            'purpose' => Purpose::Sales,
+            'batch' => 123456,
+            'tare_weight' => 10.5,
+            'gross_weight' => 25.8,
+        ];
+
+        $this->json($this->method, $this->endpoint, $payload)
+            ->assertStatus(400)
+            ->assertJsonPath('errors.0.title', 'Permisos insuficientes.')
+            ->assertJsonPath('errors.0.detail', 'El dueño del token no tiene los suficientes permisos para realizar esta acción.');
+
+        $this->assertDatabaseMissing('production_logs', [
+            'product_id' => $this->product->id,
+            'employee_id' => $identification->employee_id,
+        ]);
+    }
+
+    /**
      * Cuando el usuario no tiene permisos para crear registros de producción a
      * nombre de otro empleado, se debe asociar los registros a sí mismo.
      *
      * @test
      */
-    public function shouldCreatedSuccessfullyWhenDoesNotHaveCreateOnBehalfOfAnotherPersonPermission()
+    public function shouldCreatedSuccessfullyWhenUserDoesNotHaveCreateOnBehalfOfAnotherEmployeePermission()
     {
         $payload = [
-            'employee_code' => factory(Identification::class)->create(['type' => 'uuid'])->code, // another employee
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
@@ -139,7 +153,7 @@ class CreateProductionLogTest extends TestCase
     public function shouldCreatedSuccessfullyWhenHasCreateOnBehalfOfAnotherPersonPermission()
     {
         $payload = [
-            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // another employee
+            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid', 'employee_id' => $this->employee]))->code, // another employee
             'product_id' => $this->product->id,
             'machine_id' => $this->machine->id,
             'customer_id' => $this->customer->id,
@@ -172,6 +186,8 @@ class CreateProductionLogTest extends TestCase
             'tare_weight' => 10.5,
             'gross_weight' => 25.8,
         ];
+
+        $this->user->revokePermissionTo('production-logs.create-on-behalf-of-another-person');
 
         $this->json($this->method, $this->endpoint, $payload)->assertOk();
 
@@ -231,7 +247,7 @@ class CreateProductionLogTest extends TestCase
      *
      * @test
      */
-    public function shouldValidateThatGrossWeightIsGreaterThanTareWieght()
+    public function shouldValidateThatGrossWeightIsGreaterThanTareWeight()
     {
         $payload = [
             'product_id' => $this->product->id,
