@@ -52,7 +52,7 @@ class ProductionLogsController
         if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
             $identification = Identification::where('code', $request->get('employee_code'))->firstOrFail();
 
-            if (!User::findOrFail($identification->employee_id)->can('production-logs.update')) {
+            if (! User::findOrFail($identification->employee_id)->can('production-logs.update')) {
                 return response()->json([
                     'message' => 'Datos incorrectos',
                     'errors' => [
@@ -76,8 +76,7 @@ class ProductionLogsController
     /**
      * Display the specified resource.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -94,8 +93,7 @@ class ProductionLogsController
     /**
      * Update the specified resource in storage.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateProductionLogRequest $request, $id)
@@ -113,7 +111,7 @@ class ProductionLogsController
         if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
             $identification = Identification::where('code', $request->get('employee_code'))->firstOrFail();
 
-            if (!User::findOrFail($identification->employee_id)->can('production-logs.update')) {
+            if (! User::findOrFail($identification->employee_id)->can('production-logs.update')) {
                 return response()->json([
                     'message' => 'Datos incorrectos',
                     'errors' => [
@@ -138,8 +136,7 @@ class ProductionLogsController
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     *
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
