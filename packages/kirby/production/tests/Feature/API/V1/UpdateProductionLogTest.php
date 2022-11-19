@@ -2,6 +2,7 @@
 
 namespace Kirby\Production\Tests\Feature\API\V1;
 
+use Kirby\Authorization\Models\Permission;
 use Kirby\Customers\Models\Customer;
 use Kirby\Employees\Models\Employee;
 use Kirby\Employees\Models\Identification;
@@ -29,12 +30,18 @@ class updateProductionLogTest extends TestCase
      */
     private $method = 'PUT';
 
+    private User $user;
+    private Employee $employee;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->seed(ProductionPackageSeed::class);
         $this->actingAsAdmin($this->user = factory(Employee::class)->create()->user);
+        // create employee with full permissions
+        $this->employee = factory(Employee::class)->create();
+        $this->employee->user->permissions()->sync(Permission::all());
     }
 
     /**
@@ -50,7 +57,7 @@ class updateProductionLogTest extends TestCase
         $payload = [
             'product_id' => $productId = factory(Product::class)->create()->id,
             'machine_id' => $machineId = factory(Machine::class)->create()->id,
-            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // another employee
+            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid', 'employee_id' => $this->employee]))->code, // another employee
             'customer_id' => $customerId = factory(Customer::class)->create()->id,
             'purpose' => Purpose::Sales,
             'tag' => Tag::Rejected,
@@ -118,6 +125,46 @@ class updateProductionLogTest extends TestCase
     }
 
     /**
+     * Debe retornar error cuando el empleado dueño del token no tiene permisos
+     * para creación de registros de producción.
+     *
+     * @test
+     */
+    public function shouldReturnErrorWhenTokenOwnerDoesNotHavePermissionsToUpdateProductionLogs()
+    {
+        $log = factory(ProductionLog::class)->create();
+
+        $payload = [
+            'product_id' => factory(Product::class)->create()->id,
+            'machine_id' => factory(Machine::class)->create()->id,
+            'employee_code' => factory(Identification::class)->create(['type' => 'uuid'])->code, // employee without permissions
+            'customer_id' => factory(Customer::class)->create()->id,
+            'purpose' => Purpose::Sales,
+            'tag' => Tag::Rejected,
+            'batch' => 1111,
+            'tare_weight' => 1234,
+            'gross_weight' => 5678,
+        ];
+
+        $this->json($this->method, str_replace('id', $log->id, $this->endpoint), $payload)
+            ->assertStatus(400)
+            ->assertJsonPath('errors.0.title', 'Permisos insuficientes.')
+            ->assertJsonPath('errors.0.detail', 'El dueño del token no tiene los suficientes permisos para realizar esta acción.');
+
+        $this->assertDatabaseHas('production_logs', [
+            'product_id' => $log->product_id,
+            'employee_id' => $log->employee_id,
+            'machine_id' => $log->machine_id,
+            'customer_id' => $log->customer_id,
+            'purpose' => $log->purpose,
+            'tag' => $log->tag,
+            'batch' => $log->batch,
+            'tare_weight' => $log->tare_weight,
+            'gross_weight' => $log->gross_weight,
+        ]);
+    }
+
+    /**
      * Debe actualizar la fecha de edición de la etiqueta cuando el valor de la
      * etiqueta haya cambiado.
      *
@@ -130,7 +177,7 @@ class updateProductionLogTest extends TestCase
         $payload = [
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
-            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // another employee
+            'employee_code' => factory(Identification::class)->create(['type' => 'uuid', 'employee_id' => $this->employee])->code, // another employee
             'purpose' => Purpose::Sales,
             'tag' => Tag::Rejected,
         ];
@@ -159,7 +206,7 @@ class updateProductionLogTest extends TestCase
         $payload = [
             'machine_id' => $log->machine_id,
             'product_id' => $log->product_id,
-            'employee_code' => ($identification = factory(Identification::class)->create(['type' => 'uuid']))->code, // another employee
+            'employee_code' => factory(Identification::class)->create(['type' => 'uuid', 'employee_id' => $this->employee])->code, // another employee
             'purpose' => Purpose::Sales,
             'tag' => $log->tag->value,
         ];

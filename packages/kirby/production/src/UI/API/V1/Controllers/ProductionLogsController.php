@@ -8,6 +8,7 @@ use Kirby\Production\UI\API\V1\Requests\CreateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest;
 use Kirby\Production\UI\API\V1\Requests\UpdateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Resources\ProductionLogResource;
+use Kirby\Users\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductionLogsController
@@ -89,7 +90,21 @@ class ProductionLogsController
         }
 
         if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
-            $data['employee_id'] = Identification::where('code', $request->get('employee_code'))->firstOrFail()->employee_id;
+            $identification = Identification::where('code', $request->get('employee_code'))->firstOrFail();
+
+            if (!User::findOrFail($identification->employee_id)->can('production-logs.update')) {
+                return response()->json([
+                    'message' => 'Datos incorrectos',
+                    'errors' => [
+                        [
+                            'title' => 'Permisos insuficientes.',
+                            'detail' => 'El dueño del token no tiene los suficientes permisos para realizar esta acción.',
+                        ],
+                    ],
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            $data['employee_id'] = $identification->employee_id;
         }
 
         unset($data['employee_code']);
