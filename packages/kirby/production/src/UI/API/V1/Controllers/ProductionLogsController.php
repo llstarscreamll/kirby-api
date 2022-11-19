@@ -8,6 +8,7 @@ use Kirby\Production\UI\API\V1\Requests\CreateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest;
 use Kirby\Production\UI\API\V1\Requests\UpdateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Resources\ProductionLogResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductionLogsController
 {
@@ -40,7 +41,7 @@ class ProductionLogsController
     {
         $employeeId = $request->user()->id;
 
-        if (! empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+        if (!empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
             $employeeId = Identification::where('code', $request->get('employee_code'))->firstOrFail()->employee_id;
         }
 
@@ -53,7 +54,8 @@ class ProductionLogsController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -70,14 +72,23 @@ class ProductionLogsController
     /**
      * Update the specified resource in storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateProductionLogRequest $request, $id)
     {
         $data = $request->validated();
+        $data['employee_id'] = $request->user()->id;
 
-        if (! empty($request->employee_code) && $request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+        if ($request->user()->can('production-logs.create-on-behalf-of-another-person') && empty($request->employee_code)) {
+            return response()->json([
+                'message' => 'Datos incorrectos',
+                'errors' => ['employee_code' => ['El campo token de empleado es requerido']],
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
             $data['employee_id'] = Identification::where('code', $request->get('employee_code'))->firstOrFail()->employee_id;
         }
 
@@ -91,7 +102,8 @@ class ProductionLogsController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

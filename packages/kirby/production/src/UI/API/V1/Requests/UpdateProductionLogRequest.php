@@ -27,7 +27,7 @@ class UpdateProductionLogRequest extends FormRequest
     public function rules()
     {
         return [
-            'employee_code' => ['required', 'string', Rule::exists('identifications', 'code')->where('type', 'uuid')],
+            'employee_code' => ['nullable', 'string', Rule::exists('identifications', 'code')->where('type', 'uuid')],
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'machine_id' => ['required', 'integer', 'exists:machines,id'],
             'customer_id' => ['nullable', 'integer', 'exists:customers,id'],

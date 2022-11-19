@@ -3,6 +3,7 @@
 namespace Kirby\Production\Tests\Feature\API\V1;
 
 use Kirby\Customers\Models\Customer;
+use Kirby\Employees\Models\Employee;
 use Kirby\Employees\Models\Identification;
 use Kirby\Machines\Models\Machine;
 use Kirby\Production\Enums\Purpose;
@@ -33,15 +34,16 @@ class updateProductionLogTest extends TestCase
         parent::setUp();
 
         $this->seed(ProductionPackageSeed::class);
-        $this->actingAsAdmin($this->user = factory(User::class)->create());
+        $this->actingAsAdmin($this->user = factory(Employee::class)->create()->user);
     }
 
     /**
-     * Debe persistir correctamente cuando los datos están correctos.
+     * Debe persistir correctamente cuando los datos están correctos y se otorga
+     * un código/token de empleado.
      *
      * @test
      */
-    public function shouldBeUpdatedSuccessfullyWhenDataIsCorrect()
+    public function shouldBeUpdatedSuccessfullyWhenDataIsCorrectAndEmployeeCodeIsGiven()
     {
         $log = factory(ProductionLog::class)->create();
 
@@ -64,6 +66,47 @@ class updateProductionLogTest extends TestCase
         $this->assertDatabaseHas('production_logs', [
             'product_id' => $productId,
             'employee_id' => $identification->employee_id,
+            'machine_id' => $machineId,
+            'customer_id' => $customerId,
+            'purpose' => Purpose::Sales,
+            'tag' => Tag::Rejected,
+            'batch' => 1111,
+            'tare_weight' => 1234,
+            'gross_weight' => 5678,
+        ]);
+    }
+
+    /**
+     * Debe persistir correctamente cuando los datos están correctos y no se
+     * otorga un código/token de empleado.
+     *
+     * @test
+     */
+    public function shouldBeUpdatedSuccessfullyWhenDataIsCorrectAndEmployeeCodeIsMissing()
+    {
+        // remove permission to create production logs on behalf of another person
+        $this->user->revokePermissionTo('production-logs.create-on-behalf-of-another-person');
+        $log = factory(ProductionLog::class)->create();
+
+        $payload = [
+            'product_id' => $productId = factory(Product::class)->create()->id,
+            'machine_id' => $machineId = factory(Machine::class)->create()->id,
+            'employee_code' => '', // no employee code
+            'customer_id' => $customerId = factory(Customer::class)->create()->id,
+            'purpose' => Purpose::Sales,
+            'tag' => Tag::Rejected,
+            'batch' => 1111,
+            'tare_weight' => 1234,
+            'gross_weight' => 5678,
+        ];
+
+        $this->json($this->method, str_replace('id', $log->id, $this->endpoint), $payload)
+            ->assertOk()
+            ->assertJsonPath('data', 'ok');
+
+        $this->assertDatabaseHas('production_logs', [
+            'product_id' => $productId,
+            'employee_id' => $this->user->id, // row is now owned by authenticated user
             'machine_id' => $machineId,
             'customer_id' => $customerId,
             'purpose' => Purpose::Sales,
