@@ -52,7 +52,7 @@ class ProductionLogsController
         if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
             $identification = Identification::where('code', $request->get('employee_code'))->firstOrFail();
 
-            if (!User::findOrFail($identification->employee_id)->can('production-logs.create')) {
+            if (! User::findOrFail($identification->employee_id)->can('production-logs.create')) {
                 return response()->json([
                     'message' => 'Datos incorrectos',
                     'errors' => [
