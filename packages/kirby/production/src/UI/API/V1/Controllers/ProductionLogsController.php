@@ -2,11 +2,14 @@
 
 namespace Kirby\Production\UI\API\V1\Controllers;
 
+use Kirby\Employees\Models\Identification;
 use Kirby\Production\Contracts\ProductionLogRepository;
 use Kirby\Production\UI\API\V1\Requests\CreateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Requests\SearchProductionLogsRequest;
 use Kirby\Production\UI\API\V1\Requests\UpdateProductionLogRequest;
 use Kirby\Production\UI\API\V1\Resources\ProductionLogResource;
+use Kirby\Users\Models\User;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductionLogsController
 {
@@ -37,11 +40,32 @@ class ProductionLogsController
      */
     public function store(CreateProductionLogRequest $request)
     {
-        $currentUserId = $request->user()->id;
+        $employeeId = $request->user()->id;
 
-        $employeeId = $request->user()->can('production-logs.create-on-behalf-of-another-person')
-            ? $request->get('employee_id', $currentUserId)
-            : $currentUserId;
+        if ($request->user()->can('production-logs.create-on-behalf-of-another-person') && empty($request->employee_code)) {
+            return response()->json([
+                'message' => 'Datos incorrectos',
+                'errors' => ['employee_code' => ['El campo token de empleado es requerido.']],
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+            $identification = Identification::where('code', $request->get('employee_code'))->firstOrFail();
+
+            if (! User::findOrFail($identification->employee_id)->can('production-logs.create')) {
+                return response()->json([
+                    'message' => 'Datos incorrectos',
+                    'errors' => [
+                        [
+                            'title' => 'Permisos insuficientes.',
+                            'detail' => 'El dueño del token no tiene los suficientes permisos para realizar esta acción.',
+                        ],
+                    ],
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            $employeeId = $identification->employee_id;
+        }
 
         $productionLog = $this->productionLogRepository
             ->create(['employee_id' => $employeeId, 'tag_updated_at' => now()] + $request->validated());
@@ -74,7 +98,37 @@ class ProductionLogsController
      */
     public function update(UpdateProductionLogRequest $request, $id)
     {
-        $log = $this->productionLogRepository->update($id, $request->validated());
+        $data = $request->validated();
+        $data['employee_id'] = $request->user()->id;
+
+        if ($request->user()->can('production-logs.create-on-behalf-of-another-person') && empty($request->employee_code)) {
+            return response()->json([
+                'message' => 'Datos incorrectos',
+                'errors' => ['employee_code' => ['El campo token de empleado es requerido.']],
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($request->user()->can('production-logs.create-on-behalf-of-another-person')) {
+            $identification = Identification::where('code', $request->get('employee_code'))->firstOrFail();
+
+            if (! User::findOrFail($identification->employee_id)->can('production-logs.update')) {
+                return response()->json([
+                    'message' => 'Datos incorrectos',
+                    'errors' => [
+                        [
+                            'title' => 'Permisos insuficientes.',
+                            'detail' => 'El dueño del token no tiene los suficientes permisos para realizar esta acción.',
+                        ],
+                    ],
+                ], Response::HTTP_BAD_REQUEST);
+            }
+
+            $data['employee_id'] = $identification->employee_id;
+        }
+
+        unset($data['employee_code']);
+
+        $this->productionLogRepository->update($id, $data);
 
         return response()->json(['data' => 'ok']);
     }

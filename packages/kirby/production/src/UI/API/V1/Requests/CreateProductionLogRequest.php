@@ -3,6 +3,7 @@
 namespace Kirby\Production\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Kirby\Production\Enums\Purpose;
 
 class CreateProductionLogRequest extends FormRequest
@@ -25,7 +26,7 @@ class CreateProductionLogRequest extends FormRequest
     public function rules()
     {
         return [
-            'employee_id' => ['nullable', 'integer', 'exists:employees,id'],
+            'employee_code' => ['nullable', 'string', Rule::exists('identifications', 'code')->where('type', 'uuid')],
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'machine_id' => ['required', 'integer', 'exists:machines,id'],
             'customer_id' => ['nullable', 'integer', 'exists:customers,id'],

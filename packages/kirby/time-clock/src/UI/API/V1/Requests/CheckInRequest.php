@@ -4,7 +4,7 @@ namespace Kirby\TimeClock\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Validation\Rule;
 
 /**
  * Class CheckInRequest.
@@ -31,7 +31,7 @@ class CheckInRequest extends FormRequest
     public function rules()
     {
         return [
-            'identification_code' => ['required', 'exists:identifications,code'],
+            'identification_code' => ['required', Rule::exists('identifications', 'code')->where('type', 'code')],
             'novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],
             'work_shift_id' => ['nullable', 'numeric'],
             'sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],

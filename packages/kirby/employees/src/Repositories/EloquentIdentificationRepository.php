@@ -39,11 +39,18 @@ class EloquentIdentificationRepository extends EloquentRepositoryAbstract implem
     /**
      * @return mixed
      */
-    public function deleteWhereEmployeeIdCodesNotIn(string $employeeId, array $codes)
+    public function deleteWhereEmployeeIdCodesNotIn(int $employeeId, array $codes, string $codeType)
     {
         return $this->model
-            ->where('employee_id', $employeeId)
+            ->where(['employee_id' => $employeeId, 'type' => $codeType])
             ->whereNotIn('code', $codes)
+            ->delete();
+    }
+
+    public function deleteEmployeeUuids(int $employeeId)
+    {
+        return $this->model
+            ->where(['employee_id' => $employeeId, 'type' => 'uuid'])
             ->delete();
     }
 }

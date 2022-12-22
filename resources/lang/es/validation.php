@@ -149,6 +149,7 @@ return [
 
     'attributes' => [
         'name' => 'nombre',
+        'employee_code' => 'token de empleado',
         'username' => 'usuario',
         'email' => 'correo electrónico',
         'first_name' => 'nombre',

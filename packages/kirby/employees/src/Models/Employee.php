@@ -132,6 +132,16 @@ class Employee extends Model
     }
 
     /**
+     * Employee identification token.
+     *
+     * @return mixed
+     */
+    public function token()
+    {
+        return $this->hasOne(Identification::class)->where('type', 'uuid');
+    }
+
+    /**
      * Related work shifts.
      *
      * @return mixed

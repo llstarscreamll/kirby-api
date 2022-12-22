@@ -4,6 +4,7 @@ namespace Kirby\TimeClock\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
+use Illuminate\Validation\Rule;
 
 /**
  * Class CheckOutRequest.
@@ -30,7 +31,7 @@ class CheckOutRequest extends FormRequest
     public function rules()
     {
         return [
-            'identification_code' => ['required', 'string', 'exists:identifications,code'],
+            'identification_code' => ['required', 'string', Rule::exists('identifications', 'code')->where('type', 'code')],
             'novelty_type_id' => ['nullable', 'numeric', 'exists:novelty_types,id'],
             'sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],
             'check_out_sub_cost_center_id' => ['nullable', 'numeric', 'exists:sub_cost_centers,id'],

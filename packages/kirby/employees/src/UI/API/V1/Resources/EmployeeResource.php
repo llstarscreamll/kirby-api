@@ -38,6 +38,7 @@ class EmployeeResource extends JsonResource
             'phone' => $this->phone,
             'salary' => $this->salary,
             'cost_center' => new CostCenterResource($this->whenLoaded('costCenter')),
+            'token_code' => $this->whenLoaded('token', fn () => $this->token->code),
             'work_shifts' => WorkShiftResource::collection($this->whenLoaded('workShifts')),
             'identifications' => IdentificationResource::collection($this->whenLoaded('identifications')),
             'novelty_types' => NoveltyTypeResource::collection($this->whenLoaded('noveltyTypes')),

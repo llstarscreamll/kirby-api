@@ -2,6 +2,7 @@
 
 namespace Kirby\Employees\Tests\api;
 
+use Carbon\Carbon;
 use EmployeesPackageSeed;
 use Illuminate\Support\Facades\Hash;
 use Kirby\Authorization\Models\Role;
@@ -59,9 +60,12 @@ class UpdateEmployeeTest extends \Tests\TestCase
             'position' => 'designer',
             'salary' => 5000000,
             'cost_center' => $costCenter->toArray(),
+            'generate_token' => '15d',
             'work_shifts' => [$morningWorkShift->toArray(), $afternoonWorkShift->toArray()],
             'identifications' => [$pinIdentification, $eCardIdentification],
         ];
+
+        Carbon::setTestNow('2022-06-24 10:10:10');
 
         $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
             ->assertOk()
@@ -101,8 +105,23 @@ class UpdateEmployeeTest extends \Tests\TestCase
             'work_shift_id' => $afternoonWorkShift->id,
         ]);
 
-        $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $pinIdentification);
-        $this->assertDatabaseHas('identifications', ['employee_id' => $employee->id] + $eCardIdentification);
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'code',
+            'expiration_date' => now()->toDateTimeString(),
+        ] + $pinIdentification);
+
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'code',
+            'expiration_date' => now()->toDateTimeString(),
+        ] + $eCardIdentification);
+
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'uuid',
+            'expiration_date' => now()->addDays(15)->toDateTimeString(),
+        ]);
     }
 
     /**
@@ -147,6 +166,72 @@ class UpdateEmployeeTest extends \Tests\TestCase
     /**
      * @test
      */
+    public function shouldDeleteOldUUIDIdentificationWhenAskedToGenerateToken()
+    {
+        $employee = factory(Employee::class)->create();
+        $costCenter = factory(CostCenter::class)->create();
+        $morningWorkShift = factory(WorkShift::class)->create();
+        $afternoonWorkShift = factory(WorkShift::class)->create();
+        $pinIdentification = ['name' => 'PIN', 'code' => '123'];
+
+        Carbon::setTestNow('2022-06-24 10:10:30');
+
+        $employee->identifications()->create([
+            'type' => 'uuid',
+            'name' => 'Auto fake token',
+            'code' => 'some-token-here',
+            'expiration_date' => now()->subMonth(),
+        ]);
+
+        $requestPayload = [
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => '',
+            'roles' => [Role::create(['name' => 'admin']), Role::create(['name' => 'reader'])],
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone_prefix' => '+57',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center' => $costCenter->toArray(),
+            'generate_token' => '15d',
+            'work_shifts' => [$morningWorkShift->toArray(), $afternoonWorkShift->toArray()],
+            'identifications' => [$pinIdentification],
+        ];
+
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'uuid',
+            'code' => 'some-token-here',
+            'expiration_date' => now()->subMonth(),
+        ]);
+
+        $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
+            ->assertOk()
+            ->assertJsonHasPath('data.id');
+
+        $this->assertDatabaseMissing('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'uuid',
+            'code' => 'some-token-here',
+            'expiration_date' => now()->subMonth(),
+        ]);
+
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'uuid',
+            'name' => 'Random Token',
+            'expiration_date' => now()->addDays(15),
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function shouldReturnUnprocessableEntityWhenEmailIsAlreadyTaken()
     {
         factory(User::class)->create(['email' => 'bruce@avengers.com']);
@@ -180,6 +265,58 @@ class UpdateEmployeeTest extends \Tests\TestCase
         $this->assertDatabaseMissing('users', [
             'id' => $employee->id,
             'email' => 'bruce@avengers.com',
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldKeepTokenCurrentTokenWhenIsNotRequestedToGenerateAnotherOne()
+    {
+        $employee = factory(Employee::class)->create();
+        $costCenter = factory(CostCenter::class)->create();
+        $morningWorkShift = factory(WorkShift::class)->create();
+        $pinIdentification = ['name' => 'PIN', 'code' => '123'];
+
+        $employee->identifications()->create(['type' => 'code'] + $pinIdentification);
+
+        // this uuid code should not be deleted
+        $employee->identifications()->create([
+            'type' => 'uuid',
+            'name' => 'Auto fake token',
+            'code' => 'some-token-here',
+            'expiration_date' => now()->subMonth(),
+        ]);
+
+        $requestPayload = [
+            'first_name' => 'Bruce',
+            'last_name' => 'Banner',
+            'email' => 'bruce@avengers.com',
+            'password' => 'someP4ssw0rdH3r3!',
+            'roles' => [],
+            'code' => '987',
+            'identification_number' => '654',
+            'location' => 'Medellín',
+            'address' => 'Calle 3#2-1',
+            'phone_prefix' => '+57',
+            'phone' => '3219876543',
+            'position' => 'designer',
+            'salary' => 5000000,
+            'cost_center' => $costCenter->toArray(),
+            'work_shifts' => [$morningWorkShift->toArray()],
+            'generate_token' => '', // dont ask for new token
+            'identifications' => [$pinIdentification],
+        ];
+
+        $this->json('PUT', str_replace('{id}', $employee->id, $this->endpoint), $requestPayload)
+            ->assertOk();
+
+        $this->assertDatabaseHas('identifications', [
+            'employee_id' => $employee->id,
+            'type' => 'uuid',
+            'name' => 'Auto fake token',
+            'code' => 'some-token-here',
+            'expiration_date' => now()->subMonth()->toDateTimeString(),
         ]);
     }
 
