@@ -3,6 +3,7 @@
 namespace Kirby\Novelties;
 
 use Illuminate\Support\Collection;
+use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 
@@ -30,6 +31,16 @@ class Novelties
 
             return $setting;
         });
+    }
+
+    public function defaultSubTractNoveltyTypeId(): int
+    {
+        return $this->rawSettings()->firstWhere('key', 'novelties.default-subtraction-novelty-type')->value;
+    }
+
+    public function defaultSubTractNoveltyType(): NoveltyType
+    {
+        return app(NoveltyTypeRepositoryInterface::class)->find($this->defaultSubTractNoveltyTypeId());
     }
 
     public function defaultSubTractBalanceNoveltyTypeId(): int

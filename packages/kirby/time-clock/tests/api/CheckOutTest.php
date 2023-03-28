@@ -19,6 +19,8 @@ use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
 use TimeClockPermissionsSeeder;
 use TimeClockSettingsSeeder;
+use DefaultNoveltyTypesSeed;
+use NoveltiesSettingsSeeder;
 
 /**
  * Class CheckOutTest.
@@ -331,7 +333,7 @@ class CheckOutTest extends \Tests\TestCase
         $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         $requestData = [
@@ -756,7 +758,7 @@ class CheckOutTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
@@ -1159,7 +1161,7 @@ class CheckOutTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check out is too early,
         // this sets a default novelty type for the early check out
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => true]);
 
         $requestData = [

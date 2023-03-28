@@ -9,6 +9,7 @@ use Kirby\Employees\Contracts\IdentificationRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Novelties\Facades\Novelties;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
 use Kirby\TimeClock\Exceptions\InvalidNoveltyTypeException;
@@ -162,7 +163,7 @@ class LogCheckOut
         }
 
         if (! $noveltyTypeId && $isTooEarly && ! $noveltyTypeIsRequired) {
-            $noveltyType = $this->noveltyTypeRepository->findDefaultForSubtraction();
+            $noveltyType = Novelties::defaultSubTractNoveltyType();
         }
 
         if (! $noveltyTypeId && $isTooLate && ! $noveltyTypeIsRequired) {
