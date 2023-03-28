@@ -104,21 +104,6 @@ class NoveltyType extends Model
         return $this->operator && $this->operator->is(NoveltyTypeOperator::Subtraction);
     }
 
-    public function isDefaultForSubtraction(): bool
-    {
-        return $this->operator
-        && $this->operator->is(NoveltyTypeOperator::Subtraction)
-        && self::DEFAULT_FOR_SUBTRACTION === $this->code;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isDefaultForAdditionOrSubtraction(): bool
-    {
-        return $this->isDefaultForAddition() || $this->isDefaultForSubtraction();
-    }
-
     /**
      * @return mixed
      */

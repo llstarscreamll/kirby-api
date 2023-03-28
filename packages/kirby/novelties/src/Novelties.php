@@ -33,6 +33,11 @@ class Novelties
         });
     }
 
+    public function defaultAdditionNoveltyTypeId(): int
+    {
+        return $this->rawSettings()->firstWhere('key', 'novelties.default-addition-novelty-type')->value;
+    }
+
     public function defaultSubTractNoveltyTypeId(): int
     {
         return $this->rawSettings()->firstWhere('key', 'novelties.default-subtraction-novelty-type')->value;
@@ -41,6 +46,21 @@ class Novelties
     public function defaultSubTractNoveltyType(): NoveltyType
     {
         return app(NoveltyTypeRepositoryInterface::class)->find($this->defaultSubTractNoveltyTypeId());
+    }
+
+    public function isDefaultForSubtraction(NoveltyType $noveltyType): bool
+    {
+        return $noveltyType->id === $this->defaultSubTractNoveltyTypeId();
+    }
+
+    public function isDefaultForAddition(NoveltyType $noveltyType): bool
+    {
+        return $noveltyType->id === $this->defaultAdditionNoveltyTypeId();
+    }
+
+    public function isDefaultForAdditionOrSubtraction(NoveltyType $noveltyType): bool
+    {
+        return $this->isDefaultForAddition($noveltyType) || $this->isDefaultForSubtraction($noveltyType);
     }
 
     public function defaultSubTractBalanceNoveltyTypeId(): int
