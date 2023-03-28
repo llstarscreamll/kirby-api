@@ -19,8 +19,8 @@ class CreateBalanceNoveltyController
     {
         $hours = floatval($request->time);
         $noveltyTypeId = $hours > 0
-            ? Novelties::defaultSubTractNoveltyTypeId()
-            : Novelties::defaultAdditionNoveltyTypeId();
+            ? Novelties::defaultSubTractBalanceNoveltyTypeId()
+            : Novelties::defaultAdditionBalanceNoveltyTypeId();
 
         $novelty = $noveltyRepository->create([
             'employee_id' => $request->employee_id,

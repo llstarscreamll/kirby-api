@@ -117,7 +117,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 
     private function getSortedAdditionNoveltyTypes(): Collection
     {
-        $balanceNoveltyTypeId = Novelties::defaultAdditionNoveltyTypeId();
+        $balanceNoveltyTypeId = Novelties::defaultAdditionBalanceNoveltyTypeId();
         $additionNoveltyTypes = $this->noveltyTypes
             ->filter(fn ($noveltyType) => $noveltyType->id !== $balanceNoveltyTypeId)
             ->filter(fn ($noveltyType) => $noveltyType->operator->is(NoveltyTypeOperator::Addition()))
@@ -130,7 +130,7 @@ class GenerateCsvEmployeeResumeByNoveltyTypeJob implements ShouldQueue
 
     private function getSortedSubtractNoveltyTypes(): Collection
     {
-        $balanceNoveltyTypeId = Novelties::defaultSubTractNoveltyTypeId();
+        $balanceNoveltyTypeId = Novelties::defaultSubTractBalanceNoveltyTypeId();
         $subtractNoveltyTypes = $this->noveltyTypes
             ->filter(fn ($noveltyType) => $noveltyType->id !== $balanceNoveltyTypeId)
             ->filter(fn ($noveltyType) => $noveltyType->operator->is(NoveltyTypeOperator::Subtraction()))

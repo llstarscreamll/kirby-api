@@ -32,12 +32,12 @@ class Novelties
         });
     }
 
-    public function defaultSubTractNoveltyTypeId(): int
+    public function defaultSubTractBalanceNoveltyTypeId(): int
     {
         return $this->rawSettings()->firstWhere('key', 'novelties.default-subtraction-balance-novelty-type')->value;
     }
 
-    public function defaultAdditionNoveltyTypeId(): int
+    public function defaultAdditionBalanceNoveltyTypeId(): int
     {
         return $this->rawSettings()->firstWhere('key', 'novelties.default-addition-balance-novelty-type')->value;
     }
