@@ -46,14 +46,14 @@ class NoveltiesSettingsSeeder extends Seeder
                 'name' => 'Default addition balance novelty type ',
                 'description' => 'Default novelty type for addition balance',
                 'data_type' => 'int',
-                'value' => (string) NoveltyType::where('code', 'B+')->first()->id,
+                'value' => (string) optional(NoveltyType::where('code', 'B+')->first())->id,
             ],
             [
                 'key' => 'novelties.default-subtraction-balance-novelty-type',
                 'name' => 'Default subtraction balance novelty type',
                 'description' => 'Default novelty type for subtraction balance',
                 'data_type' => 'int',
-                'value' => (string) NoveltyType::where('code', 'B-')->first()->id,
+                'value' => (string) optional(NoveltyType::where('code', 'B-')->first())->id,
             ],
         ];
     }
