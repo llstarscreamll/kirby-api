@@ -181,7 +181,7 @@ class LogCheckIn
         }
 
         if ($isTooEarly && ! $noveltyTypeId && ! $noveltyTypeIsRequired) {
-            $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
+            $noveltyType = Novelties::defaultAdditionNoveltyType();
         }
 
         $timeClockLog = [

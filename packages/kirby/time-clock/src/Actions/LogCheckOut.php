@@ -167,7 +167,7 @@ class LogCheckOut
         }
 
         if (! $noveltyTypeId && $isTooLate && ! $noveltyTypeIsRequired) {
-            $noveltyType = $this->noveltyTypeRepository->findDefaultForAddition();
+            $noveltyType = Novelties::defaultAdditionNoveltyType();
         }
 
         if ($scheduledNovelty && $this->adjustScheduledNoveltyTimesBasedOnChecks()) {

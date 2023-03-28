@@ -111,25 +111,4 @@ class EloquentNoveltyTypeRepository extends EloquentRepositoryAbstract implement
 
         return $this->parserResult($model);
     }
-
-    /**
-     * @todo make configurable the default novelty type for subtraction
-     *
-     * @return mixed
-     */
-    public function findDefaultForAddition()
-    {
-        $this->applyScope();
-
-        $model = $this->model
-            ->where([
-                'operator' => NoveltyTypeOperator::Addition,
-                'code' => NoveltyType::DEFAULT_FOR_ADDITION,
-            ])
-            ->first();
-
-        $this->resetModel();
-
-        return $this->parserResult($model);
-    }
 }

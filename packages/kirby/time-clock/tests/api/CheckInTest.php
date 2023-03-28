@@ -1640,7 +1640,7 @@ class CheckInTest extends \Tests\TestCase
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
 
         // set setting to NOT require novelty type when check in is too early
-        $this->seed(TimeClockSettingsSeeder::class);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         $requestData = [
             'identification_code' => $employee->identifications->first()->code,

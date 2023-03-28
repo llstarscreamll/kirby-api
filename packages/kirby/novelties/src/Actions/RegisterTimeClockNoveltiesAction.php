@@ -333,7 +333,7 @@ class RegisterTimeClockNoveltiesAction
             && (
                 $timeClockLog->check_in_novelty_type_id === $noveltyType->id
                 // fix check_in_novelty_type_id on second comparison. should be check_out_novelty_type_id
-                || (empty($timeClockLog->check_in_novelty_type_id) && $noveltyType->isDefaultForAddition())
+                || (empty($timeClockLog->check_in_novelty_type_id) && Novelties::isDefaultForAddition($noveltyType))
             )
         ) {
             $noveltyTypePeriods = collect([...$basePeriodForNovelty]);
@@ -423,7 +423,7 @@ class RegisterTimeClockNoveltiesAction
             $end = $timeClockLog->expectedCheckOut();
         }
 
-        if ($noveltySelectedByEmployee && $noveltyType->isDefaultForAddition()) {
+        if ($noveltySelectedByEmployee && Novelties::isDefaultForAddition($noveltyType)) {
             $end = $timeClockLog->checked_out_at;
         }
 

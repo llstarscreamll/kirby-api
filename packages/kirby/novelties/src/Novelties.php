@@ -48,6 +48,11 @@ class Novelties
         return app(NoveltyTypeRepositoryInterface::class)->find($this->defaultSubTractNoveltyTypeId());
     }
 
+    public function defaultAdditionNoveltyType(): NoveltyType
+    {
+        return app(NoveltyTypeRepositoryInterface::class)->find($this->defaultAdditionNoveltyTypeId());
+    }
+
     public function isDefaultForSubtraction(NoveltyType $noveltyType): bool
     {
         return $noveltyType->id === $this->defaultSubTractNoveltyTypeId();
