@@ -17,9 +17,9 @@ use Kirby\TimeClock\Models\Setting;
 use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
+use NoveltiesSettingsSeeder;
 use TimeClockPermissionsSeeder;
 use TimeClockSettingsSeeder;
-use NoveltiesSettingsSeeder;
 
 /**
  * Class CheckInTest.
@@ -409,6 +409,7 @@ class CheckInTest extends \Tests\TestCase
 
     /**
      * @todo validate if this is a correct case, should return 201 or 422?
+     *
      * @test
      */
     public function whenHasNotWorkShift()
@@ -440,6 +441,7 @@ class CheckInTest extends \Tests\TestCase
 
     /**
      * @todo validate if this is a correct case, should return 201 or 422?
+     *
      * @test
      */
     public function whenHasWorkShiftButIsNotOnStartTimeRange()

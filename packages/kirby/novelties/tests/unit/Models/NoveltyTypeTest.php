@@ -18,6 +18,7 @@ class NoveltyTypeTest extends \Tests\TestCase
 {
     /**
      * @test
+     *
      * @dataProvider holidayNoveltyTypes
      *
      * @param  mixed  $attrs
@@ -37,6 +38,7 @@ class NoveltyTypeTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider workdayNoveltyTypes
      *
      * @param  mixed  $attrs
@@ -56,6 +58,7 @@ class NoveltyTypeTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider holidayNoveltyTypes
      *
      * @param  mixed  $attrs
@@ -77,6 +80,7 @@ class NoveltyTypeTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider workdayNoveltyTypes
      *
      * @param  mixed  $attrs

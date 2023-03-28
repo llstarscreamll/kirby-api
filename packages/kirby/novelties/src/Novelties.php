@@ -3,8 +3,8 @@
 namespace Kirby\Novelties;
 
 use Illuminate\Support\Collection;
-use Kirby\Novelties\Models\NoveltyType;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
+use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Contracts\SettingRepositoryInterface;
 
 /**

@@ -131,6 +131,7 @@ class HolidaysServiceTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider dataProvider
      *
      * @param  mixed  $country

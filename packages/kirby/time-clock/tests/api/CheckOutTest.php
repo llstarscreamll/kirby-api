@@ -2,6 +2,7 @@
 
 namespace Kirby\TimeClock\Tests\api;
 
+use DefaultNoveltyTypesSeed;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
@@ -17,10 +18,9 @@ use Kirby\TimeClock\Models\Setting;
 use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
+use NoveltiesSettingsSeeder;
 use TimeClockPermissionsSeeder;
 use TimeClockSettingsSeeder;
-use DefaultNoveltyTypesSeed;
-use NoveltiesSettingsSeeder;
 
 /**
  * Class CheckOutTest.
@@ -423,7 +423,7 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee->workShifts()->attach($this->workShifts->first());
 
-        $this->seed([DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]); 
+        $this->seed([DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         $requestData = [
             // sub cost center is not required because no work shift time will be registered

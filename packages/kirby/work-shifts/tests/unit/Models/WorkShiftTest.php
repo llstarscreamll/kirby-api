@@ -147,6 +147,7 @@ class WorkShiftTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider punctualityDataProvider
      *
      * @param  mixed  $slot
@@ -232,6 +233,7 @@ class WorkShiftTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider deadTimeDataProvider
      *
      * @param  mixed  $workShiftData
@@ -277,6 +279,7 @@ class WorkShiftTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider workShiftExamples
      *
      * @param  mixed  $attrs

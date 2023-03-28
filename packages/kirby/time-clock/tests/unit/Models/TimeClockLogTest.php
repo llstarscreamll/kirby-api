@@ -67,6 +67,7 @@ class TimeClockLogTest extends \Tests\TestCase
 
     /**
      * @dataProvider timeClockLogs
+     *
      * @test
      *
      * @param  mixed  $checkIn
