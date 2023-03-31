@@ -17,6 +17,8 @@ class CoreServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'core');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
+
         // publishing is only necessary when using the CLI
         if ($this->app->runningInConsole()) {
             $this->bootForConsole();
