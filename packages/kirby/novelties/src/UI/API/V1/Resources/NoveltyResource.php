@@ -29,6 +29,7 @@ class NoveltyResource extends JsonResource
             'sub_cost_center_id' => $this->sub_cost_center_id,
             'start_at' => optional($this->start_at)->toIsoString(),
             'end_at' => optional($this->end_at)->toIsoString(),
+            'attachment' => $this->attachment,
             'comment' => $this->comment,
             'created_at' => optional($this->created_at)->toIsoString(),
             'updated_at' => optional($this->updated_at)->toIsoString(),
