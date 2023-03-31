@@ -33,6 +33,8 @@ class UpdateNoveltyRequest extends FormRequest
             'novelty_type_id' => ['required', 'numeric', 'min:1'],
             'start_at' => ['required', 'date'],
             'end_at' => ['required', 'date', 'after:start_at', 'required_with:start_at'],
+            'attachment.url' => ['nullable', 'string', 'max:255'],
+            'attachment.name' => ['nullable', 'string', 'max:255'],
             'comment' => ['nullable', 'string'],
         ];
     }
