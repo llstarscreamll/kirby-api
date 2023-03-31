@@ -2,8 +2,6 @@
 
 namespace Kirby\Core\UI\API\V1\Controllers;
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 use Kirby\Core\UI\API\V1\Requests\DownloadFileRequest;
 
@@ -17,7 +15,7 @@ class DownloadFileController
     public function __invoke(DownloadFileRequest $request, $fileName)
     {
         $filePath = "files/{$fileName}";
-        
+
         if (! Storage::exists($filePath)) {
             abort(404);
         }
