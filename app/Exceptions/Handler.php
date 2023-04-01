@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
-use Laravel\Passport\Exceptions\OAuthServerException;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use PDOException;
 use Throwable;
 
