@@ -1266,6 +1266,7 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider successCases
      *
      * @param  mixed  $_
@@ -1456,6 +1457,7 @@ class RegisterTimeClockNoveltiesActionTest extends \Tests\TestCase
 
     /**
      * @todo set a proper name to this test case
+     *
      * @test
      */
     public function foo()

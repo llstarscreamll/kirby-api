@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Contracts\NoveltyTypeRepositoryInterface;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
+use Kirby\Novelties\Facades\Novelties;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 use Kirby\TimeClock\Contracts\TimeClockLogRepositoryInterface;
@@ -73,7 +74,7 @@ class RegisterTimeClockNoveltiesAction
 
         $novelties = $this->noveltyTypeRepository
             ->all()
-            ->sort(fn (NoveltyType $novelty) => $novelty->isDefaultForSubtraction() ? 9999 : 0)
+            ->sort(fn (NoveltyType $novelty) => Novelties::isDefaultForSubtraction($novelty) ? 9999 : 0)
             ->map(function ($noveltyType) use ($timeClockLog, $currentDate) {
                 $periods = $this->solveNoveltyTypeTime($timeClockLog, $noveltyType);
                 $subCostCenterId = $timeClockLog->sub_cost_center_id;
@@ -188,11 +189,11 @@ class RegisterTimeClockNoveltiesAction
             );
         }
 
-        if (! $noveltySelectedByEmployee && $noveltyType->isDefaultForAdditionOrSubtraction()) {
+        if (! $noveltySelectedByEmployee && Novelties::isDefaultForAdditionOrSubtraction($noveltyType)) {
             $result = $logPeriodsOutOfWorkShift->overlap($noveltyTypePeriods);
         }
 
-        if (! $noveltySelectedByEmployee && ($timeClockLog->lateCheckIn() || $timeClockLog->earlyCheckOut()) && $noveltyType->isDefaultForSubtraction()) {
+        if (! $noveltySelectedByEmployee && ($timeClockLog->lateCheckIn() || $timeClockLog->earlyCheckOut()) && Novelties::isDefaultForSubtraction($noveltyType)) {
             $missingWorkShiftTime = collect([...$logOverlapWithWorkShiftSlotsPeriods])
                 ->map(fn (Period $wp) => [...$wp->diff(...$scheduledNoveltiesPeriods)])
                 ->collapse()
@@ -332,7 +333,7 @@ class RegisterTimeClockNoveltiesAction
             && (
                 $timeClockLog->check_in_novelty_type_id === $noveltyType->id
                 // fix check_in_novelty_type_id on second comparison. should be check_out_novelty_type_id
-                || (empty($timeClockLog->check_in_novelty_type_id) && $noveltyType->isDefaultForAddition())
+                || (empty($timeClockLog->check_in_novelty_type_id) && Novelties::isDefaultForAddition($noveltyType))
             )
         ) {
             $noveltyTypePeriods = collect([...$basePeriodForNovelty]);
@@ -422,7 +423,7 @@ class RegisterTimeClockNoveltiesAction
             $end = $timeClockLog->expectedCheckOut();
         }
 
-        if ($noveltySelectedByEmployee && $noveltyType->isDefaultForAddition()) {
+        if ($noveltySelectedByEmployee && Novelties::isDefaultForAddition($noveltyType)) {
             $end = $timeClockLog->checked_out_at;
         }
 

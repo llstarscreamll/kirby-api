@@ -23,12 +23,6 @@ class NoveltyType extends Model
     use HolidayAware;
 
     /**
-     * @todo this constant flags should be configurable not hard coded.
-     */
-    public const DEFAULT_FOR_ADDITION = 'HADI';
-    public const DEFAULT_FOR_SUBTRACTION = 'PP';
-
-    /**
      * The attributes that are mass assignable.
      *
      * @var array
@@ -94,29 +88,9 @@ class NoveltyType extends Model
         return $this->operator && $this->operator->is(NoveltyTypeOperator::Addition);
     }
 
-    public function isDefaultForAddition(): bool
-    {
-        return $this->isForAddition() && self::DEFAULT_FOR_ADDITION === $this->code;
-    }
-
     public function isForSubtraction(): bool
     {
         return $this->operator && $this->operator->is(NoveltyTypeOperator::Subtraction);
-    }
-
-    public function isDefaultForSubtraction(): bool
-    {
-        return $this->operator
-        && $this->operator->is(NoveltyTypeOperator::Subtraction)
-        && self::DEFAULT_FOR_SUBTRACTION === $this->code;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isDefaultForAdditionOrSubtraction(): bool
-    {
-        return $this->isDefaultForAddition() || $this->isDefaultForSubtraction();
     }
 
     /**

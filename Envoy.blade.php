@@ -53,7 +53,7 @@
     {{ logMessage("📸  Generate and upload artifact") }}
     zip -r -q \
     {{ $newReleaseName }}.zip ./ \
-    -x vendor/\* node_modules/\* .git/\* tests/\* storage/\* bootstrap/cache/\* \
+    -x vendor/\* node_modules/\* .git/\* tests/\* storage/\* bootstrap/cache/\* public/storage/\* \
     \*.md \*.xml .\* \*.zip \*.yml LICENSE package.json yarn.lock Envoy* \
     packages/kirby/\*/tests/\* packages/kirby/\*.md packages/kirby/\*.xml packages/kirby/\*.yml
 

@@ -6,6 +6,7 @@ use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
+use Illuminate\Support\Facades\Storage;
 use NoveltiesPackageSeed;
 
 /**
@@ -46,7 +47,13 @@ class UpdateNoveltyTest extends \Tests\TestCase
             'start_at' => $startDate->toIsoString(),
             'end_at' => $endDate->toIsoString(),
             'comment' => 'updated comment here!!',
+            'attachment' => $attachment = [
+                'url' => 'ABC-123.jpg',
+                'name' => 'some file.jpg',
+            ],
         ];
+
+        Storage::shouldReceive('exists')->with('files/ABC-123.jpg')->andReturn(true);
 
         $endpoint = str_replace('{id}', $novelty->id, $this->endpoint);
         $this->json('PUT', $endpoint, $updatedNovelty)
@@ -57,6 +64,7 @@ class UpdateNoveltyTest extends \Tests\TestCase
             'id' => $novelty->id,
             'start_at' => $startDate->toDateTimeString(),
             'end_at' => $endDate->toDateTimeString(),
+            'attachment' => $this->castAsJson($attachment),
         ] + $updatedNovelty);
     }
 

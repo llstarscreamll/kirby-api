@@ -50,6 +50,7 @@ class CreateManyNoveltiesActionTest extends \Tests\TestCase
 
     /**
      * @test
+     *
      * @dataProvider successCases
      *
      * @param  mixed  $employees

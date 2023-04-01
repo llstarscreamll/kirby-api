@@ -1,5 +1,10 @@
 # Release notes
 
+## [2.8.0 (2022-12-22)](https://github.com/llstarscreamll/kirby-api/compare/2.8.0..2.7.0)
+
+- feat(novelties): new attribute to load attachments to novelties
+- feat(novelties): default novelties for subtraction and addtion can be now configurable
+
 ## [2.7.0 (2022-12-22)](https://github.com/llstarscreamll/kirby-api/compare/2.7.0..2.6.0)
 
 - feat(time-clock): prevent to use employee token codes for check in/out

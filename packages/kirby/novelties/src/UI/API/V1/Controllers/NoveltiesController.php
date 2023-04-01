@@ -4,6 +4,7 @@ namespace Kirby\Novelties\UI\API\V1\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Kirby\Novelties\Contracts\NoveltyRepositoryInterface;
 use Kirby\Novelties\Criteria\ByEmployeeIdsCriterion;
 use Kirby\Novelties\Repositories\Criteria\ByNoveltyTypeCriteria;
@@ -124,6 +125,10 @@ class NoveltiesController
 
         $noveltyData['start_at'] = Carbon::parse($noveltyData['start_at']);
         $noveltyData['end_at'] = Carbon::parse($noveltyData['end_at']);
+
+        if (! empty($request->attachment) && ! Storage::exists("files/{$request->attachment['url']}")) {
+            return response()->json(['errors' => ['attachment' => ['El fichero no existe']]], 422);
+        }
 
         $novelty = $this->noveltyRepository->update($noveltyData, $id);
 

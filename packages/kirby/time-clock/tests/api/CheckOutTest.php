@@ -2,6 +2,7 @@
 
 namespace Kirby\TimeClock\Tests\api;
 
+use DefaultNoveltyTypesSeed;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
@@ -17,6 +18,7 @@ use Kirby\TimeClock\Models\Setting;
 use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
+use NoveltiesSettingsSeeder;
 use TimeClockPermissionsSeeder;
 use TimeClockSettingsSeeder;
 
@@ -220,6 +222,8 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee->workShifts()->attach($this->workShifts->first());
 
+        $this->seed([DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
+
         $requestData = [
             'sub_cost_center_id' => $this->firstSubCostCenter->id,
             'identification_code' => $employee->identifications->first()->code,
@@ -331,7 +335,7 @@ class CheckOutTest extends \Tests\TestCase
         $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         $requestData = [
@@ -374,7 +378,7 @@ class CheckOutTest extends \Tests\TestCase
         $employee->workShifts()->attach($this->workShifts->first());
 
         // set setting to NOT require novelty type when check out is too early
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         $requestData = [
@@ -418,6 +422,8 @@ class CheckOutTest extends \Tests\TestCase
             ->create();
 
         $employee->workShifts()->attach($this->workShifts->first());
+
+        $this->seed([DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         $requestData = [
             // sub cost center is not required because no work shift time will be registered
@@ -535,6 +541,8 @@ class CheckOutTest extends \Tests\TestCase
             ->create();
 
         $employee->workShifts()->attach($this->workShifts->first());
+
+        $this->seed([DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         $requestData = [
             'novelty_type_id' => $this->noveltyTypes->get(2)->id, // addition novelty type
@@ -703,6 +711,8 @@ class CheckOutTest extends \Tests\TestCase
 
         $employee->workShifts()->attach($this->workShifts->first());
 
+        $this->seed([DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
+
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
         // 5pm, he's on time to check out, so the default novelty type for check
         // out should not be setted
@@ -756,7 +766,7 @@ class CheckOutTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
@@ -812,7 +822,7 @@ class CheckOutTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
-        $this->artisan('db:seed', ['--class' => TimeClockSettingsSeeder::class]);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         // create scheduled novelty from 5pm to 6pm, since employee leaves at
         // 4pm, he's too early to check out
@@ -895,7 +905,7 @@ class CheckOutTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
-        $this->artisan('db:seed', ['--class' => TimeClockSettingsSeeder::class]);
+        $this->seed([TimeClockSettingsSeeder::class, NoveltiesSettingsSeeder::class]);
 
         // create scheduled novelty from 03:30pm to 6pm, since employee leaves at
         // 4pm, he's too late to check out
@@ -1070,7 +1080,7 @@ class CheckOutTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check out is too early,
         // this make to set a default novelty type id for the early check out
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        $this->seed([TimeClockSettingsSeeder::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         // create scheduled novelty from 7am to 8am, since employee leaves at
@@ -1159,7 +1169,7 @@ class CheckOutTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check out is too early,
         // this sets a default novelty type for the early check out
-        $this->artisan('db:seed', ['--class' => 'TimeClockSettingsSeeder']);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => true]);
 
         $requestData = [

@@ -17,6 +17,7 @@ use Kirby\TimeClock\Models\Setting;
 use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\Users\Models\User;
 use Kirby\WorkShifts\Models\WorkShift;
+use NoveltiesSettingsSeeder;
 use TimeClockPermissionsSeeder;
 use TimeClockSettingsSeeder;
 
@@ -408,6 +409,7 @@ class CheckInTest extends \Tests\TestCase
 
     /**
      * @todo validate if this is a correct case, should return 201 or 422?
+     *
      * @test
      */
     public function whenHasNotWorkShift()
@@ -439,6 +441,7 @@ class CheckInTest extends \Tests\TestCase
 
     /**
      * @todo validate if this is a correct case, should return 201 or 422?
+     *
      * @test
      */
     public function whenHasWorkShiftButIsNotOnStartTimeRange()
@@ -658,11 +661,11 @@ class CheckInTest extends \Tests\TestCase
     /**
      * @test
      */
-    public function whenHasSingleWorkShiftAndArrivesTooLateClosedToWorkShiftEndandspecifyworkShiftIdAndStartNoveltyIsNotRequired()
+    public function whenHasSingleWorkShiftAndArrivesTooLateClosedToWorkShiftEndAndSpecifyWorkShiftIdAndStartNoveltyIsNotRequired()
     {
         // set setting to NOT require novelty type when check in is too late,
         // this make to set a default novelty type id for the late check in
-        $this->seed(TimeClockSettingsSeeder::class);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         $employee = factory(Employee::class)
             ->with('identifications', ['name' => 'card', 'code' => 'fake-employee-card-code'])
@@ -1113,7 +1116,7 @@ class CheckInTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check in is too late,
         // this make to set a default novelty type id for the late check in
-        $this->seed(TimeClockSettingsSeeder::class);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
         Setting::where(['key' => 'time-clock.adjust-scheduled-novelty-datetime-based-on-checks'])->update(['value' => false]);
 
         // create scheduled novelty from 7am to 8am, since employee arrives at
@@ -1230,7 +1233,7 @@ class CheckInTest extends \Tests\TestCase
 
         // set setting to NOT require novelty type when check in is too late,
         // this make to set a default novelty type id for the late check in
-        $this->seed(TimeClockSettingsSeeder::class);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         // create scheduled novelty from 10am to 11am, since employee arrives at
         // 8am (too late), he's 1 hour late to check in, so the default novelty
@@ -1569,7 +1572,7 @@ class CheckInTest extends \Tests\TestCase
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 8, 00));
 
         // set setting to NOT require novelty type when check in is too late
-        $this->seed(TimeClockSettingsSeeder::class);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         $requestData = [
             'identification_code' => $employee->identifications->first()->code,
@@ -1603,7 +1606,7 @@ class CheckInTest extends \Tests\TestCase
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 14, 00));
 
         // set setting to NOT require novelty type when check in is too late
-        $this->seed(TimeClockSettingsSeeder::class);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         $requestData = [
             'identification_code' => $employee->identifications->first()->code,
@@ -1639,7 +1642,7 @@ class CheckInTest extends \Tests\TestCase
         Carbon::setTestNow(Carbon::create(2019, 04, 01, 6, 00));
 
         // set setting to NOT require novelty type when check in is too early
-        $this->seed(TimeClockSettingsSeeder::class);
+        $this->seed([TimeClockSettingsSeeder::class, DefaultNoveltyTypesSeed::class, NoveltiesSettingsSeeder::class]);
 
         $requestData = [
             'identification_code' => $employee->identifications->first()->code,

@@ -32,6 +32,7 @@ class Novelty extends Model
         'time_clock_log_id',
         'start_at',
         'end_at',
+        'attachment',
         'comment',
     ];
 
@@ -45,6 +46,7 @@ class Novelty extends Model
         'novelty_type_id' => 'int',
         'sub_cost_center_id' => 'int',
         'time_clock_log_id' => 'int',
+        'attachment' => 'array',
         'comment' => 'string',
     ];
 
