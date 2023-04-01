@@ -107,7 +107,7 @@
 @task('migrateDatabase', ['on' => 'remote'])
     {{ logMessage("🙈  Migrating database") }}
     cd {{ $newReleaseDir }}
-    php74 artisan migrate --force
+    php74 artisan migrate --seed --force
     php74 artisan authorization:refresh-admin-permissions
 @endtask
 
