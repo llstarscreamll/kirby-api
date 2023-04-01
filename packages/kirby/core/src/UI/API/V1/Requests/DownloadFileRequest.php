@@ -3,7 +3,6 @@
 namespace Kirby\Core\UI\API\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\File;
 
 /**
  * Class DownloadFileRequest.

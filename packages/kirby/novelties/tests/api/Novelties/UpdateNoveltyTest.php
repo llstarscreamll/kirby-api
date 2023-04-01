@@ -2,11 +2,11 @@
 
 namespace Kirby\Novelties\Tests\api\Novelties;
 
+use Illuminate\Support\Facades\Storage;
 use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Enums\NoveltyTypeOperator;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
-use Illuminate\Support\Facades\Storage;
 use NoveltiesPackageSeed;
 
 /**
