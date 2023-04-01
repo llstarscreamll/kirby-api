@@ -1,6 +1,6 @@
 # Release notes
 
-## [2.8.0 (2022-12-22)](https://github.com/llstarscreamll/kirby-api/compare/2.8.0..2.7.0)
+## [2.8.0 (2023-04-01)](https://github.com/llstarscreamll/kirby-api/compare/2.8.0..2.7.0)
 
 - feat(novelties): new attribute to load attachments to novelties
 - feat(novelties): default novelties for subtraction and addtion can be now configurable
