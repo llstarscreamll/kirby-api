@@ -178,7 +178,7 @@ class DefaultNoveltyTypesSeed extends Seeder
         collect($this->noveltyTypes)->map(function (array $noveltyType) {
             $keys = Arr::only($noveltyType, ['code']);
 
-            return NoveltyType::firstOrCreate($keys, $noveltyType);
+            return NoveltyType::updateOrCreate($keys, $noveltyType);
         });
     }
 }
