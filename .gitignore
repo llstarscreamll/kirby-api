@@ -17,3 +17,4 @@ tests/_output
 .php-cs-fixer.cache
 .DS_Store
 ./**/.DS_Store
+*.zip
