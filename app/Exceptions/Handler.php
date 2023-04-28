@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthServerException;
 use PDOException;
 use Throwable;
 
@@ -17,6 +18,7 @@ class Handler extends ExceptionHandler
      */
     protected $dontReport = [
         OAuthServerException::class,
+        LaravelOAuthServerException::class,
     ];
 
     /**
