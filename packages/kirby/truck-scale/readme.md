@@ -33,11 +33,11 @@ Please see [contributing.md](contributing.md) for details and a todolist.
 
 ## Security
 
-If you discover any security related issues, please email author email instead of using the issue tracker.
+If you discover any security related issues, please email llstarscreamll@hotmail.com instead of using the issue tracker.
 
 ## Credits
 
-- [author name][link-author]
+- [Johan Alvarez][https://github.com/llstarscreamll]
 - [All Contributors][link-contributors]
 
 ## License
@@ -53,5 +53,5 @@ license. Please see the [license file](license.md) for more information.
 [link-downloads]: https://packagist.org/packages/kirby/truck-scale
 [link-travis]: https://travis-ci.org/kirby/truck-scale
 [link-styleci]: https://styleci.io/repos/12345678
-[link-author]: https://github.com/kirby
+[https://github.com/llstarscreamll]: https://github.com/kirby
 [link-contributors]: ../../contributors

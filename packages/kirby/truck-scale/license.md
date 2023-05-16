@@ -1,5 +1,5 @@
 # The license
 
-Copyright (c) author name <author email>
+Copyright (c) Johan Alvarez <llstarscreamll@hotmail.com>
 
 ...Add your license text here...
