@@ -19,6 +19,9 @@
         "orchestra/testbench": "~3"
     },
     "autoload": {
+        "classmap": [
+            "database/seeds"
+        ],
         "psr-4": {
             "kirby\\TruckScale\\": "src/"
         }

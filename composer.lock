@@ -2430,7 +2430,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/kirby/truck-scale",
-                "reference": "cecb8134faee42ed717fb0e1f2985c126ce80928"
+                "reference": "7a047ab416226a2da9cfd7e9aeda76bd1cc51c78"
             },
             "require": {
                 "illuminate/support": "~7"
@@ -2448,6 +2448,9 @@
                 }
             },
             "autoload": {
+                "classmap": [
+                    "database/seeds"
+                ],
                 "psr-4": {
                     "kirby\\TruckScale\\": "src/"
                 }
@@ -2462,9 +2465,9 @@
             ],
             "authors": [
                 {
-                    "name": "author name",
-                    "email": "author email",
-                    "homepage": "author homepage"
+                    "name": "Johan Alvarez",
+                    "email": "llstarscreamll@hotmail.com",
+                    "homepage": "https://github.com/llstarscreamll"
                 }
             ],
             "description": ":package_description",
