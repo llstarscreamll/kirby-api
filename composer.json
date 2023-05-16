@@ -30,6 +30,7 @@
         "kirby/production": "*",
         "kirby/products": "*",
         "kirby/time-clock": "*",
+        "kirby/truck-scale": "*",
         "kirby/users": "*",
         "kirby/work-shifts": "*",
         "laravel/framework": "^7.0",
