@@ -23,18 +23,18 @@
             "database/seeds"
         ],
         "psr-4": {
-            "kirby\\TruckScale\\": "src/"
+            "Kirby\\TruckScale\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "kirby\\TruckScale\\Tests\\": "tests"
+            "Kirby\\TruckScale\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "kirby\\TruckScale\\TruckScaleServiceProvider"
+                "Kirby\\TruckScale\\TruckScaleServiceProvider"
             ]
         }
     }

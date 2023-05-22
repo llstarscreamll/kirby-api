@@ -1,6 +1,6 @@
 <?php
 
-namespace kirby\TruckScale;
+namespace Kirby\TruckScale;
 
 class TruckScale
 {

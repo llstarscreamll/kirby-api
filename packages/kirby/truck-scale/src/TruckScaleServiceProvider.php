@@ -1,6 +1,6 @@
 <?php
 
-namespace kirby\TruckScale;
+namespace Kirby\TruckScale;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +15,7 @@ class TruckScaleServiceProvider extends ServiceProvider
     {
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kirby');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'kirby');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         // $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         // Publishing is only necessary when using the CLI.
