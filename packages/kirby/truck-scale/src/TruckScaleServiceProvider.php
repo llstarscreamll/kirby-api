@@ -2,6 +2,7 @@
 
 namespace Kirby\TruckScale;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
 use Illuminate\Support\ServiceProvider;
 
 class TruckScaleServiceProvider extends ServiceProvider
@@ -16,7 +17,7 @@ class TruckScaleServiceProvider extends ServiceProvider
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'kirby');
         // $this->loadViewsFrom(__DIR__.'/../resources/views', 'kirby');
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/UI/API/V1/routes.php');
 
         // Publishing is only necessary when using the CLI.
         if ($this->app->runningInConsole()) {
@@ -45,6 +46,8 @@ class TruckScaleServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../config/truck-scale.php' => config_path('truck-scale.php'),
         ], 'truck-scale.config');
+
+        $this->app->make(EloquentFactory::class)->load(__DIR__.'/../database/factories');
 
         // Publishing the views.
         /*$this->publishes([
