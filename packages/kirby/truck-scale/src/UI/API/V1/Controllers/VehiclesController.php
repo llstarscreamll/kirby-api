@@ -16,14 +16,14 @@ class VehiclesController
             ->simplePaginate(10, [
                 'vehicle_plate AS plate',
                 'vehicle_type AS type',
-                DB::raw('GROUP_CONCAT(CONCAT(driver_dni_number, ",", driver_name) ORDER BY driver_dni_number DESC SEPARATOR "|") AS drivers')
+                DB::raw('GROUP_CONCAT(CONCAT(driver_dni_number, ",", driver_name) ORDER BY driver_dni_number DESC SEPARATOR "|") AS drivers'),
             ]);
 
         return $paginated
             ->setCollection(
                 $paginated
                     ->getCollection()
-                    ->transform(fn($r) => tap($r, fn($r) => $r->drivers = array_map(fn ($d) => array_combine(['id', 'name'], explode(',', $d)), explode('|', $r->drivers))))
+                    ->transform(fn ($r) => tap($r, fn ($r) => $r->drivers = array_map(fn ($d) => array_combine(['id', 'name'], explode(',', $d)), explode('|', $r->drivers))))
             );
     }
 }
