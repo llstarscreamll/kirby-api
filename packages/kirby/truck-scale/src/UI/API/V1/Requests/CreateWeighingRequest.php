@@ -25,7 +25,7 @@ class CreateWeighingRequest extends FormRequest
             'driver_dni_number' => ['required', 'numeric', 'min:1'],
             'driver_name' => ['required', 'string', 'max:255'],
             'tare_weight' => ['required_if:weighing_type,' . WeighingType::Load, 'nullable', 'numeric'],
-            'gross_weight' => ['required_if:weighing_type,' . WeighingType::Unload, 'nullable', 'numeric'],
+            'gross_weight' => ['required_if:weighing_type,' . WeighingType::Unload . ',' . WeighingType::Weighing, 'nullable', 'numeric'],
             'weighing_description' => ['nullable', 'string', 'max:255'],
         ];
     }

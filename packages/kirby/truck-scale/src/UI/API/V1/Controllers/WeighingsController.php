@@ -17,7 +17,7 @@ class WeighingsController
             'driver_dni_number' => $request->driver_dni_number,
             'driver_name' => $request->driver_name,
             'tare_weight' => $request->weighing_type === WeighingType::Load ? $request->tare_weight : 0,
-            'gross_weight' => $request->weighing_type === WeighingType::Unload ? $request->gross_weight : 0,
+            'gross_weight' => in_array($request->weighing_type, [WeighingType::Unload, WeighingType::Weighing]) ? $request->gross_weight : 0,
             'weighing_description' => $request->weighing_description ?? '',
         ];
 
