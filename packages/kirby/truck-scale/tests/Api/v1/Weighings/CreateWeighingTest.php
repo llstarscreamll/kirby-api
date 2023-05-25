@@ -4,8 +4,6 @@ namespace Kirby\TruckScale\Tests\Api\V1\Weighings;
 
 use Kirby\TruckScale\Enums\VehicleType;
 use Kirby\TruckScale\Enums\WeighingType;
-use Kirby\TruckScale\Models\Weighing;
-use Kirby\Users\Models\User;
 use Tests\TestCase;
 use TruckScalePackageSeeder;
 
