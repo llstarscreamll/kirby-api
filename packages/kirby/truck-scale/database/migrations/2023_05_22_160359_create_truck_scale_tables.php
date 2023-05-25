@@ -15,10 +15,14 @@ class CreateTruckScaleTables extends Migration
     {
         Schema::create('weighings', function (Blueprint $table) {
             $table->id();
-            $table->string('vehicle_plate');
-            $table->string('vehicle_type');
-            $table->string('driver_dni_number');
+            $table->string('weighing_type', 20);
+            $table->string('vehicle_plate', 10);
+            $table->string('vehicle_type', 20);
+            $table->unsignedBigInteger('driver_dni_number');
             $table->string('driver_name');
+            $table->decimal('tare_weight')->default(0)->comment('measure unit in Kg');
+            $table->decimal('gross_weight')->default(0)->comment('measure unit in Kg');
+            $table->string('weighing_description')->default('');
             $table->timestamps();
         });
     }
