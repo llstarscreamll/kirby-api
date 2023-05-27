@@ -10,6 +10,6 @@ use BenSampo\Enum\Enum;
  */
 final class VehicleType extends Enum
 {
-    public const One = 'One';
-    public const Two = 'Two';
+    public const One = 'one';
+    public const Two = 'two';
 }
