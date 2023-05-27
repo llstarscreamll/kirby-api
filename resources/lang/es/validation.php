@@ -181,5 +181,12 @@ return [
         'message' => 'mensaje',
         'checkedInStart' => 'fecha de entrada inicio',
         'checkedInEnd' => 'fecha de entrada fin',
+        'driver_dni_number' => 'número de documento de conductor',
+        'driver_name' => 'nombre de conductor',
+        'vehicle_plate' => 'placa de vehículo',
+        'vehicle_type' => 'tipo de vehículo',
+        'weighing_description' => 'descripción',
+        'tare_weight' => 'peso tara',
+        'gross_weight' => 'peso neto',
     ],
 ];
