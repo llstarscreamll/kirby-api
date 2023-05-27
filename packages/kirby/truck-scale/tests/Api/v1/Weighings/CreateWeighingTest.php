@@ -6,6 +6,7 @@ use Kirby\TruckScale\Enums\VehicleType;
 use Kirby\TruckScale\Enums\WeighingStatus;
 use Kirby\TruckScale\Enums\WeighingType;
 use Kirby\TruckScale\Models\Weighing;
+use Kirby\Users\Models\User;
 use Tests\TestCase;
 use TruckScalePackageSeeder;
 
@@ -29,7 +30,7 @@ class CreateWeighingTest extends TestCase
             'weighing_description' => null,
         ];
 
-        $this->actingAsAdmin()
+        $this->actingAsAdmin($user = factory(User::class)->create())
             ->json($this->method, $this->path, $payload)
             ->assertCreated();
 
@@ -37,6 +38,7 @@ class CreateWeighingTest extends TestCase
             'gross_weight' => 0,
             'weighing_description' => '',
             'status' => WeighingStatus::InProgress,
+            'created_by_id' => $user->id,
         ] + $payload);
     }
 

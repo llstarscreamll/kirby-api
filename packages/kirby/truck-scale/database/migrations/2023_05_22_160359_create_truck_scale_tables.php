@@ -23,6 +23,7 @@ class CreateTruckScaleTables extends Migration
             $table->decimal('tare_weight')->default(0)->comment('measure unit in Kg');
             $table->decimal('gross_weight')->default(0)->comment('measure unit in Kg');
             $table->string('weighing_description')->default('');
+            $table->unsignedBigInteger('created_by_id');
             $table->string('status', 10);
             $table->timestamps();
         });
@@ -35,6 +36,6 @@ class CreateTruckScaleTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vehicles');
+        Schema::dropIfExists('weighings');
     }
 }
