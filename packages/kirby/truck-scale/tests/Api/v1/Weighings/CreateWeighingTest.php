@@ -5,6 +5,7 @@ namespace Kirby\TruckScale\Tests\Api\V1\Weighings;
 use Kirby\TruckScale\Enums\VehicleType;
 use Kirby\TruckScale\Enums\WeighingStatus;
 use Kirby\TruckScale\Enums\WeighingType;
+use Kirby\TruckScale\Models\Weighing;
 use Tests\TestCase;
 use TruckScalePackageSeeder;
 
@@ -81,5 +82,28 @@ class CreateWeighingTest extends TestCase
             ->assertCreated();
 
         $this->assertDatabaseHas('weighings', ['tare_weight' => 0, 'status' => WeighingStatus::Finished] + $payload);
+    }
+
+    /** @test */
+    public function shouldCleanAndFormatSomeFields()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $payload = [
+            'weighing_type' => WeighingType::Weighing,
+            'vehicle_plate' => 'abc123',
+            'vehicle_type' => VehicleType::One,
+            'driver_dni_number' => 1234,
+            'driver_name' => 'John Doe',
+            'tare_weight' => null,
+            'gross_weight' => 210.05,
+            'weighing_description' => 'Some description',
+        ];
+
+        $this->actingAsAdmin()
+            ->json($this->method, $this->path, $payload)
+            ->assertCreated();
+
+        $weighing = Weighing::where('vehicle_plate', 'abc123')->first();
+        $this->assertEquals('JOHN DOE', $weighing->driver_name);
     }
 }

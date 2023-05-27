@@ -2,6 +2,7 @@
 
 namespace Kirby\TruckScale\UI\API\V1\Controllers;
 
+use Illuminate\Support\Str;
 use Kirby\TruckScale\Enums\WeighingStatus;
 use Kirby\TruckScale\Enums\WeighingType;
 use Kirby\TruckScale\Models\Weighing;
@@ -16,7 +17,7 @@ class WeighingsController
             'vehicle_plate' => $request->vehicle_plate,
             'vehicle_type' => $request->vehicle_type,
             'driver_dni_number' => $request->driver_dni_number,
-            'driver_name' => $request->driver_name,
+            'driver_name' => Str::of($request->driver_name)->upper(),
             'tare_weight' => $request->weighing_type === WeighingType::Load ? $request->tare_weight : 0,
             'gross_weight' => in_array($request->weighing_type, [WeighingType::Unload, WeighingType::Weighing]) ? $request->gross_weight : 0,
             'weighing_description' => $request->weighing_description ?? '',
