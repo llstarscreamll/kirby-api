@@ -46,7 +46,7 @@ class CreateWeighingTest extends TestCase
         $this->seed(TruckScalePackageSeeder::class);
         $payload = [
             'weighing_type' => WeighingType::Unload,
-            'vehicle_plate' => 'ABC123',
+            'vehicle_plate' => 'AB123',
             'vehicle_type' => VehicleType::One,
             'driver_dni_number' => 1234,
             'driver_name' => 'John Doe',
@@ -68,7 +68,7 @@ class CreateWeighingTest extends TestCase
         $this->seed(TruckScalePackageSeeder::class);
         $payload = [
             'weighing_type' => WeighingType::Weighing,
-            'vehicle_plate' => 'ABC123',
+            'vehicle_plate' => 'A123',
             'vehicle_type' => VehicleType::One,
             'driver_dni_number' => 1234,
             'driver_name' => 'John Doe',
@@ -90,7 +90,7 @@ class CreateWeighingTest extends TestCase
         $this->seed(TruckScalePackageSeeder::class);
         $payload = [
             'weighing_type' => WeighingType::Weighing,
-            'vehicle_plate' => "\n\tabc123\t\n\t",
+            'vehicle_plate' => "\n\tabc12345\t\n\t",
             'vehicle_type' => VehicleType::One,
             'driver_dni_number' => 1234,
             'driver_name' => "\n \t\n\n\nJohn \t\t\n\n Doe\n ",
@@ -103,9 +103,64 @@ class CreateWeighingTest extends TestCase
             ->json($this->method, $this->path, $payload)
             ->assertCreated();
 
-        $weighing = Weighing::where('vehicle_plate', 'abc123')->first();
+        $weighing = Weighing::where('vehicle_plate', 'abc12345')->first();
         $this->assertEquals('JOHN DOE', $weighing->driver_name);
-        $this->assertEquals('ABC123', $weighing->vehicle_plate);
+        $this->assertEquals('ABC12345', $weighing->vehicle_plate);
         $this->assertEquals("Some \ndescription", $weighing->weighing_description);
+    }
+
+    public function wrongInputDataProvider(): array
+    {
+        return [
+            [
+                'case' => 'vehicle plate should have 3 letters max',
+                ['vehicle_plate' => 'ABCDEF4'],
+                ['vehicle_plate' => 'El formato de placa de vehículo no es válido'],
+            ],
+            [
+                'case' => 'vehicle plate should have 1 letters min',
+                ['vehicle_plate' => '12345678'],
+                ['vehicle_plate' => 'El formato de placa de vehículo no es válido'],
+            ],
+            [
+                'case' => 'vehicle plate should have 3 letters min',
+                ['vehicle_plate' => 'AAA87'],
+                ['vehicle_plate' => 'El formato de placa de vehículo no es válido'],
+            ],
+            [
+                'case' => 'vehicle plate should have 5 letters max',
+                ['vehicle_plate' => 'AA777777'],
+                ['vehicle_plate' => 'El formato de placa de vehículo no es válido'],
+            ],
+            [
+                'case' => 'vehicle plate should start with a letter',
+                ['vehicle_plate' => '123AAA'],
+                ['vehicle_plate' => 'El formato de placa de vehículo no es válido'],
+            ],
+            [
+                'case' => 'vehicle plate should finish with a number',
+                ['vehicle_plate' => 'AA123A'],
+                ['vehicle_plate' => 'El formato de placa de vehículo no es válido'],
+            ],
+            [
+                'case' => 'vehicle plate should not have accented chars',
+                ['vehicle_plate' => 'ÁÑÓ123'],
+                ['vehicle_plate' => 'El formato de placa de vehículo no es válido'],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider wrongInputDataProvider
+     * @test
+     */
+    public function shouldReturnWhenInputIsNotValid($_, $payload, $errors)
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+
+        $this->actingAsAdmin()
+            ->json($this->method, $this->path, $payload)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors($errors);
     }
 }
