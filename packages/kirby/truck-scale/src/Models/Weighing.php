@@ -15,5 +15,6 @@ class Weighing extends Model
         'tare_weight',
         'gross_weight',
         'weighing_description',
+        'status',
     ];
 }

@@ -3,6 +3,7 @@
 namespace Kirby\TruckScale\Tests\Api\V1\Weighings;
 
 use Kirby\TruckScale\Enums\VehicleType;
+use Kirby\TruckScale\Enums\WeighingStatus;
 use Kirby\TruckScale\Enums\WeighingType;
 use Tests\TestCase;
 use TruckScalePackageSeeder;
@@ -31,7 +32,11 @@ class CreateWeighingTest extends TestCase
             ->json($this->method, $this->path, $payload)
             ->assertCreated();
 
-        $this->assertDatabaseHas('weighings', ['gross_weight' => 0, 'weighing_description' => ''] + $payload);
+        $this->assertDatabaseHas('weighings', [
+            'gross_weight' => 0,
+            'weighing_description' => '',
+            'status' => WeighingStatus::InProgress
+        ] + $payload);
     }
 
     /** @test */
@@ -53,7 +58,7 @@ class CreateWeighingTest extends TestCase
             ->json($this->method, $this->path, $payload)
             ->assertCreated();
 
-        $this->assertDatabaseHas('weighings', ['tare_weight' => 0] + $payload);
+        $this->assertDatabaseHas('weighings', ['tare_weight' => 0, 'status' => WeighingStatus::InProgress] + $payload);
     }
 
     /** @test */
@@ -75,6 +80,6 @@ class CreateWeighingTest extends TestCase
             ->json($this->method, $this->path, $payload)
             ->assertCreated();
 
-        $this->assertDatabaseHas('weighings', ['tare_weight' => 0] + $payload);
+        $this->assertDatabaseHas('weighings', ['tare_weight' => 0, 'status' => WeighingStatus::Finished] + $payload);
     }
 }
