@@ -154,6 +154,7 @@ class CreateWeighingTest extends TestCase
 
     /**
      * @dataProvider wrongInputDataProvider
+     *
      * @test
      */
     public function shouldReturnWhenInputIsNotValid($_, $payload, $errors)
