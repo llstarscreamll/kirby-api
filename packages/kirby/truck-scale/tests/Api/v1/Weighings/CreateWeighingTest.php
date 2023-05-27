@@ -90,13 +90,13 @@ class CreateWeighingTest extends TestCase
         $this->seed(TruckScalePackageSeeder::class);
         $payload = [
             'weighing_type' => WeighingType::Weighing,
-            'vehicle_plate' => 'abc123',
+            'vehicle_plate' => "\n\tabc123\t\n\t",
             'vehicle_type' => VehicleType::One,
             'driver_dni_number' => 1234,
             'driver_name' => "\n \t\n\n\nJohn \t\t\n\n Doe\n ",
             'tare_weight' => null,
             'gross_weight' => 210.05,
-            'weighing_description' => 'Some description',
+            'weighing_description' => " \t\nSome \n\ndescription \t\n",
         ];
 
         $this->actingAsAdmin()
@@ -105,5 +105,7 @@ class CreateWeighingTest extends TestCase
 
         $weighing = Weighing::where('vehicle_plate', 'abc123')->first();
         $this->assertEquals('JOHN DOE', $weighing->driver_name);
+        $this->assertEquals('ABC123', $weighing->vehicle_plate);
+        $this->assertEquals("Some \ndescription", $weighing->weighing_description);
     }
 }

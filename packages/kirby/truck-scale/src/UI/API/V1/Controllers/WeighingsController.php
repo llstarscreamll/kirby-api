@@ -14,13 +14,13 @@ class WeighingsController
     {
         $data = [
             'weighing_type' => $request->weighing_type,
-            'vehicle_plate' => $request->vehicle_plate,
+            'vehicle_plate' => Str::of($request->vehicle_plate)->upper(),
             'vehicle_type' => $request->vehicle_type,
             'driver_dni_number' => $request->driver_dni_number,
-            'driver_name' => Str::of($request->driver_name)->upper()->replaceMatches('/\t|\n/', '')->replaceMatches('/[  ]+/', ' '),
+            'driver_name' => Str::of($request->driver_name)->upper()->replaceMatches('/\t|\n/', '')->replaceMatches('/  +/', ' '),
             'tare_weight' => $request->weighing_type === WeighingType::Load ? $request->tare_weight : 0,
             'gross_weight' => in_array($request->weighing_type, [WeighingType::Unload, WeighingType::Weighing]) ? $request->gross_weight : 0,
-            'weighing_description' => $request->weighing_description ?? '',
+            'weighing_description' => Str::of($request->weighing_description ?? '')->replaceMatches('/\n+/', "\n"),
             'status' => WeighingType::Weighing === $request->weighing_type ? WeighingStatus::Finished : WeighingStatus::InProgress,
         ];
 
