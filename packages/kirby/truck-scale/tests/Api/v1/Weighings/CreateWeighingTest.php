@@ -35,7 +35,7 @@ class CreateWeighingTest extends TestCase
         $this->assertDatabaseHas('weighings', [
             'gross_weight' => 0,
             'weighing_description' => '',
-            'status' => WeighingStatus::InProgress
+            'status' => WeighingStatus::InProgress,
         ] + $payload);
     }
 
