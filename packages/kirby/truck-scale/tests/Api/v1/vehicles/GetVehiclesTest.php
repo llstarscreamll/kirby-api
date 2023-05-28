@@ -56,6 +56,9 @@ class GetVehiclesTest extends TestCase
     /** @test */
     public function shouldReturnVehiclesWithDriversInfo()
     {
+        // too old row, it should not returned on results
+        factory(Weighing::class)->create(['vehicle_plate' => 'AAA111', 'vehicle_type' => VehicleType::One(), 'driver_dni_number' => '9012', 'driver_name' => 'James', 'created_at' => now()->subMonths(4)]);
+        // fresh data
         factory(Weighing::class)->create(['vehicle_plate' => 'AAA111', 'vehicle_type' => VehicleType::One(), 'driver_dni_number' => '1234', 'driver_name' => 'John']);
         factory(Weighing::class)->create(['vehicle_plate' => 'BBB222', 'vehicle_type' => VehicleType::Two()]);
         factory(Weighing::class)->create(['vehicle_plate' => 'AAA111', 'vehicle_type' => VehicleType::One(), 'driver_dni_number' => '5678', 'driver_name' => 'Jane']);
