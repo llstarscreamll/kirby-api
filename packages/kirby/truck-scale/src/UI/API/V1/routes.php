@@ -9,5 +9,5 @@ use Kirby\TruckScale\UI\API\V1\Controllers\WeighingsController;
 Route::group(['prefix' => 'api/1.0', 'middleware' => 'auth:api'], function (Router $route) {
     $route->apiResource('vehicles', VehiclesController::class)->only(['index']);
     $route->apiResource('drivers', DriversController::class)->only(['index']);
-    $route->apiResource('weighings', WeighingsController::class)->only(['store']);
+    $route->apiResource('weighings', WeighingsController::class)->only(['index', 'store']);
 });

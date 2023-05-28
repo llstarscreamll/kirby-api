@@ -10,6 +10,12 @@ use Kirby\TruckScale\UI\API\V1\Requests\CreateWeighingRequest;
 
 class WeighingsController
 {
+    public function index()
+    {
+        return Weighing::orderBy('id', 'desc')
+            ->simplePaginate(10);
+    }
+
     public function store(CreateWeighingRequest $request)
     {
         $data = [
