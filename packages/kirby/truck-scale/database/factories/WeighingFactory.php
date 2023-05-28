@@ -2,8 +2,10 @@
 
 use Faker\Generator as Faker;
 use Kirby\TruckScale\Enums\VehicleType;
+use Kirby\TruckScale\Enums\WeighingStatus;
 use Kirby\TruckScale\Enums\WeighingType;
 use Kirby\TruckScale\Models\Weighing;
+use Kirby\Users\Models\User;
 
 $factory->define(Weighing::class, function (Faker $faker) {
     return [
@@ -15,5 +17,7 @@ $factory->define(Weighing::class, function (Faker $faker) {
         'tare_weight' => $tare = $faker->numberBetween(10, 150),
         'gross_weight' => $faker->numberBetween($tare, $tare * 5),
         'weighing_description' => $faker->sentence(),
+        'created_by_id' => factory(User::class),
+        'status' => $faker->randomElement(WeighingStatus::getValues()),
     ];
 });
