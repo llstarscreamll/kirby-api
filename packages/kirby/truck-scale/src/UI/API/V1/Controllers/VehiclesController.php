@@ -16,7 +16,7 @@ class VehiclesController
             ->simplePaginate(10, [
                 'vehicle_plate AS plate',
                 'vehicle_type AS type',
-                DB::raw('GROUP_CONCAT(CONCAT(driver_dni_number, ",", driver_name) ORDER BY driver_dni_number DESC SEPARATOR "|") AS drivers'),
+                DB::raw('GROUP_CONCAT(DISTINCT CONCAT(driver_dni_number, ",", driver_name) ORDER BY driver_dni_number DESC SEPARATOR "|") AS drivers'),
             ]);
 
         return $paginated
