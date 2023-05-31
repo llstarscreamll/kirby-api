@@ -17,6 +17,7 @@ class WeighingsController
             ->when($request->input('filter.id'), fn ($q, $v) => $q->where('id', $v))
             ->when($request->input('filter.vehicle_plate'), fn ($q, $v) => $q->where('vehicle_plate', $v))
             ->when($request->input('filter.vehicle_type'), fn ($q, $v) => $q->where('vehicle_type', $v))
+            ->when($request->input('filter.status'), fn ($q, $v) => $q->where('status', $v))
             ->orderBy('id', 'desc')
             ->simplePaginate(10);
     }

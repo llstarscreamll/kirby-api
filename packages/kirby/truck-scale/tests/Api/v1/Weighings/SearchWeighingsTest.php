@@ -3,6 +3,7 @@
 namespace Kirby\TruckScale\Tests\Api\V1\Weighings;
 
 use Kirby\TruckScale\Enums\VehicleType;
+use Kirby\TruckScale\Enums\WeighingStatus;
 use Kirby\TruckScale\Models\Weighing;
 use Tests\TestCase;
 
@@ -70,6 +71,20 @@ class SearchWeighingsTest extends TestCase
         $this
             ->actingAsAdmin()
             ->json($this->method, "{$this->path}?filter[vehicle_type]={$expectedWeighing->vehicle_type}")
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $expectedWeighing->id);
+    }
+
+    /** @test */
+    public function shouldSearchByStatus()
+    {
+        factory(Weighing::class, 5)->create(['status' => WeighingStatus::InProgress]);
+        $expectedWeighing = factory(Weighing::class)->create(['status' => WeighingStatus::Finished]);
+
+        $this
+            ->actingAsAdmin()
+            ->json($this->method, "{$this->path}?filter[status]={$expectedWeighing->status}")
             ->assertOk()
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $expectedWeighing->id);
