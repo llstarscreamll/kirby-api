@@ -89,4 +89,18 @@ class SearchWeighingsTest extends TestCase
             ->assertJsonCount(1, 'data')
             ->assertJsonPath('data.0.id', $expectedWeighing->id);
     }
+
+    /** @test */
+    public function shouldSearchByDate()
+    {
+        factory(Weighing::class, 5)->create(['created_at' => now()->subMonths(10)]);
+        $expectedWeighing = factory(Weighing::class)->create(['created_at' => now()]);
+
+        $this
+            ->actingAsAdmin()
+            ->json($this->method, "{$this->path}?filter[date]={$expectedWeighing->created_at->toDateString()}")
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.id', $expectedWeighing->id);
+    }
 }

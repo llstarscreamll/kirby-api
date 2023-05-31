@@ -2,6 +2,7 @@
 
 namespace Kirby\TruckScale\UI\API\V1\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Kirby\TruckScale\Enums\WeighingStatus;
@@ -18,6 +19,7 @@ class WeighingsController
             ->when($request->input('filter.vehicle_plate'), fn ($q, $v) => $q->where('vehicle_plate', $v))
             ->when($request->input('filter.vehicle_type'), fn ($q, $v) => $q->where('vehicle_type', $v))
             ->when($request->input('filter.status'), fn ($q, $v) => $q->where('status', $v))
+            ->when($request->input('filter.date'), fn ($q, $v) => $q->whereBetween('created_at', [Carbon::parse($v)->startOfDay(), Carbon::parse($v)->endOfDay()]))
             ->orderBy('id', 'desc')
             ->simplePaginate(10);
     }
