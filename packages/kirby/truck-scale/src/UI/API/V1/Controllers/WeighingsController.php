@@ -2,6 +2,7 @@
 
 namespace Kirby\TruckScale\UI\API\V1\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Kirby\TruckScale\Enums\WeighingStatus;
 use Kirby\TruckScale\Enums\WeighingType;
@@ -10,9 +11,13 @@ use Kirby\TruckScale\UI\API\V1\Requests\CreateWeighingRequest;
 
 class WeighingsController
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Weighing::orderBy('id', 'desc')
+        return Weighing::query()
+            ->when($request->input('filter.id'), fn ($q, $v) => $q->where('id', $v))
+            ->when($request->input('filter.vehicle_plate'), fn ($q, $v) => $q->where('vehicle_plate', $v))
+            ->when($request->input('filter.vehicle_type'), fn ($q, $v) => $q->where('vehicle_type', $v))
+            ->orderBy('id', 'desc')
             ->simplePaginate(10);
     }
 
@@ -24,7 +29,7 @@ class WeighingsController
             'vehicle_type' => $request->vehicle_type,
             'driver_dni_number' => $request->driver_dni_number,
             'driver_name' => Str::of($request->driver_name)->upper()->replaceMatches('/\t|\n/', '')->replaceMatches('/  +/', ' '),
-            'tare_weight' => $request->weighing_type === WeighingType::Load ? $request->tare_weight : 0,
+            'tare_weight' => WeighingType::Load === $request->weighing_type ? $request->tare_weight : 0,
             'gross_weight' => in_array($request->weighing_type, [WeighingType::Unload, WeighingType::Weighing]) ? $request->gross_weight : 0,
             'weighing_description' => Str::of($request->weighing_description ?? '')->replaceMatches('/\n+/', "\n"),
             'status' => WeighingType::Weighing === $request->weighing_type ? WeighingStatus::Finished : WeighingStatus::InProgress,
