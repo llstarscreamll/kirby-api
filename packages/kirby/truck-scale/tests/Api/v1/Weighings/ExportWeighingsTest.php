@@ -23,7 +23,6 @@ class ExportWeighingsTest extends TestCase
 
         $this->actingAsAdmin()
             ->json($this->method, "{$this->path}?filter[id]=123&filter[vehicle_plate]=AAA111&filter[vehicle_type]=one&filter[status]=finished&filter[date]=2023-01-01")
-            ->dump()
             ->assertOk();
 
         Queue::assertPushed(
