@@ -9,6 +9,7 @@ class TruckScalePackageSeeder extends Seeder
         ['name' => 'truck-scale.search'],
         ['name' => 'truck-scale.create'],
         ['name' => 'truck-scale.update'],
+        ['name' => 'truck-scale.export'],
     ];
 
     public function run()
