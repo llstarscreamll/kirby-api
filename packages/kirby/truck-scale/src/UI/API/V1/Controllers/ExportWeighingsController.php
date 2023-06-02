@@ -9,7 +9,7 @@ class ExportWeighingsController
 {
     public function __invoke(ExportWeighingsRequest $request)
     {
-        ExportWeighingsJob::dispatch($request->validated('filter')['filter']);
+        ExportWeighingsJob::dispatch($request->validated('filter')['filter'], $request->user()->id);
 
         return ['data' => 'ok'];
     }

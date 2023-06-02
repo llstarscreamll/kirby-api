@@ -15,11 +15,13 @@ class ExportWeighingsJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
+    public int $userID;
     public array $filters = [];
 
-    public function __construct(array $filters)
+    public function __construct(array $filters, int $userID)
     {
         $this->filters = $filters;
+        $this->userID = $userID;
     }
 
     public function handle()
