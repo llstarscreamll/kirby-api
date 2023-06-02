@@ -33,7 +33,6 @@ class ExportWeighingsJob implements ShouldQueue
 
     public function handle()
     {
-        logger('filter data', $this->filters);
         $fileName = 'registros_de_pesaje_'.now()->format('Ymd_His').'.csv';
         $writer = Writer::createFromStream($file = tmpfile());
         $writer->setDelimiter(';');
