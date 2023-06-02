@@ -5,6 +5,7 @@ namespace Kirby\TruckScale\Tests\Api\V1\Weighings;
 use Illuminate\Support\Facades\Queue;
 use Kirby\TruckScale\Jobs\ExportWeighingsJob;
 use Tests\TestCase;
+use TruckScalePackageSeeder;
 
 /**
  * @internal
@@ -17,7 +18,7 @@ class ExportWeighingsTest extends TestCase
     /** @test */
     public function shouldInvokeQueueJobForDataExportGeneration()
     {
-        $this->seed(\TruckScalePackageSeeder::class);
+        $this->seed(TruckScalePackageSeeder::class);
 
         Queue::fake();
 
