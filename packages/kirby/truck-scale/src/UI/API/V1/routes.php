@@ -11,5 +11,5 @@ Route::group(['prefix' => 'api/1.0', 'middleware' => 'auth:api'], function (Rout
     $route->apiResource('vehicles', VehiclesController::class)->only(['index']);
     $route->apiResource('drivers', DriversController::class)->only(['index']);
     $route->post('weighings/export', ExportWeighingsController::class);
-    $route->apiResource('weighings', WeighingsController::class)->only(['index', 'store']);
+    $route->apiResource('weighings', WeighingsController::class)->only(['index', 'store', 'show']);
 });

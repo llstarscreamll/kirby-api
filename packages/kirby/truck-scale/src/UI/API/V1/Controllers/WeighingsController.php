@@ -41,4 +41,9 @@ class WeighingsController
 
         return response()->json(['data' => Weighing::create($data)->id], 201);
     }
+
+    public function show(string $id)
+    {
+        return response()->json(['data' => Weighing::with(['createdBy:id,first_name,last_name'])->findOrFail($id)]);
+    }
 }

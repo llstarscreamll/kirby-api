@@ -3,6 +3,7 @@
 namespace Kirby\TruckScale\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Kirby\Users\Models\User;
 
 class Weighing extends Model
 {
@@ -18,4 +19,9 @@ class Weighing extends Model
         'created_by_id',
         'status',
     ];
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by_id', 'id');
+    }
 }
