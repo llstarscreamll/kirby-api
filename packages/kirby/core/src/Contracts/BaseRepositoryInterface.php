@@ -30,7 +30,7 @@ interface BaseRepositoryInterface extends RepositoryInterface
     public function deleteWhereNotIn(string $field, array $values): int;
 
     /**
-     * @param $field
+     * @param  $field
      */
     public function deleteWhereIn($field, array $values);
 }

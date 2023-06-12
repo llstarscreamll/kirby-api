@@ -3,7 +3,6 @@
 namespace Kirby\Novelties\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 use Kirby\Novelties\Listeners\CreateTimeClockLogNoveltiesApprovalListener;
 use Kirby\Novelties\Listeners\DeleteTimeClockLogNoveltiesApprovalListener;
 use Kirby\Novelties\Listeners\RegisterTimeClockNoveltiesListener;

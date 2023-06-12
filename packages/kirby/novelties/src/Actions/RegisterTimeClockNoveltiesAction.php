@@ -292,7 +292,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param $timeClockLog
+     * @param  $timeClockLog
      */
     private function getTimeClockPeriod($timeClockLog): Period
     {
@@ -300,7 +300,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param $noveltyType
+     * @param  $noveltyType
      */
     private function getNoveltyTypePeriods(TimeClockLog $timeClockLog, NoveltyType $noveltyType)
     {
@@ -352,7 +352,7 @@ class RegisterTimeClockNoveltiesAction
     }
 
     /**
-     * @param $timeClockLog
+     * @param  $timeClockLog
      */
     private function scheduledNoveltiesPeriods($timeClockLog): PeriodCollection
     {

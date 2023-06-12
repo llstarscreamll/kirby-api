@@ -69,7 +69,7 @@ class WorkShiftController
     }
 
     /**
-     * @param $workShiftId
+     * @param  $workShiftId
      */
     public function destroy(DeleteWorkShiftRequest $request, $workShiftId)
     {

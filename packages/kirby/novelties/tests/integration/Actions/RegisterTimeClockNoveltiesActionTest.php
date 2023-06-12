@@ -14,7 +14,6 @@ use Kirby\Employees\Models\Employee;
 use Kirby\Novelties\Actions\RegisterTimeClockNoveltiesAction;
 use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
-use Kirby\Novelties\Novelties;
 use Kirby\TimeClock\Models\TimeClockLog;
 use Kirby\WorkShifts\Models\WorkShift;
 use NoveltiesPackageSeed;

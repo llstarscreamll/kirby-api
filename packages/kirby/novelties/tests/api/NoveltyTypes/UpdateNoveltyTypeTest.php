@@ -2,7 +2,6 @@
 
 namespace Kirby\Novelties\Tests\api\NoveltyTypes;
 
-use Kirby\Novelties\Models\Novelty;
 use Kirby\Novelties\Models\NoveltyType;
 use NoveltiesPackageSeed;
 
