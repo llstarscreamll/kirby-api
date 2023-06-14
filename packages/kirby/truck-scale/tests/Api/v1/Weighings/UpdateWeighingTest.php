@@ -21,6 +21,7 @@ class UpdateWeighingTest extends TestCase
         $this->seed(TruckScalePackageSeeder::class);
         $record = factory(Weighing::class)->create([
             'weighing_type' => WeighingType::Load,
+            'status' => WeighingStatus::InProgress,
             'tare_weight' => 85,
             'gross_weight' => 0
         ]);
@@ -44,11 +45,39 @@ class UpdateWeighingTest extends TestCase
     }
 
     /** @test */
+    public function shouldSetFinishedStatusWhenLoadWeighingIsUpdated()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Load,
+            'status' => WeighingStatus::InProgress,
+            'tare_weight' => 85,
+            'gross_weight' => 0
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Load,
+            'gross_weight' => 100
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertOk();
+
+        // only the gross weight should change
+        $this->assertDatabaseHas('weighings', [
+            'id' => $record->id,
+            'status' => WeighingStatus::Finished
+        ]);
+    }
+
+    /** @test */
     public function shouldUpdateUnloadWeighing()
     {
         $this->seed(TruckScalePackageSeeder::class);
         $record = factory(Weighing::class)->create([
             'weighing_type' => WeighingType::Unload,
+            'status' => WeighingStatus::InProgress,
             'tare_weight' => 0,
             'gross_weight' => 120,
         ]);
@@ -68,6 +97,33 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Unload,
             'tare_weight' => 15,
             'gross_weight' => 120,
+        ]);
+    }
+
+    /** @test */
+    public function shouldSetFinishedStatusWhenUnloadWeighingIsUpdated()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Unload,
+            'status' => WeighingStatus::InProgress,
+            'tare_weight' => 0,
+            'gross_weight' => 120,
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Unload,
+            'tare_weight' => 15
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertOk();
+
+        // only the tare weight should change
+        $this->assertDatabaseHas('weighings', [
+            'id' => $record->id,
+            'status' => WeighingStatus::Finished
         ]);
     }
 

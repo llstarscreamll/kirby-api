@@ -54,6 +54,7 @@ class WeighingsController
 
         Weighing::where('id', $ID)->update([
             $fieldToUpdate => $request->input($fieldToUpdate),
+            'status' => WeighingStatus::Finished,
         ]);
 
         return [];
