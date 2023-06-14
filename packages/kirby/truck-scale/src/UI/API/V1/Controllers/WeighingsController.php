@@ -50,8 +50,10 @@ class WeighingsController
 
     public function update(UpdateWeighingRequest $request, string $ID)
     {
+        $fieldToUpdate = $request->weighing_type == WeighingType::Load ? 'gross_weight' : 'tare_weight';
+
         Weighing::where('id', $ID)->update([
-            'gross_weight' => $request->gross_weight,
+            $fieldToUpdate => $request->input($fieldToUpdate),
         ]);
 
         return [];

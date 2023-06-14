@@ -42,4 +42,32 @@ class UpdateWeighingTest extends TestCase
             'gross_weight' => 100,
         ]);
     }
+
+    /** @test */
+    public function shouldUpdateUnloadWeighing()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Unload,
+            'tare_weight' => 0,
+            'gross_weight' => 120,
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Unload,
+            'tare_weight' => 15
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertOk();
+
+        // only the tare weight should change
+        $this->assertDatabaseHas('weighings', [
+            'id' => $record->id,
+            'weighing_type' => WeighingType::Unload,
+            'tare_weight' => 15,
+            'gross_weight' => 120,
+        ]);
+    }
 }
