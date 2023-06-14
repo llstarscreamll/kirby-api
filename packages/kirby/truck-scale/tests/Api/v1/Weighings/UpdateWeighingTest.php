@@ -125,6 +125,32 @@ class UpdateWeighingTest extends TestCase
     }
 
     /** @test */
+    public function shouldSaveTheUserIdWhoUpdatedTheRecord()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Load,
+            'status' => WeighingStatus::InProgress,
+            'tare_weight' => 85,
+            'gross_weight' => 0
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Load,
+            'gross_weight' => 100
+        ];
+
+        $this->actingAsAdmin($user = factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertOk();
+
+        $this->assertDatabaseHas('weighings', [
+            'id' => $record->id,
+            'updated_by_id' => $user->id,
+        ]);
+    }
+
+    /** @test */
     public function shouldReturnErrorWhenWeighingTypeIsWeighing()
     {
         $this->seed(TruckScalePackageSeeder::class);

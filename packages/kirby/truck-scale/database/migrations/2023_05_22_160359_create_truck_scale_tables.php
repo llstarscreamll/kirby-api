@@ -24,6 +24,7 @@ class CreateTruckScaleTables extends Migration
             $table->decimal('gross_weight')->default(0)->comment('measure unit in Kg');
             $table->string('weighing_description')->default('');
             $table->unsignedBigInteger('created_by_id');
+            $table->unsignedBigInteger('updated_by_id')->default(0);
             $table->string('status', 10);
             $table->timestamps();
         });

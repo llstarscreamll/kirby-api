@@ -17,6 +17,7 @@ class Weighing extends Model
         'gross_weight',
         'weighing_description',
         'created_by_id',
+        'updated_by_id',
         'status',
     ];
 

@@ -61,6 +61,7 @@ class WeighingsController
         $record->update([
             $fieldToUpdate => $request->input($fieldToUpdate),
             'status' => WeighingStatus::Finished,
+            'updated_by_id' => $request->user()->id,
         ]);
 
         return [];
