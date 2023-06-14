@@ -237,4 +237,48 @@ class UpdateWeighingTest extends TestCase
             ->assertStatus(422)
             ->assertJsonPath('errors.status.0', 'No se permite actualizaciones a registros finalizados');
     }
+
+    /** @test */
+    public function shouldReturnErrorUpdatingLoadWeighingWhenTareIsGreaterThanGrossWeight()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Load,
+            'status' => WeighingStatus::InProgress,
+            'tare_weight' => 50,
+            'gross_weight' => 0
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Load,
+            'gross_weight' => 49,
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertStatus(422)
+            ->assertJsonPath('errors.gross_weight.0', 'Peso tara no puede ser mayor que peso bruto');
+    }
+
+    /** @test */
+    public function shouldReturnErrorUpdatingUnloadWeighingWhenTareIsGreaterThanGrossWeight()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Unload,
+            'status' => WeighingStatus::InProgress,
+            'tare_weight' => 0,
+            'gross_weight' => 100
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Unload,
+            'tare_weight' => 101,
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertStatus(422)
+            ->assertJsonPath('errors.tare_weight.0', 'Peso tara no puede ser mayor que peso bruto');
+    }
 }

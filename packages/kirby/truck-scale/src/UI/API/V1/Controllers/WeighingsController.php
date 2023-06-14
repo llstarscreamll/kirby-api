@@ -51,18 +51,25 @@ class WeighingsController
 
     public function update(UpdateWeighingRequest $request, string $ID)
     {
-        $fieldToUpdate = $request->weighing_type == WeighingType::Load ? 'gross_weight' : 'tare_weight';
         $record = Weighing::find($ID);
+
+        $fieldToUpdate = $request->weighing_type == WeighingType::Load ? 'gross_weight' : 'tare_weight';
+        $record->fill([$fieldToUpdate => $request->input($fieldToUpdate)]);
 
         if ($record->status === WeighingStatus::Finished) {
             return response()->json(['errors' => ['status' => ['No se permite actualizaciones a registros finalizados']]], 422);
         }
 
-        $record->update([
-            $fieldToUpdate => $request->input($fieldToUpdate),
+        if ($record->tare_weight > $record->gross_weight) {
+            return response()->json(['errors' => [$fieldToUpdate => ['Peso tara no puede ser mayor que peso bruto']]], 422);
+        }
+
+        $record->fill([
             'status' => WeighingStatus::Finished,
             'updated_by_id' => $request->user()->id,
         ]);
+
+        $record->save();
 
         return [];
     }
