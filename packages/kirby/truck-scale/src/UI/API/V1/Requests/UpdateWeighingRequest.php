@@ -28,7 +28,7 @@ class UpdateWeighingRequest extends FormRequest
     public function messages()
     {
         return [
-            'weighing_type.in' => 'Solo se permite actualizaciones a registros de tipo cargue y descargue'
+            'weighing_type.in' => 'Solo se permite actualizaciones a registros de tipo cargue y descargue',
         ];
     }
 }

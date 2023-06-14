@@ -10,7 +10,6 @@ use Kirby\TruckScale\Enums\WeighingType;
 use Kirby\TruckScale\Models\Weighing;
 use Kirby\TruckScale\UI\API\V1\Requests\CreateWeighingRequest;
 use Kirby\TruckScale\UI\API\V1\Requests\UpdateWeighingRequest;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class WeighingsController
 {

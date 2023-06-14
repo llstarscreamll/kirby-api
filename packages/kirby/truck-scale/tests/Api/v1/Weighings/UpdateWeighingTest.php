@@ -22,12 +22,12 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Load,
             'status' => WeighingStatus::InProgress,
             'tare_weight' => 85,
-            'gross_weight' => 0
+            'gross_weight' => 0,
         ]);
 
         $payload = [
             'weighing_type' => WeighingType::Load,
-            'gross_weight' => 100
+            'gross_weight' => 100,
         ];
 
         $this->actingAsAdmin(factory(User::class)->create())
@@ -51,12 +51,12 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Load,
             'status' => WeighingStatus::InProgress,
             'tare_weight' => 85,
-            'gross_weight' => 0
+            'gross_weight' => 0,
         ]);
 
         $payload = [
             'weighing_type' => WeighingType::Load,
-            'gross_weight' => 100
+            'gross_weight' => 100,
         ];
 
         $this->actingAsAdmin(factory(User::class)->create())
@@ -65,7 +65,7 @@ class UpdateWeighingTest extends TestCase
 
         $this->assertDatabaseHas('weighings', [
             'id' => $record->id,
-            'status' => WeighingStatus::Finished
+            'status' => WeighingStatus::Finished,
         ]);
     }
 
@@ -82,7 +82,7 @@ class UpdateWeighingTest extends TestCase
 
         $payload = [
             'weighing_type' => WeighingType::Unload,
-            'tare_weight' => 15
+            'tare_weight' => 15,
         ];
 
         $this->actingAsAdmin(factory(User::class)->create())
@@ -111,7 +111,7 @@ class UpdateWeighingTest extends TestCase
 
         $payload = [
             'weighing_type' => WeighingType::Unload,
-            'tare_weight' => 15
+            'tare_weight' => 15,
         ];
 
         $this->actingAsAdmin(factory(User::class)->create())
@@ -120,7 +120,7 @@ class UpdateWeighingTest extends TestCase
 
         $this->assertDatabaseHas('weighings', [
             'id' => $record->id,
-            'status' => WeighingStatus::Finished
+            'status' => WeighingStatus::Finished,
         ]);
     }
 
@@ -132,12 +132,12 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Load,
             'status' => WeighingStatus::InProgress,
             'tare_weight' => 85,
-            'gross_weight' => 0
+            'gross_weight' => 0,
         ]);
 
         $payload = [
             'weighing_type' => WeighingType::Load,
-            'gross_weight' => 100
+            'gross_weight' => 100,
         ];
 
         $this->actingAsAdmin($user = factory(User::class)->create())
@@ -162,7 +162,7 @@ class UpdateWeighingTest extends TestCase
 
         $payload = [
             'weighing_type' => WeighingType::Weighing,
-            'tare_weight' => 15
+            'tare_weight' => 15,
         ];
 
         $this->actingAsAdmin(factory(User::class)->create())
@@ -202,7 +202,7 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Load,
             'status' => WeighingStatus::Finished,
             'tare_weight' => 85,
-            'gross_weight' => 100
+            'gross_weight' => 100,
         ]);
 
         $payload = [
@@ -224,7 +224,7 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Unload,
             'status' => WeighingStatus::Finished,
             'tare_weight' => 0,
-            'gross_weight' => 100
+            'gross_weight' => 100,
         ]);
 
         $payload = [
@@ -246,7 +246,7 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Load,
             'status' => WeighingStatus::InProgress,
             'tare_weight' => 50,
-            'gross_weight' => 0
+            'gross_weight' => 0,
         ]);
 
         $payload = [
@@ -268,7 +268,7 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Unload,
             'status' => WeighingStatus::InProgress,
             'tare_weight' => 0,
-            'gross_weight' => 100
+            'gross_weight' => 100,
         ]);
 
         $payload = [
