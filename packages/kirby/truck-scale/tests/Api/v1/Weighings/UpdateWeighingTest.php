@@ -70,4 +70,25 @@ class UpdateWeighingTest extends TestCase
             'gross_weight' => 120,
         ]);
     }
+
+    /** @test */
+    public function shouldNotUpdateAnythingWhenWeighingTypeIsWeighing()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Weighing,
+            'tare_weight' => 0,
+            'gross_weight' => 150,
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Weighing,
+            'tare_weight' => 15
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertStatus(422)
+            ->assertJsonPath('errors.weighing_type.0', 'Solo se permite actualizaciones a registros de tipo cargue y descargue');
+    }
 }
