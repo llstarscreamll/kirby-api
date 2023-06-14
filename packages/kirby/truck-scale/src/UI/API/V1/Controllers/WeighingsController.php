@@ -10,6 +10,7 @@ use Kirby\TruckScale\Enums\WeighingType;
 use Kirby\TruckScale\Models\Weighing;
 use Kirby\TruckScale\UI\API\V1\Requests\CreateWeighingRequest;
 use Kirby\TruckScale\UI\API\V1\Requests\UpdateWeighingRequest;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class WeighingsController
 {
@@ -51,8 +52,13 @@ class WeighingsController
     public function update(UpdateWeighingRequest $request, string $ID)
     {
         $fieldToUpdate = $request->weighing_type == WeighingType::Load ? 'gross_weight' : 'tare_weight';
+        $record = Weighing::find($ID);
 
-        Weighing::where('id', $ID)->update([
+        if ($record->status === WeighingStatus::Finished) {
+            return response()->json(['errors' => ['status' => ['No se permite actualizaciones a registros finalizados']]], 422);
+        }
+
+        $record->update([
             $fieldToUpdate => $request->input($fieldToUpdate),
             'status' => WeighingStatus::Finished,
         ]);

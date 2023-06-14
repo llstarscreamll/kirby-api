@@ -125,7 +125,7 @@ class UpdateWeighingTest extends TestCase
     }
 
     /** @test */
-    public function shouldNotUpdateAnythingWhenWeighingTypeIsWeighing()
+    public function shouldReturnErrorWhenWeighingTypeIsWeighing()
     {
         $this->seed(TruckScalePackageSeeder::class);
         $record = factory(Weighing::class)->create([
@@ -143,5 +143,72 @@ class UpdateWeighingTest extends TestCase
             ->json($this->method, "{$this->path}/{$record->id}", $payload)
             ->assertStatus(422)
             ->assertJsonPath('errors.weighing_type.0', 'Solo se permite actualizaciones a registros de tipo cargue y descargue');
+    }
+
+    /** @test */
+    public function shouldReturnErrorWhenAnotherWeighingTypeIsGivenAndStatusIsAlreadyFinished()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Weighing,
+            'status' => WeighingStatus::Finished,
+            'tare_weight' => 0,
+            'gross_weight' => 150,
+        ]);
+
+        // some one trying to hacking the system to update finished data
+        $payload = [
+            'weighing_type' => WeighingType::Load, // different type trying to skip type validation
+            'gross_weight' => 250, // increased gross weight
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertStatus(422)
+            ->assertJsonPath('errors.status.0', 'No se permite actualizaciones a registros finalizados');
+    }
+
+    /** @test */
+    public function shouldReturnErrorUpdatingLoadWeighingWhenStatusIsAlreadyFinished()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Load,
+            'status' => WeighingStatus::Finished,
+            'tare_weight' => 85,
+            'gross_weight' => 100
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Load,
+            'gross_weight' => 250,
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertStatus(422)
+            ->assertJsonPath('errors.status.0', 'No se permite actualizaciones a registros finalizados');
+    }
+
+    /** @test */
+    public function shouldReturnErrorUpdatingUnloadWeighingWhenStatusIsAlreadyFinished()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Unload,
+            'status' => WeighingStatus::Finished,
+            'tare_weight' => 0,
+            'gross_weight' => 100
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Unload,
+            'tare_weight' => 25,
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertStatus(422)
+            ->assertJsonPath('errors.status.0', 'No se permite actualizaciones a registros finalizados');
     }
 }
