@@ -13,7 +13,7 @@ class GetWeighingTest extends TestCase
     private $path = 'api/1.0/weighings';
 
     /** @test */
-    public function shouldCreateWeighingWithLoadTypeWhenInputIsValid()
+    public function shouldReturnOkWithDataWhenIdExist()
     {
         $this->seed(TruckScalePackageSeeder::class);
         $record = factory(Weighing::class)->create();
