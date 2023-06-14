@@ -9,6 +9,7 @@ use Kirby\TruckScale\Enums\WeighingStatus;
 use Kirby\TruckScale\Enums\WeighingType;
 use Kirby\TruckScale\Models\Weighing;
 use Kirby\TruckScale\UI\API\V1\Requests\CreateWeighingRequest;
+use Kirby\TruckScale\UI\API\V1\Requests\UpdateWeighingRequest;
 
 class WeighingsController
 {
@@ -45,5 +46,14 @@ class WeighingsController
     public function show(string $id)
     {
         return response()->json(['data' => Weighing::with(['createdBy:id,first_name,last_name'])->findOrFail($id)]);
+    }
+
+    public function update(UpdateWeighingRequest $request, string $ID)
+    {
+        Weighing::where('id', $ID)->update([
+            'gross_weight' => $request->gross_weight,
+        ]);
+
+        return [];
     }
 }
