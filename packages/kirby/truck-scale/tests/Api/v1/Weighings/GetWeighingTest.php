@@ -23,6 +23,8 @@ class GetWeighingTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.id', $record->id)
             ->assertJsonPath('data.created_by.first_name', $record->createdBy->first_name)
-            ->assertJsonPath('data.created_by.last_name', $record->createdBy->last_name);
+            ->assertJsonPath('data.created_by.last_name', $record->createdBy->last_name)
+            ->assertJsonPath('data.updated_by.first_name', $record->updatedBy->first_name)
+            ->assertJsonPath('data.updated_by.last_name', $record->updatedBy->last_name);
     }
 }

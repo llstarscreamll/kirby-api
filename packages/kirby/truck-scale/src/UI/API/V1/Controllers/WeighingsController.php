@@ -45,7 +45,9 @@ class WeighingsController
 
     public function show(string $id)
     {
-        return response()->json(['data' => Weighing::with(['createdBy:id,first_name,last_name'])->findOrFail($id)]);
+        return response()->json(['data' => Weighing::with([
+            'createdBy:id,first_name,last_name','updatedBy:id,first_name,last_name'
+            ])->findOrFail($id)]);
     }
 
     public function update(UpdateWeighingRequest $request, string $ID)

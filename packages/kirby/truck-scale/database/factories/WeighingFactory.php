@@ -18,6 +18,7 @@ $factory->define(Weighing::class, function (Faker $faker) {
         'gross_weight' => $faker->numberBetween($tare, $tare * 5),
         'weighing_description' => $faker->sentence(),
         'created_by_id' => factory(User::class),
+        'updated_by_id' => factory(User::class),
         'status' => $faker->randomElement(WeighingStatus::getValues()),
     ];
 });

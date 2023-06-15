@@ -25,4 +25,9 @@ class Weighing extends Model
     {
         return $this->belongsTo(User::class, 'created_by_id', 'id');
     }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by_id', 'id');
+    }
 }
