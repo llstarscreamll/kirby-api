@@ -149,6 +149,16 @@ class CreateWeighingTest extends TestCase
                 ['vehicle_plate' => 'ÁÑÓ123'],
                 ['vehicle_plate' => 'El formato de placa de vehículo no es válido'],
             ],
+            [
+                'case' => 'tare weight should be greater than 0',
+                ['weighing_type' => 'load', 'tare_weight' => 0],
+                ['tare_weight' => 'El tamaño de peso tara debe ser de al menos 1.'],
+            ],
+            [
+                'case' => 'gross weight should be greater than 0',
+                ['weighing_type' => 'unload', 'gross_weight' => 0],
+                ['gross_weight' => 'El tamaño de peso bruto debe ser de al menos 1.'],
+            ],
         ];
     }
 
