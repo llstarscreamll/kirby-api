@@ -187,6 +187,6 @@ return [
         'vehicle_type' => 'tipo de vehículo',
         'weighing_description' => 'descripción',
         'tare_weight' => 'peso tara',
-        'gross_weight' => 'peso neto',
+        'gross_weight' => 'peso bruto',
     ],
 ];
