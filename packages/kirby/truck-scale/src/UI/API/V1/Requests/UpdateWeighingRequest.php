@@ -19,8 +19,8 @@ class UpdateWeighingRequest extends FormRequest
     {
         return [
             'weighing_type' => ['required', 'string', 'in:'.WeighingType::Load.','.WeighingType::Unload],
-            'tare_weight' => ['required_if:weighing_type,'.WeighingType::Unload.','.WeighingType::Weighing, 'nullable', 'numeric'],
-            'gross_weight' => ['required_if:weighing_type,'.WeighingType::Load, 'nullable', 'numeric'],
+            'tare_weight' => ['required_if:weighing_type,'.WeighingType::Unload.','.WeighingType::Weighing, 'nullable', 'numeric', 'min:1'],
+            'gross_weight' => ['required_if:weighing_type,'.WeighingType::Load, 'nullable', 'numeric', 'min:1'],
             'weighing_description' => ['nullable', 'string', 'max:255'],
         ];
     }

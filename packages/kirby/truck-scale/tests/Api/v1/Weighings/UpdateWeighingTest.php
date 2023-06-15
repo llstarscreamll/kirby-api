@@ -281,4 +281,38 @@ class UpdateWeighingTest extends TestCase
             ->assertStatus(422)
             ->assertJsonPath('errors.tare_weight.0', 'Peso tara no puede ser mayor que peso bruto');
     }
+
+    public function wrongInputDataProvider(): array
+    {
+        return [
+            [
+                'case' => 'tare weight should be greater than 0',
+                ['weighing_type' => WeighingType::Unload, 'status' => WeighingStatus::InProgress, 'tare_weight' => 0, 'gross_weight' => 100],
+                ['weighing_type' => WeighingType::Unload, 'tare_weight' => 0],
+                ['tare_weight' => 'El tamaño de peso tara debe ser de al menos 1.'],
+            ],
+            [
+                'case' => 'gross weight should be greater than 0',
+                ['weighing_type' => WeighingType::Load, 'status' => WeighingStatus::InProgress, 'tare_weight' => 80, 'gross_weight' => 0],
+                ['weighing_type' => WeighingType::Load, 'gross_weight' => 0],
+                ['gross_weight' => 'El tamaño de peso bruto debe ser de al menos 1.'],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider wrongInputDataProvider
+     *
+     * @test
+     */
+    public function shouldReturn422WhenInputIsNotValid($_, array $weighing, array $payload, array $errors)
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create($weighing);
+
+        $this->actingAsAdmin()
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors($errors);
+    }
 }
