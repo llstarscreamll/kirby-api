@@ -167,7 +167,7 @@ class CreateWeighingTest extends TestCase
      *
      * @test
      */
-    public function shouldReturnWhenInputIsNotValid($_, $payload, $errors)
+    public function shouldReturn422WhenInputIsNotValid($_, $payload, $errors)
     {
         $this->seed(TruckScalePackageSeeder::class);
 
