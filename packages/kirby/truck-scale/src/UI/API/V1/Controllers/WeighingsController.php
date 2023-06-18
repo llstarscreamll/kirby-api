@@ -16,6 +16,7 @@ class WeighingsController
     public function index(Request $request)
     {
         return Weighing::query()
+            ->with(['createdBy:id,first_name,last_name', 'updatedBy:id,first_name,last_name'])
             ->when($request->input('filter.id'), fn ($q, $v) => $q->where('id', $v))
             ->when($request->input('filter.vehicle_plate'), fn ($q, $v) => $q->where('vehicle_plate', $v))
             ->when($request->input('filter.vehicle_type'), fn ($q, $v) => $q->where('vehicle_type', $v))

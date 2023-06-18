@@ -31,7 +31,13 @@ class SearchWeighingsTest extends TestCase
             ->json($this->method, $this->path)
             ->assertOk()
             ->assertJsonCount(10, 'data')
-            ->assertJsonPath('data.0.id', $weighings->first()->id);
+            ->assertJsonPath('data.0.id', $weighings->first()->id)
+            ->assertJsonPath('data.0.created_by.id', $weighings->first()->createdBy->id)
+            ->assertJsonPath('data.0.created_by.first_name', $weighings->first()->createdBy->first_name)
+            ->assertJsonPath('data.0.created_by.last_name', $weighings->first()->createdBy->last_name)
+            ->assertJsonPath('data.0.updated_by.id', $weighings->first()->updatedBy->id)
+            ->assertJsonPath('data.0.updated_by.first_name', $weighings->first()->updatedBy->first_name)
+            ->assertJsonPath('data.0.updated_by.last_name', $weighings->first()->updatedBy->last_name);
     }
 
     /** @test */
