@@ -111,6 +111,21 @@ class CreateWeighingTest extends TestCase
         $this->assertEquals("Some \ndescription", $weighing->weighing_description);
     }
 
+    /**
+     * @dataProvider wrongInputDataProvider
+     *
+     * @test
+     */
+    public function shouldReturn422WhenInputIsNotValid($_, $payload, $errors)
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+
+        $this->actingAsAdmin()
+            ->json($this->method, $this->path, $payload)
+            ->assertStatus(422)
+            ->assertJsonValidationErrors($errors);
+    }
+
     public function wrongInputDataProvider(): array
     {
         return [
@@ -160,20 +175,5 @@ class CreateWeighingTest extends TestCase
                 ['gross_weight' => 'El tamaño de peso bruto debe ser de al menos 1.'],
             ],
         ];
-    }
-
-    /**
-     * @dataProvider wrongInputDataProvider
-     *
-     * @test
-     */
-    public function shouldReturn422WhenInputIsNotValid($_, $payload, $errors)
-    {
-        $this->seed(TruckScalePackageSeeder::class);
-
-        $this->actingAsAdmin()
-            ->json($this->method, $this->path, $payload)
-            ->assertStatus(422)
-            ->assertJsonValidationErrors($errors);
     }
 }
