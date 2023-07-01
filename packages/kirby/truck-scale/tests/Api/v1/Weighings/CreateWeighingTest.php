@@ -25,6 +25,9 @@ class CreateWeighingTest extends TestCase
             'vehicle_type' => VehicleType::One,
             'driver_dni_number' => 1234,
             'driver_name' => 'John Doe',
+            'client' => 'ACME INC.',
+            'commodity' => 'DYNAMITE',
+            'destination' => 'AREA 55',
             'tare_weight' => 120.05,
             'gross_weight' => null,
             'weighing_description' => null,
@@ -52,6 +55,9 @@ class CreateWeighingTest extends TestCase
             'vehicle_type' => VehicleType::One,
             'driver_dni_number' => 1234,
             'driver_name' => 'John Doe',
+            'client' => 'ACME INC.',
+            'commodity' => 'DYNAMITE',
+            'destination' => 'AREA 55',
             'tare_weight' => null,
             'gross_weight' => 130.05,
             'weighing_description' => 'Test description',
@@ -74,6 +80,9 @@ class CreateWeighingTest extends TestCase
             'vehicle_type' => VehicleType::One,
             'driver_dni_number' => 1234,
             'driver_name' => 'John Doe',
+            'client' => 'ACME INC.',
+            'commodity' => 'DYNAMITE',
+            'destination' => 'AREA 55',
             'tare_weight' => null,
             'gross_weight' => 210.05,
             'weighing_description' => 'Some description',
@@ -96,6 +105,9 @@ class CreateWeighingTest extends TestCase
             'vehicle_type' => VehicleType::One,
             'driver_dni_number' => 1234,
             'driver_name' => "\n \t\n\n\nJohn \t\t\n\n Doe\n ",
+            'client' => "\t\t\n \tACME\n \t \n  \n\n\n",
+            'commodity' => "\t\t\n \tDYNAMITE\n \t \n  \n\n\n",
+            'destination' => "\t\t\n  area 55\n \t \n  \n\n\n",
             'tare_weight' => null,
             'gross_weight' => 210.05,
             'weighing_description' => " \t\nSome \n\ndescription \t\n",
@@ -108,6 +120,9 @@ class CreateWeighingTest extends TestCase
         $weighing = Weighing::where('vehicle_plate', 'abc12345')->first();
         $this->assertEquals('JOHN DOE', $weighing->driver_name);
         $this->assertEquals('ABC12345', $weighing->vehicle_plate);
+        $this->assertEquals('ACME', $weighing->client);
+        $this->assertEquals('DYNAMITE', $weighing->commodity);
+        $this->assertEquals('area 55', $weighing->destination);
         $this->assertEquals("Some \ndescription", $weighing->weighing_description);
     }
 

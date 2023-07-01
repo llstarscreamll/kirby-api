@@ -22,6 +22,7 @@ class CreateTruckScaleTables extends Migration
             $table->string('driver_name');
             $table->string('client');
             $table->string('commodity');
+            $table->string('destination');
             $table->decimal('tare_weight')->default(0)->comment('measure unit in Kg');
             $table->decimal('gross_weight')->default(0)->comment('measure unit in Kg');
             $table->string('weighing_description')->default('');
