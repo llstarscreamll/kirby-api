@@ -66,7 +66,11 @@ class WeighingsController
         }
 
         if ($record->tare_weight > $record->gross_weight) {
-            return response()->json(['errors' => [$fieldToUpdate => ['Peso tara no puede ser mayor que peso bruto']]], 422);
+            return response()->json(['errors' => [$fieldToUpdate => ['Peso tara no puede ser mayor que peso bruto.']]], 422);
+        }
+
+        if ($record->tare_weight == $record->gross_weight) {
+            return response()->json(['errors' => [$fieldToUpdate => ['Peso tara y peso bruto no pueden ser iguales.']]], 422);
         }
 
         $record->fill([

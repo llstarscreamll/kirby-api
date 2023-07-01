@@ -257,7 +257,7 @@ class UpdateWeighingTest extends TestCase
         $this->actingAsAdmin(factory(User::class)->create())
             ->json($this->method, "{$this->path}/{$record->id}", $payload)
             ->assertStatus(422)
-            ->assertJsonPath('errors.gross_weight.0', 'Peso tara no puede ser mayor que peso bruto');
+            ->assertJsonPath('errors.gross_weight.0', 'Peso tara no puede ser mayor que peso bruto.');
     }
 
     /** @test */
@@ -279,7 +279,7 @@ class UpdateWeighingTest extends TestCase
         $this->actingAsAdmin(factory(User::class)->create())
             ->json($this->method, "{$this->path}/{$record->id}", $payload)
             ->assertStatus(422)
-            ->assertJsonPath('errors.tare_weight.0', 'Peso tara no puede ser mayor que peso bruto');
+            ->assertJsonPath('errors.tare_weight.0', 'Peso tara no puede ser mayor que peso bruto.');
     }
 
     public function wrongInputDataProvider(): array
@@ -296,6 +296,12 @@ class UpdateWeighingTest extends TestCase
                 ['weighing_type' => WeighingType::Load, 'status' => WeighingStatus::InProgress, 'tare_weight' => 80, 'gross_weight' => 0],
                 ['weighing_type' => WeighingType::Load, 'gross_weight' => 0],
                 ['gross_weight' => 'El tamaño de peso bruto debe ser de al menos 1.'],
+            ],
+            [
+                'case' => 'gross weight should not be equal to tare weight',
+                ['weighing_type' => WeighingType::Load, 'status' => WeighingStatus::InProgress, 'tare_weight' => 80, 'gross_weight' => 0],
+                ['weighing_type' => WeighingType::Load, 'gross_weight' => 80],
+                ['gross_weight' => 'Peso tara y peso bruto no pueden ser iguales.'],
             ],
         ];
     }
