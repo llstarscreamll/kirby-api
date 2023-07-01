@@ -20,6 +20,7 @@ class CreateTruckScaleTables extends Migration
             $table->string('vehicle_type', 20);
             $table->unsignedBigInteger('driver_dni_number');
             $table->string('driver_name');
+            $table->string('client');
             $table->decimal('tare_weight')->default(0)->comment('measure unit in Kg');
             $table->decimal('gross_weight')->default(0)->comment('measure unit in Kg');
             $table->string('weighing_description')->default('');

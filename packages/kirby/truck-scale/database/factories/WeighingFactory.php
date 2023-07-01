@@ -14,6 +14,7 @@ $factory->define(Weighing::class, function (Faker $faker) {
         'vehicle_type' => $faker->randomElement(VehicleType::getKeys()),
         'driver_dni_number' => $faker->unique()->numerify('##########'),
         'driver_name' => $faker->name(),
+        'client' => $faker->company(),
         'tare_weight' => $tare = $faker->numberBetween(10, 150),
         'gross_weight' => $faker->numberBetween($tare, $tare * 5),
         'weighing_description' => $faker->sentence(),
