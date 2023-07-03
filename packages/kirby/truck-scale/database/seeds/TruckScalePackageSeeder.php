@@ -27,7 +27,7 @@ class TruckScalePackageSeeder extends Seeder
     public function run()
     {
         collect($this->permissions)->map(function ($permission) {
-            return Permission::updateOrCreate($permission);
+            return Permission::firstOrCreate($permission);
         });
 
         collect($this->settings)->each(fn($s) => Setting::firstOrCreate(Arr::only($s, ['key']), $s));
