@@ -12,6 +12,7 @@ use Kirby\TruckScale\UI\API\V1\Controllers\WeighingsController;
 
 Route::group(['prefix' => 'api/1.0', 'middleware' => 'auth:api'], function (Router $route) {
     $route->apiResource('truck-scale-settings', SettingsController::class)->only(['index']);
+    $route->put('truck-scale-settings/toggle-require-weighing-machine-lecture', [SettingsController::class, 'toggleRequireWeighingMachineLecture']);
     $route->apiResource('vehicles', VehiclesController::class)->only(['index']);
     $route->apiResource('drivers', DriversController::class)->only(['index']);
     $route->apiResource('clients', ClientsController::class)->only(['index']);
