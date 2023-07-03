@@ -15,7 +15,7 @@ class SettingsController
 
     public function toggleRequireWeighingMachineLecture(UpdateWeighingSettingsRequest $_)
     {
-        DB::statement(<<<MYSQL
+        DB::statement(<<<'MYSQL'
             UPDATE settings
             SET `value` = IF(value='ON','OFF','ON')
             WHERE `key` = 'truck-scale.require-weighing-machine-lecture'

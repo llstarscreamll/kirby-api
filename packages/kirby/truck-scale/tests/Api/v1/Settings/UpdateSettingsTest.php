@@ -17,7 +17,7 @@ class UpdateSettingsTest extends TestCase
 
         $this->assertDatabaseHas('settings', [
             'key' => 'truck-scale.require-weighing-machine-lecture',
-            'value' => 'ON'
+            'value' => 'ON',
         ]);
 
         $this->actingAsAdmin()
@@ -27,7 +27,7 @@ class UpdateSettingsTest extends TestCase
 
         $this->assertDatabaseHas('settings', [
             'key' => 'truck-scale.require-weighing-machine-lecture',
-            'value' => 'OFF'
+            'value' => 'OFF',
         ]);
     }
 
@@ -38,7 +38,7 @@ class UpdateSettingsTest extends TestCase
 
         $this->assertDatabaseHas('settings', [
             'key' => 'truck-scale.require-weighing-machine-lecture',
-            'value' => 'ON'
+            'value' => 'ON',
         ]);
 
         $this->actingAsGuest()
@@ -48,7 +48,7 @@ class UpdateSettingsTest extends TestCase
         // config value should not be changed
         $this->assertDatabaseHas('settings', [
             'key' => 'truck-scale.require-weighing-machine-lecture',
-            'value' => 'ON'
+            'value' => 'ON',
         ]);
     }
 }

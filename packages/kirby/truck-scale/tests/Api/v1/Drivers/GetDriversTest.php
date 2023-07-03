@@ -3,7 +3,6 @@
 namespace Kirby\TruckScale\Tests\Api\V1\Drivers;
 
 use Kirby\TruckScale\Models\Weighing;
-use Kirby\Users\Models\User;
 use Tests\TestCase;
 
 class GetDriversTest extends TestCase

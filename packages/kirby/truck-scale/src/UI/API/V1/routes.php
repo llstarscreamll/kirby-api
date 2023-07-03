@@ -2,9 +2,9 @@
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
-use Kirby\TruckScale\UI\API\V1\Controllers\DriversController;
 use Kirby\TruckScale\UI\API\V1\Controllers\ClientsController;
 use Kirby\TruckScale\UI\API\V1\Controllers\CommoditiesController;
+use Kirby\TruckScale\UI\API\V1\Controllers\DriversController;
 use Kirby\TruckScale\UI\API\V1\Controllers\ExportWeighingsController;
 use Kirby\TruckScale\UI\API\V1\Controllers\SettingsController;
 use Kirby\TruckScale\UI\API\V1\Controllers\VehiclesController;

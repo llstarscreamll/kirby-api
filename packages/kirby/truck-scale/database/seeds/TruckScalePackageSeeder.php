@@ -22,7 +22,7 @@ class TruckScalePackageSeeder extends Seeder
             'description' => 'When value is ON, in desktop app the truck scale machine will fill the weight form fields automatically with no way to fill manually those values, when value is OFF values can be filled manually',
             'data_type' => 'string',
             'value' => 'ON',
-        ]
+        ],
     ];
 
     public function run()
@@ -31,6 +31,6 @@ class TruckScalePackageSeeder extends Seeder
             return Permission::firstOrCreate($permission);
         });
 
-        collect($this->settings)->each(fn($s) => Setting::firstOrCreate(Arr::only($s, ['key']), $s));
+        collect($this->settings)->each(fn ($s) => Setting::firstOrCreate(Arr::only($s, ['key']), $s));
     }
 }
