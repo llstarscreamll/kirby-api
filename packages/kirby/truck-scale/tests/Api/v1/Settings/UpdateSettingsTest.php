@@ -11,7 +11,7 @@ class UpdateSettingsTest extends TestCase
     private $path = 'api/1.0/truck-scale-settings/toggle-require-weighing-machine-lecture';
 
     /** @test */
-    public function shouldReturnAllModuleSettings()
+    public function shouldToggleTheValueOfRequireWeighingMachineLectureFlag()
     {
         $this->seed(TruckScalePackageSeeder::class);
 
@@ -28,6 +28,27 @@ class UpdateSettingsTest extends TestCase
         $this->assertDatabaseHas('settings', [
             'key' => 'truck-scale.require-weighing-machine-lecture',
             'value' => 'OFF'
+        ]);
+    }
+
+    /** @test */
+    public function shouldReturnForbiddenWhenUserDoesNotHaveEnoughPermissions()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+
+        $this->assertDatabaseHas('settings', [
+            'key' => 'truck-scale.require-weighing-machine-lecture',
+            'value' => 'ON'
+        ]);
+
+        $this->actingAsGuest()
+            ->json($this->method, $this->path)
+            ->assertForbidden();
+
+        // config value should not be changed
+        $this->assertDatabaseHas('settings', [
+            'key' => 'truck-scale.require-weighing-machine-lecture',
+            'value' => 'ON'
         ]);
     }
 }

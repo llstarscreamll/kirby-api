@@ -4,6 +4,7 @@ namespace Kirby\TruckScale\UI\API\V1\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Kirby\TruckScale\TruckScale;
+use Kirby\TruckScale\UI\API\V1\Requests\UpdateWeighingSettingsRequest;
 
 class SettingsController
 {
@@ -12,7 +13,7 @@ class SettingsController
         return ['data' => $module->rawSettings()];
     }
 
-    public function toggleRequireWeighingMachineLecture()
+    public function toggleRequireWeighingMachineLecture(UpdateWeighingSettingsRequest $_)
     {
         DB::statement(<<<MYSQL
             UPDATE settings
