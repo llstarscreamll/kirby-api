@@ -5,7 +5,7 @@ namespace Kirby\TruckScale\Tests\Api\V1\Drivers;
 use Tests\TestCase;
 use TruckScalePackageSeeder;
 
-class GetConfigTest extends TestCase
+class GetSettingsTest extends TestCase
 {
     private $method = 'GET';
     private $path = 'api/1.0/truck-scale-settings';
