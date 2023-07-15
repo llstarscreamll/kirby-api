@@ -23,7 +23,7 @@ class ExportWeighingsTest extends TestCase
         Queue::fake();
 
         $this->actingAsAdmin($user = factory(User::class)->create())
-            ->json($this->method, "{$this->path}?filter[id]=123&filter[vehicle_plate]=AAA111&filter[vehicle_type]=one&filter[status]=finished&filter[date]=2023-01-01")
+            ->json($this->method, "{$this->path}?filter[id]=123&filter[vehicle_plate]=AAA111&filter[vehicle_type]=TURBO&filter[status]=finished&filter[date]=2023-01-01")
             ->assertOk();
 
         Queue::assertPushed(
@@ -31,7 +31,7 @@ class ExportWeighingsTest extends TestCase
             fn ($job) => $job->userID === $user->id
             && 123 == $job->filters['id']
             && 'AAA111' === $job->filters['vehicle_plate']
-            && 'one' === $job->filters['vehicle_type']
+            && 'TURBO' === $job->filters['vehicle_type']
             && 'finished' === $job->filters['status']
             && '2023-01-01' === $job->filters['date']
         );
