@@ -42,6 +42,7 @@ class WeighingsController
             'weighing_description' => Str::of($request->weighing_description ?? '')->replaceMatches('/\n+/', "\n"),
             'status' => WeighingType::Weighing === $request->weighing_type ? WeighingStatus::Finished : WeighingStatus::InProgress,
             'created_by_id' => $request->user()->id,
+            'updated_by_id' => $request->input('weighing_type') === WeighingType::Weighing ? $request->user()->id : 0,
         ];
 
         return response()->json(['data' => Weighing::create($data)->id], 201);

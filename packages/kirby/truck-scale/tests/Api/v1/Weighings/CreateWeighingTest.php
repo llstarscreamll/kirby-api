@@ -88,11 +88,16 @@ class CreateWeighingTest extends TestCase
             'weighing_description' => 'Some description',
         ];
 
-        $this->actingAsAdmin()
+        $this->actingAsAdmin($user = factory(User::class)->create())
             ->json($this->method, $this->path, $payload)
             ->assertCreated();
 
-        $this->assertDatabaseHas('weighings', ['tare_weight' => 0, 'status' => WeighingStatus::Finished] + $payload);
+        $this->assertDatabaseHas('weighings', [
+            'tare_weight' => 0,
+            'status' => WeighingStatus::Finished,
+            'created_by_id' => $user->id,
+            'updated_by_id' => $user->id,
+        ] + $payload);
     }
 
     /** @test */
