@@ -11,7 +11,7 @@ class VehiclesController
     {
         $paginated = DB::table('weighings')
             ->when($request->s, fn ($q, $s) => $q->where('vehicle_plate', 'like', "%{$s}%"))
-            ->where('created_at', '>', now()->subMonths(3)->toDateTimeString())
+            ->where('created_at', '>', now()->subMonths(6)->toDateTimeString())
             ->groupBy('plate', 'type')
             ->orderBy('plate', 'ASC')
             ->simplePaginate(10, [
