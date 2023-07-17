@@ -102,4 +102,28 @@ class GetVehiclesTest extends TestCase
                ->assertJsonPath('data.0.clients.0.name', 'GGG')
                ->assertJsonPath('data.0.clients.1.name', 'HHH');
        }
+
+       /** @test */
+       public function shouldReturnVehiclesWithCommoditiesInfo()
+       {
+           // too old row, it should not returned on results
+           factory(Weighing::class)->create(['vehicle_plate' => 'AAA111', 'vehicle_type' => VehicleType::One(), 'commodity' => 'FFF', 'created_at' => now()->subMonths(7)]);
+           // fresh data
+           factory(Weighing::class)->create(['vehicle_plate' => 'AAA111', 'vehicle_type' => VehicleType::One(), 'commodity' => 'GGG']);
+           factory(Weighing::class)->create(['vehicle_plate' => 'BBB222', 'vehicle_type' => VehicleType::Two()]);
+           factory(Weighing::class)->create(['vehicle_plate' => 'AAA111', 'vehicle_type' => VehicleType::One(), 'commodity' => 'HHH']);
+           factory(Weighing::class)->create(['vehicle_plate' => 'CCC333', 'vehicle_type' => VehicleType::One()]);
+           factory(Weighing::class)->create(['vehicle_plate' => 'AAA222', 'vehicle_type' => VehicleType::One()]);
+           // repeated driver row, should appear only once on results
+           factory(Weighing::class)->create(['vehicle_plate' => 'AAA111', 'vehicle_type' => VehicleType::One(), 'commodity' => 'GGG']);
+
+           $this->actingAsAdmin(factory(User::class)->create())
+               ->json($this->method, "{$this->path}?s=AAA111")
+               ->assertOk()
+               ->assertJsonCount(1, 'data')
+               ->assertJsonCount(2, 'data.0.commodities')
+               ->assertJsonPath('data.0.plate', 'AAA111')
+               ->assertJsonPath('data.0.commodities.0.name', 'GGG')
+               ->assertJsonPath('data.0.commodities.1.name', 'HHH');
+       }
 }
