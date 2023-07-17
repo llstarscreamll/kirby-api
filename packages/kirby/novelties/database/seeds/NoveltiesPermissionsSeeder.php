@@ -47,7 +47,7 @@ class NoveltiesPermissionsSeeder extends Seeder
     public function run()
     {
         collect($this->permissions)->map(function ($permission) {
-            return Permission::updateOrCreate($permission, $permission);
+            return Permission::firstOrCreate($permission, $permission);
         });
     }
 }
