@@ -74,8 +74,7 @@
 @task('runComposer', ['on' => 'remote'])
     {{ logMessage("🚚  Running Composer") }}
     cd {{ $newReleaseDir }};
-    COMPOSER=$(which composer)
-    php74 $COMPOSER install --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile -q
+    php74 $(which composer) install --prefer-dist --no-scripts --no-ansi --no-interaction --optimize-autoloader --no-progress --profile -q
 @endtask
 
 @task('updateSymlinks', ['on' => 'remote'])
@@ -107,7 +106,7 @@
 @task('migrateDatabase', ['on' => 'remote'])
     {{ logMessage("🙈  Migrating database") }}
     cd {{ $newReleaseDir }}
-    php74 artisan migrate --seed --force
+    php74 artisan migrate --force
     php74 artisan authorization:refresh-admin-permissions
 @endtask
 
