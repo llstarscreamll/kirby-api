@@ -14,7 +14,7 @@ class DefaultUserSeed extends Seeder
             return;
         }
 
-        $user = User::updateOrCreate(['email' => 'admin@pascal.com'], [
+        $user = User::firstOrCreate(['email' => 'admin@pascal.com'], [
             'first_name' => 'Pascal',
             'last_name' => 'Admin',
             'phone_prefix' => '+57',
