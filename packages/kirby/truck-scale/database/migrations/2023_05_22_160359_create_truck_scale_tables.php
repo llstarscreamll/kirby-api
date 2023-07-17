@@ -30,6 +30,8 @@ class CreateTruckScaleTables extends Migration
             $table->unsignedBigInteger('updated_by_id')->default(0);
             $table->string('status', 10);
             $table->timestamps();
+
+            $table->index(['vehicle_plate', 'driver_dni_number', 'client', 'commodity']);
         });
     }
 
