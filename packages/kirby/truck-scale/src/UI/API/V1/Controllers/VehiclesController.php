@@ -27,8 +27,8 @@ class VehiclesController
                 $paginated
                     ->getCollection()
                     ->transform(fn ($r) => tap($r, fn ($r) => $r->drivers = array_map(fn ($d) => array_combine(['id', 'name'], explode(',', $d)), explode('|', $r->drivers))))
-                    ->transform(fn ($r) => tap($r, fn ($r) => $r->clients = array_map(fn($v) => ['name' => $v], explode('|', $r->clients))))
-                    ->transform(fn ($r) => tap($r, fn ($r) => $r->commodities = array_map(fn($v) => ['name' => $v], explode('|', $r->commodities))))
+                    ->transform(fn ($r) => tap($r, fn ($r) => $r->clients = array_map(fn ($v) => ['name' => $v], explode('|', $r->clients))))
+                    ->transform(fn ($r) => tap($r, fn ($r) => $r->commodities = array_map(fn ($v) => ['name' => $v], explode('|', $r->commodities))))
             );
     }
 }
