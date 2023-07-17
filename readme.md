@@ -40,7 +40,7 @@ php artisan company:sync-holidays # use the --nex-year flag to sync next year ho
 Make sure to have your `.env` file, server and Github `ssh` keys correctly established on your local and remote instances. To make a full deploy execute:
 
 ```bash
-envoy run deploy
+envoy run deploy --target=prod
 ```
 
 To deploy only the code:
