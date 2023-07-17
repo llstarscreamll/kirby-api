@@ -128,7 +128,7 @@ class CreateWeighingTest extends TestCase
         $this->assertEquals('ACME', $weighing->client);
         $this->assertEquals('DYNAMITE', $weighing->commodity);
         $this->assertEquals('area 55', $weighing->destination);
-        $this->assertEquals("Some \ndescription", $weighing->weighing_description);
+        $this->assertEquals("SOME \nDESCRIPTION", $weighing->weighing_description);
     }
 
     /**

@@ -39,7 +39,7 @@ class WeighingsController
             'destination' => Str::of($request->destination)->replaceMatches('/\t|\n/', '')->replaceMatches('/  +/', ' '),
             'tare_weight' => WeighingType::Load === $request->weighing_type ? $request->tare_weight : 0,
             'gross_weight' => in_array($request->weighing_type, [WeighingType::Unload, WeighingType::Weighing]) ? $request->gross_weight : 0,
-            'weighing_description' => Str::of($request->weighing_description ?? '')->replaceMatches('/\n+/', "\n"),
+            'weighing_description' => Str::of($request->weighing_description ?? '')->replaceMatches('/\n+/', "\n")->upper(),
             'status' => WeighingType::Weighing === $request->weighing_type ? WeighingStatus::Finished : WeighingStatus::InProgress,
             'created_by_id' => $request->user()->id,
             'updated_by_id' => $request->input('weighing_type') === WeighingType::Weighing ? $request->user()->id : 0,
