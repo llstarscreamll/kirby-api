@@ -17,7 +17,7 @@ class CreateTruckScaleTables extends Migration
             $table->id();
             $table->string('weighing_type', 20);
             $table->string('vehicle_plate', 10);
-            $table->string('vehicle_type', 25);
+            $table->string('vehicle_type', 50);
             $table->unsignedBigInteger('driver_dni_number');
             $table->string('driver_name');
             $table->string('client');
