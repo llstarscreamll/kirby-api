@@ -37,7 +37,7 @@ class ExportWeighingsJob implements ShouldQueue
         $writer = Writer::createFromStream($file = tmpfile());
         $writer->setDelimiter(';');
         $writer->insertOne([
-            'ID', 'tipo de pesaje', 'placa', 'tipo de vehículo', '# documento conductor', 'nombres conductor', 'peso tara', 'peso bruto', 'descripción', 'estado', 'fecha de creación',
+            'ID', 'tipo de pesaje', 'placa', 'tipo de vehículo', '# documento conductor', 'nombres conductor', 'cliente', 'producto', 'destino', 'peso tara', 'peso bruto', 'descripción', 'estado', 'fecha de creación',
         ]);
 
         DB::table('weighings')
@@ -46,7 +46,7 @@ class ExportWeighingsJob implements ShouldQueue
             ->when(Arr::get($this->filters, 'status'), fn ($q, $v) => $q->where('status', $v))
             ->when(Arr::get($this->filters, 'date'), fn ($q, $v) => $q->whereBetween('created_at', [Carbon::parse($v)->startOfDay(), Carbon::parse($v)->endOfDay()]))
             ->select([
-                'id', 'weighing_type', 'vehicle_plate', 'vehicle_type', 'driver_dni_number', 'driver_name', 'tare_weight', 'gross_weight', 'weighing_description', 'status', 'created_at',
+                'id', 'weighing_type', 'vehicle_plate', 'vehicle_type', 'driver_dni_number', 'driver_name', 'client', 'commodity', 'destination', 'tare_weight', 'gross_weight', 'weighing_description', 'status', 'created_at',
             ])
             ->orderBy('id', 'desc')
             ->chunk(5000, function ($data) use ($writer) {
@@ -67,6 +67,9 @@ class ExportWeighingsJob implements ShouldQueue
             'vehicle_type' => $row->vehicle_type,
             'driver_dni_number' => $row->driver_dni_number,
             'driver_name' => $row->driver_name,
+            'client' => $row->client,
+            'commodity' => $row->commodity,
+            'destination' => $row->destination,
             'tare_weight' => $row->tare_weight,
             'gross_weight' => $row->gross_weight,
             'weighing_description' => $row->weighing_description,
