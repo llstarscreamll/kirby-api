@@ -37,7 +37,7 @@ class ExportWeighingsJob implements ShouldQueue
         $writer = Writer::createFromStream($file = tmpfile());
         $writer->setDelimiter(';');
         $writer->insertOne([
-            'ID', 'tipo de pesaje', 'placa', 'tipo de vehículo', '# documento conductor', 'nombres conductor', 'cliente', 'producto', 'destino', 'peso tara', 'peso bruto', 'descripción', 'estado', 'fecha de creación',
+            'ID', 'tipo de pesaje', 'placa', 'tipo de vehículo', '# documento conductor', 'nombres conductor', 'cliente', 'producto', 'destino', 'peso tara', 'peso bruto', 'peso neto', 'descripción', 'estado', 'fecha de creación',
         ]);
 
         DB::table('weighings')
@@ -72,6 +72,7 @@ class ExportWeighingsJob implements ShouldQueue
             'destination' => $row->destination,
             'tare_weight' => $row->tare_weight,
             'gross_weight' => $row->gross_weight,
+            'net_weight' => $row->gross_weight - $row->tare_weight,
             'weighing_description' => $row->weighing_description,
             'status' => trans("truck-scale.statuses.{$row->status}"),
             'created_at' => $row->created_at,
