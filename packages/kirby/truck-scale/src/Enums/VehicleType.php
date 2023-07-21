@@ -16,4 +16,5 @@ final class VehicleType extends Enum
     public const Four = 'CUATRO MANOS';
     public const Five = 'MINIMULA - PATINETA';
     public const Six = 'TRACTOMULA DE TRES EJES';
+    public const Seven = 'MONTACARGAS';
 }
