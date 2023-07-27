@@ -42,7 +42,7 @@ class WeighingsController
             'weighing_description' => Str::of($request->weighing_description ?? '')->replaceMatches('/\n+/', "\n")->upper(),
             'status' => WeighingType::Weighing === $request->weighing_type ? WeighingStatus::Finished : WeighingStatus::InProgress,
             'created_by_id' => $request->user()->id,
-            'updated_by_id' => $request->input('weighing_type') === WeighingType::Weighing ? $request->user()->id : 0,
+            'updated_by_id' => WeighingType::Weighing === $request->input('weighing_type') ? $request->user()->id : 0,
         ];
 
         return response()->json(['data' => Weighing::create($data)->id], 201);
@@ -59,10 +59,10 @@ class WeighingsController
     {
         $record = Weighing::find($ID);
 
-        $fieldToUpdate = $request->weighing_type == WeighingType::Load ? 'gross_weight' : 'tare_weight';
+        $fieldToUpdate = WeighingType::Load == $request->weighing_type ? 'gross_weight' : 'tare_weight';
         $record->fill([$fieldToUpdate => $request->input($fieldToUpdate)]);
 
-        if ($record->status === WeighingStatus::Finished) {
+        if (WeighingStatus::Finished === $record->status) {
             return response()->json(['errors' => ['status' => ['No se permite actualizaciones a registros finalizados']]], 422);
         }
 
@@ -76,6 +76,7 @@ class WeighingsController
 
         $record->fill([
             'status' => WeighingStatus::Finished,
+            'weighing_description' => $request->input('weighing_description', ''),
             'updated_by_id' => $request->user()->id,
         ]);
 

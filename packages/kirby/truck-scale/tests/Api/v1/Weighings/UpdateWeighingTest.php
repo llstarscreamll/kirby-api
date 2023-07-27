@@ -28,6 +28,7 @@ class UpdateWeighingTest extends TestCase
         $payload = [
             'weighing_type' => WeighingType::Load,
             'gross_weight' => 100,
+            'weighing_description' => 'test description',
         ];
 
         $this->actingAsAdmin(factory(User::class)->create())
@@ -40,6 +41,7 @@ class UpdateWeighingTest extends TestCase
             'weighing_type' => WeighingType::Load,
             'tare_weight' => 85,
             'gross_weight' => 100,
+            'weighing_description' => 'test description',
         ]);
     }
 
