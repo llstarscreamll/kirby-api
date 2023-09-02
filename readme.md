@@ -22,10 +22,6 @@ This project aims to be as a base for reutilizable Laravel packages used for mul
 ## Install
 
 ```bash
-# valet use php@7.4
-# brew install redis
-# pecl install redis
-# valet restart
 # setup mysql
 brew install mysql
 brew services start mysql
