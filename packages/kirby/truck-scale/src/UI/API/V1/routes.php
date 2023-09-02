@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
+use Kirby\TruckScale\UI\API\V1\Controllers\CancelWeighingController;
 use Kirby\TruckScale\UI\API\V1\Controllers\ClientsController;
 use Kirby\TruckScale\UI\API\V1\Controllers\CommoditiesController;
 use Kirby\TruckScale\UI\API\V1\Controllers\DriversController;
@@ -18,5 +19,6 @@ Route::group(['prefix' => 'api/1.0', 'middleware' => 'auth:api'], function (Rout
     $route->apiResource('clients', ClientsController::class)->only(['index']);
     $route->apiResource('commodities', CommoditiesController::class)->only(['index']);
     $route->post('weighings/export', ExportWeighingsController::class);
+    $route->post('weighings/{id}/cancel', CancelWeighingController::class);
     $route->apiResource('weighings', WeighingsController::class)->only(['index', 'store', 'show', 'update']);
 });

@@ -12,4 +12,5 @@ final class WeighingStatus extends Enum
 {
     public const InProgress = 'inProgress';
     public const Finished = 'finished';
+    public const Canceled = 'canceled';
 }
