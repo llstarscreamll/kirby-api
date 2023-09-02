@@ -46,6 +46,33 @@ class UpdateWeighingTest extends TestCase
     }
 
     /** @test */
+    public function shouldUpdateWeighingWhenDescriptionIsEmpty()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create([
+            'weighing_type' => WeighingType::Load,
+            'status' => WeighingStatus::InProgress,
+            'tare_weight' => 85,
+            'gross_weight' => 0,
+        ]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Load,
+            'gross_weight' => 100,
+            'weighing_description' => '',
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertOk();
+
+        $this->assertDatabaseHas('weighings', [
+            'id' => $record->id,
+            'weighing_description' => '',
+        ]);
+    }
+
+    /** @test */
     public function shouldSetFinishedStatusWhenLoadWeighingIsUpdated()
     {
         $this->seed(TruckScalePackageSeeder::class);

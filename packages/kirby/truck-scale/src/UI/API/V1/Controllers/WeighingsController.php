@@ -77,7 +77,7 @@ class WeighingsController
 
         $record->fill([
             'status' => WeighingStatus::Finished,
-            'weighing_description' => $request->input('weighing_description', ''),
+            'weighing_description' => $request->weighing_description ?? '',
             'updated_by_id' => $request->user()->id,
         ]);
 
