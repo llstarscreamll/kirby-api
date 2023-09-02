@@ -22,6 +22,7 @@ $factory->define(Weighing::class, function (Faker $faker) {
         'weighing_description' => $faker->sentence(),
         'created_by_id' => factory(User::class),
         'updated_by_id' => factory(User::class),
-        'status' => $faker->randomElement(WeighingStatus::getValues()),
+        'status' => $status = $faker->randomElement(WeighingStatus::getValues()),
+        'cancel_comment' => $status === WeighingStatus::Canceled ? $faker->sentence() : '',
     ];
 });

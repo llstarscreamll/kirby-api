@@ -22,6 +22,7 @@ class GetWeighingTest extends TestCase
             ->json($this->method, "{$this->path}/{$record->id}")
             ->assertOk()
             ->assertJsonPath('data.id', $record->id)
+            ->assertJsonPath('data.cancel_comment', $record->cancel_comment)
             ->assertJsonPath('data.created_by.first_name', $record->createdBy->first_name)
             ->assertJsonPath('data.created_by.last_name', $record->createdBy->last_name)
             ->assertJsonPath('data.updated_by.first_name', $record->updatedBy->first_name)
