@@ -62,8 +62,9 @@ class WeighingsController
         $fieldToUpdate = WeighingType::Load == $request->weighing_type ? 'gross_weight' : 'tare_weight';
         $record->fill([$fieldToUpdate => $request->input($fieldToUpdate)]);
 
-        if (WeighingStatus::Finished === $record->status) {
-            return response()->json(['errors' => ['status' => ['No se permite actualizaciones a registros finalizados']]], 422);
+        if (in_array($record->status, [WeighingStatus::Finished, WeighingStatus::Canceled])) {
+            $readableStatus = $record->status === WeighingStatus::Finished ? 'finalizados' : 'anulados';
+            return response()->json(['errors' => ['status' => ["No se permite actualizaciones a registros {$readableStatus}"]]], 422);
         }
 
         if ($record->tare_weight > $record->gross_weight) {
@@ -82,6 +83,6 @@ class WeighingsController
 
         $record->save();
 
-        return [];
+        return ['data' => 'ok'];
     }
 }

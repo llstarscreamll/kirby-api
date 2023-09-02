@@ -241,6 +241,23 @@ class UpdateWeighingTest extends TestCase
     }
 
     /** @test */
+    public function shouldReturnErrorUpdatingWeighingWhenStatusIsCanceled()
+    {
+        $this->seed(TruckScalePackageSeeder::class);
+        $record = factory(Weighing::class)->create(['status' => WeighingStatus::Canceled]);
+
+        $payload = [
+            'weighing_type' => WeighingType::Unload,
+            'tare_weight' => 25,
+        ];
+
+        $this->actingAsAdmin(factory(User::class)->create())
+            ->json($this->method, "{$this->path}/{$record->id}", $payload)
+            ->assertStatus(422)
+            ->assertJsonPath('errors.status.0', 'No se permite actualizaciones a registros anulados');
+    }
+
+    /** @test */
     public function shouldReturnErrorUpdatingLoadWeighingWhenTareIsGreaterThanGrossWeight()
     {
         $this->seed(TruckScalePackageSeeder::class);
