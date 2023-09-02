@@ -26,8 +26,16 @@ This project aims to be as a base for reutilizable Laravel packages used for mul
 # brew install redis
 # pecl install redis
 # valet restart
-git clone https://github.com/llstarscreamll/laravel.git
-cd laravel
+# setup mysql
+brew install mysql
+brew services start mysql
+mysql -u root -e "CREATE USER 'homestead'@'localhost' IDENTIFIED BY 'secret';"
+mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'homestead'@'localhost' WITH GRANT OPTION;"
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS test"
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS kirby_local"
+
+git clone https://github.com/llstarscreamll/kirby-api.git
+cd kirby-api
 composer install
 cp .env.example .env # fill the environment variables
 php artisan migrate --seed
