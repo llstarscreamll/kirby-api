@@ -64,6 +64,7 @@ class WeighingsController
 
         if (in_array($record->status, [WeighingStatus::Finished, WeighingStatus::Canceled])) {
             $readableStatus = $record->status === WeighingStatus::Finished ? 'finalizados' : 'anulados';
+
             return response()->json(['errors' => ['status' => ["No se permite actualizaciones a registros {$readableStatus}"]]], 422);
         }
 
