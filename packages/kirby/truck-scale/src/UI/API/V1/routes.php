@@ -7,6 +7,7 @@ use Kirby\TruckScale\UI\API\V1\Controllers\ClientsController;
 use Kirby\TruckScale\UI\API\V1\Controllers\CommoditiesController;
 use Kirby\TruckScale\UI\API\V1\Controllers\DriversController;
 use Kirby\TruckScale\UI\API\V1\Controllers\ExportWeighingsController;
+use Kirby\TruckScale\UI\API\V1\Controllers\ManualFinishWeighingController;
 use Kirby\TruckScale\UI\API\V1\Controllers\SettingsController;
 use Kirby\TruckScale\UI\API\V1\Controllers\VehiclesController;
 use Kirby\TruckScale\UI\API\V1\Controllers\WeighingsController;
@@ -20,5 +21,6 @@ Route::group(['prefix' => 'api/1.0', 'middleware' => 'auth:api'], function (Rout
     $route->apiResource('commodities', CommoditiesController::class)->only(['index']);
     $route->post('weighings/export', ExportWeighingsController::class);
     $route->post('weighings/{id}/cancel', CancelWeighingController::class);
+    $route->post('weighings/{id}/manual-finish', ManualFinishWeighingController::class);
     $route->apiResource('weighings', WeighingsController::class)->only(['index', 'store', 'show', 'update']);
 });

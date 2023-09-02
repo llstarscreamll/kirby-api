@@ -12,6 +12,7 @@ class TruckScalePackageSeeder extends Seeder
         ['name' => 'truck-scale.create'],
         ['name' => 'truck-scale.update'],
         ['name' => 'truck-scale.cancel'],
+        ['name' => 'truck-scale.manual-finish'],
         ['name' => 'truck-scale.export'],
         ['name' => 'truck-scale.update-settings'],
     ];

@@ -15,6 +15,7 @@ class AddCancelDescriptionColumnToWeighingsTable extends Migration
     {
         Schema::table('weighings', function (Blueprint $table) {
             $table->string('cancel_comment')->default('')->after('weighing_description');
+            $table->string('status', 15)->change();
         });
     }
 
@@ -27,6 +28,7 @@ class AddCancelDescriptionColumnToWeighingsTable extends Migration
     {
         Schema::table('weighings', function (Blueprint $table) {
             $table->dropColumn('cancel_comment');
+            $table->string('status', 10)->change();
         });
     }
 }
