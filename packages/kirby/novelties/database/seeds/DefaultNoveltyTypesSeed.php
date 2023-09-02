@@ -175,6 +175,9 @@ class DefaultNoveltyTypesSeed extends Seeder
      */
     public function run()
     {
+        if (NoveltyType::count() > count($this->noveltyTypes)) {
+            return;
+        }
         collect($this->noveltyTypes)->map(function (array $noveltyType) {
             $keys = Arr::only($noveltyType, ['code']);
 
