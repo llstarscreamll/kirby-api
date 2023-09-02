@@ -19,7 +19,7 @@ class CancelWeighingTest extends TestCase
         $this->seed(TruckScalePackageSeeder::class);
         $record = factory(Weighing::class)->create(['status' => WeighingStatus::InProgress]);
 
-        $payload = ['comment' => 'test description'];
+        $payload = ['comment' => "\n \t\t test \n\n\t  description"];
 
         $this->actingAsAdmin(factory(User::class)->create())
             ->json($this->method, str_replace('{id}', $record->id, $this->path), $payload)
@@ -58,7 +58,7 @@ class CancelWeighingTest extends TestCase
     public function shouldReturnErrorWhenCancelCommentIsEmpty()
     {
         $this->seed(TruckScalePackageSeeder::class);
-        $record = factory(Weighing::class)->create(['status' => WeighingStatus::InProgress]);
+        $record = factory(Weighing::class)->create(['status' => WeighingStatus::InProgress, 'cancel_comment' => '']);
 
         $payload = ['comment' => ''];
 
@@ -75,10 +75,10 @@ class CancelWeighingTest extends TestCase
     }
 
     /** @test */
-    public function shouldReturnErrorWhenUserDoesNotHaveEnoughtPermissions()
+    public function shouldReturnErrorWhenUserDoesNotHaveEnoughPermissions()
     {
         $this->seed(TruckScalePackageSeeder::class);
-        $record = factory(Weighing::class)->create(['status' => WeighingStatus::InProgress]);
+        $record = factory(Weighing::class)->create(['status' => WeighingStatus::InProgress, 'cancel_comment' => '']);
 
         $payload = ['comment' => 'foo'];
 
