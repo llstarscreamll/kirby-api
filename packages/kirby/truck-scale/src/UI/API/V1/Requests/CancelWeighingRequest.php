@@ -14,7 +14,7 @@ class CancelWeighingRequest extends FormRequest
     public function rules()
     {
         return [
-            'comment' => ['required', 'min:5', 'max:255']
+            'comment' => ['required', 'min:5', 'max:255'],
         ];
     }
 }
