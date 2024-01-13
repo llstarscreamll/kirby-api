@@ -27,8 +27,6 @@ class TimeClockLogsExport implements FromQuery, WithHeadings, WithMapping
             ? explode(',', explode(':', head(array_filter(explode(';', $this->params['search']), fn ($str) => Str::contains($str, 'employee_id'))))[1])
             : [];
 
-        logger('employee IDs:', $employeeIDs);
-
         return DB::table('time_clock_logs')
             ->join('employees', 'time_clock_logs.employee_id', 'employees.id')
             ->join('users', 'users.id', 'employees.id')
@@ -49,10 +47,10 @@ class TimeClockLogsExport implements FromQuery, WithHeadings, WithMapping
                 DB::raw('CONCAT(users.first_name, users.last_name) AS employeeFullName'),
                 'sub_cost_centers.name AS subCostCenterName',
                 'work_shifts.name AS workShiftName',
-                DB::raw('CONVERT_TZ(time_clock_logs.checked_in_at, "UTC", "America/Bogota") AS checked_in_at'),
-                DB::raw('CONVERT_TZ(time_clock_logs.checked_out_at, "UTC", "America/Bogota") AS checked_out_at'),
+                DB::raw('CONVERT_TZ(time_clock_logs.checked_in_at, "+00:00", "-05:00") AS checked_in_at'),
+                DB::raw('CONVERT_TZ(time_clock_logs.checked_out_at, "+00:00", "-05:00") AS checked_out_at'),
                 DB::raw('GROUP_CONCAT(CONCAT(novelty_types.code, " ", TIME_TO_SEC(TIMEDIFF(novelties.end_at, novelties.start_at)) / 3600) SEPARATOR "\n") AS novelties'),
-                DB::raw('GROUP_CONCAT(CONCAT(approvers.last_name, " - ", CONVERT_TZ(novelty_approvals.created_at, "UTC", "America/Bogota")) SEPARATOR "\n") AS approvals'),
+                DB::raw('GROUP_CONCAT(CONCAT(approvers.last_name, " - ", CONVERT_TZ(novelty_approvals.created_at, "+00:00", "-05:00")) SEPARATOR "\n") AS approvals'),
             ])
             ->orderBy('time_clock_logs.id', 'DESC')
             ->groupBy('time_clock_logs.id');
@@ -75,8 +73,6 @@ class TimeClockLogsExport implements FromQuery, WithHeadings, WithMapping
 
     public function map($row): array
     {
-        logger('here');
-
         return [
             $row->employeeCode,
             $row->employeeIdentificationNumber,
