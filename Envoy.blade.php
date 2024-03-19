@@ -29,7 +29,6 @@
     backup
     migrateDatabase
     blessNewRelease
-    cleanOldReleases
     finishDeploy
 @endstory
 
@@ -133,14 +132,6 @@
     sudo systemctl enable {{ $site}}-horizon.service
     sudo systemctl restart {{ $site}}-horizon.service
     sudo systemctl restart nginx
-@endtask
-
-@task('cleanOldReleases', ['on' => 'remote'])
-    {{ logMessage("🚾  Cleaning up old releases") }}
-    # Delete all but the 5 most recent.
-    cd {{ $releasesDir }}
-    # ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" sudo chown -R $USER .;
-    ls -dt {{ $releasesDir }}/* | tail -n +6 | xargs -d "\n" rm -rf;
 @endtask
 
 @task('finishDeploy', ['on' => 'local'])
