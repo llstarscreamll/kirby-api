@@ -29,6 +29,7 @@ class ProductionLogResource extends JsonResource
             'batch' => $this->batch,
             'tare_weight' => $this->tare_weight,
             'gross_weight' => $this->gross_weight,
+            'purpose' => $this->purpose,
             'tag' => $this->tag,
             'tag_updated_at' => $this->tag_updated_at->toIsoString(),
             'created_at' => optional($this->created_at)->toIsoString(),
