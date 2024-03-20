@@ -25,8 +25,8 @@ class Kernel extends ConsoleKernel
         $schedule->command(SyncHolidaysCommand::class, ['--next-year' => true])->cron('0 0 1 */12 *');
 
         if ($this->app->environment('production')) {
-            $schedule->command('backup:clean')->weekly();
             $schedule->command('backup:run')->hourly();
+            $schedule->command('backup:clean')->weekly();
         }
     }
 
