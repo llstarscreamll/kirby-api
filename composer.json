@@ -47,6 +47,7 @@
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
         "blastcloud/guzzler": "^1.5",
+        "blastcloud/chassis": "1.0.5",
         "facade/ignition": "^2.0",
         "filp/whoops": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.6",
@@ -93,6 +94,6 @@
         "sort-packages": true,
         "optimize-autoloader": true
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }
