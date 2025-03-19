@@ -66,6 +66,22 @@ To use `--target=lab` flag you must have in your environment `LAB_SERVERS`. Exam
 LAB_SERVERS="john_doe@1.2.3.4;john_doe@5.6.7.8"
 ```
 
+### Setup Redis on host machine
+
+Add Docker `host.docker.internal` (172.17.0.1) to the redis bind directive on `/etc/redis/redis.conf` file:
+
+```
+bind 127.0.0.1 -::1 172.17.0.1
+```
+
+Said address is shown from `ifconfig` command:
+
+```
+ifconfig
+docker0: flags=4099<UP,BROADCAST,MULTICAST>  mtu 1500
+        inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+```
+
 ### Set Firewall options on production server
 
 Configure the Linux Firewall to allow https connections on ports 8000 and 4200:
@@ -81,17 +97,6 @@ sudo firewall-cmd --permanent --service=https-8000 --set-description="Allow HTTP
 
 # Add the service to the public zone
 sudo firewall-cmd --permanent --zone=public --add-service=https-8000
-
-# Add a custom service for HTTPS on port 4200
-sudo firewall-cmd --permanent --new-service=https-4200
-
-# Configure the custom service
-sudo firewall-cmd --permanent --service=https-4200 --add-port=4200/tcp
-sudo firewall-cmd --permanent --service=https-4200 --set-short="HTTPS on port 4200"
-sudo firewall-cmd --permanent --service=https-4200 --set-description="Allow HTTPS traffic on port 4200"
-
-# Add the service to the public zone
-sudo firewall-cmd --permanent --zone=public --add-service=https-4200
 
 # Reload firewalld to apply changes
 sudo firewall-cmd --reload
