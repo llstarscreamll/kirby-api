@@ -1,7 +1,8 @@
 {
     "name": "kirby/company",
     "description": ":description",
-    "license": "license",
+    "license": "MIT",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Johan Alvarez",

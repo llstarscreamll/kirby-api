@@ -1,7 +1,8 @@
 {
     "name": "kirby/truck-scale",
     "description": ":package_description",
-    "license": "license",
+    "license": "MIT",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Johan Alvarez",

@@ -2,6 +2,7 @@
     "name": "kirby/authentication",
     "description": ":description",
     "license": "MIT",
+    "version": "1.0.0",
     "authors": [
         {
             "name": "Johan Alvarez",
