@@ -65,3 +65,37 @@ To use `--target=lab` flag you must have in your environment `LAB_SERVERS`. Exam
 # separate servers with semicolons
 LAB_SERVERS="john_doe@1.2.3.4;john_doe@5.6.7.8"
 ```
+
+### Set Firewall options on production server
+
+Configure the Linux Firewall to allow https connections on ports 8000 and 4200:
+
+```bash
+# Add a custom service for HTTPS on port 8000
+sudo firewall-cmd --permanent --new-service=https-8000
+
+# Configure the custom service
+sudo firewall-cmd --permanent --service=https-8000 --add-port=8000/tcp
+sudo firewall-cmd --permanent --service=https-8000 --set-short="HTTPS on port 8000"
+sudo firewall-cmd --permanent --service=https-8000 --set-description="Allow HTTPS traffic on port 8000"
+
+# Add the service to the public zone
+sudo firewall-cmd --permanent --zone=public --add-service=https-8000
+
+# Add a custom service for HTTPS on port 4200
+sudo firewall-cmd --permanent --new-service=https-4200
+
+# Configure the custom service
+sudo firewall-cmd --permanent --service=https-4200 --add-port=4200/tcp
+sudo firewall-cmd --permanent --service=https-4200 --set-short="HTTPS on port 4200"
+sudo firewall-cmd --permanent --service=https-4200 --set-description="Allow HTTPS traffic on port 4200"
+
+# Add the service to the public zone
+sudo firewall-cmd --permanent --zone=public --add-service=https-4200
+
+# Reload firewalld to apply changes
+sudo firewall-cmd --reload
+
+# Verify the service is active
+sudo firewall-cmd --list-all
+```
