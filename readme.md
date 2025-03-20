@@ -41,29 +41,10 @@ php artisan company:sync-holidays # use the --nex-year flag to sync next year ho
 
 ## Deploying
 
-Make sure to have your `.env` file, server and Github `ssh` keys correctly established on your local and remote instances. To make a full deploy execute:
+The Makefile relies on ssh configuration to the target server to deploy, make sure to configure it. To make a full deploy execute:
 
 ```bash
-envoy run deploy --target=prod
-```
-
-To deploy only the code:
-
-```bash
-envoy run deployOnlyCode
-```
-
-If you want to deploy to specific server and branch execute:
-
-```bash
-envoy run deploy --target=lab --branch=staging
-```
-
-To use `--target=lab` flag you must have in your environment `LAB_SERVERS`. Example:
-
-```
-# separate servers with semicolons
-LAB_SERVERS="john_doe@1.2.3.4;john_doe@5.6.7.8"
+make deploy
 ```
 
 ### Setup Redis on host machine
