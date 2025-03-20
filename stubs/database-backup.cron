@@ -1,0 +1,1 @@
+0 * * * * /bin/bash /usr/share/nginx/html/projects/kirby/scripts/backup_database.sh >> ~/projects/kirby/persistent/storage/logs/backup.log 2>&1

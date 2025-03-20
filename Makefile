@@ -12,6 +12,7 @@ all: help
 help:
 	@echo "Usage:"
 	@echo "  make deploy        Deploy the application"
+	@echo "  make setup-db-backup-cron  Set up hourly database backup"
 
 # Copy MySQL data from old server
 .PHONY: copy-mysql-data-to-new-server
@@ -74,8 +75,8 @@ deploy:
 	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && sed -i 's|##DOCUMENT_ROOT##|/usr/share/nginx/html/projects/$(PROJECT_NAME)/public|g' stubs/site-nginx.conf"
 
 	# install dependencies
-	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --quiet-pull kirby-composer-dependencies"
-	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --quiet-pull kirby-npm-dependencies"
+	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --remove-orphans --quiet-pull kirby-composer-dependencies"
+	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --remove-orphans --quiet-pull kirby-npm-dependencies"
 
 	# set files and folders permissions
 	@ssh root@200.7.107.218 "chown -R nginx:nginx $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION)"
@@ -86,10 +87,10 @@ deploy:
 	@ssh root@200.7.107.218 "ln -nfs ~/projects/kirby/persistent/storage/app/public/ /usr/share/nginx/html/projects/$(PROJECT_NAME)/public/storage"
 
 	# start php-fpm container
-	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build -d --quiet-pull --remove-orphans kirby-fpm"
+	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --remove-orphans -d --quiet-pull --remove-orphans kirby-fpm"
 	
 	# start php-worker container
-	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build -d --quiet-pull --remove-orphans kirby-worker"
+	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --remove-orphans -d --quiet-pull --remove-orphans kirby-worker"
 	
 	# clear cache
 	@ssh root@200.7.107.218 "docker exec kirby-fpm sh -c 'php artisan optimize && chown -R nginx:nginx ./'"
@@ -103,3 +104,14 @@ deploy:
 
 	# clean up old releases
 	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases && ls -t | tail -n +10 | xargs rm -rf"
+
+# Setup database backup cron job
+.PHONY: setup-db-backup-cron
+setup-db-backup-cron:
+	@echo "Setting up hourly database backup cron job"
+	@ssh root@200.7.107.218 "mkdir -p $(PROJECT_HOME)/persistent/mysql-backups"
+	@ssh root@200.7.107.218 "mkdir -p $(PROJECT_HOME)/persistent/storage/logs"
+	@ssh root@200.7.107.218 "chmod +x $(PROJECT_HOME)/releases/*/scripts/backup_database.sh"
+	@scp stubs/database-backup.cron root@200.7.107.218:/etc/cron.d/$(PROJECT_NAME)-db-backup
+	@ssh root@200.7.107.218 "chmod 644 /etc/cron.d/$(PROJECT_NAME)-db-backup"
+	@echo "Cron job installed. Database will be backed up hourly."
