@@ -1,0 +1,19 @@
+FROM php:7.4-cli-alpine
+
+RUN apk add --no-cache git libxml2-dev oniguruma-dev autoconf build-base \
+    && apk add --no-cache libzip-dev gd-dev \
+    && docker-php-ext-install pdo pdo_mysql mbstring tokenizer xml zip gd pcntl \
+    && pecl install redis \
+    && docker-php-ext-enable redis
+
+RUN addgroup -g 1000 nginx && \
+    adduser -D -u 1000 -G nginx nginx
+
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY ./stubs/laravel.ini /usr/local/etc/php/conf.d
+
+USER nginx
+
+WORKDIR /usr/share/nginx/html/projects/kirby
+
+CMD php artisan horizon --verbose

@@ -1,0 +1,98 @@
+name: kirby
+
+networks:
+  backend:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.20.0.0/16
+
+services:
+  kirby-fpm:
+    container_name: kirby-fpm
+    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.php-fpm
+    ports:
+      - "9002:9000"
+    networks:
+      - backend
+    volumes:
+      - $PWD:/usr/share/nginx/html/projects/kirby
+      - $HOME/projects/kirby/persistent/storage:/usr/share/nginx/html/projects/kirby/storage
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - REDIS_HOST=host.docker.internal
+      - MYSQL_HOST=host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  kirby-worker:
+    container_name: kirby-worker
+    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.php-worker
+    networks:
+      - backend
+    volumes:
+      - $PWD:/usr/share/nginx/html/projects/kirby
+      - $HOME/projects/kirby/persistent/storage:/usr/share/nginx/html/projects/kirby/storage
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      - REDIS_HOST=host.docker.internal
+      - MYSQL_HOST=host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  kirby-composer-dependencies:
+    container_name: kirby-composer-dependencies
+    volumes:
+      - $PWD:/app
+      - $HOME/projects/kirby/persistent/storage:/app/storage
+      - $HOME/.cache/composer-2:/tmp/composer
+    working_dir: /app
+    build:
+      dockerfile: ./docker/Dockerfile.dependencies
+    restart: "no"
+    networks:
+      - backend
+    environment:
+      - REDIS_HOST=host.docker.internal
+      - MYSQL_HOST=host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  kirby-npm-dependencies:
+    container_name: kirby-npm-dependencies
+    image: node:20-alpine
+    volumes:
+      - $PWD:/app
+      - $HOME/.npm:$HOME/.npm
+    working_dir: /app
+    command: /bin/sh -c "apk add --no-cache git && npm install --allow-root --omit=dev"
+    environment:
+      - name=value
+    restart: "no"
+    networks:
+      - backend
+
