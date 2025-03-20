@@ -74,8 +74,8 @@ deploy:
 	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && sed -i 's|##DOCUMENT_ROOT##|/usr/share/nginx/html/projects/$(PROJECT_NAME)/public|g' stubs/site-nginx.conf"
 
 	# install dependencies
-	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --remove-orphans --quiet-pull kirby-composer-dependencies"
-	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --remove-orphans --quiet-pull kirby-npm-dependencies"
+	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --remove-orphans --quiet-pull kirby-composer-dependencies"
+	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --remove-orphans --quiet-pull kirby-npm-dependencies"
 
 	# set files and folders permissions
 	@ssh root@200.7.107.218 "chown -R nginx:nginx $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION)"
@@ -87,10 +87,10 @@ deploy:
 	@ssh root@200.7.107.218 "ln -nfs ~/projects/kirby/persistent/storage/app/public/ /usr/share/nginx/html/projects/$(PROJECT_NAME)/public/storage"
 
 	# start php-fpm container
-	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --remove-orphans -d --quiet-pull --remove-orphans kirby-fpm"
+	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --remove-orphans -d --quiet-pull --remove-orphans kirby-fpm"
 	
 	# start php-worker container
-	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --build --remove-orphans -d --quiet-pull --remove-orphans kirby-worker"
+	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) && COMPOSE_BAKE=true docker compose up --remove-orphans -d --quiet-pull --remove-orphans kirby-worker"
 	
 	# clear cache
 	@ssh root@200.7.107.218 "docker exec kirby-fpm sh -c 'php artisan optimize && chown -R nginx:nginx ./'"
