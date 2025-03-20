@@ -12,7 +12,6 @@ all: help
 help:
 	@echo "Usage:"
 	@echo "  make deploy        Deploy the application"
-	@echo "  make setup-db-backup-cron  Set up hourly database backup"
 
 # Copy MySQL data from old server
 .PHONY: copy-mysql-data-to-new-server
@@ -50,7 +49,7 @@ deploy:
 		Makefile
 	
 	# create directories on remote server
-	@ssh root@200.7.107.218 "mkdir -p $(PROJECT_HOME)/{releases,persistent}"
+	@ssh root@200.7.107.218 "mkdir -p $(PROJECT_HOME)/{releases,persistent,mysql-backups}"
 	@ssh root@200.7.107.218 "mkdir -p $(PROJECT_HOME)/persistent/storage/{app,framework,logs}"
 	@ssh root@200.7.107.218 "mkdir -p $(PROJECT_HOME)/persistent/storage/framework/{cache,sessions,views}"
 	@ssh root@200.7.107.218 "mkdir -p /usr/share/nginx/html/projects"
@@ -81,6 +80,7 @@ deploy:
 	# set files and folders permissions
 	@ssh root@200.7.107.218 "chown -R nginx:nginx $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION)"
 	@ssh root@200.7.107.218 "chown -R nginx:nginx $(PROJECT_HOME)/persistent"
+	@ssh root@200.7.107.218 "chmod +x $(PROJECT_HOME)/releases/*/scripts/backup_database.sh"
 
 	# publish new release
 	@ssh root@200.7.107.218 "ln -nfs $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION) /usr/share/nginx/html/projects/$(PROJECT_NAME)"
@@ -105,13 +105,6 @@ deploy:
 	# clean up old releases
 	@ssh root@200.7.107.218 "cd $(PROJECT_HOME)/releases && ls -t | tail -n +10 | xargs rm -rf"
 
-# Setup database backup cron job
-.PHONY: setup-db-backup-cron
-setup-db-backup-cron:
-	@echo "Setting up hourly database backup cron job"
-	@ssh root@200.7.107.218 "mkdir -p $(PROJECT_HOME)/persistent/mysql-backups"
-	@ssh root@200.7.107.218 "mkdir -p $(PROJECT_HOME)/persistent/storage/logs"
-	@ssh root@200.7.107.218 "chmod +x $(PROJECT_HOME)/releases/*/scripts/backup_database.sh"
-	@scp stubs/database-backup.cron root@200.7.107.218:/etc/cron.d/$(PROJECT_NAME)-db-backup
+	# setup cron jobs
+	@ssh root@200.7.107.218 "cp $(PROJECT_HOME)/releases/$(ARTIFACT_VERSION)/stubs/database-backup.cron /etc/cron.d/$(PROJECT_NAME)-db-backup"
 	@ssh root@200.7.107.218 "chmod 644 /etc/cron.d/$(PROJECT_NAME)-db-backup"
-	@echo "Cron job installed. Database will be backed up hourly."
